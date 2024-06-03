@@ -3,6 +3,7 @@ import 'package:habit_tracker/pages/icons.dart';
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
+TextEditingController createcontroller = TextEditingController();
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -12,13 +13,22 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  List habitList = [
+    ["Add a new task", false, Icons.add],
+    ["Open the app", true, Icons.door_front_door],
+  ];
+
+  void createNewTask() {
+    setState(() {
+      habitList.add([createcontroller.text, false, updatedIcon.icon]);
+    });
+    createcontroller.clear();
+    updatedIcon = startIcon;
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    List habitList = [
-      ["Add a new task", false, Icons.add],
-      ["Open the app", true, Icons.door_front_door],
-    ];
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 211, 190),
       appBar: AppBar(
@@ -75,6 +85,7 @@ class HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: TextField(
+                          controller: createcontroller,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               onPressed: () {
@@ -96,6 +107,28 @@ class HomePageState extends State<HomePage> {
                                   BorderRadius.all(Radius.circular(15.0)),
                               borderSide: BorderSide(color: Colors.black),
                             ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 200.0,
+                          left: 220.0,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            createNewTask();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 37, 67, 54),
+                            shape: const StadiumBorder(),
+                            minimumSize:
+                                const Size(120, 50), // Increase button size
+                          ),
+                          child: const Text(
+                            "Add",
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
