@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/icons.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
@@ -27,6 +28,53 @@ class HomePageState extends State<HomePage> {
     Navigator.pop(context);
   }
 
+  Future<void> deleteTask(int index) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 37, 67, 54),
+          content: Container(
+            height: 122,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text(
+                  "Are you sure you want to delete this task?",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      child: Text("Delete"),
+                      onPressed: () {
+                        setState(() {
+                          habitList.removeAt(index);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    ElevatedButton(
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,15 +87,30 @@ class HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         itemCount: habitList.length,
-        itemBuilder: (context, index) => ListTile(
-          contentPadding: const EdgeInsets.only(
-            left: 20.0,
-            right: 20.0,
-            top: 5.0,
+        itemBuilder: (context, index) => Slidable(
+          endActionPane: ActionPane(
+            extentRatio: 0.35,
+            motion: const ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context) => deleteTask(index),
+                backgroundColor: const Color.fromARGB(255, 183, 181, 151),
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                label: 'Delete',
+              ),
+            ],
           ),
-          leading: Icon(habitList[index][2]),
-          title: Text(habitList[index][0]),
-          trailing: Icon(habitList[index][1] ? Icons.check_box : Icons.close),
+          child: ListTile(
+            contentPadding: const EdgeInsets.only(
+              left: 20.0,
+              right: 20.0,
+              top: 5.0,
+            ),
+            leading: Icon(habitList[index][2]),
+            title: Text(habitList[index][0]),
+            trailing: Icon(habitList[index][1] ? Icons.check_box : Icons.close),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
