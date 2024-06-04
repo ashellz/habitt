@@ -33,10 +33,8 @@ class IconsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconWidget(icon: Icon(Icons.audiotrack)),
-              IconWidget(icon: Icon(Icons.restore_from_trash)),
-              IconWidget(
-                icon: Icon(Icons.book),
-              ),
+              IconWidget(icon: Icon(Icons.delete_rounded)),
+              IconWidget(icon: Icon(Icons.book)),
               IconWidget(icon: Icon(Icons.edit_document)),
             ],
           ),
@@ -72,7 +70,7 @@ class IconsPage extends StatelessWidget {
             children: [
               IconWidget(icon: Icon(Icons.coffee_rounded)),
               IconWidget(icon: Icon(Icons.science_rounded)),
-              IconWidget(icon: Icon(Icons.gamepad_rounded)),
+              IconWidget(icon: Icon(Icons.door_front_door_rounded)),
               IconWidget(icon: Icon(Icons.videogame_asset_rounded)),
             ],
           ),
