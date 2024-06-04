@@ -36,15 +36,12 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
- editing-habits
           backgroundColor: Color.fromARGB(255, 218, 211, 190),
           content: SizedBox(
-
             height: 122,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-
                 const Center(
                   child: Text(
                     textAlign: TextAlign.center,
@@ -57,14 +54,12 @@ class HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(
                   height: 5,
-
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 152, 26, 51),
                       ),
@@ -72,7 +67,6 @@ class HomePageState extends State<HomePage> {
                         "Delete",
                         style: TextStyle(color: Colors.white),
                       ),
-
                       onPressed: () {
                         setState(() {
                           habitList.removeAt(index);
@@ -92,7 +86,6 @@ class HomePageState extends State<HomePage> {
                       ),
                       child: const Text("Cancel",
                           style: TextStyle(color: Colors.white)),
-
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -106,7 +99,6 @@ class HomePageState extends State<HomePage> {
       },
     );
   }
-
 
   void editTask(int index) {
     setState(() {
@@ -144,7 +136,6 @@ class HomePageState extends State<HomePage> {
               ),
             ],
           ),
-
           child: HabitTile(
             habitList: habitList,
             index: index,
