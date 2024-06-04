@@ -4,7 +4,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
-TextEditingController createcontroller = TextEditingController();
+final createcontroller = TextEditingController();
+final editcontroller = TextEditingController();
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -75,6 +76,15 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  void editTask(int index) {
+    setState(() {
+      habitList[index][0] = editcontroller.text;
+      habitList[index][1] = false;
+      habitList[index][2] = updatedIcon.icon;
+    });
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +111,7 @@ class HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          child: HabitTile(habitList: habitList, index: index,)),
+          child: HabitTile(habitList: habitList, index: index, edittask: editTask),),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
@@ -196,14 +206,16 @@ class HomePageState extends State<HomePage> {
 }
 
 class HabitTile extends StatelessWidget {
-  const HabitTile({
+  HabitTile({
     super.key,
     required this.habitList,
+    required this.edittask,
     required this.index,
   });
 
   final List habitList;
   final int index;
+  final void Function(int index) edittask;
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +227,9 @@ class HabitTile extends StatelessWidget {
             builder: (BuildContext context) {
               return StatefulBuilder(
                 builder: (BuildContext context, StateSetter mystate) {
+                  if (editcontroller.text.isEmpty) {
+                    editcontroller.text = habitList[index][0];
+                  }
                   return Container(
                     height: MediaQuery.of(context).size.height * 1.5 / 3,
                     child: Column(
@@ -238,7 +253,7 @@ class HabitTile extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: TextField(
-                            controller: createcontroller,
+                            controller: editcontroller,
                             decoration: InputDecoration(
                               suffixIcon: IconButton(
                                 onPressed: () {
@@ -254,7 +269,6 @@ class HabitTile extends StatelessWidget {
                                 icon: updatedIcon,
                               ),
                               labelStyle: const TextStyle(fontSize: 18.0),
-                              labelText: "Habit Name",
                               border: const OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15.0)),
@@ -270,7 +284,7 @@ class HabitTile extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              //edittask();
+                              edittask(index);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
