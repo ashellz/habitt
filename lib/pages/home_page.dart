@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List habitList = [
-    ["Add a new task", false, Icons.add],
+    ["Add a new habit", false, Icons.add],
     ["Open the app", true, Icons.door_front_door],
   ];
 
@@ -111,6 +111,12 @@ class HomePageState extends State<HomePage> {
     Navigator.pop(context);
   }
 
+  void checkTask(int index) {
+    setState(() {
+      habitList[index][1] = !habitList[index][1];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,6 +133,7 @@ class HomePageState extends State<HomePage> {
               habitList: habitList,
               edittask: editTask,
               deletetask: deleteTask,
+              checkTask: checkTask,
               index: index)),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
@@ -229,12 +236,14 @@ class HabitTile extends StatelessWidget {
     required this.edittask,
     required this.deletetask,
     required this.index,
+    required this.checkTask,
   });
 
   final List habitList;
   final int index;
   final Future<void> Function(int index) deletetask;
   final void Function(int index) edittask;
+  final void Function(int index) checkTask;
 
   void popmenu(BuildContext context) {
     Navigator.pop(context);
@@ -251,10 +260,10 @@ class HabitTile extends StatelessWidget {
             motion: const ScrollMotion(),
             children: [
               SlidableAction(
-                onPressed: (context) => deletetask(index),
+                onPressed: (context) => checkTask(index),
                 backgroundColor: const Color.fromARGB(255, 37, 67, 54),
                 foregroundColor: Colors.white,
-                label: 'Done',
+                label: habitList[index][1] ? 'Undo' : 'Done',
                 borderRadius: BorderRadius.circular(15),
               ),
               const SizedBox(width: 10),
@@ -387,10 +396,36 @@ class HabitTile extends StatelessWidget {
                 right: 20.0,
                 top: 5.0,
               ),
-              leading: Icon(habitList[index][2]),
-              title: Text(habitList[index][0]),
-              trailing:
-                  Icon(habitList[index][1] ? Icons.check_box : Icons.close),
+              leading: Icon(
+                habitList[index][2],
+                color: habitList[index][1]
+                    ? Colors.grey.shade600
+                    : Colors.grey.shade800,
+              ),
+              title: Text(
+                habitList[index][0],
+                style: TextStyle(
+                    color: habitList[index][1]
+                        ? Colors.grey.shade600
+                        : Colors.black,
+                    decoration: habitList[index][1]
+                        ? TextDecoration.lineThrough
+                        : null),
+              ),
+              trailing: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: habitList[index][1]
+                      ? const Color.fromARGB(255, 37, 67, 54)
+                      : const Color.fromARGB(255, 183, 181, 151),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Icon(habitList[index][1] ? Icons.check : Icons.close,
+                    color: habitList[index][1]
+                        ? Colors.white
+                        : Colors.grey.shade800),
+              ),
             ),
           ),
         ),
