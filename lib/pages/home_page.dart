@@ -111,7 +111,7 @@ class HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          child: HabitTile(habitList: habitList, index: index, edittask: editTask),),
+          child: HabitTile(habitList: habitList, index: index, edittask: editTask, deletetask: deleteTask,),),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
@@ -210,11 +210,13 @@ class HabitTile extends StatelessWidget {
     super.key,
     required this.habitList,
     required this.edittask,
+    required this.deletetask,
     required this.index,
   });
 
   final List habitList;
   final int index;
+  final void Function(int index) deletetask;
   final void Function(int index) edittask;
 
   @override
@@ -278,26 +280,46 @@ class HabitTile extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(
-                            top: 200.0,
-                            left: 250.0,
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              edittask(index);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 37, 67, 54),
-                              shape: const StadiumBorder(),
-                              minimumSize:
-                                  const Size(120, 50), // Increase button size
+                          padding: const EdgeInsets.only(top: 200),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    deletetask(index);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 152, 26, 51),
+                                    shape: const StadiumBorder(),
+                                    minimumSize:
+                                        const Size(120, 50), // Increase button size
+                                  ),
+                                  child: const Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                SizedBox(width: 112,),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    edittask(index);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 37, 67, 54),
+                                    shape: const StadiumBorder(),
+                                    minimumSize:
+                                        const Size(120, 50), // Increase button size
+                                  ),
+                                  child: const Text(
+                                    "Save",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
-                            child: const Text(
-                              "Save",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
                         ),
                       ],
                     ),
