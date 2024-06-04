@@ -7,6 +7,7 @@ Icon updatedIcon = startIcon;
 final createcontroller = TextEditingController();
 final editcontroller = TextEditingController();
 bool deleted = false;
+bool changed = false;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -45,10 +46,15 @@ class HomePageState extends State<HomePage> {
                   child: Text(
                     textAlign: TextAlign.center,
                     "Are you sure you want to delete this task?",
-                    style: TextStyle(color: Colors.black, fontSize: 18,),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -57,7 +63,10 @@ class HomePageState extends State<HomePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 152, 26, 51),
                       ),
-                      child: const Text("Delete", style: TextStyle(color: Colors.white),),
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onPressed: () {
                         setState(() {
                           habitList.removeAt(index);
@@ -71,8 +80,11 @@ class HomePageState extends State<HomePage> {
                       width: 15,
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 37, 67, 54),),
-                      child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+                      ),
+                      child: const Text("Cancel",
+                          style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -123,7 +135,13 @@ class HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          child: HabitTile(habitList: habitList, index: index, edittask: editTask, deletetask: deleteTask,),),
+          child: HabitTile(
+            habitList: habitList,
+            index: index,
+            edittask: editTask,
+            deletetask: deleteTask,
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
@@ -135,7 +153,6 @@ class HomePageState extends State<HomePage> {
             return StatefulBuilder(
               builder: (BuildContext context, StateSetter mystate) {
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height * 1.5 / 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,7 +202,7 @@ class HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 200.0,
-                          left: 250.0,
+                          left: 220.0,
                         ),
                         child: ElevatedButton(
                           onPressed: () {
@@ -210,7 +227,10 @@ class HomePageState extends State<HomePage> {
               },
             );
           },
-        ),
+        ).whenComplete(() {
+          createcontroller.clear();
+          updatedIcon = startIcon;
+        }),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -234,126 +254,138 @@ class HabitTile extends StatelessWidget {
   void popmenu(BuildContext context) {
     Navigator.pop(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => showModalBottomSheet(
-            enableDrag: true,
-            context: context,
-            backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-            builder: (BuildContext context) {
-              return StatefulBuilder(
-                builder: (BuildContext context, StateSetter mystate) {
-                  if (editcontroller.text.isEmpty) {
-                    editcontroller.text = habitList[index][0]; 
-                  }
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 1.5 / 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            top: 20.0,
-                            left: 25.0,
-                            bottom: 10.0,
-                          ),
-                          child: Text(
-                            "Edit Habit",
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+      onTap: () => showModalBottomSheet(
+        enableDrag: true,
+        context: context,
+        backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter mystate) {
+              if (!changed) {
+                updatedIcon = Icon(habitList[index][2]);
+              }
+              if (editcontroller.text.isEmpty) {
+                editcontroller.text = habitList[index][0];
+              }
+              return SizedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        top: 20.0,
+                        left: 25.0,
+                        bottom: 10.0,
+                      ),
+                      child: Text(
+                        "Edit Habit",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: TextField(
-                            controller: editcontroller,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const IconsPage(),
-                                    ),
-                                  ).then((value) => mystate(() {
-                                        updatedIcon = theIcon;
-                                      }));
-                                },
-                                icon: updatedIcon,
-                              ),
-                              labelStyle: const TextStyle(fontSize: 18.0),
-                              border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0)),
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 200),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    await deletetask(index);
-                                    if (deleted){Navigator.pop(context);deleted=false;}
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 152, 26, 51),
-                                    shape: const StadiumBorder(),
-                                    minimumSize:
-                                        const Size(120, 50), // Increase button size
-                                  ),
-                                  child: const Text(
-                                    "Delete",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                const SizedBox(width: 112,),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    edittask(index);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 37, 67, 54),
-                                    shape: const StadiumBorder(),
-                                    minimumSize:
-                                        const Size(120, 50), // Increase button size
-                                  ),
-                                  child: const Text(
-                                    "Save",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ),
-                      ],
+                      ),
                     ),
-                  );
-                },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: TextField(
+                        controller: editcontroller,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const IconsPage(),
+                                ),
+                              ).then((value) => mystate(() {
+                                    updatedIcon = theIcon;
+                                    changed = true;
+                                  }));
+                            },
+                            icon: updatedIcon,
+                          ),
+                          labelStyle: const TextStyle(fontSize: 18.0),
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 200),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              await deletetask(index);
+                              if (deleted) {
+                                Navigator.pop(context);
+                                deleted = false;
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 152, 26, 51),
+                              shape: const StadiumBorder(),
+                              minimumSize:
+                                  const Size(120, 50), // Increase button size
+                            ),
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 75,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              edittask(index);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 37, 67, 54),
+                              shape: const StadiumBorder(),
+                              minimumSize:
+                                  const Size(120, 50), // Increase button size
+                            ),
+                            child: const Text(
+                              "Save",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
-          ),
-        child: ListTile(
-          contentPadding: const EdgeInsets.only(
-            left: 20.0,
-            right: 20.0,
-            top: 5.0,
-          ),
-          leading: Icon(habitList[index][2]),
-          title: Text(habitList[index][0]),
-          trailing: Icon(habitList[index][1] ? Icons.check_box : Icons.close),
+          );
+        },
+      ).whenComplete(() {
+        editcontroller.clear();
+        changed = false;
+      }),
+      child: ListTile(
+        contentPadding: const EdgeInsets.only(
+          left: 20.0,
+          right: 20.0,
+          top: 5.0,
         ),
-      );
+        leading: Icon(habitList[index][2]),
+        title: Text(habitList[index][0]),
+        trailing: Icon(habitList[index][1] ? Icons.check_box : Icons.close),
+      ),
+    );
   }
 }
