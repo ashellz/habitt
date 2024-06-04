@@ -61,7 +61,7 @@ class HomePageState extends State<HomePage> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 152, 26, 51),
+                        backgroundColor: const Color.fromARGB(255, 152, 26, 51),
                       ),
                       child: const Text(
                         "Delete",
@@ -107,6 +107,7 @@ class HomePageState extends State<HomePage> {
       habitList[index][2] = updatedIcon.icon;
     });
     editcontroller.text = "";
+    updatedIcon = startIcon;
     Navigator.pop(context);
   }
 
@@ -121,29 +122,12 @@ class HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
       ),
       body: ListView.builder(
-        itemCount: habitList.length,
-        itemBuilder: (context, index) => Slidable(
-          endActionPane: ActionPane(
-            extentRatio: 0.35,
-            motion: const ScrollMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) => deleteTask(index),
-                backgroundColor: const Color.fromARGB(255, 183, 181, 151),
-                foregroundColor: Colors.white,
-                icon: Icons.delete,
-                label: 'Delete',
-              ),
-            ],
-          ),
-          child: HabitTile(
-            habitList: habitList,
-            index: index,
-            edittask: editTask,
-            deletetask: deleteTask,
-          ),
-        ),
-      ),
+          itemCount: habitList.length,
+          itemBuilder: (context, index) => HabitTile(
+              habitList: habitList,
+              edittask: editTask,
+              deletetask: deleteTask,
+              index: index)),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
         onPressed: () => showModalBottomSheet(
@@ -258,135 +242,159 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => showModalBottomSheet(
-        enableDrag: true,
-        context: context,
-        backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, StateSetter mystate) {
-              if (!changed) {
-                updatedIcon = Icon(habitList[index][2]);
-              }
-              if (editcontroller.text.isEmpty) {
-                editcontroller.text = habitList[index][0];
-              }
-              return SizedBox(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        top: 20.0,
-                        left: 25.0,
-                        bottom: 10.0,
-                      ),
-                      child: Text(
-                        "Edit Habit",
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: TextField(
-                        controller: editcontroller,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const IconsPage(),
-                                ),
-                              ).then((value) => mystate(() {
-                                    updatedIcon = theIcon;
-                                    changed = true;
-                                  }));
-                            },
-                            icon: updatedIcon,
-                          ),
-                          labelStyle: const TextStyle(fontSize: 18.0),
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 200),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        Slidable(
+          endActionPane: ActionPane(
+            extentRatio: 0.30,
+            motion: const ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context) => deletetask(index),
+                backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+                foregroundColor: Colors.white,
+                label: 'Done',
+                borderRadius: BorderRadius.circular(15),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+          child: GestureDetector(
+            onTap: () => showModalBottomSheet(
+              enableDrag: true,
+              context: context,
+              backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+              builder: (BuildContext context) {
+                return StatefulBuilder(
+                  builder: (BuildContext context, StateSetter mystate) {
+                    if (!changed) {
+                      updatedIcon = Icon(habitList[index][2]);
+                    }
+                    if (editcontroller.text.isEmpty) {
+                      editcontroller.text = habitList[index][0];
+                    }
+                    return SizedBox(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              await deletetask(index);
-                              if (deleted) {
-                                Navigator.pop(context);
-                                deleted = false;
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 152, 26, 51),
-                              shape: const StadiumBorder(),
-                              minimumSize:
-                                  const Size(120, 50), // Increase button size
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              top: 20.0,
+                              left: 25.0,
+                              bottom: 10.0,
                             ),
-                            child: const Text(
-                              "Delete",
-                              style: TextStyle(color: Colors.white),
+                            child: Text(
+                              "Edit Habit",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 75,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              edittask(index);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 37, 67, 54),
-                              shape: const StadiumBorder(),
-                              minimumSize:
-                                  const Size(120, 50), // Increase button size
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: TextField(
+                              controller: editcontroller,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const IconsPage(),
+                                      ),
+                                    ).then((value) => mystate(() {
+                                          updatedIcon = theIcon;
+                                          changed = true;
+                                        }));
+                                  },
+                                  icon: updatedIcon,
+                                ),
+                                labelStyle: const TextStyle(fontSize: 18.0),
+                                border: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15.0)),
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                              ),
                             ),
-                            child: const Text(
-                              "Save",
-                              style: TextStyle(color: Colors.white),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 200),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await deletetask(index);
+                                    if (deleted) {
+                                      Navigator.pop(context);
+                                      deleted = false;
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 152, 26, 51),
+                                    shape: const StadiumBorder(),
+                                    minimumSize: const Size(
+                                        120, 50), // Increase button size
+                                  ),
+                                  child: const Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 75,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    edittask(index);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 37, 67, 54),
+                                    shape: const StadiumBorder(),
+                                    minimumSize: const Size(
+                                        120, 50), // Increase button size
+                                  ),
+                                  child: const Text(
+                                    "Save",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      ).whenComplete(() {
-        editcontroller.clear();
-        changed = false;
-      }),
-      child: ListTile(
-        contentPadding: const EdgeInsets.only(
-          left: 20.0,
-          right: 20.0,
-          top: 5.0,
+                    );
+                  },
+                );
+              },
+            ).whenComplete(() {
+              editcontroller.clear();
+              changed = false;
+              updatedIcon = startIcon;
+            }),
+            child: ListTile(
+              contentPadding: const EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                top: 5.0,
+              ),
+              leading: Icon(habitList[index][2]),
+              title: Text(habitList[index][0]),
+              trailing:
+                  Icon(habitList[index][1] ? Icons.check_box : Icons.close),
+            ),
+          ),
         ),
-        leading: Icon(habitList[index][2]),
-        title: Text(habitList[index][0]),
-        trailing: Icon(habitList[index][1] ? Icons.check_box : Icons.close),
-      ),
+      ],
     );
   }
 }
