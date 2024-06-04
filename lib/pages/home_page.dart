@@ -6,6 +6,7 @@ Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
 final createcontroller = TextEditingController();
 final editcontroller = TextEditingController();
+bool deleted = false;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -34,34 +35,44 @@ class HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 37, 67, 54),
-          content: Container(
+          backgroundColor: Color.fromARGB(255, 218, 211, 190),
+          content: SizedBox(
             height: 122,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const Text(
-                  "Are you sure you want to delete this task?",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                const Center(
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    "Are you sure you want to delete this task?",
+                    style: TextStyle(color: Colors.black, fontSize: 18,),
+                  ),
                 ),
+                const SizedBox(height: 5,),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      child: Text("Delete"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 152, 26, 51),
+                      ),
+                      child: const Text("Delete", style: TextStyle(color: Colors.white),),
                       onPressed: () {
                         setState(() {
                           habitList.removeAt(index);
                         });
+                        deleted = true;
+                        editcontroller.text = "";
                         Navigator.of(context).pop();
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 15,
                     ),
                     ElevatedButton(
-                      child: Text("Cancel"),
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 37, 67, 54),),
+                      child: const Text("Cancel", style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -82,6 +93,7 @@ class HomePageState extends State<HomePage> {
       habitList[index][1] = false;
       habitList[index][2] = updatedIcon.icon;
     });
+    editcontroller.text = "";
     Navigator.pop(context);
   }
 
@@ -122,7 +134,7 @@ class HomePageState extends State<HomePage> {
           builder: (BuildContext context) {
             return StatefulBuilder(
               builder: (BuildContext context, StateSetter mystate) {
-                return Container(
+                return SizedBox(
                   height: MediaQuery.of(context).size.height * 1.5 / 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -206,7 +218,7 @@ class HomePageState extends State<HomePage> {
 }
 
 class HabitTile extends StatelessWidget {
-  HabitTile({
+  const HabitTile({
     super.key,
     required this.habitList,
     required this.edittask,
@@ -216,9 +228,12 @@ class HabitTile extends StatelessWidget {
 
   final List habitList;
   final int index;
-  final void Function(int index) deletetask;
+  final Future<void> Function(int index) deletetask;
   final void Function(int index) edittask;
 
+  void popmenu(BuildContext context) {
+    Navigator.pop(context);
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -230,9 +245,9 @@ class HabitTile extends StatelessWidget {
               return StatefulBuilder(
                 builder: (BuildContext context, StateSetter mystate) {
                   if (editcontroller.text.isEmpty) {
-                    editcontroller.text = habitList[index][0];
+                    editcontroller.text = habitList[index][0]; 
                   }
-                  return Container(
+                  return SizedBox(
                     height: MediaQuery.of(context).size.height * 1.5 / 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -286,12 +301,13 @@ class HabitTile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {
-                                    deletetask(index);
+                                  onPressed: () async {
+                                    await deletetask(index);
+                                    if (deleted){Navigator.pop(context);deleted=false;}
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                        Color.fromARGB(255, 152, 26, 51),
+                                        const Color.fromARGB(255, 152, 26, 51),
                                     shape: const StadiumBorder(),
                                     minimumSize:
                                         const Size(120, 50), // Increase button size
@@ -301,7 +317,7 @@ class HabitTile extends StatelessWidget {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
-                                SizedBox(width: 112,),
+                                const SizedBox(width: 112,),
                                 ElevatedButton(
                                   onPressed: () {
                                     edittask(index);
