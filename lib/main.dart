@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(HabitDataAdapter());
+
+  await Hive.openBox<HabitData>('habits');
+
+  if (Hive.box<HabitData>('habits').isEmpty) {
+    await Hive.box<HabitData>('habits').add(HabitData(
+        name: "Add a new habit", completed: false, icon: "Icons.add"));
+    await Hive.box<HabitData>('habits').add(HabitData(
+        name: "Open the app", completed: true, icon: "Icons.door_front_door"));
+  }
+
   runApp(const MyApp());
 }
 

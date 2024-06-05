@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/icons.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:habit_tracker/util/getIcon.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
@@ -8,6 +11,8 @@ final createcontroller = TextEditingController();
 final editcontroller = TextEditingController();
 bool deleted = false;
 bool changed = false;
+final habitBox = Hive.box<HabitData>('habits');
+late HabitData myHabit;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -17,14 +22,16 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List habitList = [
-    ["Add a new habit", false, Icons.add],
-    ["Open the app", true, Icons.door_front_door],
-  ];
+  var habitListLenght = Hive.box<HabitData>('habits').length;
 
   void createNewTask() {
     setState(() {
-      habitList.add([createcontroller.text, false, updatedIcon.icon]);
+      myHabit = HabitData(
+          name: createcontroller.text,
+          completed: false,
+          icon: getIconString(updatedIcon.icon));
+      habitBox.add(myHabit);
+      habitListLenght = habitBox.length;
     });
     createcontroller.clear();
     updatedIcon = startIcon;
@@ -69,7 +76,7 @@ class HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         setState(() {
-                          habitList.removeAt(index);
+                          habitBox.deleteAt(index);
                         });
 
                         deleted = true;
@@ -102,9 +109,13 @@ class HomePageState extends State<HomePage> {
 
   void editTask(int index) {
     setState(() {
-      habitList[index][0] = editcontroller.text;
-      habitList[index][1] = false;
-      habitList[index][2] = updatedIcon.icon;
+      habitBox.putAt(
+          index,
+          HabitData(
+            name: editcontroller.text,
+            completed: habitBox.getAt(index)?.completed ?? false,
+            icon: getIconString(updatedIcon.icon),
+          ));
     });
     editcontroller.text = "";
     updatedIcon = startIcon;
@@ -113,7 +124,20 @@ class HomePageState extends State<HomePage> {
 
   void checkTask(int index) {
     setState(() {
-      habitList[index][1] = !habitList[index][1];
+      final habitBox = Hive.box<HabitData>('habits');
+      final existingHabit = habitBox.getAt(index);
+
+      if (existingHabit != null) {
+        // Toggle the completed status
+        final updatedHabit = HabitData(
+          name: existingHabit.name,
+          completed: !existingHabit.completed, // Toggle the value
+          icon: existingHabit.icon,
+        );
+
+        // Update the habit in the box
+        habitBox.putAt(index, updatedHabit);
+      }
     });
   }
 
@@ -128,9 +152,8 @@ class HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
       ),
       body: ListView.builder(
-          itemCount: habitList.length,
+          itemCount: habitListLenght,
           itemBuilder: (context, index) => HabitTile(
-              habitList: habitList,
               edittask: editTask,
               deletetask: deleteTask,
               checkTask: checkTask,
@@ -232,14 +255,12 @@ class HomePageState extends State<HomePage> {
 class HabitTile extends StatelessWidget {
   const HabitTile({
     super.key,
-    required this.habitList,
     required this.edittask,
     required this.deletetask,
     required this.index,
     required this.checkTask,
   });
 
-  final List habitList;
   final int index;
   final Future<void> Function(int index) deletetask;
   final void Function(int index) edittask;
@@ -251,6 +272,7 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    IconData displayIcon = getIcon(index);
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -263,7 +285,7 @@ class HabitTile extends StatelessWidget {
                 onPressed: (context) => checkTask(index),
                 backgroundColor: const Color.fromARGB(255, 37, 67, 54),
                 foregroundColor: Colors.white,
-                label: habitList[index][1] ? 'Undo' : 'Done',
+                label: habitBox.getAt(index)!.completed ? 'Undo' : 'Done',
                 borderRadius: BorderRadius.circular(15),
               ),
               const SizedBox(width: 10),
@@ -278,10 +300,10 @@ class HabitTile extends StatelessWidget {
                 return StatefulBuilder(
                   builder: (BuildContext context, StateSetter mystate) {
                     if (!changed) {
-                      updatedIcon = Icon(habitList[index][2]);
+                      updatedIcon = Icon(getIcon(index));
                     }
                     if (editcontroller.text.isEmpty) {
-                      editcontroller.text = habitList[index][0];
+                      editcontroller.text = habitBox.getAt(index)!.name;
                     }
                     return SizedBox(
                       child: Column(
@@ -397,18 +419,18 @@ class HabitTile extends StatelessWidget {
                 top: 5.0,
               ),
               leading: Icon(
-                habitList[index][2],
-                color: habitList[index][1]
+                displayIcon,
+                color: habitBox.getAt(index)!.completed
                     ? Colors.grey.shade600
                     : Colors.grey.shade800,
               ),
               title: Text(
-                habitList[index][0],
+                habitBox.getAt(index)!.name,
                 style: TextStyle(
-                    color: habitList[index][1]
+                    color: habitBox.getAt(index)!.completed
                         ? Colors.grey.shade600
                         : Colors.black,
-                    decoration: habitList[index][1]
+                    decoration: habitBox.getAt(index)!.completed
                         ? TextDecoration.lineThrough
                         : null),
               ),
@@ -416,13 +438,16 @@ class HabitTile extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: habitList[index][1]
+                  color: habitBox.getAt(index)!.completed
                       ? const Color.fromARGB(255, 37, 67, 54)
                       : const Color.fromARGB(255, 183, 181, 151),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Icon(habitList[index][1] ? Icons.check : Icons.close,
-                    color: habitList[index][1]
+                child: Icon(
+                    habitBox.getAt(index)!.completed
+                        ? Icons.check
+                        : Icons.close,
+                    color: habitBox.getAt(index)!.completed
                         ? Colors.white
                         : Colors.grey.shade800),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icons_flutter/icons_flutter.dart';
 
 Icon chosenIcon = const Icon(Icons.book);
 Icon theIcon = chosenIcon;
@@ -42,7 +43,7 @@ class IconsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconWidget(icon: Icon(Icons.edit_calendar)),
-              IconWidget(icon: Icon(Icons.cloud)),
+              IconWidget(icon: Icon(Ionicons.md_shirt)),
               IconWidget(icon: Icon(Icons.directions_bike)),
               IconWidget(icon: Icon(Icons.directions_car)),
             ],
@@ -60,9 +61,9 @@ class IconsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconWidget(icon: Icon(Icons.checkroom_rounded)),
-              IconWidget(icon: Icon(Icons.child_care_rounded)),
+              IconWidget(icon: Icon(MaterialCommunityIcons.puzzle)),
               IconWidget(icon: Icon(Icons.clean_hands_rounded)),
-              IconWidget(icon: Icon(Icons.school_rounded)),
+              IconWidget(icon: Icon(MaterialCommunityIcons.tooth)),
             ],
           ),
           Row(
