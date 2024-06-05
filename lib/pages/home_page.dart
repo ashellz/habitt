@@ -77,7 +77,6 @@ class HomePageState extends State<HomePage> {
                       onPressed: () {
                         setState(() {
                           habitBox.deleteAt(index);
-                          habitListLenght = habitBox.length;
                         });
 
                         deleted = true;
