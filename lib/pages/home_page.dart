@@ -215,27 +215,33 @@ class HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 200.0,
-                          left: 220.0,
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            createNewTask();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 37, 67, 54),
-                            shape: const StadiumBorder(),
-                            minimumSize:
-                                const Size(120, 50), // Increase button size
+                      Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              right: 20.0,
+                              bottom: 20.0,
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                createNewTask();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 37, 67, 54),
+                                shape: const StadiumBorder(),
+                                minimumSize:
+                                    const Size(120, 50), // Increase button size
+                              ),
+                              child: const Text(
+                                "Add",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
-                          child: const Text(
-                            "Add",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -354,11 +360,12 @@ class HabitTile extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Spacer(),
                           Padding(
-                            padding: const EdgeInsets.only(top: 200),
+                            padding: const EdgeInsets.only(
+                                bottom: 20, right: 20, left: 20),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 ElevatedButton(
                                   onPressed: () async {
@@ -379,9 +386,6 @@ class HabitTile extends StatelessWidget {
                                     "Delete",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 75,
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
