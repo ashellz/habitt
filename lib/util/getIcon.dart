@@ -52,8 +52,18 @@ IconData getIcon(int index) {
       return Icons.science_rounded;
     case "Icons.door_front_door_rounded":
       return Icons.door_front_door_rounded;
+    case "Icons.sports_esports_rounded":
+      return Icons.sports_esports_rounded;
+    case "Icons.sports_football_rounded":
+      return Icons.sports_football_rounded;
+    case "MaterialIcons.fitness_center":
+      return MaterialIcons.fitness_center;
+    case "MaterialIcons.directions_walk":
+      return MaterialIcons.directions_walk;
+    case "Icons.water_drop_rounded":
+      return Icons.water_drop_rounded;
     default:
-      return Icons.videogame_asset_rounded;
+      return Icons.book;
   }
 }
 
@@ -103,7 +113,17 @@ String getIconString(IconData? icon) {
       return "Icons.science_rounded";
     case Icons.door_front_door_rounded:
       return "Icons.door_front_door_rounded";
+    case Icons.sports_esports_rounded:
+      return "Icons.sports_esports_rounded";
+    case Icons.sports_football_rounded:
+      return "Icons.sports_football_rounded";
+    case MaterialIcons.fitness_center:
+      return "MaterialIcons.fitness_center";
+    case MaterialIcons.directions_walk:
+      return "MaterialIcons.directions_walk";
+    case Icons.water_drop_rounded:
+      return "Icons.water_drop_rounded";
     default:
-      return "Icons.videogame_asset_rounded";
+      return "Icons.book";
   }
 }

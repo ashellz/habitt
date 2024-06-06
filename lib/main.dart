@@ -11,9 +11,15 @@ Future<void> main() async {
 
   if (Hive.box<HabitData>('habits').isEmpty) {
     await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Add a new habit", completed: false, icon: "Icons.add"));
+        name: "Add a new habit",
+        completed: false,
+        icon: "Icons.add",
+        category: "Any time"));
     await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Open the app", completed: true, icon: "Icons.door_front_door"));
+        name: "Open the app",
+        completed: true,
+        icon: "Icons.door_front_door",
+        category: "Any time"));
   }
 
   runApp(const MyApp());
