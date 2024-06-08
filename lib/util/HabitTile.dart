@@ -34,6 +34,13 @@ class HabitTile extends StatelessWidget {
     return null;
   }
 
+  String truncatedText(index) {
+    if (habitBox.getAt(index)!.name.length > 20) {
+      return habitBox.getAt(index)!.name.substring(0, 20) + '...';
+    }
+    return habitBox.getAt(index)!.name;
+  }
+
   @override
   Widget build(BuildContext context) {
     IconData displayIcon = getIcon(index);
@@ -229,7 +236,7 @@ class HabitTile extends StatelessWidget {
                     : Colors.grey.shade800,
               ),
               title: Text(
-                habitBox.getAt(index)!.name,
+                truncatedText(index),
                 style: TextStyle(
                     color: habitBox.getAt(index)!.completed
                         ? Colors.grey.shade600

@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 
 final habitBox = Hive.box<HabitData>('habits');
+
 IconData getIcon(int index) {
   String icon = habitBox.getAt(index)!.icon;
 

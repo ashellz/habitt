@@ -3,6 +3,11 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 
+bool morningImageVisible = false;
+bool afternoonImageVisible = false;
+bool eveningImageVisible = false;
+bool anyTimeImageVisible = false;
+
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(HabitDataAdapter());
@@ -20,6 +25,18 @@ Future<void> main() async {
         completed: true,
         icon: "Icons.door_front_door",
         category: "Any time"));
+  }
+
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == 'Morning') {
+      morningImageVisible = true;
+    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+      afternoonImageVisible = true;
+    } else if (habitBox.getAt(i)?.category == 'Evening') {
+      eveningImageVisible = true;
+    } else if (habitBox.getAt(i)?.category == 'Any time') {
+      anyTimeImageVisible = true;
+    }
   }
 
   runApp(const MyApp());

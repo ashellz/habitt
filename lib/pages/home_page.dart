@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/icons.dart';
 import 'package:habit_tracker/util/HabitTile.dart';
@@ -14,8 +13,18 @@ bool deleted = false;
 bool changed = false;
 final habitBox = Hive.box<HabitData>('habits');
 late HabitData myHabit;
-String dropDownValue = 'Any time';
+String dropDownValue = 'Any Time';
 final _formKey = GlobalKey<FormState>();
+bool morningVisible = false;
+double morningHeight = 0;
+bool afternoonVisible = false;
+double afternoonHeight = 0;
+bool eveningVisible = false;
+double eveningHeight = 0;
+bool anyTimeVisible = false;
+double anyTimeHeight = 0;
+double containerHeight = 0;
+final ScrollController scrollController = ScrollController();
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -41,6 +50,33 @@ class HomePageState extends State<HomePage> {
     createcontroller.clear();
     updatedIcon = startIcon;
     Navigator.pop(context);
+  }
+
+  String checkCategory(index) {
+    if (habitBox.getAt(index) == "Morning") {
+      return "Morning";
+    } else if (habitBox.getAt(index) == "Afternoon") {
+      return "Afternoon";
+    } else if (habitBox.getAt(index) == "Evening") {
+      return "Evening";
+    } else if (habitBox.getAt(index) == "Any time") {
+      return "Any time";
+    }
+    return "";
+  }
+
+  void updateHeightDelete(index) {
+    setState(() {
+      if (checkCategory(index) == "Morning") {
+        morningHeight -= 71;
+      } else if (checkCategory(index) == "Afternoon") {
+        afternoonHeight -= 71;
+      } else if (checkCategory(index) == "Evening") {
+        eveningHeight -= 71;
+      } else if (checkCategory(index) == "Any time") {
+        anyTimeHeight -= 71;
+      }
+    });
   }
 
   Future<void> deleteTask(int index) async {
@@ -81,10 +117,10 @@ class HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         setState(() {
+                          updateHeightDelete(index);
                           habitBox.deleteAt(index);
                           habitListLenght = habitBox.length;
                         });
-
                         deleted = true;
                         editcontroller.text = "";
                         Navigator.of(context).pop();
@@ -153,7 +189,6 @@ class HomePageState extends State<HomePage> {
     }
     return null;
   }
-
   // THE SCAFFOLD STARTS HERE, ALL ABOVE ARE FUNCTIONS AND DECLARATIONS
 
   @override
@@ -165,13 +200,232 @@ class HomePageState extends State<HomePage> {
         centerTitle: true,
         toolbarHeight: 80.0,
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+        actions: [
+          IconButton(
+            iconSize: 30,
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: () => showModalBottomSheet(
+              enableDrag: true,
+              context: context,
+              backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+              builder: (BuildContext context) {
+                return StatefulBuilder(
+                  builder: (BuildContext context, StateSetter mystate) {
+                    return SizedBox(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                top: 20.0,
+                                left: 25.0,
+                                bottom: 10.0,
+                              ),
+                              child: Text(
+                                "New Habit",
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: TextFormField(
+                                validator: _validateText,
+                                controller: createcontroller,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const IconsPage(),
+                                        ),
+                                      ).then((value) => mystate(() {
+                                            updatedIcon = theIcon;
+                                          }));
+                                    },
+                                    icon: updatedIcon,
+                                  ),
+                                  labelStyle: const TextStyle(fontSize: 16.0),
+                                  labelText: "Habit Name",
+                                  border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15.0)),
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                  filled: true,
+                                  fillColor: const Color.fromARGB(255, 183, 181,
+                                      151), // Added background color
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButtonFormField(
+                                  dropdownColor:
+                                      const Color.fromARGB(255, 218, 211, 190),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color.fromARGB(
+                                        255, 218, 211, 190),
+                                  ),
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.black,
+                                    fontSize: 16.0,
+                                  ),
+                                  hint: const Text("Any Time"),
+                                  items: dropdownItems,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropDownValue = newValue!;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 20.0,
+                                    bottom: 20.0,
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        createNewTask();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 37, 67, 54),
+                                      shape: const StadiumBorder(),
+                                      minimumSize: const Size(
+                                          120, 50), // Increase button size
+                                    ),
+                                    child: const Text(
+                                      "Add",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ).whenComplete(() {
+              createcontroller.clear();
+              updatedIcon = startIcon;
+            }),
+          ),
+        ],
       ),
-      body: ListView(children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: ListView(
+        controller: scrollController,
+        children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    morningVisible = !morningVisible;
+                    if (morningVisible == true) {
+                      for (int i = 0; i < habitListLenght; i++) {
+                        if (habitBox.getAt(i)?.category == 'Morning') {
+                          morningHeight += 71;
+                        }
+                      }
+                    } else {
+                      morningHeight = 0;
+                    }
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Morning",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/morning_picture.png')),
+                      ),
+                    )),
+              ),
+            ),
+            AnimatedContainer(
+              color: const Color.fromARGB(255, 218, 211, 190),
+              duration: const Duration(milliseconds: 500),
+              height: morningVisible ? morningHeight : 0,
+              curve: Curves.fastOutSlowIn,
+              child: Column(
+                children: [
+                  for (int i = 0; i < habitListLenght; i++)
+                    if (habitBox.getAt(i)?.category == 'Morning')
+                      HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
+                ],
+              ),
+            ),
+          ]),
+
+          // Afternoon
+
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  afternoonVisible = !afternoonVisible;
+                  if (afternoonVisible == true) {
+                    for (int i = 0; i < habitListLenght; i++) {
+                      if (habitBox.getAt(i)?.category == 'Afternoon') {
+                        afternoonHeight += 71;
+                      }
+                    }
+                  } else {
+                    afternoonHeight = 0;
+                  }
+                });
+              },
               child: Container(
                   width: double.infinity,
                   height: 80,
@@ -182,232 +436,161 @@ class HomePageState extends State<HomePage> {
                     child: const GridTile(
                       footer: Center(
                           child: Text(
-                        "Morning",
+                        "Afternoon",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      )),
+                      child: Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage(
+                              'assets/images/afternoon_picture.png')),
+                    ),
+                  )),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: afternoonVisible ? afternoonHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Afternoon')
+                    HabitTile(
+                      edittask: editTask,
+                      deletetask: deleteTask,
+                      checkTask: checkTask,
+                      index: i,
+                    ),
+              ],
+            ),
+          ),
+
+          // Evening
+
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  eveningVisible = !eveningVisible;
+                  if (eveningVisible == true) {
+                    for (int i = 0; i < habitListLenght; i++) {
+                      if (habitBox.getAt(i)?.category == 'Evening') {
+                        eveningHeight += 71;
+                      }
+                    }
+                  } else {
+                    eveningHeight = 0;
+                  }
+                });
+              },
+              child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: const GridTile(
+                      footer: Center(
+                          child: Text(
+                        "Evening",
                         style: TextStyle(fontSize: 20, color: Colors.white),
                       )),
                       child: Image(
                           fit: BoxFit.cover,
                           image:
-                              AssetImage('assets/images/morning_picture.png')),
+                              AssetImage('assets/images/evening_picture.png')),
                     ),
                   )),
-
-              /*child: Text(
-                "Morning",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),*/
             ),
-            for (int i = 0; i < habitListLenght; i++)
-              if (habitBox.getAt(i)?.category == 'Morning')
-                HabitTile(
-                  edittask: editTask,
-                  deletetask: deleteTask,
-                  checkTask: checkTask,
-                  index: i,
-                ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20.0, top: 20),
-              child: Text(
-                "Afternoon",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            for (int i = 0; i < habitListLenght; i++)
-              if (habitBox.getAt(i)?.category == 'Afternoon')
-                HabitTile(
-                  edittask: editTask,
-                  deletetask: deleteTask,
-                  checkTask: checkTask,
-                  index: i,
-                ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20.0, top: 20),
-              child: Text(
-                "Evening",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            for (int i = 0; i < habitListLenght; i++)
-              if (habitBox.getAt(i)?.category == 'Evening')
-                HabitTile(
-                  edittask: editTask,
-                  deletetask: deleteTask,
-                  checkTask: checkTask,
-                  index: i,
-                ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20.0, top: 20),
-              child: Text(
-                "Any time",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            for (int i = 0; i < habitListLenght; i++)
-              if (habitBox.getAt(i)?.category == 'Any time')
-                HabitTile(
-                  edittask: editTask,
-                  deletetask: deleteTask,
-                  checkTask: checkTask,
-                  index: i,
-                ),
-          ],
-        ),
-      ]),
-      // body: ListView.builder(
-      //     itemCount: habitListLenght,
-      //     itemBuilder: (context, index) => HabitTile(
-      //         edittask: editTask,
-      //         deletetask: deleteTask,
-      //         checkTask: checkTask,
-      //         index: index)),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-        onPressed: () => showModalBottomSheet(
-          enableDrag: true,
-          context: context,
-          backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-          builder: (BuildContext context) {
-            return StatefulBuilder(
-              builder: (BuildContext context, StateSetter mystate) {
-                return SizedBox(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            top: 20.0,
-                            left: 25.0,
-                            bottom: 10.0,
-                          ),
-                          child: Text(
-                            "New Habit",
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: TextFormField(
-                            validator: _validateText,
-                            controller: createcontroller,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const IconsPage(),
-                                    ),
-                                  ).then((value) => mystate(() {
-                                        updatedIcon = theIcon;
-                                      }));
-                                },
-                                icon: updatedIcon,
-                              ),
-                              labelStyle: const TextStyle(fontSize: 16.0),
-                              labelText: "Habit Name",
-                              border: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0)),
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              filled: true,
-                              fillColor: const Color.fromARGB(
-                                  255, 183, 181, 151), // Added background color
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButtonFormField(
-                              dropdownColor:
-                                  const Color.fromARGB(255, 218, 211, 190),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                ),
-                                filled: true,
-                                fillColor:
-                                    const Color.fromARGB(255, 218, 211, 190),
-                              ),
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.black,
-                                fontSize: 16.0,
-                              ),
-                              hint: const Text("Any time"),
-                              items: dropdownItems,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropDownValue = newValue!;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                right: 20.0,
-                                bottom: 20.0,
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    createNewTask();
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 37, 67, 54),
-                                  shape: const StadiumBorder(),
-                                  minimumSize: const Size(
-                                      120, 50), // Increase button size
-                                ),
-                                child: const Text(
-                                  "Add",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: eveningVisible ? eveningHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Evening')
+                    HabitTile(
+                      edittask: editTask,
+                      deletetask: deleteTask,
+                      checkTask: checkTask,
+                      index: i,
                     ),
-                  ),
-                );
+              ],
+            ),
+          ),
+
+          // Any time
+
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  anyTimeVisible = !anyTimeVisible;
+                  if (anyTimeVisible == true) {
+                    containerHeight = anyTimeHeight;
+                    for (int i = 0; i < habitListLenght; i++) {
+                      if (habitBox.getAt(i)?.category == 'Any time') {
+                        containerHeight += 71;
+                        anyTimeHeight += 71;
+                      }
+                    }
+                  } else {
+                    anyTimeHeight = 0;
+                  }
+                });
               },
-            );
-          },
-        ).whenComplete(() {
-          createcontroller.clear();
-          updatedIcon = startIcon;
-        }),
-        child: const Icon(Icons.add, color: Colors.white),
+              child: Container(
+                  width: double.infinity,
+                  height: 80,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: const GridTile(
+                      footer: Center(
+                          child: Text(
+                        "Any Time",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      )),
+                      child: Image(
+                          fit: BoxFit.cover,
+                          image:
+                              AssetImage('assets/images/anytime_picture.png')),
+                    ),
+                  )),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: anyTimeVisible ? anyTimeHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Any time')
+                    HabitTile(
+                      edittask: editTask,
+                      deletetask: deleteTask,
+                      checkTask: checkTask,
+                      index: i,
+                    ),
+              ],
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: containerHeight,
+            color: const Color.fromARGB(255, 218, 211, 190),
+          )
+        ],
       ),
     );
   }
@@ -418,7 +601,7 @@ List<DropdownMenuItem<String>> get dropdownItems {
     const DropdownMenuItem(value: "Morning", child: Text("Morning")),
     const DropdownMenuItem(value: "Afternoon", child: Text("Afternoon")),
     const DropdownMenuItem(value: "Evening", child: Text("Evening")),
-    const DropdownMenuItem(value: "Any time", child: Text("Any time")),
+    const DropdownMenuItem(value: "Any time", child: Text("Any Time")),
   ];
   return menuItems;
 }
