@@ -3,10 +3,10 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 
-bool morningImageVisible = false;
-bool afternoonImageVisible = false;
-bool eveningImageVisible = false;
-bool anyTimeImageVisible = false;
+bool morningHasHabits = false;
+bool afternoonHasHabits = false;
+bool eveningHasHabits = false;
+bool anytimeHasHabits = false;
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -29,13 +29,13 @@ Future<void> main() async {
 
   for (int i = 0; i < habitBox.length; i++) {
     if (habitBox.getAt(i)?.category == 'Morning') {
-      morningImageVisible = true;
+      morningHasHabits = true;
     } else if (habitBox.getAt(i)?.category == 'Afternoon') {
-      afternoonImageVisible = true;
+      afternoonHasHabits = true;
     } else if (habitBox.getAt(i)?.category == 'Evening') {
-      eveningImageVisible = true;
+      eveningHasHabits = true;
     } else if (habitBox.getAt(i)?.category == 'Any time') {
-      anyTimeImageVisible = true;
+      anytimeHasHabits = true;
     }
   }
 

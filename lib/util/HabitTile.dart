@@ -35,8 +35,8 @@ class HabitTile extends StatelessWidget {
   }
 
   String truncatedText(index) {
-    if (habitBox.getAt(index)!.name.length > 20) {
-      return habitBox.getAt(index)!.name.substring(0, 20) + '...';
+    if (habitBox.getAt(index)!.name.length > 18) {
+      return habitBox.getAt(index)!.name.substring(0, 18) + '...';
     }
     return habitBox.getAt(index)!.name;
   }
@@ -162,7 +162,7 @@ class HabitTile extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 20, right: 20, left: 20),

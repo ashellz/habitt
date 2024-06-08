@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/icons.dart';
 import 'package:habit_tracker/util/HabitTile.dart';
 import 'package:habit_tracker/util/getIcon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:async';
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
@@ -36,55 +38,167 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   var habitListLenght = Hive.box<HabitData>('habits').length;
 
+  bool isTapAllowed = true;
+
+  void _onTapWithThrottle(VoidCallback onTap) {
+    if (isTapAllowed) {
+      isTapAllowed = false;
+      onTap();
+      Timer(const Duration(seconds: 1), () {
+        isTapAllowed = true;
+      });
+    }
+  }
+
   void createNewTask() {
     setState(() {
       myHabit = HabitData(
-          name: createcontroller.text,
-          completed: false,
-          icon: getIconString(updatedIcon.icon),
-          category: dropDownValue);
+        name: createcontroller.text,
+        completed: false,
+        icon: getIconString(updatedIcon.icon),
+        category: dropDownValue,
+      );
       habitBox.add(myHabit);
       habitListLenght = habitBox.length;
+      openCategory("created");
     });
-    dropDownValue = 'Any time';
     createcontroller.clear();
     updatedIcon = startIcon;
+    dropDownValue = 'Any time';
     Navigator.pop(context);
   }
 
-  String checkCategory(index) {
-    if (habitBox.getAt(index) == "Morning") {
+  void openCategory(String key) {
+    if (dropDownValue == "Morning") {
+      setState(() {
+        if (morningHasHabits == false) {
+          morningHasHabits = true;
+        }
+        if (morningVisible == false) {
+          morningVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Morning') {
+              morningHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          morningHeight += 71;
+        }
+      });
+    } else if (dropDownValue == "Afternoon") {
+      setState(() {
+        if (afternoonHasHabits == false) {
+          afternoonHasHabits = true;
+        }
+        if (afternoonVisible == false) {
+          afternoonVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Afternoon') {
+              afternoonHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          afternoonHeight += 71;
+        }
+      });
+    } else if (dropDownValue == "Evening") {
+      setState(() {
+        if (eveningHasHabits == false) {
+          eveningHasHabits = true;
+        }
+        if (eveningVisible == false) {
+          eveningVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Evening') {
+              eveningHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          eveningHeight += 71;
+        }
+      });
+    } else if (dropDownValue == "Any time") {
+      setState(() {
+        if (anytimeHasHabits == false) {
+          anytimeHasHabits = true;
+        }
+        if (anyTimeVisible == false) {
+          anyTimeVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Any time') {
+              anyTimeHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          anyTimeHeight += 71;
+        }
+      });
+    }
+  }
+
+  void updateHeightDelete(index) {
+    setState(() {
+      if (habitBox.getAt(index)!.category == "Morning") {
+        morningHeight -= 71;
+      } else if (habitBox.getAt(index)!.category == "Afternoon") {
+        afternoonHeight -= 71;
+      } else if (habitBox.getAt(index)!.category == "Evening") {
+        eveningHeight -= 71;
+      } else if (habitBox.getAt(index)!.category == "Any time") {
+        anyTimeHeight -= 71;
+      }
+    });
+  }
+
+  String checkCategory(String category) {
+    if (category == "Morning") {
       return "Morning";
-    } else if (habitBox.getAt(index) == "Afternoon") {
+    } else if (category == "Afternoon") {
       return "Afternoon";
-    } else if (habitBox.getAt(index) == "Evening") {
+    } else if (category == "Evening") {
       return "Evening";
-    } else if (habitBox.getAt(index) == "Any time") {
+    } else if (category == "Any time") {
       return "Any time";
     }
     return "";
   }
 
-  void updateHeightDelete(index) {
-    setState(() {
-      if (checkCategory(index) == "Morning") {
-        morningHeight -= 71;
-      } else if (checkCategory(index) == "Afternoon") {
-        afternoonHeight -= 71;
-      } else if (checkCategory(index) == "Evening") {
-        eveningHeight -= 71;
-      } else if (checkCategory(index) == "Any time") {
-        anyTimeHeight -= 71;
+  void checkIfEmpty(String category) {
+    bool hasHabits = false;
+    for (int i = 0; i < habitListLenght; i++) {
+      if (habitBox.getAt(i)?.category == category) {
+        hasHabits = true;
+        break;
       }
-    });
+    }
+
+    if (hasHabits == false) {
+      setState(() {
+        if (category == "Morning") {
+          morningHasHabits = false;
+          morningVisible = false;
+        } else if (category == "Afternoon") {
+          afternoonHasHabits = false;
+          afternoonVisible = false;
+        } else if (category == "Evening") {
+          eveningHasHabits = false;
+          eveningVisible = false;
+        } else if (category == "Any time") {
+          anytimeHasHabits = false;
+          anyTimeVisible = false;
+        }
+      });
+    }
   }
+
+  late String category;
 
   Future<void> deleteTask(int index) async {
     await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 218, 211, 190),
+          backgroundColor: const Color.fromARGB(255, 218, 211, 190),
           content: SizedBox(
             height: 122,
             child: Column(
@@ -117,9 +231,12 @@ class HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         setState(() {
+                          category = checkCategory(
+                              habitBox.getAt(index)!.category.toString());
                           updateHeightDelete(index);
                           habitBox.deleteAt(index);
                           habitListLenght = habitBox.length;
+                          checkIfEmpty(category);
                         });
                         deleted = true;
                         editcontroller.text = "";
@@ -149,7 +266,55 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  late String editedFrom;
+  late String editedTo;
+
+  void editHeights() {
+    if (editedFrom == "Morning") {
+      setState(() {
+        morningHeight -= 71;
+      });
+    } else if (editedFrom == "Afternoon") {
+      setState(() {
+        afternoonHeight -= 71;
+      });
+    } else if (editedFrom == "Evening") {
+      setState(() {
+        eveningHeight -= 71;
+      });
+    } else if (editedFrom == "Any time") {
+      setState(() {
+        anyTimeHeight -= 71;
+      });
+    }
+
+    if (editedTo == "Morning") {
+      setState(() {
+        morningHeight += 71;
+        openCategory("no");
+      });
+    } else if (editedTo == "Afternoon") {
+      setState(() {
+        afternoonHeight += 71;
+        openCategory("no");
+      });
+    } else if (editedTo == "Evening") {
+      setState(() {
+        eveningHeight += 71;
+        openCategory("no");
+      });
+    } else if (editedTo == "Any time") {
+      setState(() {
+        anyTimeHeight += 71;
+        openCategory("no");
+      });
+    }
+  }
+
   void editTask(int index) {
+    editedFrom = habitBox.getAt(index)!.category;
+    editedTo = dropDownValue;
+    editHeights();
     setState(() {
       habitBox.putAt(
           index,
@@ -160,6 +325,8 @@ class HomePageState extends State<HomePage> {
             category: dropDownValue,
           ));
     });
+    checkIfEmpty(editedFrom);
+    dropDownValue = 'Any time';
     editcontroller.text = "";
     updatedIcon = startIcon;
     Navigator.pop(context);
@@ -348,22 +515,28 @@ class HomePageState extends State<HomePage> {
       body: ListView(
         controller: scrollController,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
+          //Morning
+
+          Visibility(
+            visible: morningHasHabits,
+            child: Padding(
               padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    morningVisible = !morningVisible;
-                    if (morningVisible == true) {
-                      for (int i = 0; i < habitListLenght; i++) {
-                        if (habitBox.getAt(i)?.category == 'Morning') {
-                          morningHeight += 71;
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      morningVisible = !morningVisible;
+
+                      if (morningVisible == true) {
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Morning') {
+                            morningHeight += 71;
+                          }
                         }
+                      } else {
+                        morningHeight = 0;
                       }
-                    } else {
-                      morningHeight = 0;
-                    }
+                    });
                   });
                 },
                 child: Container(
@@ -387,64 +560,73 @@ class HomePageState extends State<HomePage> {
                     )),
               ),
             ),
-            AnimatedContainer(
-              color: const Color.fromARGB(255, 218, 211, 190),
-              duration: const Duration(milliseconds: 500),
-              height: morningVisible ? morningHeight : 0,
-              curve: Curves.fastOutSlowIn,
-              child: Column(
-                children: [
-                  for (int i = 0; i < habitListLenght; i++)
-                    if (habitBox.getAt(i)?.category == 'Morning')
-                      HabitTile(
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: morningVisible ? morningHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Morning')
+                    AnimatedOpacity(
+                      opacity: morningVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
                         edittask: editTask,
                         deletetask: deleteTask,
                         checkTask: checkTask,
                         index: i,
                       ),
-                ],
-              ),
+                    ),
+              ],
             ),
-          ]),
+          ),
 
           // Afternoon
 
-          Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  afternoonVisible = !afternoonVisible;
-                  if (afternoonVisible == true) {
-                    for (int i = 0; i < habitListLenght; i++) {
-                      if (habitBox.getAt(i)?.category == 'Afternoon') {
-                        afternoonHeight += 71;
+          Visibility(
+            visible: afternoonHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      afternoonVisible = !afternoonVisible;
+                      if (afternoonVisible == true) {
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Afternoon') {
+                            afternoonHeight += 71;
+                          }
+                        }
+                      } else {
+                        afternoonHeight = 0;
                       }
-                    }
-                  } else {
-                    afternoonHeight = 0;
-                  }
-                });
-              },
-              child: Container(
-                  width: double.infinity,
-                  height: 80,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: const GridTile(
-                      footer: Center(
-                          child: Text(
-                        "Afternoon",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )),
-                      child: Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage(
-                              'assets/images/afternoon_picture.png')),
-                    ),
-                  )),
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Afternoon",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/afternoon_picture.png')),
+                      ),
+                    )),
+              ),
             ),
           ),
           AnimatedContainer(
@@ -456,11 +638,15 @@ class HomePageState extends State<HomePage> {
               children: [
                 for (int i = 0; i < habitListLenght; i++)
                   if (habitBox.getAt(i)?.category == 'Afternoon')
-                    HabitTile(
-                      edittask: editTask,
-                      deletetask: deleteTask,
-                      checkTask: checkTask,
-                      index: i,
+                    AnimatedOpacity(
+                      opacity: afternoonVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
                     ),
               ],
             ),
@@ -468,42 +654,47 @@ class HomePageState extends State<HomePage> {
 
           // Evening
 
-          Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  eveningVisible = !eveningVisible;
-                  if (eveningVisible == true) {
-                    for (int i = 0; i < habitListLenght; i++) {
-                      if (habitBox.getAt(i)?.category == 'Evening') {
-                        eveningHeight += 71;
+          Visibility(
+            visible: eveningHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      eveningVisible = !eveningVisible;
+                      if (eveningVisible == true) {
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Evening') {
+                            eveningHeight += 71;
+                          }
+                        }
+                      } else {
+                        eveningHeight = 0;
                       }
-                    }
-                  } else {
-                    eveningHeight = 0;
-                  }
-                });
-              },
-              child: Container(
-                  width: double.infinity,
-                  height: 80,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: const GridTile(
-                      footer: Center(
-                          child: Text(
-                        "Evening",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )),
-                      child: Image(
-                          fit: BoxFit.cover,
-                          image:
-                              AssetImage('assets/images/evening_picture.png')),
-                    ),
-                  )),
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Evening",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/evening_picture.png')),
+                      ),
+                    )),
+              ),
             ),
           ),
           AnimatedContainer(
@@ -515,11 +706,15 @@ class HomePageState extends State<HomePage> {
               children: [
                 for (int i = 0; i < habitListLenght; i++)
                   if (habitBox.getAt(i)?.category == 'Evening')
-                    HabitTile(
-                      edittask: editTask,
-                      deletetask: deleteTask,
-                      checkTask: checkTask,
-                      index: i,
+                    AnimatedOpacity(
+                      opacity: eveningVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
                     ),
               ],
             ),
@@ -527,44 +722,49 @@ class HomePageState extends State<HomePage> {
 
           // Any time
 
-          Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  anyTimeVisible = !anyTimeVisible;
-                  if (anyTimeVisible == true) {
-                    containerHeight = anyTimeHeight;
-                    for (int i = 0; i < habitListLenght; i++) {
-                      if (habitBox.getAt(i)?.category == 'Any time') {
-                        containerHeight += 71;
-                        anyTimeHeight += 71;
+          Visibility(
+            visible: anytimeHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      anyTimeVisible = !anyTimeVisible;
+                      if (anyTimeVisible == true) {
+                        containerHeight = anyTimeHeight;
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Any time') {
+                            containerHeight += 71;
+                            anyTimeHeight += 71;
+                          }
+                        }
+                      } else {
+                        anyTimeHeight = 0;
                       }
-                    }
-                  } else {
-                    anyTimeHeight = 0;
-                  }
-                });
-              },
-              child: Container(
-                  width: double.infinity,
-                  height: 80,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: const GridTile(
-                      footer: Center(
-                          child: Text(
-                        "Any Time",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )),
-                      child: Image(
-                          fit: BoxFit.cover,
-                          image:
-                              AssetImage('assets/images/anytime_picture.png')),
-                    ),
-                  )),
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Any Time",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/anytime_picture.png')),
+                      ),
+                    )),
+              ),
             ),
           ),
           AnimatedContainer(
@@ -576,11 +776,15 @@ class HomePageState extends State<HomePage> {
               children: [
                 for (int i = 0; i < habitListLenght; i++)
                   if (habitBox.getAt(i)?.category == 'Any time')
-                    HabitTile(
-                      edittask: editTask,
-                      deletetask: deleteTask,
-                      checkTask: checkTask,
-                      index: i,
+                    AnimatedOpacity(
+                      opacity: anyTimeVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
                     ),
               ],
             ),
