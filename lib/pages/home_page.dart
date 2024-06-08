@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
     if (isTapAllowed) {
       isTapAllowed = false;
       onTap();
-      Timer(const Duration(seconds: 1), () {
+      Timer(const Duration(milliseconds: 500), () {
         isTapAllowed = true;
       });
     }

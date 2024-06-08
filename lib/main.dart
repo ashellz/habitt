@@ -30,12 +30,16 @@ Future<void> main() async {
   for (int i = 0; i < habitBox.length; i++) {
     if (habitBox.getAt(i)?.category == 'Morning') {
       morningHasHabits = true;
+      morningVisible = true;
     } else if (habitBox.getAt(i)?.category == 'Afternoon') {
       afternoonHasHabits = true;
+      afternoonVisible = true;
     } else if (habitBox.getAt(i)?.category == 'Evening') {
       eveningHasHabits = true;
+      eveningVisible = true;
     } else if (habitBox.getAt(i)?.category == 'Any time') {
       anytimeHasHabits = true;
+      anyTimeVisible = true;
     }
   }
 

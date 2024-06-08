@@ -17,8 +17,10 @@ samples, guidance on mobile development, and a full API reference.Ž
 
 Things to fix:
 
-4. Hide categories with no habits
-5. Change the way animations work
+1. Change the way animations work
+2. Add a bed icon
+3. Add an egg icon
+4. When opening edit set dropdownvalue to category it's in, not any time
 
 Fixed things:
 
@@ -27,3 +29,5 @@ Fixed things:
 3. When a habit is edited to be in another category, update both categories heights (firstCategoryHeight -= 71, secondCategoryHeight += 71)
 4. Habit name going into the second row
 5. Apply 1 second delay to every category open and close
+6. Hide categories with no habits
+7. Change 1 second delay to half a second (need to update app)
