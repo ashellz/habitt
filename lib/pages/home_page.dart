@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/icons.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:habit_tracker/util/HabitTile.dart';
 import 'package:habit_tracker/util/getIcon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:async';
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
@@ -13,6 +15,18 @@ bool deleted = false;
 bool changed = false;
 final habitBox = Hive.box<HabitData>('habits');
 late HabitData myHabit;
+String dropDownValue = 'Any Time';
+final _formKey = GlobalKey<FormState>();
+bool morningVisible = false;
+double morningHeight = 0;
+bool afternoonVisible = false;
+double afternoonHeight = 0;
+bool eveningVisible = false;
+double eveningHeight = 0;
+bool anyTimeVisible = false;
+double anyTimeHeight = 0;
+double containerHeight = 0;
+final ScrollController scrollController = ScrollController();
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -24,26 +38,167 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   var habitListLenght = Hive.box<HabitData>('habits').length;
 
+  bool isTapAllowed = true;
+
+  void _onTapWithThrottle(VoidCallback onTap) {
+    if (isTapAllowed) {
+      isTapAllowed = false;
+      onTap();
+      Timer(const Duration(seconds: 1), () {
+        isTapAllowed = true;
+      });
+    }
+  }
+
   void createNewTask() {
     setState(() {
       myHabit = HabitData(
-          name: createcontroller.text,
-          completed: false,
-          icon: getIconString(updatedIcon.icon));
+        name: createcontroller.text,
+        completed: false,
+        icon: getIconString(updatedIcon.icon),
+        category: dropDownValue,
+      );
       habitBox.add(myHabit);
       habitListLenght = habitBox.length;
+      openCategory("created");
     });
     createcontroller.clear();
     updatedIcon = startIcon;
+    dropDownValue = 'Any time';
     Navigator.pop(context);
   }
+
+  void openCategory(String key) {
+    if (dropDownValue == "Morning") {
+      setState(() {
+        if (morningHasHabits == false) {
+          morningHasHabits = true;
+        }
+        if (morningVisible == false) {
+          morningVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Morning') {
+              morningHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          morningHeight += 71;
+        }
+      });
+    } else if (dropDownValue == "Afternoon") {
+      setState(() {
+        if (afternoonHasHabits == false) {
+          afternoonHasHabits = true;
+        }
+        if (afternoonVisible == false) {
+          afternoonVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Afternoon') {
+              afternoonHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          afternoonHeight += 71;
+        }
+      });
+    } else if (dropDownValue == "Evening") {
+      setState(() {
+        if (eveningHasHabits == false) {
+          eveningHasHabits = true;
+        }
+        if (eveningVisible == false) {
+          eveningVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Evening') {
+              eveningHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          eveningHeight += 71;
+        }
+      });
+    } else if (dropDownValue == "Any time") {
+      setState(() {
+        if (anytimeHasHabits == false) {
+          anytimeHasHabits = true;
+        }
+        if (anyTimeVisible == false) {
+          anyTimeVisible = true;
+          for (int i = 0; i < habitListLenght; i++) {
+            if (habitBox.getAt(i)?.category == 'Any time') {
+              anyTimeHeight += 71;
+            }
+          }
+        } else if (key == "created") {
+          anyTimeHeight += 71;
+        }
+      });
+    }
+  }
+
+  void updateHeightDelete(index) {
+    setState(() {
+      if (habitBox.getAt(index)!.category == "Morning") {
+        morningHeight -= 71;
+      } else if (habitBox.getAt(index)!.category == "Afternoon") {
+        afternoonHeight -= 71;
+      } else if (habitBox.getAt(index)!.category == "Evening") {
+        eveningHeight -= 71;
+      } else if (habitBox.getAt(index)!.category == "Any time") {
+        anyTimeHeight -= 71;
+      }
+    });
+  }
+
+  String checkCategory(String category) {
+    if (category == "Morning") {
+      return "Morning";
+    } else if (category == "Afternoon") {
+      return "Afternoon";
+    } else if (category == "Evening") {
+      return "Evening";
+    } else if (category == "Any time") {
+      return "Any time";
+    }
+    return "";
+  }
+
+  void checkIfEmpty(String category) {
+    bool hasHabits = false;
+    for (int i = 0; i < habitListLenght; i++) {
+      if (habitBox.getAt(i)?.category == category) {
+        hasHabits = true;
+        break;
+      }
+    }
+
+    if (hasHabits == false) {
+      setState(() {
+        if (category == "Morning") {
+          morningHasHabits = false;
+          morningVisible = false;
+        } else if (category == "Afternoon") {
+          afternoonHasHabits = false;
+          afternoonVisible = false;
+        } else if (category == "Evening") {
+          eveningHasHabits = false;
+          eveningVisible = false;
+        } else if (category == "Any time") {
+          anytimeHasHabits = false;
+          anyTimeVisible = false;
+        }
+      });
+    }
+  }
+
+  late String category;
 
   Future<void> deleteTask(int index) async {
     await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 218, 211, 190),
+          backgroundColor: const Color.fromARGB(255, 218, 211, 190),
           content: SizedBox(
             height: 122,
             child: Column(
@@ -76,10 +231,13 @@ class HomePageState extends State<HomePage> {
                       ),
                       onPressed: () {
                         setState(() {
+                          category = checkCategory(
+                              habitBox.getAt(index)!.category.toString());
+                          updateHeightDelete(index);
                           habitBox.deleteAt(index);
                           habitListLenght = habitBox.length;
+                          checkIfEmpty(category);
                         });
-
                         deleted = true;
                         editcontroller.text = "";
                         Navigator.of(context).pop();
@@ -108,7 +266,55 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  late String editedFrom;
+  late String editedTo;
+
+  void editHeights() {
+    if (editedFrom == "Morning") {
+      setState(() {
+        morningHeight -= 71;
+      });
+    } else if (editedFrom == "Afternoon") {
+      setState(() {
+        afternoonHeight -= 71;
+      });
+    } else if (editedFrom == "Evening") {
+      setState(() {
+        eveningHeight -= 71;
+      });
+    } else if (editedFrom == "Any time") {
+      setState(() {
+        anyTimeHeight -= 71;
+      });
+    }
+
+    if (editedTo == "Morning") {
+      setState(() {
+        morningHeight += 71;
+        openCategory("no");
+      });
+    } else if (editedTo == "Afternoon") {
+      setState(() {
+        afternoonHeight += 71;
+        openCategory("no");
+      });
+    } else if (editedTo == "Evening") {
+      setState(() {
+        eveningHeight += 71;
+        openCategory("no");
+      });
+    } else if (editedTo == "Any time") {
+      setState(() {
+        anyTimeHeight += 71;
+        openCategory("no");
+      });
+    }
+  }
+
   void editTask(int index) {
+    editedFrom = habitBox.getAt(index)!.category;
+    editedTo = dropDownValue;
+    editHeights();
     setState(() {
       habitBox.putAt(
           index,
@@ -116,8 +322,11 @@ class HomePageState extends State<HomePage> {
             name: editcontroller.text,
             completed: habitBox.getAt(index)?.completed ?? false,
             icon: getIconString(updatedIcon.icon),
+            category: dropDownValue,
           ));
     });
+    checkIfEmpty(editedFrom);
+    dropDownValue = 'Any time';
     editcontroller.text = "";
     updatedIcon = startIcon;
     Navigator.pop(context);
@@ -129,18 +338,25 @@ class HomePageState extends State<HomePage> {
       final existingHabit = habitBox.getAt(index);
 
       if (existingHabit != null) {
-        // Toggle the completed status
         final updatedHabit = HabitData(
           name: existingHabit.name,
-          completed: !existingHabit.completed, // Toggle the value
+          completed: !existingHabit.completed,
           icon: existingHabit.icon,
+          category: existingHabit.category,
         );
 
-        // Update the habit in the box
         habitBox.putAt(index, updatedHabit);
       }
     });
   }
+
+  String? _validateText(String? value) {
+    if (value?.isEmpty ?? true) {
+      return 'Please enter some text';
+    }
+    return null;
+  }
+  // THE SCAFFOLD STARTS HERE, ALL ABOVE ARE FUNCTIONS AND DECLARATIONS
 
   @override
   Widget build(BuildContext context) {
@@ -151,315 +367,445 @@ class HomePageState extends State<HomePage> {
         centerTitle: true,
         toolbarHeight: 80.0,
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-      ),
-      body: ListView.builder(
-          itemCount: habitListLenght,
-          itemBuilder: (context, index) => HabitTile(
-              edittask: editTask,
-              deletetask: deleteTask,
-              checkTask: checkTask,
-              index: index)),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-        onPressed: () => showModalBottomSheet(
-          enableDrag: true,
-          context: context,
-          backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-          builder: (BuildContext context) {
-            return StatefulBuilder(
-              builder: (BuildContext context, StateSetter mystate) {
-                return SizedBox(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 20.0,
-                          left: 25.0,
-                          bottom: 10.0,
-                        ),
-                        child: Text(
-                          "New Habit",
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: TextField(
-                          controller: createcontroller,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const IconsPage(),
-                                  ),
-                                ).then((value) => mystate(() {
-                                      updatedIcon = theIcon;
-                                    }));
-                              },
-                              icon: updatedIcon,
-                            ),
-                            labelStyle: const TextStyle(fontSize: 18.0),
-                            labelText: "Habit Name",
-                            border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              right: 20.0,
-                              bottom: 20.0,
-                            ),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                createNewTask();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 37, 67, 54),
-                                shape: const StadiumBorder(),
-                                minimumSize:
-                                    const Size(120, 50), // Increase button size
-                              ),
-                              child: const Text(
-                                "Add",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ).whenComplete(() {
-          createcontroller.clear();
-          updatedIcon = startIcon;
-        }),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
-}
-
-class HabitTile extends StatelessWidget {
-  const HabitTile({
-    super.key,
-    required this.edittask,
-    required this.deletetask,
-    required this.index,
-    required this.checkTask,
-  });
-
-  final int index;
-  final Future<void> Function(int index) deletetask;
-  final void Function(int index) edittask;
-  final void Function(int index) checkTask;
-
-  void popmenu(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    IconData displayIcon = getIcon(index);
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-        Slidable(
-          endActionPane: ActionPane(
-            extentRatio: 0.30,
-            motion: const ScrollMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) => checkTask(index),
-                backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-                foregroundColor: Colors.white,
-                label: habitBox.getAt(index)!.completed ? 'Undo' : 'Done',
-                borderRadius: BorderRadius.circular(15),
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-          child: GestureDetector(
-            onTap: () => showModalBottomSheet(
+        actions: [
+          IconButton(
+            iconSize: 30,
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: () => showModalBottomSheet(
               enableDrag: true,
               context: context,
               backgroundColor: const Color.fromARGB(255, 218, 211, 190),
               builder: (BuildContext context) {
                 return StatefulBuilder(
                   builder: (BuildContext context, StateSetter mystate) {
-                    if (!changed) {
-                      updatedIcon = Icon(getIcon(index));
-                    }
-                    if (editcontroller.text.isEmpty) {
-                      editcontroller.text = habitBox.getAt(index)!.name;
-                    }
                     return SizedBox(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              top: 20.0,
-                              left: 25.0,
-                              bottom: 10.0,
-                            ),
-                            child: Text(
-                              "Edit Habit",
-                              style: TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                top: 20.0,
+                                left: 25.0,
+                                bottom: 10.0,
+                              ),
+                              child: Text(
+                                "New Habit",
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: TextField(
-                              controller: editcontroller,
-                              decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const IconsPage(),
-                                      ),
-                                    ).then((value) => mystate(() {
-                                          updatedIcon = theIcon;
-                                          changed = true;
-                                        }));
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: TextFormField(
+                                validator: _validateText,
+                                controller: createcontroller,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const IconsPage(),
+                                        ),
+                                      ).then((value) => mystate(() {
+                                            updatedIcon = theIcon;
+                                          }));
+                                    },
+                                    icon: updatedIcon,
+                                  ),
+                                  labelStyle: const TextStyle(fontSize: 16.0),
+                                  labelText: "Habit Name",
+                                  border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15.0)),
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                  filled: true,
+                                  fillColor: const Color.fromARGB(255, 183, 181,
+                                      151), // Added background color
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButtonFormField(
+                                  dropdownColor:
+                                      const Color.fromARGB(255, 218, 211, 190),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color.fromARGB(
+                                        255, 218, 211, 190),
+                                  ),
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.black,
+                                    fontSize: 16.0,
+                                  ),
+                                  hint: const Text("Any Time"),
+                                  items: dropdownItems,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropDownValue = newValue!;
+                                    });
                                   },
-                                  icon: updatedIcon,
-                                ),
-                                labelStyle: const TextStyle(fontSize: 18.0),
-                                border: const OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15.0)),
-                                  borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
                             ),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 20, right: 20, left: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            const Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    await deletetask(index);
-                                    if (deleted) {
-                                      Navigator.pop(context);
-                                      deleted = false;
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 152, 26, 51),
-                                    shape: const StadiumBorder(),
-                                    minimumSize: const Size(
-                                        120, 50), // Increase button size
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 20.0,
+                                    bottom: 20.0,
                                   ),
-                                  child: const Text(
-                                    "Delete",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    edittask(index);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 37, 67, 54),
-                                    shape: const StadiumBorder(),
-                                    minimumSize: const Size(
-                                        120, 50), // Increase button size
-                                  ),
-                                  child: const Text(
-                                    "Save",
-                                    style: TextStyle(color: Colors.white),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        createNewTask();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 37, 67, 54),
+                                      shape: const StadiumBorder(),
+                                      minimumSize: const Size(
+                                          120, 50), // Increase button size
+                                    ),
+                                    child: const Text(
+                                      "Add",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
                 );
               },
             ).whenComplete(() {
-              editcontroller.clear();
-              changed = false;
+              createcontroller.clear();
               updatedIcon = startIcon;
             }),
-            child: ListTile(
-              contentPadding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                top: 5.0,
-              ),
-              leading: Icon(
-                displayIcon,
-                color: habitBox.getAt(index)!.completed
-                    ? Colors.grey.shade600
-                    : Colors.grey.shade800,
-              ),
-              title: Text(
-                habitBox.getAt(index)!.name,
-                style: TextStyle(
-                    color: habitBox.getAt(index)!.completed
-                        ? Colors.grey.shade600
-                        : Colors.black,
-                    decoration: habitBox.getAt(index)!.completed
-                        ? TextDecoration.lineThrough
-                        : null),
-              ),
-              trailing: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: habitBox.getAt(index)!.completed
-                      ? const Color.fromARGB(255, 37, 67, 54)
-                      : const Color.fromARGB(255, 183, 181, 151),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Icon(
-                    habitBox.getAt(index)!.completed
-                        ? Icons.check
-                        : Icons.close,
-                    color: habitBox.getAt(index)!.completed
-                        ? Colors.white
-                        : Colors.grey.shade800),
+          ),
+        ],
+      ),
+      body: ListView(
+        controller: scrollController,
+        children: [
+          //Morning
+
+          Visibility(
+            visible: morningHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      morningVisible = !morningVisible;
+
+                      if (morningVisible == true) {
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Morning') {
+                            morningHeight += 71;
+                          }
+                        }
+                      } else {
+                        morningHeight = 0;
+                      }
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Morning",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/morning_picture.png')),
+                      ),
+                    )),
               ),
             ),
           ),
-        ),
-      ],
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: morningVisible ? morningHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Morning')
+                    AnimatedOpacity(
+                      opacity: morningVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
+                    ),
+              ],
+            ),
+          ),
+
+          // Afternoon
+
+          Visibility(
+            visible: afternoonHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      afternoonVisible = !afternoonVisible;
+                      if (afternoonVisible == true) {
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Afternoon') {
+                            afternoonHeight += 71;
+                          }
+                        }
+                      } else {
+                        afternoonHeight = 0;
+                      }
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Afternoon",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/afternoon_picture.png')),
+                      ),
+                    )),
+              ),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: afternoonVisible ? afternoonHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Afternoon')
+                    AnimatedOpacity(
+                      opacity: afternoonVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
+                    ),
+              ],
+            ),
+          ),
+
+          // Evening
+
+          Visibility(
+            visible: eveningHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      eveningVisible = !eveningVisible;
+                      if (eveningVisible == true) {
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Evening') {
+                            eveningHeight += 71;
+                          }
+                        }
+                      } else {
+                        eveningHeight = 0;
+                      }
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Evening",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/evening_picture.png')),
+                      ),
+                    )),
+              ),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: eveningVisible ? eveningHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Evening')
+                    AnimatedOpacity(
+                      opacity: eveningVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
+                    ),
+              ],
+            ),
+          ),
+
+          // Any time
+
+          Visibility(
+            visible: anytimeHasHabits,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onTapWithThrottle(() {
+                    setState(() {
+                      anyTimeVisible = !anyTimeVisible;
+                      if (anyTimeVisible == true) {
+                        containerHeight = anyTimeHeight;
+                        for (int i = 0; i < habitListLenght; i++) {
+                          if (habitBox.getAt(i)?.category == 'Any time') {
+                            containerHeight += 71;
+                            anyTimeHeight += 71;
+                          }
+                        }
+                      } else {
+                        anyTimeHeight = 0;
+                      }
+                    });
+                  });
+                },
+                child: Container(
+                    width: double.infinity,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: const GridTile(
+                        footer: Center(
+                            child: Text(
+                          "Any Time",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                                'assets/images/anytime_picture.png')),
+                      ),
+                    )),
+              ),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 500),
+            height: anyTimeVisible ? anyTimeHeight : 0,
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                for (int i = 0; i < habitListLenght; i++)
+                  if (habitBox.getAt(i)?.category == 'Any time')
+                    AnimatedOpacity(
+                      opacity: anyTimeVisible ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: HabitTile(
+                        edittask: editTask,
+                        deletetask: deleteTask,
+                        checkTask: checkTask,
+                        index: i,
+                      ),
+                    ),
+              ],
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: containerHeight,
+            color: const Color.fromARGB(255, 218, 211, 190),
+          )
+        ],
+      ),
     );
   }
+}
+
+List<DropdownMenuItem<String>> get dropdownItems {
+  List<DropdownMenuItem<String>> menuItems = [
+    const DropdownMenuItem(value: "Morning", child: Text("Morning")),
+    const DropdownMenuItem(value: "Afternoon", child: Text("Afternoon")),
+    const DropdownMenuItem(value: "Evening", child: Text("Evening")),
+    const DropdownMenuItem(value: "Any time", child: Text("Any Time")),
+  ];
+  return menuItems;
 }

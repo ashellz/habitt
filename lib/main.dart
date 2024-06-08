@@ -3,6 +3,11 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 
+bool morningHasHabits = false;
+bool afternoonHasHabits = false;
+bool eveningHasHabits = false;
+bool anytimeHasHabits = false;
+
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(HabitDataAdapter());
@@ -11,9 +16,27 @@ Future<void> main() async {
 
   if (Hive.box<HabitData>('habits').isEmpty) {
     await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Add a new habit", completed: false, icon: "Icons.add"));
+        name: "Add a new habit",
+        completed: false,
+        icon: "Icons.add",
+        category: "Any time"));
     await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Open the app", completed: true, icon: "Icons.door_front_door"));
+        name: "Open the app",
+        completed: true,
+        icon: "Icons.door_front_door",
+        category: "Any time"));
+  }
+
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == 'Morning') {
+      morningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+      afternoonHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Evening') {
+      eveningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Any time') {
+      anytimeHasHabits = true;
+    }
   }
 
   runApp(const MyApp());

@@ -36,7 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.6
   provider: ^6.0.0
   flutter_slidable: ^3.1.0
-  flutter_svg: ^2.0.10+1
   icons_flutter: ^0.0.4
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -66,8 +65,11 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/morning_picture.png
+    - assets/images/afternoon_picture.png
+    - assets/images/evening_picture.png
+    - assets/images/anytime_picture.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

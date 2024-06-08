@@ -72,7 +72,16 @@ class IconsPage extends StatelessWidget {
               IconWidget(icon: Icon(Icons.coffee_rounded)),
               IconWidget(icon: Icon(Icons.science_rounded)),
               IconWidget(icon: Icon(Icons.door_front_door_rounded)),
-              IconWidget(icon: Icon(Icons.videogame_asset_rounded)),
+              IconWidget(icon: Icon(Icons.sports_esports_rounded)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconWidget(icon: Icon(Icons.sports_football_rounded)),
+              IconWidget(icon: Icon(MaterialIcons.fitness_center)),
+              IconWidget(icon: Icon(MaterialIcons.directions_walk)),
+              IconWidget(icon: Icon(Icons.water_drop_rounded)),
             ],
           ),
         ],

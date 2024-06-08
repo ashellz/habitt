@@ -20,19 +20,22 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       name: fields[0] as String,
       completed: fields[1] as bool,
       icon: fields[2] as String,
+      category: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.completed)
       ..writeByte(2)
-      ..write(obj.icon);
+      ..write(obj.icon)
+      ..writeByte(3)
+      ..write(obj.category);
   }
 
   @override
