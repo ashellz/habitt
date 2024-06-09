@@ -35,8 +35,8 @@ class HabitTile extends StatelessWidget {
   }
 
   String truncatedText(index) {
-    if (habitBox.getAt(index)!.name.length > 18) {
-      return '${habitBox.getAt(index)!.name.substring(0, 18)}...';
+    if (habitBox.getAt(index)!.name.length > 22) {
+      return '${habitBox.getAt(index)!.name.substring(0, 22)}...';
     }
     return habitBox.getAt(index)!.name;
   }
@@ -68,6 +68,7 @@ class HabitTile extends StatelessWidget {
               context: context,
               backgroundColor: const Color.fromARGB(255, 218, 211, 190),
               builder: (BuildContext context) {
+                dropDownValue = habitBox.getAt(index)!.category;
                 return StatefulBuilder(
                   builder: (BuildContext context, StateSetter mystate) {
                     if (!changed) {

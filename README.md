@@ -19,8 +19,6 @@ Things to fix:
 
 1. Change the way animations work
 
-2. When opening edit set dropdownvalue to category it's in, not any time
-
 Fixed things:
 
 1. When a new habit is created, open the category it's created in
@@ -36,3 +34,5 @@ Fixed things:
 11. Add an egg icon
 12. Add a shower icon
 13. Add a better book icon
+14. Show a banner after a task is created, edited or deleted
+15. When opening edit set dropdownvalue to category it's in, not any time

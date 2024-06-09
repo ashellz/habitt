@@ -11,22 +11,21 @@ Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
 final createcontroller = TextEditingController();
 final editcontroller = TextEditingController();
-bool deleted = false;
-bool changed = false;
 final habitBox = Hive.box<HabitData>('habits');
 late HabitData myHabit;
 String dropDownValue = 'Any Time';
 final _formKey = GlobalKey<FormState>();
-bool morningVisible = false;
-double morningHeight = 0;
-bool afternoonVisible = false;
-double afternoonHeight = 0;
-bool eveningVisible = false;
-double eveningHeight = 0;
-bool anyTimeVisible = false;
-double anyTimeHeight = 0;
-double containerHeight = 0;
-final ScrollController scrollController = ScrollController();
+bool eveningVisible = false,
+    anyTimeVisible = false,
+    afternoonVisible = false,
+    morningVisible = false,
+    changed = false,
+    deleted = false;
+double anyTimeHeight = 0,
+    containerHeight = 0,
+    eveningHeight = 0,
+    afternoonHeight = 0,
+    morningHeight = 0;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, Key? homePageKey});
@@ -36,6 +35,81 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  bool popupOpacity = true;
+  OverlayEntry? _overlayEntry;
+
+  void showPopup(BuildContext context, String text) {
+    if (_overlayEntry != null) return;
+
+    _overlayEntry = _createOverlayEntry(text);
+    Overlay.of(context).insert(_overlayEntry!);
+
+    // Initially set popupOpacity to false so it will animate into view
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        popupOpacity = false;
+        _overlayEntry?.markNeedsBuild();
+      });
+    });
+    // Delay to let the popup stay visible for a while
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      setState(() {
+        popupOpacity = true;
+        _overlayEntry?.markNeedsBuild();
+      });
+
+      // Delay to allow the animation to complete before removing the popup
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+      });
+    });
+  }
+
+  OverlayEntry _createOverlayEntry(String text) {
+    return OverlayEntry(
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return AnimatedPositioned(
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.fastOutSlowIn,
+            left: MediaQuery.of(context).size.width / 2 - 80,
+            top: popupOpacity ? -80 : MediaQuery.of(context).padding.top + 10,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                height: 50,
+                width: 160,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 183, 181, 151),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   var habitListLenght = Hive.box<HabitData>('habits').length;
 
   bool isTapAllowed = true;
@@ -66,6 +140,7 @@ class HomePageState extends State<HomePage> {
     updatedIcon = startIcon;
     dropDownValue = 'Any time';
     Navigator.pop(context);
+    showPopup(context, "Habit added!");
   }
 
   void openCategory(String key) {
@@ -241,6 +316,7 @@ class HomePageState extends State<HomePage> {
                         deleted = true;
                         editcontroller.text = "";
                         Navigator.of(context).pop();
+                        showPopup(context, "Habit deleted!");
                       },
                     ),
                     const SizedBox(
@@ -330,6 +406,7 @@ class HomePageState extends State<HomePage> {
     editcontroller.text = "";
     updatedIcon = startIcon;
     Navigator.pop(context);
+    showPopup(context, "Habit edited!");
   }
 
   void checkTask(int index) {
@@ -513,7 +590,6 @@ class HomePageState extends State<HomePage> {
         ],
       ),
       body: ListView(
-        controller: scrollController,
         children: [
           //Morning
 
