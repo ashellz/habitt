@@ -20,12 +20,14 @@ Future<void> main() async {
         name: "Add a new habit",
         completed: false,
         icon: "Icons.add",
-        category: "Any time"));
+        category: "Any time",
+        streak: 0));
     await Hive.box<HabitData>('habits').add(HabitData(
         name: "Open the app",
         completed: true,
         icon: "Icons.door_front_door",
-        category: "Any time"));
+        category: "Any time",
+        streak: 0));
   }
 
   for (int i = 0; i < habitBox.length; i++) {

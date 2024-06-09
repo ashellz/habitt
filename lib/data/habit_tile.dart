@@ -9,7 +9,7 @@ class HabitData {
       required this.completed,
       required this.icon,
       required this.category,
-      this.streak = 0});
+      required this.streak});
   @HiveField(0)
   String name;
 

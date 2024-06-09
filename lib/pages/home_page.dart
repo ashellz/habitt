@@ -192,6 +192,7 @@ class HomePageState extends State<HomePage> {
         completed: false,
         icon: getIconString(updatedIcon.icon),
         category: dropDownValue,
+        streak: 0,
       );
       habitBox.add(myHabit);
       habitListLenght = habitBox.length;
@@ -214,11 +215,11 @@ class HomePageState extends State<HomePage> {
           morningVisible = true;
           for (int i = 0; i < habitListLenght; i++) {
             if (habitBox.getAt(i)?.category == 'Morning') {
-              morningHeight += 71;
+              morningHeight += 82;
             }
           }
         } else if (key == "created") {
-          morningHeight += 71;
+          morningHeight += 82;
         }
       });
     } else if (dropDownValue == "Afternoon") {
@@ -230,11 +231,11 @@ class HomePageState extends State<HomePage> {
           afternoonVisible = true;
           for (int i = 0; i < habitListLenght; i++) {
             if (habitBox.getAt(i)?.category == 'Afternoon') {
-              afternoonHeight += 71;
+              afternoonHeight += 82;
             }
           }
         } else if (key == "created") {
-          afternoonHeight += 71;
+          afternoonHeight += 82;
         }
       });
     } else if (dropDownValue == "Evening") {
@@ -246,11 +247,11 @@ class HomePageState extends State<HomePage> {
           eveningVisible = true;
           for (int i = 0; i < habitListLenght; i++) {
             if (habitBox.getAt(i)?.category == 'Evening') {
-              eveningHeight += 71;
+              eveningHeight += 82;
             }
           }
         } else if (key == "created") {
-          eveningHeight += 71;
+          eveningHeight += 82;
         }
       });
     } else if (dropDownValue == "Any time") {
@@ -262,11 +263,11 @@ class HomePageState extends State<HomePage> {
           anyTimeVisible = true;
           for (int i = 0; i < habitListLenght; i++) {
             if (habitBox.getAt(i)?.category == 'Any time') {
-              anyTimeHeight += 71;
+              anyTimeHeight += 82;
             }
           }
         } else if (key == "created") {
-          anyTimeHeight += 71;
+          anyTimeHeight += 82;
         }
       });
     }
@@ -275,13 +276,13 @@ class HomePageState extends State<HomePage> {
   void updateHeightDelete(index) {
     setState(() {
       if (habitBox.getAt(index)!.category == "Morning") {
-        morningHeight -= 71;
+        morningHeight -= 82;
       } else if (habitBox.getAt(index)!.category == "Afternoon") {
-        afternoonHeight -= 71;
+        afternoonHeight -= 82;
       } else if (habitBox.getAt(index)!.category == "Evening") {
-        eveningHeight -= 71;
+        eveningHeight -= 82;
       } else if (habitBox.getAt(index)!.category == "Any time") {
-        anyTimeHeight -= 71;
+        anyTimeHeight -= 82;
       }
     });
   }
@@ -409,40 +410,40 @@ class HomePageState extends State<HomePage> {
   void editHeights() {
     if (editedFrom == "Morning") {
       setState(() {
-        morningHeight -= 71;
+        morningHeight -= 82;
       });
     } else if (editedFrom == "Afternoon") {
       setState(() {
-        afternoonHeight -= 71;
+        afternoonHeight -= 82;
       });
     } else if (editedFrom == "Evening") {
       setState(() {
-        eveningHeight -= 71;
+        eveningHeight -= 82;
       });
     } else if (editedFrom == "Any time") {
       setState(() {
-        anyTimeHeight -= 71;
+        anyTimeHeight -= 82;
       });
     }
 
     if (editedTo == "Morning") {
       setState(() {
-        morningHeight += 71;
+        morningHeight += 82;
         openCategory("no");
       });
     } else if (editedTo == "Afternoon") {
       setState(() {
-        afternoonHeight += 71;
+        afternoonHeight += 82;
         openCategory("no");
       });
     } else if (editedTo == "Evening") {
       setState(() {
-        eveningHeight += 71;
+        eveningHeight += 82;
         openCategory("no");
       });
     } else if (editedTo == "Any time") {
       setState(() {
-        anyTimeHeight += 71;
+        anyTimeHeight += 82;
         openCategory("no");
       });
     }
@@ -460,6 +461,7 @@ class HomePageState extends State<HomePage> {
             completed: habitBox.getAt(index)?.completed ?? false,
             icon: getIconString(updatedIcon.icon),
             category: dropDownValue,
+            streak: habitBox.getAt(index)?.streak ?? 0,
           ));
     });
     checkIfEmpty(editedFrom);
@@ -481,6 +483,7 @@ class HomePageState extends State<HomePage> {
           completed: !existingHabit.completed,
           icon: existingHabit.icon,
           category: existingHabit.category,
+          streak: existingHabit.streak,
         );
 
         habitBox.putAt(index, updatedHabit);
@@ -500,6 +503,11 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        setState(() {
+          habitBox.getAt(0)!.streak += 1;
+        });
+      }),
       appBar: AppBar(
         title: const Text("HABIT TRACKER"),
         centerTitle: true,
@@ -667,7 +675,7 @@ class HomePageState extends State<HomePage> {
                       if (morningVisible == true) {
                         for (int i = 0; i < habitListLenght; i++) {
                           if (habitBox.getAt(i)?.category == 'Morning') {
-                            morningHeight += 71;
+                            morningHeight += 82;
                           }
                         }
                       } else {
@@ -735,7 +743,7 @@ class HomePageState extends State<HomePage> {
                       if (afternoonVisible == true) {
                         for (int i = 0; i < habitListLenght; i++) {
                           if (habitBox.getAt(i)?.category == 'Afternoon') {
-                            afternoonHeight += 71;
+                            afternoonHeight += 82;
                           }
                         }
                       } else {
@@ -803,7 +811,7 @@ class HomePageState extends State<HomePage> {
                       if (eveningVisible == true) {
                         for (int i = 0; i < habitListLenght; i++) {
                           if (habitBox.getAt(i)?.category == 'Evening') {
-                            eveningHeight += 71;
+                            eveningHeight += 82;
                           }
                         }
                       } else {
@@ -872,8 +880,8 @@ class HomePageState extends State<HomePage> {
                         containerHeight = anyTimeHeight;
                         for (int i = 0; i < habitListLenght; i++) {
                           if (habitBox.getAt(i)?.category == 'Any time') {
-                            containerHeight += 71;
-                            anyTimeHeight += 71;
+                            containerHeight += 82;
+                            anyTimeHeight += 82;
                           }
                         }
                       } else {

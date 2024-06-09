@@ -41,6 +41,23 @@ class HabitTile extends StatelessWidget {
     return habitBox.getAt(index)!.name;
   }
 
+  Widget streakWidget() {
+    if (habitBox.getAt(index)!.streak >= 2) {
+      if (habitBox.getAt(index)!.completed == true) {
+        return Text(
+          "${habitBox.getAt(index)!.streak} days streak",
+          style: const TextStyle(
+              color: Color.fromARGB(255, 37, 67, 54),
+              fontWeight: FontWeight.bold,
+              fontSize: 15),
+        );
+      } else {
+        return Text("${habitBox.getAt(index)!.streak} days streak");
+      }
+    }
+    return const SizedBox();
+  }
+
   @override
   Widget build(BuildContext context) {
     IconData displayIcon = getIcon(index);
@@ -236,10 +253,11 @@ class HabitTile extends StatelessWidget {
               updatedIcon = startIcon;
             }),
             child: ListTile(
+              minTileHeight: 65,
               contentPadding: const EdgeInsets.only(
                 left: 20.0,
                 right: 20.0,
-                top: 5.0,
+                top: 2.0,
               ),
               leading: Icon(
                 displayIcon,
@@ -247,15 +265,22 @@ class HabitTile extends StatelessWidget {
                     ? Colors.grey.shade600
                     : Colors.grey.shade800,
               ),
-              title: Text(
-                truncatedText(index),
-                style: TextStyle(
-                    color: habitBox.getAt(index)!.completed
-                        ? Colors.grey.shade600
-                        : Colors.black,
-                    decoration: habitBox.getAt(index)!.completed
-                        ? TextDecoration.lineThrough
-                        : null),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    truncatedText(index),
+                    style: TextStyle(
+                        color: habitBox.getAt(index)!.completed
+                            ? Colors.grey.shade600
+                            : Colors.black,
+                        decoration: habitBox.getAt(index)!.completed
+                            ? TextDecoration.lineThrough
+                            : null),
+                  ),
+                  streakWidget(),
+                ],
               ),
               trailing: Container(
                 height: 50,
