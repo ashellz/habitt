@@ -41,7 +41,7 @@ class IconsPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              IconWidget(icon: Icon(Icons.edit_calendar)),
+              IconWidget(icon: Icon(Icons.laptop_mac_rounded)),
               IconWidget(icon: Icon(Ionicons.md_shirt)),
               IconWidget(icon: Icon(Icons.directions_bike)),
               IconWidget(icon: Icon(Icons.directions_car)),

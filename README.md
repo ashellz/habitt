@@ -18,6 +18,7 @@ samples, guidance on mobile development, and a full API reference.Ž
 Things to fix:
 
 1. Change the way animations work
+2. Habit completion value changes every other day
 
 Fixed things:
 
@@ -36,3 +37,4 @@ Fixed things:
 13. Add a better book icon
 14. Show a banner after a task is created, edited or deleted
 15. When opening edit set dropdownvalue to category it's in, not any time
+16. Add a laptop icon
