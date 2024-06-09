@@ -19,6 +19,7 @@ Things to fix:
 
 1. Change the way animations work
 2. Make the streak number update right away when the habit is completed and undo if habit is undone
+3. Add notifications
 
 Fixed things:
 

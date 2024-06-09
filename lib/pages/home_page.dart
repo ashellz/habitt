@@ -503,11 +503,6 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        setState(() {
-          habitBox.getAt(0)!.streak += 1;
-        });
-      }),
       appBar: AppBar(
         title: const Text("HABIT TRACKER"),
         centerTitle: true,
