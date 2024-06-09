@@ -12,6 +12,7 @@ Icon updatedIcon = startIcon;
 final createcontroller = TextEditingController();
 final editcontroller = TextEditingController();
 final habitBox = Hive.box<HabitData>('habits');
+final metadataBox = Hive.box<DateTime>('metadata');
 late HabitData myHabit;
 String dropDownValue = 'Any Time';
 final _formKey = GlobalKey<FormState>();
@@ -37,6 +38,66 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   bool popupOpacity = true;
   OverlayEntry? _overlayEntry;
+
+  @override
+  void initState() {
+    super.initState();
+    updateLastOpenedDate();
+    scheduleMidnightTask();
+  }
+
+  void scheduleMidnightTask() {
+    Timer(
+      Duration(
+        hours: 24 - DateTime.now().hour,
+        minutes: 60 - DateTime.now().minute,
+        seconds: 60 - DateTime.now().second,
+      ),
+      () {
+        updateStreaks();
+        scheduleMidnightTask(); // Reschedule the task
+      },
+    );
+  }
+
+  void updateStreaks() {
+    var habits = habitBox.values;
+    for (var habit in habits) {
+      if (habit.completed) {
+        habit.streak += 1;
+      } else {
+        habit.streak = 0;
+      }
+      habit.completed = false;
+    }
+  }
+
+  void updateLastOpenedDate() async {
+    DateTime? lastOpened = metadataBox.get('lastOpenedDate');
+    DateTime now = DateTime.now();
+
+    if (lastOpened != null) {
+      int daysDifference = now.difference(lastOpened).inDays;
+
+      if (daysDifference > 0) {
+        resetOrUpdateStreaks(daysDifference);
+      }
+    }
+
+    metadataBox.put('lastOpenedDate', now);
+  }
+
+  void resetOrUpdateStreaks(int daysDifference) {
+    var habits = habitBox.values;
+    for (var habit in habits) {
+      if (habit.completed) {
+        habit.streak += 1;
+      } else {
+        habit.streak = 0;
+      }
+      habit.completed = false;
+    }
+  }
 
   void showPopup(BuildContext context, String text) {
     if (_overlayEntry != null) return;

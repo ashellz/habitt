@@ -84,19 +84,30 @@ class HabitTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                top: 20.0,
-                                left: 25.0,
-                                bottom: 10.0,
-                              ),
-                              child: Text(
-                                "Edit Habit",
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
+                            Row(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 20.0,
+                                    left: 25.0,
+                                    bottom: 10.0,
+                                  ),
+                                  child: Text(
+                                    "Habit Info",
+                                    style: TextStyle(
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20.0, right: 25.0),
+                                  child: Text(
+                                      "Streak ${habitBox.getAt(index)!.streak}"),
+                                ),
+                              ],
                             ),
                             Padding(
                               padding:

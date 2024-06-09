@@ -13,6 +13,7 @@ Future<void> main() async {
   Hive.registerAdapter(HabitDataAdapter());
 
   await Hive.openBox<HabitData>('habits');
+  await Hive.openBox<DateTime>('metadata');
 
   if (Hive.box<HabitData>('habits').isEmpty) {
     await Hive.box<HabitData>('habits').add(HabitData(

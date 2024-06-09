@@ -21,13 +21,14 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       completed: fields[1] as bool,
       icon: fields[2] as String,
       category: fields[3] as String,
+      streak: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(2)
       ..write(obj.icon)
       ..writeByte(3)
-      ..write(obj.category);
+      ..write(obj.category)
+      ..writeByte(4)
+      ..write(obj.streak);
   }
 
   @override
