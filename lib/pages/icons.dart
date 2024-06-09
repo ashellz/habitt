@@ -9,13 +9,12 @@ class IconsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 218, 211, 190),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      body: ListView(
+        children: const [
           Padding(
-            padding: EdgeInsets.only(left: 25, top: 35, bottom: 5),
+            padding: EdgeInsets.only(left: 25, top: 20, bottom: 5),
             child: Text(
               'Choose an icon',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -84,6 +83,16 @@ class IconsPage extends StatelessWidget {
               IconWidget(icon: Icon(Icons.water_drop_rounded)),
             ],
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconWidget(icon: Icon(Icons.egg_alt)),
+              IconWidget(icon: Icon(MaterialIcons.hotel)),
+              IconWidget(icon: Icon(FontAwesome.shower)),
+              IconWidget(icon: Icon(FontAwesome.book)),
+            ],
+          ),
+          SizedBox(height: 25),
         ],
       ),
     );

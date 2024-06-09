@@ -63,6 +63,14 @@ IconData getIcon(int index) {
       return MaterialIcons.directions_walk;
     case "Icons.water_drop_rounded":
       return Icons.water_drop_rounded;
+    case "Icons.egg_alt":
+      return Icons.egg_alt;
+    case "MaterialIcons.hotel":
+      return MaterialIcons.hotel;
+    case "FontAwesome.shower":
+      return FontAwesome.shower;
+    case "FontAwesome.book":
+      return FontAwesome.book;
     default:
       return Icons.book;
   }
@@ -124,6 +132,14 @@ String getIconString(IconData? icon) {
       return "MaterialIcons.directions_walk";
     case Icons.water_drop_rounded:
       return "Icons.water_drop_rounded";
+    case Icons.egg_alt:
+      return "Icons.egg_alt";
+    case MaterialIcons.hotel:
+      return "MaterialIcons.hotel";
+    case FontAwesome.shower:
+      return "FontAwesome.shower";
+    case FontAwesome.book:
+      return "FontAwesome.book";
     default:
       return "Icons.book";
   }

@@ -18,9 +18,8 @@ samples, guidance on mobile development, and a full API reference.Ž
 Things to fix:
 
 1. Change the way animations work
-2. Add a bed icon
-3. Add an egg icon
-4. When opening edit set dropdownvalue to category it's in, not any time
+
+2. When opening edit set dropdownvalue to category it's in, not any time
 
 Fixed things:
 
@@ -30,4 +29,10 @@ Fixed things:
 4. Habit name going into the second row
 5. Apply 1 second delay to every category open and close
 6. Hide categories with no habits
-7. Change 1 second delay to half a second (need to update app)
+7. Change 1 second delay to half a second
+8. Fix app freeze on start
+9. When app is opened, open all the visible categories
+10. Add a bed icon
+11. Add an egg icon
+12. Add a shower icon
+13. Add a better book icon

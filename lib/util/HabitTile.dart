@@ -36,7 +36,7 @@ class HabitTile extends StatelessWidget {
 
   String truncatedText(index) {
     if (habitBox.getAt(index)!.name.length > 18) {
-      return habitBox.getAt(index)!.name.substring(0, 18) + '...';
+      return '${habitBox.getAt(index)!.name.substring(0, 18)}...';
     }
     return habitBox.getAt(index)!.name;
   }

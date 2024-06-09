@@ -30,20 +30,53 @@ Future<void> main() async {
   for (int i = 0; i < habitBox.length; i++) {
     if (habitBox.getAt(i)?.category == 'Morning') {
       morningHasHabits = true;
-      morningVisible = true;
     } else if (habitBox.getAt(i)?.category == 'Afternoon') {
       afternoonHasHabits = true;
-      afternoonVisible = true;
     } else if (habitBox.getAt(i)?.category == 'Evening') {
       eveningHasHabits = true;
-      eveningVisible = true;
     } else if (habitBox.getAt(i)?.category == 'Any time') {
       anytimeHasHabits = true;
-      anyTimeVisible = true;
     }
   }
 
+  openCategory();
+
   runApp(const MyApp());
+}
+
+void openCategory() {
+  if (morningHasHabits == true) {
+    morningVisible = true;
+    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
+      if (habitBox.getAt(i)?.category == 'Morning') {
+        morningHeight += 71;
+      }
+    }
+  }
+  if (afternoonHasHabits == true) {
+    afternoonVisible = true;
+    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
+      if (habitBox.getAt(i)?.category == 'Afternoon') {
+        afternoonHeight += 71;
+      }
+    }
+  }
+  if (eveningHasHabits == true) {
+    eveningVisible = true;
+    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
+      if (habitBox.getAt(i)?.category == 'Evening') {
+        eveningHeight += 71;
+      }
+    }
+  }
+  if (anytimeHasHabits == true) {
+    anyTimeVisible = true;
+    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
+      if (habitBox.getAt(i)?.category == 'Any time') {
+        anyTimeHeight += 71;
+      }
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
