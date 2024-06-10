@@ -55,47 +55,50 @@ class HomePageState extends State<HomePage> {
       ),
       () {
         updateStreaks();
-        scheduleMidnightTask(); // Reschedule the task
+        scheduleMidnightTask();
       },
     );
   }
 
   void updateStreaks() {
-    var habits = habitBox.values;
-    for (var habit in habits) {
+    for (int i = 0; i < habitBox.length; i++) {
+      var habit = habitBox.getAt(i)!;
       if (habit.completed) {
         habit.streak += 1;
       } else {
         habit.streak = 0;
       }
       habit.completed = false;
+      habit.save();
     }
   }
 
   void updateLastOpenedDate() async {
     DateTime? lastOpened = metadataBox.get('lastOpenedDate');
     DateTime now = DateTime.now();
-
     if (lastOpened != null) {
       int daysDifference = now.difference(lastOpened).inDays;
-
       if (daysDifference > 0) {
         resetOrUpdateStreaks(daysDifference);
       }
     }
-
     metadataBox.put('lastOpenedDate', now);
   }
 
   void resetOrUpdateStreaks(int daysDifference) {
-    var habits = habitBox.values;
-    for (var habit in habits) {
-      if (habit.completed) {
-        habit.streak += 1;
+    for (int i = 0; i < habitListLenght; i++) {
+      var habit = habitBox.getAt(i)!;
+      if (daysDifference == 1) {
+        if (habit.completed) {
+          habit.streak += 1;
+        } else {
+          habit.streak = 0;
+        }
       } else {
         habit.streak = 0;
       }
       habit.completed = false;
+      habit.save();
     }
   }
 

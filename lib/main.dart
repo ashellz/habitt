@@ -52,7 +52,7 @@ void openCategory() {
     morningVisible = true;
     for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
       if (habitBox.getAt(i)?.category == 'Morning') {
-        morningHeight += 71;
+        morningHeight += 82;
       }
     }
   }
@@ -60,7 +60,7 @@ void openCategory() {
     afternoonVisible = true;
     for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
       if (habitBox.getAt(i)?.category == 'Afternoon') {
-        afternoonHeight += 71;
+        afternoonHeight += 82;
       }
     }
   }
@@ -68,7 +68,7 @@ void openCategory() {
     eveningVisible = true;
     for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
       if (habitBox.getAt(i)?.category == 'Evening') {
-        eveningHeight += 71;
+        eveningHeight += 82;
       }
     }
   }
@@ -76,7 +76,7 @@ void openCategory() {
     anyTimeVisible = true;
     for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
       if (habitBox.getAt(i)?.category == 'Any time') {
-        anyTimeHeight += 71;
+        anyTimeHeight += 82;
       }
     }
   }
