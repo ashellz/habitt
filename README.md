@@ -13,13 +13,14 @@ A few resources to get you started if this is your first Flutter project:
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.Ž
+samples, guidance on mobile development, and a full API reference.
 
 Things to fix:
 
 1. Change the way animations work
 2. Make the streak number update right away when the habit is completed and undo if habit is undone
 3. Add notifications
+4. Add settings page
 
 Fixed things:
 

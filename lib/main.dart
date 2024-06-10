@@ -14,6 +14,7 @@ Future<void> main() async {
 
   await Hive.openBox<HabitData>('habits');
   await Hive.openBox<DateTime>('metadata');
+  await Hive.openBox<int>('streak');
 
   if (Hive.box<HabitData>('habits').isEmpty) {
     await Hive.box<HabitData>('habits').add(HabitData(
@@ -95,6 +96,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.green,
         appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 22,
