@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/icons.dart';
@@ -16,6 +15,7 @@ final editcontroller = TextEditingController();
 final habitBox = Hive.box<HabitData>('habits');
 final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
+final notificationsBox = Hive.box<bool>('notifications');
 late HabitData myHabit;
 String dropDownValue = 'Any Time';
 final _formKey = GlobalKey<FormState>();
