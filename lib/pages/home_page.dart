@@ -3,8 +3,8 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/icons.dart';
 import 'package:habit_tracker/pages/settings_page.dart';
-import 'package:habit_tracker/util/HabitTile.dart';
-import 'package:habit_tracker/util/getIcon.dart';
+import 'package:habit_tracker/util/display_habit_tile.dart';
+import 'package:habit_tracker/util/get_icon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 

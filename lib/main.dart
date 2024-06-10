@@ -72,7 +72,6 @@ Future<void> main() async {
     notificationsBox.put('dailyNotification', false);
   }
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   Workmanager().registerPeriodicTask(
     "1",
     "simplePeriodicTask",
@@ -86,27 +85,21 @@ Future<void> main() async {
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
+
     var notificationBox = await Hive.openBox('notifications');
 
     DateTime now = DateTime.now();
     int hour = now.hour;
-    int minute = now.minute;
 
-    if (notificationBox.get('morningNotification') == true &&
-        hour == 7 &&
-        minute == 0) {
+    if (notificationBox.get('morningNotification') == true && hour == 7) {
       triggerMorningNotification();
     } else if (notificationBox.get('afternoonNotification') == true &&
-        hour == 14 &&
-        minute == 0) {
+        hour == 14) {
       triggerAfternoonNotification();
     } else if (notificationBox.get('eveningNotification') == true &&
-        hour == 22 &&
-        minute == 0) {
+        hour == 22) {
       triggerEveningNotification();
-    } else if (notificationBox.get('dailyNotification') == true &&
-        hour == 19 &&
-        minute == 0) {
+    } else if (notificationBox.get('dailyNotification') == true && hour == 19) {
       triggerReminderNotification();
     }
 
