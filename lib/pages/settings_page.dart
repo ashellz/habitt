@@ -101,23 +101,26 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Center(
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(
-                      const Color.fromARGB(255, 183, 181, 151)),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+          Visibility(
+            visible: notificationsBox.get("hasNotificationAccess") == false,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Center(
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                        const Color.fromARGB(255, 183, 181, 151)),
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
                   ),
-                ),
-                onPressed: () => requestNotificationAccess(),
-                child: const Text(
-                  "Request Notification Access",
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  onPressed: () => requestNotificationAccess(),
+                  child: const Text(
+                    "Request Notification Access",
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
                 ),
               ),
             ),
@@ -135,3 +138,4 @@ void requestNotificationAccess() {
     }
   });
 }
+

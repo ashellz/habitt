@@ -71,11 +71,15 @@ Future<void> main() async {
   if (!notificationsBox.containsKey('dailyNotification')) {
     notificationsBox.put('dailyNotification', false);
   }
+  if (!notificationsBox.containsKey('hasNotificationAccess')) {
+    notificationsBox.put('hasNotificationAccess', false);
+  }
 
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   Workmanager().registerPeriodicTask(
     "1",
     "simplePeriodicTask",
-    frequency: const Duration(minutes: 60),
+    frequency: const Duration(minutes: 15),
   );
 
   runApp(const MyApp());

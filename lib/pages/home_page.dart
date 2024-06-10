@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
@@ -44,6 +45,16 @@ class HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    if (notificationsBox.get("hasNotificationAccess") == false) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (isAllowed) {
+      notificationsBox.put("hasNotificationAccess", true);
+    } else {
+      notificationsBox.put("hasNotificationAccess", false);
+    }
+  });
     super.initState();
     updateLastOpenedDate();
     scheduleMidnightTask();
@@ -1011,7 +1022,7 @@ Widget buildHeader(BuildContext context) {
     child: Padding(
       padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -1037,11 +1048,11 @@ Widget buildMenuItems(BuildContext context) => Container(
               leading: const Icon(
                 Icons.settings,
                 color: Colors.white,
-                size: 30,
+                size: 25,
               ),
               title: const Text(
                 'Settings',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onTap: () => Navigator.push(
                     context,
