@@ -73,6 +73,7 @@ flutter:
     - assets/images/afternoon_picture.png
     - assets/images/evening_picture.png
     - assets/images/anytime_picture.png
+    - assets/images/ic_launcher.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

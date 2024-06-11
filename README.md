@@ -19,11 +19,8 @@ Things to fix:
 
 1. Change the way animations work
 2. Make the streak number update right away when the habit is completed and undo if habit is undone
-3. When the app is launched for the first time ever, ask for notifications <------
-5. Implement Custom notifications feature
-6. Notify the user for category habits only if he has any habits in that category
-
-7. FINALLY make notifications and streaks work (with firebase?)
+3. Implement Custom notifications feature
+4. Redesign the app
 
 Fixed things:
 
@@ -46,3 +43,6 @@ Fixed things:
 17. Habit completion value changes every other day + streak
 18. Add notifications
 19. Fix design issues
+20. When the app is launched for the first time ever, ask for notifications
+21. Notify the user for category habits only if he has any habits in that category
+22. FINALLY make notifications and streaks work

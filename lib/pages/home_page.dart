@@ -49,102 +49,13 @@ class HomePageState extends State<HomePage> {
       AwesomeNotifications().requestPermissionToSendNotifications();
     }
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    if (isAllowed) {
-      notificationsBox.put("hasNotificationAccess", true);
-    } else {
-      notificationsBox.put("hasNotificationAccess", false);
-    }
-  });
+      if (isAllowed) {
+        notificationsBox.put("hasNotificationAccess", true);
+      } else {
+        notificationsBox.put("hasNotificationAccess", false);
+      }
+    });
     super.initState();
-    updateLastOpenedDate();
-    scheduleMidnightTask();
-  }
-
-  void scheduleMidnightTask() {
-    Timer(
-      Duration(
-        hours: 24 - DateTime.now().hour,
-        minutes: 60 - DateTime.now().minute,
-        seconds: 60 - DateTime.now().second,
-      ),
-      () {
-        if (!streakBox.containsKey('allHabitsCompletedStreak')) {
-          streakBox.put('allHabitsCompletedStreak', 0);
-        }
-        updateStreaks();
-        scheduleMidnightTask();
-      },
-    );
-  }
-
-  void updateStreaks() {
-    bool allHabitsCompleted = true;
-
-    for (int i = 0; i < habitBox.length; i++) {
-      var habit = habitBox.getAt(i)!;
-      if (habit.completed) {
-        habit.streak += 1;
-      } else {
-        allHabitsCompleted = false;
-        habit.streak = 0;
-      }
-      habit.completed = false;
-      habit.save();
-    }
-
-    int allHabitsCompletedStreak =
-        streakBox.get('allHabitsCompletedStreak') ?? 0;
-
-    if (allHabitsCompleted) {
-      allHabitsCompletedStreak += 1;
-      streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
-    } else {
-      streakBox.put('allHabitsCompletedStreak', 0);
-    }
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
-  }
-
-  void updateLastOpenedDate() async {
-    DateTime? lastOpened = metadataBox.get('lastOpenedDate');
-    DateTime now = DateTime.now();
-    if (lastOpened != null) {
-      int daysDifference = now.difference(lastOpened).inDays;
-      if (daysDifference > 0) {
-        resetOrUpdateStreaks(daysDifference);
-      }
-    }
-    metadataBox.put('lastOpenedDate', now);
-  }
-
-  void resetOrUpdateStreaks(int daysDifference) {
-    bool allHabitsCompleted = true;
-    for (int i = 0; i < habitListLenght; i++) {
-      var habit = habitBox.getAt(i)!;
-      if (daysDifference == 1) {
-        if (habit.completed) {
-          habit.streak += 1;
-        } else {
-          allHabitsCompleted = false;
-          habit.streak = 0;
-        }
-      } else {
-        allHabitsCompleted = false;
-        habit.streak = 0;
-      }
-      habit.completed = false;
-      habit.save();
-    }
-
-    int allHabitsCompletedStreak =
-        streakBox.get('allHabitsCompletedStreak') ?? 0;
-
-    if (allHabitsCompleted) {
-      allHabitsCompletedStreak += 1;
-      streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
-    } else {
-      streakBox.put('allHabitsCompletedStreak', 0);
-    }
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
   }
 
   void showPopup(BuildContext context, String text) {

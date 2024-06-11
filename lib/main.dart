@@ -13,12 +13,13 @@ bool anytimeHasHabits = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
-    null,
+    'resource://drawable/notification2',
     [
       NotificationChannel(
         channelKey: 'basic_channel',
         channelName: 'Basic notifications',
         channelDescription: 'Notification channel for basic tests',
+        defaultColor: const Color.fromARGB(255, 37, 67, 54),
       ),
     ],
   );
@@ -45,20 +46,13 @@ Future<void> main() async {
         streak: 0));
   }
 
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == 'Morning') {
-      morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
-      afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening') {
-      eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time') {
-      anytimeHasHabits = true;
-    }
-  }
+  hasHabits();
 
   openCategory();
 
+  if (!streakBox.containsKey('allHabitsCompletedStreak')) {
+    streakBox.put('allHabitsCompletedStreak', 0);
+  }
   if (!notificationsBox.containsKey('morningNotification')) {
     notificationsBox.put('morningNotification', false);
   }
@@ -69,42 +63,70 @@ Future<void> main() async {
     notificationsBox.put('eveningNotification', false);
   }
   if (!notificationsBox.containsKey('dailyNotification')) {
-    notificationsBox.put('dailyNotification', false);
+    notificationsBox.put('dailyNotification', true);
   }
   if (!notificationsBox.containsKey('hasNotificationAccess')) {
     notificationsBox.put('hasNotificationAccess', false);
   }
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
     "1",
     "simplePeriodicTask",
-    frequency: const Duration(minutes: 15),
+    frequency: const Duration(minutes: 31),
   );
 
   runApp(const MyApp());
 }
+
+bool morningNotification = false;
+bool afternoonNotification = false;
+bool eveningNotification = false;
+bool dailyNotification = false;
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
 
+    hasHabits();
+
     var notificationBox = await Hive.openBox('notifications');
 
     DateTime now = DateTime.now();
     int hour = now.hour;
 
-    if (notificationBox.get('morningNotification') == true && hour == 7) {
+    if (notificationBox.get('morningNotification') == true &&
+        hour == 7 &&
+        morningNotification == false &&
+        morningHasHabits == true) {
       triggerMorningNotification();
+      morningNotification = true;
     } else if (notificationBox.get('afternoonNotification') == true &&
-        hour == 14) {
+        hour == 15 &&
+        afternoonNotification == false &&
+        afternoonHasHabits == true) {
       triggerAfternoonNotification();
+      afternoonNotification = true;
     } else if (notificationBox.get('eveningNotification') == true &&
-        hour == 22) {
+        hour == 22 &&
+        eveningNotification == false &&
+        eveningHasHabits == true) {
       triggerEveningNotification();
-    } else if (notificationBox.get('dailyNotification') == true && hour == 19) {
+    } else if (notificationBox.get('dailyNotification') == true &&
+        hour == 19 &&
+        dailyNotification == false) {
       triggerReminderNotification();
+      dailyNotification = true;
+    } else {
+      morningNotification = false;
+      afternoonNotification = false;
+      eveningNotification = false;
+      dailyNotification = false;
+    }
+
+    if (hour == 0) {
+      updateStreaks();
     }
 
     return Future.value(true);
@@ -219,4 +241,44 @@ void triggerReminderNotification() {
       body: "It's 7 PM! Daily check-in time.",
     ),
   );
+}
+
+hasHabits() {
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == 'Morning') {
+      morningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+      afternoonHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Evening') {
+      eveningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Any time') {
+      anytimeHasHabits = true;
+    }
+  }
+}
+
+void updateStreaks() {
+  bool allHabitsCompleted = true;
+
+  for (int i = 0; i < habitBox.length; i++) {
+    var habit = habitBox.getAt(i)!;
+    if (habit.completed) {
+      habit.streak += 1;
+    } else {
+      allHabitsCompleted = false;
+      habit.streak = 0;
+    }
+    habit.completed = false;
+    habit.save();
+  }
+
+  int allHabitsCompletedStreak = streakBox.get('allHabitsCompletedStreak') ?? 0;
+
+  if (allHabitsCompleted) {
+    allHabitsCompletedStreak += 1;
+    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
+  } else {
+    streakBox.put('allHabitsCompletedStreak', 0);
+  }
+  streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
 }
