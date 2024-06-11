@@ -5,6 +5,7 @@ import 'package:habit_tracker/pages/home_page.dart';
 bool firstValue = false;
 bool secondValue = false;
 bool thirdValue = false;
+bool fourthValue = false;
 
 int notifValue = 0;
 
@@ -95,9 +96,125 @@ class _SettingsPageState extends State<SettingsPage> {
               value: 2,
               onChanged: (value) {
                 setState(() {
+                  notificationsBox.put('dailyNotification', false);
+                  notificationsBox.put('morningNotification', false);
+                  notificationsBox.put('afternoonNotification', false);
+                  notificationsBox.put('eveningNotification', false);
                   notifValue = value!;
                 });
               },
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 250),
+            height: notifValue == 2 ? 60 : 0,
+            curve: Curves.fastOutSlowIn,
+            child: AnimatedOpacity(
+              opacity: notifValue == 2 ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 43),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: firstValue,
+                      onChanged: (value) {
+                        setState(() {
+                          firstValue = value!;
+                          notificationsBox.put(
+                              'morningNotification', firstValue);
+                        });
+                      },
+                    ),
+                    const Text("Morning notification"),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 250),
+            height: notifValue == 2 ? 60 : 0,
+            curve: Curves.fastOutSlowIn,
+            child: AnimatedOpacity(
+              opacity: notifValue == 2 ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 43),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: secondValue,
+                      onChanged: (value) {
+                        setState(() {
+                          secondValue = value!;
+                          notificationsBox.put(
+                              'afternoonNotification', secondValue);
+                        });
+                      },
+                    ),
+                    const Text("Afternoon notification"),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 250),
+            height: notifValue == 2 ? 60 : 0,
+            curve: Curves.fastOutSlowIn,
+            child: AnimatedOpacity(
+              opacity: notifValue == 2 ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 43),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: thirdValue,
+                      onChanged: (value) {
+                        setState(() {
+                          thirdValue = value!;
+                          notificationsBox.put(
+                              'eveningNotification', thirdValue);
+                        });
+                      },
+                    ),
+                    const Text("Evening notification"),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          AnimatedContainer(
+            color: const Color.fromARGB(255, 218, 211, 190),
+            duration: const Duration(milliseconds: 250),
+            height: notifValue == 2 ? 60 : 0,
+            curve: Curves.fastOutSlowIn,
+            child: AnimatedOpacity(
+              opacity: notifValue == 2 ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 43),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: fourthValue,
+                      onChanged: (value) {
+                        setState(() {
+                          fourthValue = value!;
+                          notificationsBox.put(
+                              'dailyNotification', fourthValue);
+                        });
+                      },
+                    ),
+                    const Text("Daily notification"),
+                  ],
+                ),
+              ),
             ),
           ),
           const Spacer(),
