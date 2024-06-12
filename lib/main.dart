@@ -125,10 +125,6 @@ void callbackDispatcher() {
       dailyNotification = false;
     }
 
-    if (hour == 0) {
-      updateStreaks();
-    }
-
     return Future.value(true);
   });
 }
@@ -255,30 +251,4 @@ hasHabits() {
       anytimeHasHabits = true;
     }
   }
-}
-
-void updateStreaks() {
-  bool allHabitsCompleted = true;
-
-  for (int i = 0; i < habitBox.length; i++) {
-    var habit = habitBox.getAt(i)!;
-    if (habit.completed) {
-      habit.streak += 1;
-    } else {
-      allHabitsCompleted = false;
-      habit.streak = 0;
-    }
-    habit.completed = false;
-    habit.save();
-  }
-
-  int allHabitsCompletedStreak = streakBox.get('allHabitsCompletedStreak') ?? 0;
-
-  if (allHabitsCompleted) {
-    allHabitsCompletedStreak += 1;
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
-  } else {
-    streakBox.put('allHabitsCompletedStreak', 0);
-  }
-  streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
 }
