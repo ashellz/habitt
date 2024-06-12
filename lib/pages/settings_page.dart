@@ -2,12 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 
-bool firstValue = false;
-bool secondValue = false;
-bool thirdValue = false;
-bool fourthValue = false;
-
-int notifValue = 0;
+int notifValue = streakBox.get('notifValue') ?? 0;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -57,6 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) {
                 setState(() {
                   notifValue = value!;
+                  streakBox.put('notifValue', value);
                   notificationsBox.put('dailyNotification', true);
                   notificationsBox.put('morningNotification', false);
                   notificationsBox.put('afternoonNotification', false);
@@ -77,6 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (value) {
                 setState(() {
                   notifValue = value!;
+                  streakBox.put('notifValue', value);
                   notificationsBox.put('dailyNotification', false);
                   notificationsBox.put('morningNotification', true);
                   notificationsBox.put('afternoonNotification', true);
@@ -96,11 +93,12 @@ class _SettingsPageState extends State<SettingsPage> {
               value: 2,
               onChanged: (value) {
                 setState(() {
+                  notifValue = value!;
+                  streakBox.put('notifValue', value);
                   notificationsBox.put('dailyNotification', false);
                   notificationsBox.put('morningNotification', false);
                   notificationsBox.put('afternoonNotification', false);
                   notificationsBox.put('eveningNotification', false);
-                  notifValue = value!;
                 });
               },
             ),
@@ -118,12 +116,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: firstValue,
+                      value: notificationsBox.get('morningNotification'),
                       onChanged: (value) {
                         setState(() {
-                          firstValue = value!;
-                          notificationsBox.put(
-                              'morningNotification', firstValue);
+                          notificationsBox.put('morningNotification',
+                              !notificationsBox.get('morningNotification')!);
                         });
                       },
                     ),
@@ -146,12 +143,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: secondValue,
+                      value: notificationsBox.get('afternoonNotification'),
                       onChanged: (value) {
                         setState(() {
-                          secondValue = value!;
-                          notificationsBox.put(
-                              'afternoonNotification', secondValue);
+                          notificationsBox.put('afternoonNotification',
+                              !notificationsBox.get('afternoonNotification')!);
                         });
                       },
                     ),
@@ -174,12 +170,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: thirdValue,
+                      value: notificationsBox.get('eveningNotification'),
                       onChanged: (value) {
                         setState(() {
-                          thirdValue = value!;
-                          notificationsBox.put(
-                              'eveningNotification', thirdValue);
+                          notificationsBox.put('eveningNotification',
+                              !notificationsBox.get('eveningNotification')!);
                         });
                       },
                     ),
@@ -202,12 +197,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: fourthValue,
+                      value: notificationsBox.get('dailyNotification'),
                       onChanged: (value) {
                         setState(() {
-                          fourthValue = value!;
-                          notificationsBox.put(
-                              'dailyNotification', fourthValue);
+                          notificationsBox.put('dailyNotification',
+                              !notificationsBox.get('dailyNotification')!);
                         });
                       },
                     ),
