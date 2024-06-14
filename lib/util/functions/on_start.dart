@@ -4,15 +4,32 @@ import 'package:hive_flutter/hive_flutter.dart';
 final streakBox = Hive.box<int>('streak');
 final habitBox = Hive.box<HabitData>('habits');
 
+bool newMonth = false;
+
 void updateLastOpenedDate() async {
   DateTime now = DateTime.now();
+  int month = now.month;
   int day = now.day;
   int lastOpenedDate = streakBox.get('lastOpenedDate') ?? 0;
   int daysDifference = day - lastOpenedDate;
-  if (daysDifference > 0) {
-    resetOrUpdateStreaks(daysDifference);
+
+  if (month != streakBox.get('lastOpenedMonth')) {
+    newMonth = true;
   }
-  streakBox.put('lastOpenedDate', day);
+
+  if (daysDifference > 0) {
+    if (!newMonth) {
+      resetOrUpdateStreaks(daysDifference);
+    } else {
+      if (day == 1) {
+        resetOrUpdateStreaks(1);
+      } else {
+        resetOrUpdateStreaks(2);
+      }
+    }
+  }
+  streakBox.put('lastOpenedDay', day);
+  streakBox.put('lastOpenedMonth', month);
 }
 
 void resetOrUpdateStreaks(int daysDifference) {
