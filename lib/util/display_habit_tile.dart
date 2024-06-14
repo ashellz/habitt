@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/icons.dart';
+import 'package:habit_tracker/pages/icons_page.dart';
 import 'package:habit_tracker/util/get_icon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

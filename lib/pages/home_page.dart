@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/icons.dart';
+import 'package:habit_tracker/pages/icons_page.dart';
 import 'package:habit_tracker/pages/settings_page.dart';
 import 'package:habit_tracker/util/display_habit_tile.dart';
 import 'package:habit_tracker/util/get_icon.dart';
@@ -62,15 +62,14 @@ class HomePageState extends State<HomePage> {
   }
 
   void updateLastOpenedDate() async {
-    DateTime? lastOpened = metadataBox.get('lastOpenedDate');
     DateTime now = DateTime.now();
-    if (lastOpened != null) {
-      int daysDifference = now.difference(lastOpened).inDays;
-      if (daysDifference > 0) {
-        resetOrUpdateStreaks(daysDifference);
-      }
+    int day = now.day;
+    int lastOpenedDate = streakBox.get('lastOpenedDate') ?? 0;
+    int daysDifference = day - lastOpenedDate;
+    if (daysDifference > 0) {
+      resetOrUpdateStreaks(daysDifference);
     }
-    metadataBox.put('lastOpenedDate', now);
+    streakBox.put('lastOpenedDate', day);
   }
 
   void resetOrUpdateStreaks(int daysDifference) {
@@ -101,7 +100,6 @@ class HomePageState extends State<HomePage> {
     } else {
       streakBox.put('allHabitsCompletedStreak', 0);
     }
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
   }
 
   void showPopup(BuildContext context, String text) {
