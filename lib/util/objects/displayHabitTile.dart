@@ -45,7 +45,9 @@ class HabitTile extends StatelessWidget {
     if (habitBox.getAt(index)!.streak >= 2) {
       if (habitBox.getAt(index)!.completed == true) {
         return Text(
-          "${habitBox.getAt(index)!.streak} days streak",
+          habitBox.getAt(index)!.completed
+              ? "${habitBox.getAt(index)!.streak + 1} days streak"
+              : "${habitBox.getAt(index)!.streak} days streak",
           style: const TextStyle(
               color: Color.fromARGB(255, 37, 67, 54),
               fontWeight: FontWeight.bold,

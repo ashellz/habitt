@@ -2,11 +2,11 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/settings_page.dart';
-import 'package:habit_tracker/util/objects/add_habit.dart';
-import 'package:habit_tracker/util/objects/display_habit_tile.dart';
+import 'package:habit_tracker/util/objects/addHabit.dart';
+import 'package:habit_tracker/util/objects/displayHabitTile.dart';
 import 'package:habit_tracker/util/functions/get_icon.dart';
 import 'package:habit_tracker/util/functions/on_start.dart';
+import 'package:habit_tracker/util/objects/menuDrawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 
@@ -492,18 +492,7 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: Drawer(
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              buildHeader(context),
-              buildMenuItems(context),
-            ],
-          ),
-        ),
-      ),
+      drawer: menuDrawer(context),
       body: ListView(
         children: [
           //Morning
@@ -800,57 +789,3 @@ List<DropdownMenuItem<String>> get dropdownItems {
   ];
   return menuItems;
 }
-
-Widget buildHeader(BuildContext context) {
-  int streak = streakBox.get('allHabitsCompletedStreak') ?? 0;
-  return Container(
-    height: 140,
-    decoration: const BoxDecoration(
-      borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-      color: Color.fromARGB(255, 24, 41, 33),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "All habits completed streak:",
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          Text(
-            "$streak days",
-            style: const TextStyle(
-                color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget buildMenuItems(BuildContext context) => Container(
-      padding: const EdgeInsets.all(15),
-      child: Column(
-        children: [
-          ListTile(
-              leading: const Icon(
-                Icons.settings,
-                color: Colors.white,
-                size: 25,
-              ),
-              title: const Text(
-                'Settings',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsPage(),
-                    ),
-                  ))
-        ],
-      ),
-    );

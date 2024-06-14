@@ -18,9 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 Things to fix:
 
 1. Change the way animations work
-2. Make the streak number update right away when the habit is completed and undo if habit is undone
-3. Implement Custom notifications feature
-4. Redesign the app
+2. Redesign the app
 
 Fixed things:
 
@@ -46,3 +44,5 @@ Fixed things:
 20. When the app is launched for the first time ever, ask for notifications
 21. Notify the user for category habits only if he has any habits in that category
 22. FINALLY make notifications and streaks work
+23. Make the streak number update right away when the habit is completed and undo if habit is undone
+24. Implement Custom notifications feature
