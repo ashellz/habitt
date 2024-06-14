@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
+import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -48,27 +49,8 @@ Future<void> main() async {
   }
 
   hasHabits();
-
   openCategory();
-
-  if (!streakBox.containsKey('allHabitsCompletedStreak')) {
-    streakBox.put('allHabitsCompletedStreak', 0);
-  }
-  if (!notificationsBox.containsKey('morningNotification')) {
-    notificationsBox.put('morningNotification', false);
-  }
-  if (!notificationsBox.containsKey('afternoonNotification')) {
-    notificationsBox.put('afternoonNotification', false);
-  }
-  if (!notificationsBox.containsKey('eveningNotification')) {
-    notificationsBox.put('eveningNotification', false);
-  }
-  if (!notificationsBox.containsKey('dailyNotification')) {
-    notificationsBox.put('dailyNotification', true);
-  }
-  if (!notificationsBox.containsKey('hasNotificationAccess')) {
-    notificationsBox.put('hasNotificationAccess', false);
-  }
+  fillKeys();
 
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
@@ -162,50 +144,6 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
     );
   }
-}
-
-void triggerMorningNotification() {
-  AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Morning Habits',
-      body: "Good morning! Time to start your day!",
-    ),
-  );
-}
-
-void triggerAfternoonNotification() {
-  AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Afternoon Habits',
-      body: "Good afternoon! Don't forget about your habits!",
-    ),
-  );
-}
-
-void triggerEveningNotification() {
-  AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Evening Habits',
-      body: "Good evening! Time to wind down.",
-    ),
-  );
-}
-
-void triggerReminderNotification() {
-  AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Check your habits',
-      body: "It's 7 PM! Daily check-in time.",
-    ),
-  );
 }
 
 hasHabits() {
