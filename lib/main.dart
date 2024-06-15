@@ -72,8 +72,6 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
 
-    hasHabits();
-
     checkForNotifications();
 
     return Future.value(true);

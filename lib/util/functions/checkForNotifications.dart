@@ -10,31 +10,21 @@ void checkForNotifications() {
 
   if (notificationBox.get('morningNotification') == true &&
       hour == 7 &&
-      morningNotification == false &&
       morningHasHabits == true) {
     triggerMorningNotification();
     morningNotification = true;
   } else if (notificationBox.get('afternoonNotification') == true &&
-      hour == 15 &&
-      afternoonNotification == false &&
+      hour == 14 &&
       afternoonHasHabits == true) {
     triggerAfternoonNotification();
     afternoonNotification = true;
   } else if (notificationBox.get('eveningNotification') == true &&
       hour == 22 &&
-      eveningNotification == false &&
       eveningHasHabits == true) {
     triggerEveningNotification();
-  } else if (notificationBox.get('dailyNotification') == true &&
-      hour == 19 &&
-      dailyNotification == false) {
+  } else if (notificationBox.get('dailyNotification') == true && hour == 19) {
     triggerReminderNotification();
     dailyNotification = true;
-  } else {
-    morningNotification = false;
-    afternoonNotification = false;
-    eveningNotification = false;
-    dailyNotification = false;
   }
 }
 

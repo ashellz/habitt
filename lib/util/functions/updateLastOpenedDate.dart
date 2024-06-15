@@ -10,7 +10,7 @@ void updateLastOpenedDate() async {
   DateTime now = DateTime.now();
   int month = now.month;
   int day = now.day;
-  int lastOpenedDate = streakBox.get('lastOpenedDate') ?? 0;
+  int lastOpenedDate = streakBox.get('lastOpenedDay') ?? 0;
   int daysDifference = day - lastOpenedDate;
 
   if (month != streakBox.get('lastOpenedMonth')) {
