@@ -19,7 +19,7 @@ void checkForNotifications() {
     triggerAfternoonNotification();
     afternoonNotification = true;
   } else if (notificationBox.get('eveningNotification') == true &&
-      hour == 22 &&
+      hour == 21 &&
       eveningHasHabits == true) {
     triggerEveningNotification();
   } else if (notificationBox.get('dailyNotification') == true && hour == 19) {
