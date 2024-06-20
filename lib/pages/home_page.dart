@@ -155,7 +155,7 @@ class HomePageState extends State<HomePage> {
         completed: false,
         icon: getIconString(updatedIcon.icon),
         category: dropDownValue,
-        streak: 0,
+        streak: 1,
       );
       habitBox.add(myHabit);
       habitListLenght = habitBox.length;
