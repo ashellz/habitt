@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
@@ -57,7 +56,7 @@ Future<void> main() async {
   openCategory();
   fillKeys();
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   Workmanager().registerPeriodicTask(
     "1",
     "simplePeriodicTask",
@@ -76,8 +75,19 @@ bool dailyNotification = false;
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
+    var notificationBox = Hive.openBox('notifications');
 
-    checkForNotifications();
+    DateTime now = DateTime.now();
+    print("Hour: ${now.hour}");
+
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1239,
+        channelKey: 'basic_channel',
+        title: 'Debug notification',
+        body: "Notification triggered",
+      ),
+    );
 
     return Future.value(true);
   });

@@ -2,34 +2,32 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-void checkForNotifications() {
+void checkForNotifications() async {
   var notificationBox = Hive.box('notifications');
 
   DateTime now = DateTime.now();
-  int hour = now.hour;
+  print("Hour: ${now.hour}");
 
   if (notificationBox.get('morningNotification') == true &&
-      hour == 7 &&
+      now.hour == 7 &&
       morningHasHabits == true) {
     triggerMorningNotification();
-    morningNotification = true;
   } else if (notificationBox.get('afternoonNotification') == true &&
-      hour == 14 &&
+      now.hour == 14 &&
       afternoonHasHabits == true) {
     triggerAfternoonNotification();
-    afternoonNotification = true;
   } else if (notificationBox.get('eveningNotification') == true &&
-      hour == 21 &&
+      now.hour == 21 &&
       eveningHasHabits == true) {
     triggerEveningNotification();
-  } else if (notificationBox.get('dailyNotification') == true && hour == 19) {
+  } else if (notificationBox.get('dailyNotification') == true &&
+      now.hour == 19) {
     triggerReminderNotification();
-    dailyNotification = true;
   }
 }
 
-void triggerMorningNotification() {
-  AwesomeNotifications().createNotification(
+void triggerMorningNotification() async {
+  await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 1234,
       channelKey: 'basic_channel',
@@ -39,8 +37,8 @@ void triggerMorningNotification() {
   );
 }
 
-void triggerAfternoonNotification() {
-  AwesomeNotifications().createNotification(
+void triggerAfternoonNotification() async {
+  await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 1234,
       channelKey: 'basic_channel',
@@ -50,8 +48,8 @@ void triggerAfternoonNotification() {
   );
 }
 
-void triggerEveningNotification() {
-  AwesomeNotifications().createNotification(
+void triggerEveningNotification() async {
+  await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 1234,
       channelKey: 'basic_channel',
@@ -61,8 +59,8 @@ void triggerEveningNotification() {
   );
 }
 
-void triggerReminderNotification() {
-  AwesomeNotifications().createNotification(
+void triggerReminderNotification() async {
+  await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 1234,
       channelKey: 'basic_channel',

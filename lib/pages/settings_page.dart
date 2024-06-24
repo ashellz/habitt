@@ -203,6 +203,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           notificationsBox.put('dailyNotification',
                               !notificationsBox.get('dailyNotification')!);
                         });
+                        print(notificationsBox.get('dailyNotification'));
                       },
                     ),
                     const Text("Daily notification"),
@@ -247,5 +248,11 @@ void requestNotificationAccess() {
     if (!isAllowed) {
       AwesomeNotifications().requestPermissionToSendNotifications();
     }
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: 1234,
+            channelKey: 'basic_channel',
+            title: 'Basic Notification',
+            body: 'Notification Body'));
   });
 }

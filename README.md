@@ -19,6 +19,8 @@ Things to fix:
 
 1. Change the way animations work
 2. Redesign the app
+3. Make notifications work
+4. Fix only spacebars as habit name
 
 Fixed things:
 
