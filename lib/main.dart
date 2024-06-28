@@ -56,7 +56,7 @@ Future<void> main() async {
   openCategory();
   fillKeys();
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
     "1",
     "simplePeriodicTask",
@@ -75,7 +75,7 @@ bool dailyNotification = false;
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
-    var notificationBox = Hive.openBox('notifications');
+    // var notificationBox = Hive.openBox('notifications');
 
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
