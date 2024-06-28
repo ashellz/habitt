@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/icons_page.dart';
 import 'package:habit_tracker/util/objects/elevatedButton.dart';
+import 'package:numberpicker/numberpicker.dart';
+
+int _currentValue = 1;
 
 Widget addHabit(formKey, validateText, createNewTask) {
   return StatefulBuilder(
@@ -106,6 +109,22 @@ Widget addHabit(formKey, validateText, createNewTask) {
                     const elevatedButton(text: "Number of times"),
                     const elevatedButton(text: "Duration"),
                   ],
+                ),
+              ),
+              Visibility(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Center(
+                    child: NumberPicker(
+                      value: _currentValue,
+                      minValue: 1,
+                      maxValue: 100,
+                      haptics: true,
+                      axis: Axis.horizontal,
+                      onChanged: (value) =>
+                          mystate(() => _currentValue = value),
+                    ),
+                  ),
                 ),
               ),
               const Spacer(),

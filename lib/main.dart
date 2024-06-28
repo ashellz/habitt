@@ -75,19 +75,21 @@ bool dailyNotification = false;
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await Hive.initFlutter();
-    // var notificationBox = Hive.openBox('notifications');
+    var notificationBox = Hive.box('notifications');
 
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
 
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: 1239,
-        channelKey: 'basic_channel',
-        title: 'Debug notification',
-        body: "Notification triggered",
-      ),
-    );
+    if (now.hour == 14 && notificationBox.get('morningNotification') == true) {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 1239,
+          channelKey: 'basic_channel',
+          title: 'Debug notification',
+          body: "Notification triggered",
+        ),
+      );
+    }
 
     return Future.value(true);
   });
