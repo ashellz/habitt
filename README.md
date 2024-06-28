@@ -48,3 +48,14 @@ Fixed things:
 22. FINALLY make notifications and streaks work
 23. Make the streak number update right away when the habit is completed and undo if habit is undone
 24. Implement Custom notifications feature
+
+Add Features:
+Add how many times to complete the habit (the quantity of the habit).
+
+- In the database file of a habit add a quantity field as of int (default: 1).
+- When completing the habit with a quantity more than 1 you will be given more slideable options, or at least a dialog box to enter if you've done the habit that many times (default: max amount)
+- Add a new field left to the completion icon displaying how many times you've done the habit
+
+Add how long to do the task.
+
+- In the database file of a habit add a time field as an int (default: 0).
