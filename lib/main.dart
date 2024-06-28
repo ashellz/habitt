@@ -80,15 +80,17 @@ void callbackDispatcher() {
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
 
-    if (now.hour == 14 && notificationBox.get('morningNotification') == true) {
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: 1239,
-          channelKey: 'basic_channel',
-          title: 'Debug notification',
-          body: "Notification triggered",
-        ),
-      );
+    if (now.hour == 16 && notificationBox.get('morningNotification') == true) {
+      if (morningHasHabits == true) {
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: 1239,
+            channelKey: 'basic_channel',
+            title: 'Morning Habits',
+            body: "Good morning! Time to start your day!",
+          ),
+        );
+      }
     }
 
     return Future.value(true);

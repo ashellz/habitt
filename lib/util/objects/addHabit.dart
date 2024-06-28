@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/icons_page.dart';
-import 'package:habit_tracker/util/objects/elevatedButton.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 int _currentValue = 1;
+int habitGoal = 0;
 
 Widget addHabit(formKey, validateText, createNewTask) {
   return StatefulBuilder(
@@ -101,29 +101,101 @@ Widget addHabit(formKey, validateText, createNewTask) {
                   ),
                 ),
               ),
-              const Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              Padding(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const elevatedButton(text: "Number of times"),
-                    const elevatedButton(text: "Duration"),
+                    ElevatedButton(
+                      onPressed: () {
+                        mystate(() {
+                          _currentValue = 1;
+                          habitGoal = 1;
+                        });
+                      },
+                      style: ButtonStyle(
+                        fixedSize:
+                            WidgetStateProperty.all<Size>(const Size(170, 45)),
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                          habitGoal == 1
+                              ? const Color.fromARGB(255, 107, 138, 122)
+                              : const Color.fromARGB(255, 183, 181, 151),
+                        ),
+                      ),
+                      child: const Text("Number of times",
+                          style: TextStyle(color: Colors.black)),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        mystate(() {
+                          _currentValue = 1;
+                          habitGoal = 2;
+                        });
+                      },
+                      style: ButtonStyle(
+                        fixedSize:
+                            WidgetStateProperty.all<Size>(const Size(170, 45)),
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                          habitGoal == 2
+                              ? const Color.fromARGB(255, 107, 138, 122)
+                              : const Color.fromARGB(255, 183, 181, 151),
+                        ),
+                      ),
+                      child: const Text("Duration",
+                          style: TextStyle(color: Colors.black)),
+                    ),
                   ],
                 ),
               ),
               Visibility(
+                visible: habitGoal == 1,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                  child: Center(
-                    child: NumberPicker(
-                      value: _currentValue,
-                      minValue: 1,
-                      maxValue: 100,
-                      haptics: true,
-                      axis: Axis.horizontal,
-                      onChanged: (value) =>
-                          mystate(() => _currentValue = value),
-                    ),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: NumberPicker(
+                          value: _currentValue,
+                          minValue: 1,
+                          maxValue: 100,
+                          haptics: true,
+                          axis: Axis.horizontal,
+                          onChanged: (value) =>
+                              mystate(() => _currentValue = value),
+                        ),
+                      ),
+                      Center(
+                        child: Text(_currentValue == 1
+                            ? "Once a day"
+                            : "$_currentValue times a day"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: habitGoal == 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: NumberPicker(
+                          value: _currentValue,
+                          minValue: 1,
+                          maxValue: 100,
+                          haptics: true,
+                          axis: Axis.horizontal,
+                          onChanged: (value) =>
+                              mystate(() => _currentValue = value),
+                        ),
+                      ),
+                      Center(
+                        child: Text(_currentValue == 1
+                            ? "1 minute a day"
+                            : "$_currentValue minutes a day"),
+                      ),
+                    ],
                   ),
                 ),
               ),
