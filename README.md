@@ -20,6 +20,9 @@ Things to fix:
 1. Change the way animations work
 2. Redesign the app
 3. Make notifications work
+
+- possible fix: time is 7 on phone and not 19
+
 4. Fix only spacebars as habit name
 
 Fixed things:

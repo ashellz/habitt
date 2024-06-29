@@ -26,12 +26,17 @@ bool eveningVisible = false,
     afternoonVisible = false,
     morningVisible = false,
     changed = false,
-    deleted = false;
+    deleted = false,
+    firstCheck = true;
 double anyTimeHeight = 0,
     containerHeight = 0,
     eveningHeight = 0,
     afternoonHeight = 0,
     morningHeight = 0;
+int undoAmount = 1,
+    undoDuration = 0,
+    undoAmountCompleted = 0,
+    undoDurationCompleted = 0;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, Key? homePageKey});
@@ -155,7 +160,11 @@ class HomePageState extends State<HomePage> {
         completed: false,
         icon: getIconString(updatedIcon.icon),
         category: dropDownValue,
-        streak: 1,
+        streak: 0,
+        amount: habitGoal == 1 ? currentAmountValue : 1,
+        amountCompleted: 0,
+        duration: habitGoal == 2 ? currentDurationValue : 0,
+        durationCompleted: 0,
       );
       habitBox.add(myHabit);
       habitListLenght = habitBox.length;
@@ -425,6 +434,11 @@ class HomePageState extends State<HomePage> {
             icon: getIconString(updatedIcon.icon),
             category: dropDownValue,
             streak: habitBox.getAt(index)?.streak ?? 0,
+            amount: 1,
+            amountCompleted: 0,
+            duration:
+                0, // --------------------------------- MARK TO CHANGE THESE LATER
+            durationCompleted: 0,
           ));
     });
     checkIfEmpty(editedFrom);
@@ -440,17 +454,45 @@ class HomePageState extends State<HomePage> {
       final habitBox = Hive.box<HabitData>('habits');
       final existingHabit = habitBox.getAt(index);
 
-      if (existingHabit != null) {
-        final updatedHabit = HabitData(
-          name: existingHabit.name,
-          completed: !existingHabit.completed,
-          icon: existingHabit.icon,
-          category: existingHabit.category,
-          streak: existingHabit.streak,
-        );
-
-        habitBox.putAt(index, updatedHabit);
+      if (undoAmount == 1 && undoDuration == 0) {
+        undoAmount = habitBox.getAt(index)!.amount;
+        undoDuration = habitBox.getAt(index)!.duration;
+        undoAmountCompleted = habitBox.getAt(index)!.amountCompleted;
+        undoDurationCompleted = habitBox.getAt(index)!.durationCompleted;
       }
+
+      if (existingHabit != null) {
+        if (firstCheck) {
+          final updatedHabit = HabitData(
+            name: existingHabit.name,
+            completed: !existingHabit.completed,
+            icon: existingHabit.icon,
+            category: existingHabit.category,
+            streak: existingHabit.streak,
+            amount: 1,
+            amountCompleted: 0,
+            duration:
+                0, // --------------------------------- MARK TO CHANGE THESE LATER
+            durationCompleted: 0,
+          );
+
+          habitBox.putAt(index, updatedHabit);
+        } else {
+          final updatedHabit = HabitData(
+              name: existingHabit.name,
+              completed: !existingHabit.completed,
+              icon: existingHabit.icon,
+              category: existingHabit.category,
+              streak: existingHabit.streak,
+              amount: undoAmount,
+              amountCompleted: undoAmountCompleted,
+              duration: undoDuration,
+              durationCompleted: undoDurationCompleted);
+
+          habitBox.putAt(index, updatedHabit);
+        }
+      }
+      firstCheck = !firstCheck;
     });
   }
 

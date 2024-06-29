@@ -9,7 +9,11 @@ class HabitData extends HiveObject {
       required this.completed,
       required this.icon,
       required this.category,
-      required this.streak});
+      required this.streak,
+      required this.amount,
+      required this.amountCompleted,
+      required this.duration,
+      required this.durationCompleted});
   @HiveField(0)
   String name;
 
@@ -24,4 +28,16 @@ class HabitData extends HiveObject {
 
   @HiveField(4)
   int streak;
+
+  @HiveField(5)
+  int amount;
+
+  @HiveField(6)
+  int amountCompleted;
+
+  @HiveField(7)
+  int duration;
+
+  @HiveField(8)
+  int durationCompleted;
 }

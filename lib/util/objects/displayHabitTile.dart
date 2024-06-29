@@ -5,6 +5,7 @@ import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
 import 'package:habit_tracker/util/objects/editHabit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 final habitBox = Hive.box<HabitData>('habits');
 final _formKey = GlobalKey<FormState>();
@@ -66,9 +67,33 @@ class HabitTile extends StatelessWidget {
         const SizedBox(height: 10),
         Slidable(
           endActionPane: ActionPane(
-            extentRatio: 0.30,
+            extentRatio: habitBox.getAt(index)!.completed
+                ? 0.275
+                : habitBox.getAt(index)!.amount <= 1 &&
+                        habitBox.getAt(index)!.duration <= 0
+                    ? 0.275
+                    : 0.50,
             motion: const ScrollMotion(),
             children: [
+              if (habitBox.getAt(index)!.completed == false &&
+                      habitBox.getAt(index)!.amount > 1 ||
+                  habitBox.getAt(index)!.duration > 0)
+                SlidableAction(
+                  onPressed: (context) => AlertDialog(
+                      title: Text("Enter amount"),
+                      content: NumberPicker(
+                          minValue: 1,
+                          maxValue: habitBox
+                              .getAt(index)!
+                              .amount, // change to support duration too
+                          value: habitBox.getAt(index)!.amountCompleted,
+                          onChanged: setstate)),
+                  backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+                  foregroundColor: Colors.white,
+                  label: 'Enter',
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              const SizedBox(width: 5),
               SlidableAction(
                 onPressed: (context) => checkTask(index),
                 backgroundColor: const Color.fromARGB(255, 37, 67, 54),
@@ -107,21 +132,56 @@ class HabitTile extends StatelessWidget {
                     ? Colors.grey.shade600
                     : Colors.grey.shade800,
               ),
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    truncatedText(index),
-                    style: TextStyle(
-                        color: habitBox.getAt(index)!.completed
-                            ? Colors.grey.shade600
-                            : Colors.black,
-                        decoration: habitBox.getAt(index)!.completed
-                            ? TextDecoration.lineThrough
-                            : null),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        truncatedText(index),
+                        style: TextStyle(
+                            color: habitBox.getAt(index)!.completed
+                                ? Colors.grey.shade600
+                                : Colors.black,
+                            decoration: habitBox.getAt(index)!.completed
+                                ? TextDecoration.lineThrough
+                                : null),
+                      ),
+                      streakWidget(),
+                    ],
                   ),
-                  streakWidget(),
+                  if (habitBox.getAt(index)!.amount > 1)
+                    SizedBox(
+                      width: 53,
+                      child: Column(
+                        children: [
+                          Text(
+                              "0/${habitBox.getAt(index)!.amount}") //-------- HAVE TO CHANGE THE 0 HERE
+                          ,
+                          const Text(
+                            "times",
+                            style: TextStyle(fontSize: 12),
+                          )
+                        ],
+                      ),
+                    )
+                  else if (habitBox.getAt(index)!.duration > 0)
+                    SizedBox(
+                      width: 53,
+                      child: Column(
+                        children: [
+                          Text(
+                              "0/${habitBox.getAt(index)!.duration}") //-------- HAVE TO CHANGE THE 0 HERE
+                          ,
+                          const Text(
+                            "minutes",
+                            style: TextStyle(fontSize: 12),
+                          )
+                        ],
+                      ),
+                    )
                 ],
               ),
               trailing: Container(

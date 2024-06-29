@@ -3,7 +3,8 @@ import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/icons_page.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-int _currentValue = 1;
+int currentAmountValue = 2;
+int currentDurationValue = 1;
 int habitGoal = 0;
 
 Widget addHabit(formKey, validateText, createNewTask) {
@@ -84,9 +85,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                     hint: const Text("Any Time"),
                     items: dropdownItems,
                     onChanged: (String? newValue) {
-                      //setState(() {
                       dropDownValue = newValue!;
-                      //});
                     },
                   ),
                 ),
@@ -102,15 +101,19 @@ Widget addHabit(formKey, validateText, createNewTask) {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
                       onPressed: () {
                         mystate(() {
-                          _currentValue = 1;
-                          habitGoal = 1;
+                          if (habitGoal == 1) {
+                            habitGoal = 0;
+                          } else {
+                            currentAmountValue = 2;
+                            habitGoal = 1;
+                          }
                         });
                       },
                       style: ButtonStyle(
@@ -128,8 +131,12 @@ Widget addHabit(formKey, validateText, createNewTask) {
                     ElevatedButton(
                       onPressed: () {
                         mystate(() {
-                          _currentValue = 1;
-                          habitGoal = 2;
+                          if (habitGoal == 2) {
+                            habitGoal = 0;
+                          } else {
+                            currentDurationValue = 1;
+                            habitGoal = 2;
+                          }
                         });
                       },
                       style: ButtonStyle(
@@ -155,19 +162,17 @@ Widget addHabit(formKey, validateText, createNewTask) {
                     children: [
                       Center(
                         child: NumberPicker(
-                          value: _currentValue,
-                          minValue: 1,
+                          value: currentAmountValue,
+                          minValue: 2,
                           maxValue: 100,
                           haptics: true,
                           axis: Axis.horizontal,
                           onChanged: (value) =>
-                              mystate(() => _currentValue = value),
+                              mystate(() => currentAmountValue = value),
                         ),
                       ),
                       Center(
-                        child: Text(_currentValue == 1
-                            ? "Once a day"
-                            : "$_currentValue times a day"),
+                        child: Text("$currentAmountValue times"),
                       ),
                     ],
                   ),
@@ -181,19 +186,19 @@ Widget addHabit(formKey, validateText, createNewTask) {
                     children: [
                       Center(
                         child: NumberPicker(
-                          value: _currentValue,
+                          value: currentDurationValue,
                           minValue: 1,
                           maxValue: 100,
                           haptics: true,
                           axis: Axis.horizontal,
                           onChanged: (value) =>
-                              mystate(() => _currentValue = value),
+                              mystate(() => currentDurationValue = value),
                         ),
                       ),
                       Center(
-                        child: Text(_currentValue == 1
+                        child: Text(currentDurationValue == 1
                             ? "1 minute a day"
-                            : "$_currentValue minutes a day"),
+                            : "$currentDurationValue minutes a day"),
                       ),
                     ],
                   ),

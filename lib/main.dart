@@ -39,17 +39,25 @@ Future<void> main() async {
 
   if (Hive.box<HabitData>('habits').isEmpty) {
     await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Add a new habit",
+        name: "Add new habits",
         completed: false,
         icon: "Icons.add",
         category: "Any time",
-        streak: 0));
+        streak: 0,
+        amount: 2,
+        amountCompleted: 0,
+        duration: 0,
+        durationCompleted: 0));
     await Hive.box<HabitData>('habits').add(HabitData(
         name: "Open the app",
         completed: true,
         icon: "Icons.door_front_door",
         category: "Any time",
-        streak: 0));
+        streak: 0,
+        amount: 1,
+        amountCompleted: 1,
+        duration: 0,
+        durationCompleted: 0));
   }
 
   hasHabits();
@@ -80,7 +88,7 @@ void callbackDispatcher() {
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
 
-    if (now.hour == 16 && notificationBox.get('morningNotification') == true) {
+    if (now.hour == 19 && notificationBox.get('morningNotification') == true) {
       if (morningHasHabits == true) {
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
