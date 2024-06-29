@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/home_page.dart';
@@ -62,6 +63,7 @@ class HabitTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     IconData displayIcon = getIcon(index);
+    int theValue = habitBox.getAt(index)!.amountCompleted;
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -79,15 +81,55 @@ class HabitTile extends StatelessWidget {
                       habitBox.getAt(index)!.amount > 1 ||
                   habitBox.getAt(index)!.duration > 0)
                 SlidableAction(
-                  onPressed: (context) => AlertDialog(
-                      title: Text("Enter amount"),
-                      content: NumberPicker(
-                          minValue: 1,
-                          maxValue: habitBox
-                              .getAt(index)!
-                              .amount, // change to support duration too
-                          value: habitBox.getAt(index)!.amountCompleted,
-                          onChanged: setstate)),
+                  onPressed: (context) => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) =>
+                          AlertDialog(
+                        backgroundColor:
+                            const Color.fromARGB(255, 218, 211, 190),
+                        title: const Center(
+                          child: Text("Enter amount",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 22)),
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            NumberPicker(
+                                axis: Axis.horizontal,
+                                minValue: 1,
+                                maxValue: habitBox
+                                    .getAt(index)!
+                                    .amount, // change to support duration too
+                                value: theValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    theValue = value;
+                                  });
+                                }),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 37, 67, 54),
+                                  ),
+                                  onPressed: () {
+                                    habitBox.getAt(index)!.amountCompleted =
+                                        theValue;
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    "Enter",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   backgroundColor: const Color.fromARGB(255, 37, 67, 54),
                   foregroundColor: Colors.white,
                   label: 'Enter',
@@ -158,7 +200,7 @@ class HabitTile extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                              "0/${habitBox.getAt(index)!.amount}") //-------- HAVE TO CHANGE THE 0 HERE
+                              "${habitBox.getAt(index)!.amountCompleted}/${habitBox.getAt(index)!.amount}") //-------- HAVE TO CHANGE THE 0 HERE
                           ,
                           const Text(
                             "times",
