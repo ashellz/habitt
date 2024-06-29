@@ -103,10 +103,10 @@ class _HabitTileState extends State<HabitTile> {
                           children: [
                             NumberPicker(
                                 axis: Axis.horizontal,
-                                minValue: 1,
+                                minValue: 0,
                                 maxValue: habitBox.getAt(widget.index)!.amount -
                                     1, // change to support duration too
-                                value: theValue == 0 ? 1 : theValue,
+                                value: theValue,
                                 onChanged: (value) {
                                   mystate(() {
                                     theValue = value;
@@ -122,15 +122,13 @@ class _HabitTileState extends State<HabitTile> {
                                   onPressed: () {
                                     mystate(() {
                                       habitBox
-                                              .getAt(widget.index)!
-                                              .amountCompleted =
-                                          theValue == 0 ? 1 : theValue;
+                                          .getAt(widget.index)!
+                                          .amountCompleted = theValue;
                                     });
                                     setState(() {
                                       habitBox
-                                              .getAt(widget.index)!
-                                              .amountCompleted =
-                                          theValue == 0 ? 1 : theValue;
+                                          .getAt(widget.index)!
+                                          .amountCompleted = theValue;
                                     });
                                     Navigator.pop(context);
                                   },
