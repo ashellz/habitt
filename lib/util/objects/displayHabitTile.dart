@@ -11,7 +11,7 @@ import 'package:numberpicker/numberpicker.dart';
 final habitBox = Hive.box<HabitData>('habits');
 final _formKey = GlobalKey<FormState>();
 
-class HabitTile extends StatelessWidget {
+class HabitTile extends StatefulWidget {
   const HabitTile({
     super.key,
     required this.edittask,
@@ -25,6 +25,11 @@ class HabitTile extends StatelessWidget {
   final void Function(int index) edittask;
   final void Function(int index) checkTask;
 
+  @override
+  State<HabitTile> createState() => _HabitTileState();
+}
+
+class _HabitTileState extends State<HabitTile> {
   void popmenu(BuildContext context) {
     Navigator.pop(context);
   }
@@ -44,17 +49,17 @@ class HabitTile extends StatelessWidget {
   }
 
   Widget streakWidget() {
-    if (habitBox.getAt(index)!.streak >= 1) {
-      if (habitBox.getAt(index)!.completed == true) {
+    if (habitBox.getAt(widget.index)!.streak >= 1) {
+      if (habitBox.getAt(widget.index)!.completed == true) {
         return Text(
-          "${habitBox.getAt(index)!.streak + 1} days streak",
+          "${habitBox.getAt(widget.index)!.streak + 1} days streak",
           style: const TextStyle(
               color: Color.fromARGB(255, 37, 67, 54),
               fontWeight: FontWeight.bold,
               fontSize: 15),
         );
-      } else if (habitBox.getAt(index)!.streak != 1) {
-        return Text("${habitBox.getAt(index)!.streak} days streak");
+      } else if (habitBox.getAt(widget.index)!.streak != 1) {
+        return Text("${habitBox.getAt(widget.index)!.streak} days streak");
       }
     }
     return const SizedBox();
@@ -62,29 +67,30 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IconData displayIcon = getIcon(index);
-    int theValue = habitBox.getAt(index)!.amountCompleted;
+    IconData displayIcon = getIcon(widget.index);
+    int theValue = habitBox.getAt(widget.index)!.amountCompleted;
+
     return Column(
       children: [
         const SizedBox(height: 10),
         Slidable(
           endActionPane: ActionPane(
-            extentRatio: habitBox.getAt(index)!.completed
+            extentRatio: habitBox.getAt(widget.index)!.completed
                 ? 0.275
-                : habitBox.getAt(index)!.amount <= 1 &&
-                        habitBox.getAt(index)!.duration <= 0
+                : habitBox.getAt(widget.index)!.amount <= 1 &&
+                        habitBox.getAt(widget.index)!.duration <= 0
                     ? 0.275
                     : 0.50,
             motion: const ScrollMotion(),
             children: [
-              if (habitBox.getAt(index)!.completed == false &&
-                      habitBox.getAt(index)!.amount > 1 ||
-                  habitBox.getAt(index)!.duration > 0)
+              if (habitBox.getAt(widget.index)!.completed == false &&
+                      habitBox.getAt(widget.index)!.amount > 1 ||
+                  habitBox.getAt(widget.index)!.duration > 0)
                 SlidableAction(
                   onPressed: (context) => showDialog(
                     context: context,
                     builder: (BuildContext context) => StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) =>
+                      builder: (BuildContext context, StateSetter mystate) =>
                           AlertDialog(
                         backgroundColor:
                             const Color.fromARGB(255, 218, 211, 190),
@@ -99,12 +105,11 @@ class HabitTile extends StatelessWidget {
                             NumberPicker(
                                 axis: Axis.horizontal,
                                 minValue: 1,
-                                maxValue: habitBox
-                                    .getAt(index)!
-                                    .amount, // change to support duration too
-                                value: theValue,
+                                maxValue: habitBox.getAt(widget.index)!.amount -
+                                    1, // change to support duration too
+                                value: theValue == 0 ? 1 : theValue,
                                 onChanged: (value) {
-                                  setState(() {
+                                  mystate(() {
                                     theValue = value;
                                   });
                                 }),
@@ -116,8 +121,18 @@ class HabitTile extends StatelessWidget {
                                         const Color.fromARGB(255, 37, 67, 54),
                                   ),
                                   onPressed: () {
-                                    habitBox.getAt(index)!.amountCompleted =
-                                        theValue;
+                                    mystate(() {
+                                      habitBox
+                                              .getAt(widget.index)!
+                                              .amountCompleted =
+                                          theValue == 0 ? 1 : theValue;
+                                    });
+                                    setState(() {
+                                      habitBox
+                                              .getAt(widget.index)!
+                                              .amountCompleted =
+                                          theValue == 0 ? 1 : theValue;
+                                    });
                                     Navigator.pop(context);
                                   },
                                   child: const Text(
@@ -137,10 +152,11 @@ class HabitTile extends StatelessWidget {
                 ),
               const SizedBox(width: 5),
               SlidableAction(
-                onPressed: (context) => checkTask(index),
+                onPressed: (context) => widget.checkTask(widget.index),
                 backgroundColor: const Color.fromARGB(255, 37, 67, 54),
                 foregroundColor: Colors.white,
-                label: habitBox.getAt(index)!.completed ? 'Undo' : 'Done',
+                label:
+                    habitBox.getAt(widget.index)!.completed ? 'Undo' : 'Done',
                 borderRadius: BorderRadius.circular(15),
               ),
               const SizedBox(width: 10),
@@ -152,9 +168,9 @@ class HabitTile extends StatelessWidget {
               context: context,
               backgroundColor: const Color.fromARGB(255, 218, 211, 190),
               builder: (BuildContext context) {
-                dropDownValue = habitBox.getAt(index)!.category;
-                return editHabit(
-                    _formKey, _validateText, deletetask, edittask, index);
+                dropDownValue = habitBox.getAt(widget.index)!.category;
+                return editHabit(_formKey, _validateText, widget.deletetask,
+                    widget.edittask, widget.index);
               },
             ).whenComplete(() {
               editcontroller.clear();
@@ -170,7 +186,7 @@ class HabitTile extends StatelessWidget {
               ),
               leading: Icon(
                 displayIcon,
-                color: habitBox.getAt(index)!.completed
+                color: habitBox.getAt(widget.index)!.completed
                     ? Colors.grey.shade600
                     : Colors.grey.shade800,
               ),
@@ -182,25 +198,25 @@ class HabitTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        truncatedText(index),
+                        truncatedText(widget.index),
                         style: TextStyle(
-                            color: habitBox.getAt(index)!.completed
+                            color: habitBox.getAt(widget.index)!.completed
                                 ? Colors.grey.shade600
                                 : Colors.black,
-                            decoration: habitBox.getAt(index)!.completed
+                            decoration: habitBox.getAt(widget.index)!.completed
                                 ? TextDecoration.lineThrough
                                 : null),
                       ),
                       streakWidget(),
                     ],
                   ),
-                  if (habitBox.getAt(index)!.amount > 1)
+                  if (habitBox.getAt(widget.index)!.amount > 1)
                     SizedBox(
                       width: 53,
                       child: Column(
                         children: [
                           Text(
-                              "${habitBox.getAt(index)!.amountCompleted}/${habitBox.getAt(index)!.amount}") //-------- HAVE TO CHANGE THE 0 HERE
+                              "$theValue/${habitBox.getAt(widget.index)!.amount}") //-------- HAVE TO CHANGE THE 0 HERE
                           ,
                           const Text(
                             "times",
@@ -209,13 +225,13 @@ class HabitTile extends StatelessWidget {
                         ],
                       ),
                     )
-                  else if (habitBox.getAt(index)!.duration > 0)
+                  else if (habitBox.getAt(widget.index)!.duration > 0)
                     SizedBox(
                       width: 53,
                       child: Column(
                         children: [
                           Text(
-                              "0/${habitBox.getAt(index)!.duration}") //-------- HAVE TO CHANGE THE 0 HERE
+                              "0/${habitBox.getAt(widget.index)!.duration}") //-------- HAVE TO CHANGE THE 0 HERE
                           ,
                           const Text(
                             "minutes",
@@ -230,16 +246,16 @@ class HabitTile extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: habitBox.getAt(index)!.completed
+                  color: habitBox.getAt(widget.index)!.completed
                       ? const Color.fromARGB(255, 37, 67, 54)
                       : const Color.fromARGB(255, 183, 181, 151),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Icon(
-                    habitBox.getAt(index)!.completed
+                    habitBox.getAt(widget.index)!.completed
                         ? Icons.check
                         : Icons.close,
-                    color: habitBox.getAt(index)!.completed
+                    color: habitBox.getAt(widget.index)!.completed
                         ? Colors.white
                         : Colors.grey.shade800),
               ),
