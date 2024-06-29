@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
-import 'package:habit_tracker/util/objects/editHabit.dart';
+import 'package:habit_tracker/util/objects/edit_habit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -216,12 +215,29 @@ class _HabitTileState extends State<HabitTile> {
                       child: Column(
                         children: [
                           Text(
-                              "$theValue/${habitBox.getAt(widget.index)!.amount}") //-------- HAVE TO CHANGE THE 0 HERE
+                            "$theValue/${habitBox.getAt(widget.index)!.amount}",
+                            style: TextStyle(
+                                color: habitBox.getAt(widget.index)!.completed
+                                    ? const Color.fromARGB(255, 37, 67, 54)
+                                    : Colors.black,
+                                fontWeight:
+                                    habitBox.getAt(widget.index)!.completed
+                                        ? FontWeight.bold
+                                        : FontWeight.normal),
+                          ) //-------- HAVE TO CHANGE THE 0 HERE
                           ,
-                          const Text(
+                          Text(
                             "times",
-                            style: TextStyle(fontSize: 12),
-                          )
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: habitBox.getAt(widget.index)!.completed
+                                    ? const Color.fromARGB(255, 37, 67, 54)
+                                    : Colors.black,
+                                fontWeight:
+                                    habitBox.getAt(widget.index)!.completed
+                                        ? FontWeight.bold
+                                        : FontWeight.normal),
+                          ),
                         ],
                       ),
                     )
@@ -231,12 +247,23 @@ class _HabitTileState extends State<HabitTile> {
                       child: Column(
                         children: [
                           Text(
-                              "0/${habitBox.getAt(widget.index)!.duration}") //-------- HAVE TO CHANGE THE 0 HERE
+                            "0/${habitBox.getAt(widget.index)!.duration}",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 37, 67, 54)),
+                          ) //-------- HAVE TO CHANGE THE 0 HERE
                           ,
-                          const Text(
+                          Text(
                             "minutes",
-                            style: TextStyle(fontSize: 12),
-                          )
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: habitBox.getAt(widget.index)!.completed
+                                    ? const Color.fromARGB(255, 37, 67, 54)
+                                    : Colors.black,
+                                fontWeight:
+                                    habitBox.getAt(widget.index)!.completed
+                                        ? FontWeight.bold
+                                        : FontWeight.normal),
+                          ),
                         ],
                       ),
                     )

@@ -2,11 +2,11 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/util/objects/addHabit.dart';
-import 'package:habit_tracker/util/objects/displayHabitTile.dart';
+import 'package:habit_tracker/util/objects/add_habit.dart';
+import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
-import 'package:habit_tracker/util/objects/menuDrawer.dart';
+import 'package:habit_tracker/util/objects/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 
@@ -469,11 +469,11 @@ class HomePageState extends State<HomePage> {
             icon: existingHabit.icon,
             category: existingHabit.category,
             streak: existingHabit.streak,
-            amount: 1,
-            amountCompleted: 0,
-            duration:
-                0, // --------------------------------- MARK TO CHANGE THESE LATER
-            durationCompleted: 0,
+            amount: existingHabit.amount,
+            amountCompleted: existingHabit.amount,
+            duration: existingHabit
+                .duration, // --------------------------------- MARK TO CHANGE THESE LATER
+            durationCompleted: existingHabit.duration,
           );
 
           habitBox.putAt(index, updatedHabit);
