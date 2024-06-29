@@ -67,7 +67,12 @@ class _HabitTileState extends State<HabitTile> {
   @override
   Widget build(BuildContext context) {
     IconData displayIcon = getIcon(widget.index);
-    int theValue = habitBox.getAt(widget.index)!.amountCompleted;
+    int theAmountValue = habitBox.getAt(widget.index)!.amountCompleted;
+    int theDurationValue = habitBox.getAt(widget.index)!.durationCompleted;
+
+    bool amountCheck = false;
+
+    if (habitBox.getAt(widget.index)!.amount > 1) amountCheck = true;
 
     return Column(
       children: [
@@ -104,12 +109,20 @@ class _HabitTileState extends State<HabitTile> {
                             NumberPicker(
                                 axis: Axis.horizontal,
                                 minValue: 0,
-                                maxValue: habitBox.getAt(widget.index)!.amount -
-                                    1, // change to support duration too
-                                value: theValue,
+                                maxValue: amountCheck
+                                    ? habitBox.getAt(widget.index)!.amount - 1
+                                    : habitBox.getAt(widget.index)!.duration -
+                                        1,
+                                value: amountCheck
+                                    ? theAmountValue
+                                    : theDurationValue,
                                 onChanged: (value) {
                                   mystate(() {
-                                    theValue = value;
+                                    if (amountCheck) {
+                                      theAmountValue = value;
+                                    } else {
+                                      theDurationValue = value;
+                                    }
                                   });
                                 }),
                             Padding(
@@ -121,14 +134,28 @@ class _HabitTileState extends State<HabitTile> {
                                   ),
                                   onPressed: () {
                                     mystate(() {
-                                      habitBox
-                                          .getAt(widget.index)!
-                                          .amountCompleted = theValue;
+                                      if (amountCheck) {
+                                        habitBox
+                                            .getAt(widget.index)!
+                                            .amountCompleted = theAmountValue;
+                                      } else {
+                                        habitBox
+                                                .getAt(widget.index)!
+                                                .durationCompleted =
+                                            theDurationValue;
+                                      }
                                     });
                                     setState(() {
-                                      habitBox
-                                          .getAt(widget.index)!
-                                          .amountCompleted = theValue;
+                                      if (amountCheck) {
+                                        habitBox
+                                            .getAt(widget.index)!
+                                            .amountCompleted = theAmountValue;
+                                      } else {
+                                        habitBox
+                                                .getAt(widget.index)!
+                                                .durationCompleted =
+                                            theDurationValue;
+                                      }
                                     });
                                     Navigator.pop(context);
                                   },
@@ -207,13 +234,13 @@ class _HabitTileState extends State<HabitTile> {
                       streakWidget(),
                     ],
                   ),
-                  if (habitBox.getAt(widget.index)!.amount > 1)
+                  if (amountCheck)
                     SizedBox(
-                      width: 53,
+                      width: 54,
                       child: Column(
                         children: [
                           Text(
-                            "$theValue/${habitBox.getAt(widget.index)!.amount}",
+                            "$theAmountValue/${habitBox.getAt(widget.index)!.amount}",
                             style: TextStyle(
                                 color: habitBox.getAt(widget.index)!.completed
                                     ? const Color.fromARGB(255, 37, 67, 54)
@@ -222,8 +249,7 @@ class _HabitTileState extends State<HabitTile> {
                                     habitBox.getAt(widget.index)!.completed
                                         ? FontWeight.bold
                                         : FontWeight.normal),
-                          ) //-------- HAVE TO CHANGE THE 0 HERE
-                          ,
+                          ),
                           Text(
                             "times",
                             style: TextStyle(
@@ -241,15 +267,21 @@ class _HabitTileState extends State<HabitTile> {
                     )
                   else if (habitBox.getAt(widget.index)!.duration > 0)
                     SizedBox(
-                      width: 53,
+                      width: 54,
                       child: Column(
                         children: [
                           Text(
-                            "0/${habitBox.getAt(widget.index)!.duration}",
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 37, 67, 54)),
-                          ) //-------- HAVE TO CHANGE THE 0 HERE
-                          ,
+                            "$theDurationValue/${habitBox.getAt(widget.index)!.duration}",
+                            style: TextStyle(
+                              color: habitBox.getAt(widget.index)!.completed
+                                  ? const Color.fromARGB(255, 37, 67, 54)
+                                  : Colors.black,
+                              fontWeight:
+                                  habitBox.getAt(widget.index)!.completed
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                            ),
+                          ),
                           Text(
                             "minutes",
                             style: TextStyle(

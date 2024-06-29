@@ -197,8 +197,8 @@ Widget addHabit(formKey, validateText, createNewTask) {
                       ),
                       Center(
                         child: Text(currentDurationValue == 1
-                            ? "1 minute a day"
-                            : "$currentDurationValue minutes a day"),
+                            ? "1 minute"
+                            : "$currentDurationValue minutes"),
                       ),
                     ],
                   ),
