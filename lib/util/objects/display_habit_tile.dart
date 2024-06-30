@@ -87,93 +87,93 @@ class _HabitTileState extends State<HabitTile> {
                     : 0.50,
             motion: const ScrollMotion(),
             children: [
-              if (habitBox.getAt(widget.index)!.completed == false &&
-                      habitBox.getAt(widget.index)!.amount > 1 ||
-                  habitBox.getAt(widget.index)!.duration > 0)
-                SlidableAction(
-                  onPressed: (context) => showDialog(
-                    context: context,
-                    builder: (BuildContext context) => StatefulBuilder(
-                      builder: (BuildContext context, StateSetter mystate) =>
-                          AlertDialog(
-                        backgroundColor:
-                            const Color.fromARGB(255, 218, 211, 190),
-                        title: const Center(
-                          child: Text("Enter amount",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 22)),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            NumberPicker(
-                                axis: Axis.horizontal,
-                                minValue: 0,
-                                maxValue: amountCheck
-                                    ? habitBox.getAt(widget.index)!.amount - 1
-                                    : habitBox.getAt(widget.index)!.duration -
-                                        1,
-                                value: amountCheck
-                                    ? theAmountValue
-                                    : theDurationValue,
-                                onChanged: (value) {
-                                  mystate(() {
-                                    if (amountCheck) {
-                                      theAmountValue = value;
-                                    } else {
-                                      theDurationValue = value;
-                                    }
-                                  });
-                                }),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 37, 67, 54),
-                                  ),
-                                  onPressed: () {
+              if (habitBox.getAt(widget.index)!.completed == false)
+                if (habitBox.getAt(widget.index)!.duration > 0 ||
+                    habitBox.getAt(widget.index)!.amount > 1)
+                  SlidableAction(
+                    onPressed: (context) => showDialog(
+                      context: context,
+                      builder: (BuildContext context) => StatefulBuilder(
+                        builder: (BuildContext context, StateSetter mystate) =>
+                            AlertDialog(
+                          backgroundColor:
+                              const Color.fromARGB(255, 218, 211, 190),
+                          title: const Center(
+                            child: Text("Enter amount",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 22)),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              NumberPicker(
+                                  axis: Axis.horizontal,
+                                  minValue: 0,
+                                  maxValue: amountCheck
+                                      ? habitBox.getAt(widget.index)!.amount - 1
+                                      : habitBox.getAt(widget.index)!.duration -
+                                          1,
+                                  value: amountCheck
+                                      ? theAmountValue
+                                      : theDurationValue,
+                                  onChanged: (value) {
                                     mystate(() {
                                       if (amountCheck) {
-                                        habitBox
-                                            .getAt(widget.index)!
-                                            .amountCompleted = theAmountValue;
+                                        theAmountValue = value;
                                       } else {
-                                        habitBox
-                                                .getAt(widget.index)!
-                                                .durationCompleted =
-                                            theDurationValue;
+                                        theDurationValue = value;
                                       }
                                     });
-                                    setState(() {
-                                      if (amountCheck) {
-                                        habitBox
-                                            .getAt(widget.index)!
-                                            .amountCompleted = theAmountValue;
-                                      } else {
-                                        habitBox
-                                                .getAt(widget.index)!
-                                                .durationCompleted =
-                                            theDurationValue;
-                                      }
-                                    });
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    "Enter",
-                                    style: TextStyle(color: Colors.white),
-                                  )),
-                            ),
-                          ],
+                                  }),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          const Color.fromARGB(255, 37, 67, 54),
+                                    ),
+                                    onPressed: () {
+                                      mystate(() {
+                                        if (amountCheck) {
+                                          habitBox
+                                              .getAt(widget.index)!
+                                              .amountCompleted = theAmountValue;
+                                        } else {
+                                          habitBox
+                                                  .getAt(widget.index)!
+                                                  .durationCompleted =
+                                              theDurationValue;
+                                        }
+                                      });
+                                      setState(() {
+                                        if (amountCheck) {
+                                          habitBox
+                                              .getAt(widget.index)!
+                                              .amountCompleted = theAmountValue;
+                                        } else {
+                                          habitBox
+                                                  .getAt(widget.index)!
+                                                  .durationCompleted =
+                                              theDurationValue;
+                                        }
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      "Enter",
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                    backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+                    foregroundColor: Colors.white,
+                    label: 'Enter',
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-                  foregroundColor: Colors.white,
-                  label: 'Enter',
-                  borderRadius: BorderRadius.circular(15),
-                ),
               const SizedBox(width: 5),
               SlidableAction(
                 onPressed: (context) => widget.checkTask(widget.index),

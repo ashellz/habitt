@@ -19,7 +19,7 @@ final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
 final notificationsBox = Hive.box<bool>('notifications');
 late HabitData myHabit;
-String dropDownValue = 'Any Time';
+String dropDownValue = 'Any time';
 final _formKey = GlobalKey<FormState>();
 bool eveningVisible = false,
     anyTimeVisible = false,
@@ -33,10 +33,6 @@ double anyTimeHeight = 0,
     eveningHeight = 0,
     afternoonHeight = 0,
     morningHeight = 0;
-int undoAmount = 1,
-    undoDuration = 0,
-    undoAmountCompleted = 0,
-    undoDurationCompleted = 0;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, Key? homePageKey});
@@ -173,6 +169,9 @@ class HomePageState extends State<HomePage> {
     createcontroller.clear();
     updatedIcon = startIcon;
     dropDownValue = 'Any time';
+    currentAmountValue = 2;
+    currentDurationValue = 1;
+    habitGoal = 0;
     Navigator.pop(context);
     showPopup(context, "Habit added!");
   }
@@ -454,13 +453,6 @@ class HomePageState extends State<HomePage> {
       final habitBox = Hive.box<HabitData>('habits');
       final existingHabit = habitBox.getAt(index);
 
-      if (undoAmount == 1 && undoDuration == 0) {
-        undoAmount = habitBox.getAt(index)!.amount;
-        undoDuration = habitBox.getAt(index)!.duration;
-        undoAmountCompleted = habitBox.getAt(index)!.amountCompleted;
-        undoDurationCompleted = habitBox.getAt(index)!.durationCompleted;
-      }
-
       if (existingHabit != null) {
         if (firstCheck) {
           final updatedHabit = HabitData(
@@ -471,8 +463,7 @@ class HomePageState extends State<HomePage> {
             streak: existingHabit.streak,
             amount: existingHabit.amount,
             amountCompleted: existingHabit.amount,
-            duration: existingHabit
-                .duration, // --------------------------------- MARK TO CHANGE THESE LATER
+            duration: existingHabit.duration,
             durationCompleted: existingHabit.duration,
           );
 
@@ -484,10 +475,10 @@ class HomePageState extends State<HomePage> {
               icon: existingHabit.icon,
               category: existingHabit.category,
               streak: existingHabit.streak,
-              amount: undoAmount,
-              amountCompleted: undoAmountCompleted,
-              duration: undoDuration,
-              durationCompleted: undoDurationCompleted);
+              amount: existingHabit.amount,
+              amountCompleted: 0,
+              duration: existingHabit.duration,
+              durationCompleted: 0);
 
           habitBox.putAt(index, updatedHabit);
         }
