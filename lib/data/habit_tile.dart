@@ -3,12 +3,18 @@ import 'package:hive/hive.dart';
 part 'habit_tile.g.dart';
 
 @HiveType(typeId: 1)
-class HabitData {
+class HabitData extends HiveObject {
   HabitData(
       {required this.name,
       required this.completed,
       required this.icon,
-      required this.category});
+      required this.category,
+      required this.streak,
+      required this.amount,
+      required this.amountName,
+      required this.amountCompleted,
+      required this.duration,
+      required this.durationCompleted});
   @HiveField(0)
   String name;
 
@@ -20,4 +26,22 @@ class HabitData {
 
   @HiveField(3)
   String category;
+
+  @HiveField(4)
+  int streak;
+
+  @HiveField(5)
+  int amount;
+
+  @HiveField(6)
+  String amountName;
+
+  @HiveField(7)
+  int amountCompleted;
+
+  @HiveField(8)
+  int duration;
+
+  @HiveField(9)
+  int durationCompleted;
 }

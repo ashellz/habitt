@@ -25,8 +25,8 @@ IconData getIcon(int index) {
       return Icons.delete_rounded;
     case "Icons.edit_document":
       return Icons.edit_document;
-    case "Icons.edit_calendar":
-      return Icons.edit_calendar;
+    case "Icons.laptop_mac_rounded":
+      return Icons.laptop_mac_rounded;
     case "Ionicons.md_shirt":
       return Ionicons.md_shirt;
     case "Icons.directions_bike":
@@ -94,8 +94,8 @@ String getIconString(IconData? icon) {
       return "Icons.delete_rounded";
     case Icons.edit_document:
       return "Icons.edit_document";
-    case Icons.edit_calendar:
-      return "Icons.edit_calendar";
+    case Icons.laptop_mac_rounded:
+      return "Icons.laptop_mac_rounded";
     case Ionicons.md_shirt:
       return "Ionicons.md_shirt";
     case Icons.directions_bike:

@@ -40,6 +40,10 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_launcher_icons: ^0.13.1
+  awesome_notifications_core: ^0.9.3
+  awesome_notifications: any
+  workmanager: ^0.5.2
+  numberpicker: ^2.1.2
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +74,7 @@ flutter:
     - assets/images/afternoon_picture.png
     - assets/images/evening_picture.png
     - assets/images/anytime_picture.png
+    - assets/images/ic_launcher.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
