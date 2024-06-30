@@ -24,6 +24,7 @@ Things to fix:
 - possible fix: time is 7 on phone and not 19
 
 4. Fix only spacebars as habit name
+5. Limit characters to 10 in naming the amount
 
 Fixed things:
 
@@ -51,19 +52,29 @@ Fixed things:
 22. FINALLY make notifications and streaks work
 23. Make the streak number update right away when the habit is completed and undo if habit is undone
 24. Implement Custom notifications feature
+25. Reset amount name after a habit is created
 
 Add Features:
+
+## ADDED
+
 Add how many times to complete the habit (the quantity of the habit).
 
 - In the database file of a habit add a quantity field as of int (default: 1).
 - When completing the habit with a quantity more than 1 you will be given more slideable options, or at least a dialog box to enter if you've done the habit that many times (default: max amount)
 - Add a new field left to the completion icon displaying how many times you've done the habit out of the specified amount
 
+## ADDED
+
 Add how long to do the task.
 
 - In the database file of a habit add a time field as an int (default: 0).
-- Limit the time to 12h a day.
+
+#### YET TO ADD - Limit the time to 12h a day.
+
 - Add a new field left to the completion icon displaying how long you've done the habit for compared to the specified amount of time
+
+## ADDED
 
 When creating the habit make the user choose between creating a task based on time goal or amount goal.
 

@@ -45,6 +45,7 @@ Future<void> main() async {
         category: "Any time",
         streak: 0,
         amount: 2,
+        amountName: "habits",
         amountCompleted: 0,
         duration: 0,
         durationCompleted: 0));
@@ -55,6 +56,7 @@ Future<void> main() async {
         category: "Any time",
         streak: 0,
         amount: 1,
+        amountName: "times",
         amountCompleted: 1,
         duration: 0,
         durationCompleted: 0));

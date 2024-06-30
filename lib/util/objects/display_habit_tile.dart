@@ -251,7 +251,7 @@ class _HabitTileState extends State<HabitTile> {
                                         : FontWeight.normal),
                           ),
                           Text(
-                            "times",
+                            habitBox.getAt(widget.index)!.amountName,
                             style: TextStyle(
                                 fontSize: 12,
                                 color: habitBox.getAt(widget.index)!.completed

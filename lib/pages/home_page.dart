@@ -149,7 +149,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void createNewTask() {
+  void createNewHabit() {
     setState(() {
       myHabit = HabitData(
         name: createcontroller.text,
@@ -158,6 +158,7 @@ class HomePageState extends State<HomePage> {
         category: dropDownValue,
         streak: 0,
         amount: habitGoal == 1 ? currentAmountValue : 1,
+        amountName: amountNameController.text,
         amountCompleted: 0,
         duration: habitGoal == 2 ? currentDurationValue : 0,
         durationCompleted: 0,
@@ -169,6 +170,7 @@ class HomePageState extends State<HomePage> {
     createcontroller.clear();
     updatedIcon = startIcon;
     dropDownValue = 'Any time';
+    amountNameController.text = "times";
     currentAmountValue = 2;
     currentDurationValue = 1;
     habitGoal = 0;
@@ -434,6 +436,7 @@ class HomePageState extends State<HomePage> {
             category: dropDownValue,
             streak: habitBox.getAt(index)?.streak ?? 0,
             amount: 1,
+            amountName: "new name", //------ CHANGE TO CONTROLLER
             amountCompleted: 0,
             duration:
                 0, // --------------------------------- MARK TO CHANGE THESE LATER
@@ -462,6 +465,7 @@ class HomePageState extends State<HomePage> {
             category: existingHabit.category,
             streak: existingHabit.streak,
             amount: existingHabit.amount,
+            amountName: existingHabit.amountName,
             amountCompleted: existingHabit.amount,
             duration: existingHabit.duration,
             durationCompleted: existingHabit.duration,
@@ -476,6 +480,7 @@ class HomePageState extends State<HomePage> {
               category: existingHabit.category,
               streak: existingHabit.streak,
               amount: existingHabit.amount,
+              amountName: existingHabit.amountName,
               amountCompleted: 0,
               duration: existingHabit.duration,
               durationCompleted: 0);
@@ -512,11 +517,16 @@ class HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
             onPressed: () => showModalBottomSheet(
-              enableDrag: true,
+              isScrollControlled: true,
               context: context,
               backgroundColor: const Color.fromARGB(255, 218, 211, 190),
               builder: (BuildContext context) {
-                return addHabit(_formKey, _validateText, createNewTask);
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: addHabit(_formKey, _validateText, createNewHabit),
+                );
               },
             ).whenComplete(() {
               createcontroller.clear();
