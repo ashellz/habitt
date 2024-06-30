@@ -8,12 +8,14 @@ import 'package:hive/hive.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 final habitBox = Hive.box<HabitData>('habits');
+late int habitGoalEdit;
+late int amount;
+late int duration;
+bool updated = false;
+TextEditingController amountNameControllerEdit = TextEditingController();
+bool dropDownChanged = false;
 
-Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
-  late int habitGoal;
-  late int amountValue;
-  late int durationValue;
-  TextEditingController amountNameController = TextEditingController();
+Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) {
       if (!changed) {
@@ -23,20 +25,31 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
         editcontroller.text = habitBox.getAt(index)!.name;
       }
 
-      if (habitBox.getAt(index)!.amount > 1) {
-        habitGoal = 1;
-        amountValue = habitBox.getAt(index)!.amountCompleted;
-        amountNameController.text = habitBox.getAt(index)!.amountName;
-      } else {
-        habitGoal = 2;
-        durationValue = habitBox.getAt(index)!.durationCompleted;
+      if (!updated) {
+        if (habitBox.getAt(index)!.amount > 1) {
+          habitGoalEdit = 1;
+          amount = habitBox.getAt(index)!.amount;
+          amountNameControllerEdit.text = habitBox.getAt(index)!.amountName;
+          duration = 1;
+        } else {
+          habitGoalEdit = 2;
+          duration = habitBox.getAt(index)!.duration == 0
+              ? 1
+              : habitBox.getAt(index)!.duration;
+          amount = habitBox.getAt(index)!.amount == 1
+              ? 2
+              : habitBox.getAt(index)!.amount;
+        }
+        updated = true;
       }
+
+      if (!dropDownChanged) dropDownValue = habitBox.getAt(index)!.category;
 
       return SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.65,
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +84,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextFormField(
-                    validator: _validateText,
+                    validator: validateText,
                     controller: editcontroller,
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
@@ -122,6 +135,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                       items: dropdownItems,
                       onChanged: (String? newValue) {
                         mystate(() {
+                          dropDownChanged = true;
                           dropDownValue = newValue!;
                         });
                       },
@@ -136,11 +150,11 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                       ElevatedButton(
                         onPressed: () {
                           mystate(() {
-                            if (habitGoal == 1) {
-                              habitGoal = 0;
+                            if (habitGoalEdit == 1) {
+                              habitGoalEdit = 0;
                             } else {
-                              amountValue = 2;
-                              habitGoal = 1;
+                              amount = 2;
+                              habitGoalEdit = 1;
                             }
                           });
                         },
@@ -148,7 +162,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                           fixedSize: WidgetStateProperty.all<Size>(
                               const Size(170, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
-                            habitGoal == 1
+                            habitGoalEdit == 1
                                 ? const Color.fromARGB(255, 107, 138, 122)
                                 : const Color.fromARGB(255, 183, 181, 151),
                           ),
@@ -159,11 +173,11 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                       ElevatedButton(
                         onPressed: () {
                           mystate(() {
-                            if (habitGoal == 2) {
-                              habitGoal = 0;
+                            if (habitGoalEdit == 2) {
+                              habitGoalEdit = 0;
                             } else {
-                              durationValue = 1;
-                              habitGoal = 2;
+                              duration = 1;
+                              habitGoalEdit = 2;
                             }
                           });
                         },
@@ -171,7 +185,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                           fixedSize: WidgetStateProperty.all<Size>(
                               const Size(170, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
-                            habitGoal == 2
+                            habitGoalEdit == 2
                                 ? const Color.fromARGB(255, 107, 138, 122)
                                 : const Color.fromARGB(255, 183, 181, 151),
                           ),
@@ -183,7 +197,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                   ),
                 ),
                 Visibility(
-                  visible: habitGoal == 1,
+                  visible: habitGoalEdit == 1,
                   child: Padding(
                     padding:
                         const EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -191,18 +205,17 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                       children: [
                         Center(
                           child: NumberPicker(
-                            value: amountValue,
+                            value: amount,
                             minValue: 2,
                             maxValue: 100,
                             haptics: true,
                             axis: Axis.horizontal,
-                            onChanged: (value) =>
-                                mystate(() => amountValue = value),
+                            onChanged: (value) => mystate(() => amount = value),
                           ),
                         ),
                         Center(
                           child:
-                              Text("$amountValue ${amountNameController.text}"),
+                              Text("$amount ${amountNameControllerEdit.text}"),
                         ),
                         const SizedBox(
                           height: 5,
@@ -212,7 +225,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                             LengthLimitingTextInputFormatter(10),
                             LowerCaseTextInputFormatter(),
                           ],
-                          controller: amountNameController,
+                          controller: amountNameControllerEdit,
                           decoration: const InputDecoration(
                               contentPadding:
                                   EdgeInsets.symmetric(horizontal: 20.0),
@@ -229,7 +242,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                   ),
                 ),
                 Visibility(
-                  visible: habitGoal == 2,
+                  visible: habitGoalEdit == 2,
                   child: Padding(
                     padding:
                         const EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -237,19 +250,18 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                       children: [
                         Center(
                           child: NumberPicker(
-                            value: durationValue,
+                            value: duration,
                             minValue: 1,
                             maxValue: 100,
                             haptics: true,
                             axis: Axis.horizontal,
                             onChanged: (value) =>
-                                mystate(() => durationValue = value),
+                                mystate(() => duration = value),
                           ),
                         ),
                         Center(
-                          child: Text(durationValue == 1
-                              ? "1 minute"
-                              : "$durationValue minutes"),
+                          child: Text(
+                              duration == 1 ? "1 minute" : "$duration minutes"),
                         ),
                       ],
                     ),
@@ -284,7 +296,7 @@ Widget editHabit(_formKey, _validateText, deletetask, edithabit, index) {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             edithabit(index);
                           }
                         },

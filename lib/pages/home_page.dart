@@ -6,6 +6,7 @@ import 'package:habit_tracker/util/objects/add_habit.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
+import 'package:habit_tracker/util/objects/edit_habit.dart';
 import 'package:habit_tracker/util/objects/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
@@ -303,7 +304,7 @@ class HomePageState extends State<HomePage> {
 
   late String category;
 
-  Future<void> deleteTask(int index) async {
+  Future<void> deleteHabit(int index) async {
     await showDialog(
       context: context,
       builder: (context) {
@@ -317,7 +318,7 @@ class HomePageState extends State<HomePage> {
                 const Center(
                   child: Text(
                     textAlign: TextAlign.center,
-                    "Are you sure you want to delete this task?",
+                    "Are you sure you want to delete this habit?",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -422,7 +423,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void editTask(int index) {
+  void editHabit(int index) {
     editedFrom = habitBox.getAt(index)!.category;
     editedTo = dropDownValue;
     editHeights();
@@ -435,11 +436,10 @@ class HomePageState extends State<HomePage> {
             icon: getIconString(updatedIcon.icon),
             category: dropDownValue,
             streak: habitBox.getAt(index)?.streak ?? 0,
-            amount: 1,
-            amountName: "new name", //------ CHANGE TO CONTROLLER
+            amount: habitGoalEdit == 2 ? 1 : amount,
+            amountName: amountNameControllerEdit.text,
             amountCompleted: 0,
-            duration:
-                0, // --------------------------------- MARK TO CHANGE THESE LATER
+            duration: duration,
             durationCompleted: 0,
           ));
     });
@@ -451,7 +451,7 @@ class HomePageState extends State<HomePage> {
     showPopup(context, "Habit edited!");
   }
 
-  void checkTask(int index) {
+  void checkHabit(int index) {
     setState(() {
       final habitBox = Hive.box<HabitData>('habits');
       final existingHabit = habitBox.getAt(index);
@@ -599,9 +599,9 @@ class HomePageState extends State<HomePage> {
                       opacity: morningVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edithabit: editTask,
-                        deletetask: deleteTask,
-                        checkTask: checkTask,
+                        edithabit: editHabit,
+                        deletehabit: deleteHabit,
+                        checkHabit: checkHabit,
                         index: i,
                       ),
                     ),
@@ -667,9 +667,9 @@ class HomePageState extends State<HomePage> {
                       opacity: afternoonVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edithabit: editTask,
-                        deletetask: deleteTask,
-                        checkTask: checkTask,
+                        edithabit: editHabit,
+                        deletehabit: deleteHabit,
+                        checkHabit: checkHabit,
                         index: i,
                       ),
                     ),
@@ -735,9 +735,9 @@ class HomePageState extends State<HomePage> {
                       opacity: eveningVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edithabit: editTask,
-                        deletetask: deleteTask,
-                        checkTask: checkTask,
+                        edithabit: editHabit,
+                        deletehabit: deleteHabit,
+                        checkHabit: checkHabit,
                         index: i,
                       ),
                     ),
@@ -805,9 +805,9 @@ class HomePageState extends State<HomePage> {
                       opacity: anyTimeVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edithabit: editTask,
-                        deletetask: deleteTask,
-                        checkTask: checkTask,
+                        edithabit: editHabit,
+                        deletehabit: deleteHabit,
+                        checkHabit: checkHabit,
                         index: i,
                       ),
                     ),

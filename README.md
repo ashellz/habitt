@@ -82,3 +82,7 @@ Add a feature so a user can edit completion values of habits the last 5 days
 - Add DateTime field to the habit database
 
 Make new amount and duration features editable within a habit
+
+Add cookie icon
+
+Add chef top icon

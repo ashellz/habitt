@@ -14,15 +14,15 @@ class HabitTile extends StatefulWidget {
   const HabitTile({
     super.key,
     required this.edithabit,
-    required this.deletetask,
+    required this.deletehabit,
     required this.index,
-    required this.checkTask,
+    required this.checkHabit,
   });
 
   final int index;
-  final Future<void> Function(int index) deletetask;
+  final Future<void> Function(int index) deletehabit;
   final void Function(int index) edithabit;
-  final void Function(int index) checkTask;
+  final void Function(int index) checkHabit;
 
   @override
   State<HabitTile> createState() => _HabitTileState();
@@ -176,7 +176,7 @@ class _HabitTileState extends State<HabitTile> {
                   ),
               const SizedBox(width: 5),
               SlidableAction(
-                onPressed: (context) => widget.checkTask(widget.index),
+                onPressed: (context) => widget.checkHabit(widget.index),
                 backgroundColor: const Color.fromARGB(255, 37, 67, 54),
                 foregroundColor: Colors.white,
                 label:
@@ -196,11 +196,13 @@ class _HabitTileState extends State<HabitTile> {
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  child: editHabit(_formKey, _validateText, widget.deletetask,
+                  child: editHabit(_formKey, _validateText, widget.deletehabit,
                       widget.edithabit, widget.index),
                 );
               },
             ).whenComplete(() {
+              updated = false;
+              dropDownChanged = false;
               editcontroller.clear();
               changed = false;
               updatedIcon = startIcon;
