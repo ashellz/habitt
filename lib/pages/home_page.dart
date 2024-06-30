@@ -495,6 +495,8 @@ class HomePageState extends State<HomePage> {
   String? _validateText(String? value) {
     if (value?.isEmpty ?? true) {
       return 'Please enter some text';
+    } else if (value == null || value.trim().isEmpty) {
+      return 'Input cannot be just spaces';
     }
     return null;
   }
@@ -597,7 +599,7 @@ class HomePageState extends State<HomePage> {
                       opacity: morningVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edittask: editTask,
+                        edithabit: editTask,
                         deletetask: deleteTask,
                         checkTask: checkTask,
                         index: i,
@@ -665,7 +667,7 @@ class HomePageState extends State<HomePage> {
                       opacity: afternoonVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edittask: editTask,
+                        edithabit: editTask,
                         deletetask: deleteTask,
                         checkTask: checkTask,
                         index: i,
@@ -733,7 +735,7 @@ class HomePageState extends State<HomePage> {
                       opacity: eveningVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edittask: editTask,
+                        edithabit: editTask,
                         deletetask: deleteTask,
                         checkTask: checkTask,
                         index: i,
@@ -803,7 +805,7 @@ class HomePageState extends State<HomePage> {
                       opacity: anyTimeVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 200),
                       child: HabitTile(
-                        edittask: editTask,
+                        edithabit: editTask,
                         deletetask: deleteTask,
                         checkTask: checkTask,
                         index: i,

@@ -23,9 +23,6 @@ Things to fix:
 
 - possible fix: time is 7 on phone and not 19
 
-4. Fix only spacebars as habit name
-5. Limit characters to 10 in naming the amount
-
 Fixed things:
 
 1. When a new habit is created, open the category it's created in
@@ -53,6 +50,8 @@ Fixed things:
 23. Make the streak number update right away when the habit is completed and undo if habit is undone
 24. Implement Custom notifications feature
 25. Reset amount name after a habit is created
+26. Fix only spacebars as habit name
+27. Limit characters to 10 in naming the amount
 
 Add Features:
 
@@ -81,3 +80,5 @@ When creating the habit make the user choose between creating a task based on ti
 Add a feature so a user can edit completion values of habits the last 5 days
 
 - Add DateTime field to the habit database
+
+Make new amount and duration features editable within a habit

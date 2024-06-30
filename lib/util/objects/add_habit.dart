@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/icons_page.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -57,6 +58,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                         },
                         icon: updatedIcon,
                       ),
+
                       labelStyle: const TextStyle(fontSize: 16.0),
                       labelText: "Habit Name",
                       border: const OutlineInputBorder(
@@ -187,6 +189,10 @@ Widget addHabit(formKey, validateText, createNewTask) {
                           height: 5,
                         ),
                         TextFormField(
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10),
+                            LowerCaseTextInputFormatter(),
+                          ],
                           controller: amountNameController,
                           decoration: const InputDecoration(
                               contentPadding:
@@ -266,4 +272,15 @@ Widget addHabit(formKey, validateText, createNewTask) {
       );
     },
   );
+}
+
+class LowerCaseTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return newValue.copyWith(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
 }

@@ -13,7 +13,7 @@ final _formKey = GlobalKey<FormState>();
 class HabitTile extends StatefulWidget {
   const HabitTile({
     super.key,
-    required this.edittask,
+    required this.edithabit,
     required this.deletetask,
     required this.index,
     required this.checkTask,
@@ -21,7 +21,7 @@ class HabitTile extends StatefulWidget {
 
   final int index;
   final Future<void> Function(int index) deletetask;
-  final void Function(int index) edittask;
+  final void Function(int index) edithabit;
   final void Function(int index) checkTask;
 
   @override
@@ -188,13 +188,17 @@ class _HabitTileState extends State<HabitTile> {
           ),
           child: GestureDetector(
             onTap: () => showModalBottomSheet(
-              enableDrag: true,
+              isScrollControlled: true,
               context: context,
               backgroundColor: const Color.fromARGB(255, 218, 211, 190),
               builder: (BuildContext context) {
-                dropDownValue = habitBox.getAt(widget.index)!.category;
-                return editHabit(_formKey, _validateText, widget.deletetask,
-                    widget.edittask, widget.index);
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: editHabit(_formKey, _validateText, widget.deletetask,
+                      widget.edithabit, widget.index),
+                );
               },
             ).whenComplete(() {
               editcontroller.clear();
@@ -236,7 +240,7 @@ class _HabitTileState extends State<HabitTile> {
                   ),
                   if (amountCheck)
                     SizedBox(
-                      width: 54,
+                      width: 60,
                       child: Column(
                         children: [
                           Text(
@@ -267,7 +271,7 @@ class _HabitTileState extends State<HabitTile> {
                     )
                   else if (habitBox.getAt(widget.index)!.duration > 0)
                     SizedBox(
-                      width: 54,
+                      width: 60,
                       child: Column(
                         children: [
                           Text(
