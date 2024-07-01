@@ -127,7 +127,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                         },
                         style: ButtonStyle(
                           fixedSize: WidgetStateProperty.all<Size>(Size(
-                              MediaQuery.of(context).size.width * 0.43, 45)),
+                              MediaQuery.of(context).size.width * 0.42, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
                             habitGoal == 1
                                 ? const Color.fromARGB(255, 107, 138, 122)
@@ -135,6 +135,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                           ),
                         ),
                         child: const Text("Number of times",
+                            textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.black)),
                       ),
                       const SizedBox(

@@ -106,10 +106,11 @@ class _HabitTileState extends State<HabitTile> {
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               NumberPicker(
                                   axis: Axis.horizontal,
+                                  itemWidth:
+                                      MediaQuery.of(context).size.width / 4.5,
                                   minValue: 0,
                                   maxValue: amountCheck
                                       ? habitBox.getAt(widget.index)!.amount - 1
