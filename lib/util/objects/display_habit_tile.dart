@@ -80,11 +80,11 @@ class _HabitTileState extends State<HabitTile> {
         Slidable(
           endActionPane: ActionPane(
             extentRatio: habitBox.getAt(widget.index)!.completed
-                ? 0.275
+                ? 0.320
                 : habitBox.getAt(widget.index)!.amount <= 1 &&
                         habitBox.getAt(widget.index)!.duration <= 0
-                    ? 0.275
-                    : 0.50,
+                    ? 0.320
+                    : 0.60,
             motion: const ScrollMotion(),
             children: [
               if (habitBox.getAt(widget.index)!.completed == false)
@@ -105,6 +105,8 @@ class _HabitTileState extends State<HabitTile> {
                           ),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               NumberPicker(
                                   axis: Axis.horizontal,

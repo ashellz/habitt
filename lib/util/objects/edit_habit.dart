@@ -159,8 +159,8 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                           });
                         },
                         style: ButtonStyle(
-                          fixedSize: WidgetStateProperty.all<Size>(
-                              const Size(170, 45)),
+                          fixedSize: WidgetStateProperty.all<Size>(Size(
+                              MediaQuery.of(context).size.width * 0.43, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
                             habitGoalEdit == 1
                                 ? const Color.fromARGB(255, 107, 138, 122)
@@ -169,6 +169,9 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                         ),
                         child: const Text("Number of times",
                             style: TextStyle(color: Colors.black)),
+                      ),
+                      const SizedBox(
+                        width: 15,
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -182,8 +185,8 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                           });
                         },
                         style: ButtonStyle(
-                          fixedSize: WidgetStateProperty.all<Size>(
-                              const Size(170, 45)),
+                          fixedSize: WidgetStateProperty.all<Size>(Size(
+                              MediaQuery.of(context).size.width * 0.43, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
                             habitGoalEdit == 2
                                 ? const Color.fromARGB(255, 107, 138, 122)

@@ -533,6 +533,11 @@ class HomePageState extends State<HomePage> {
             ).whenComplete(() {
               createcontroller.clear();
               updatedIcon = startIcon;
+              habitGoal = 0;
+              dropDownValue = 'Any time';
+              amountNameController.text = "times";
+              currentAmountValue = 2;
+              currentDurationValue = 1;
             }),
           ),
         ],

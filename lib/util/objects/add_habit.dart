@@ -126,8 +126,8 @@ Widget addHabit(formKey, validateText, createNewTask) {
                           });
                         },
                         style: ButtonStyle(
-                          fixedSize: WidgetStateProperty.all<Size>(
-                              const Size(170, 45)),
+                          fixedSize: WidgetStateProperty.all<Size>(Size(
+                              MediaQuery.of(context).size.width * 0.43, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
                             habitGoal == 1
                                 ? const Color.fromARGB(255, 107, 138, 122)
@@ -136,6 +136,9 @@ Widget addHabit(formKey, validateText, createNewTask) {
                         ),
                         child: const Text("Number of times",
                             style: TextStyle(color: Colors.black)),
+                      ),
+                      const SizedBox(
+                        width: 15,
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -149,8 +152,8 @@ Widget addHabit(formKey, validateText, createNewTask) {
                           });
                         },
                         style: ButtonStyle(
-                          fixedSize: WidgetStateProperty.all<Size>(
-                              const Size(170, 45)),
+                          fixedSize: WidgetStateProperty.all<Size>(Size(
+                              MediaQuery.of(context).size.width * 0.43, 45)),
                           backgroundColor: WidgetStateProperty.all<Color>(
                             habitGoal == 2
                                 ? const Color.fromARGB(255, 107, 138, 122)
