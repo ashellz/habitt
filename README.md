@@ -23,6 +23,8 @@ Things to fix:
 
 - possible fix: time is 7 on phone and not 19
 
+4. Editing normal habits bring duration to 1 as default, fix so nothing apepars
+
 Fixed things:
 
 1. When a new habit is created, open the category it's created in
@@ -81,6 +83,7 @@ Add a feature so a user can edit completion values of habits the last 5 days
 
 - Add DateTime field to the habit database
 
+## ADDED
 Make new amount and duration features editable within a habit
 
 Add cookie icon
