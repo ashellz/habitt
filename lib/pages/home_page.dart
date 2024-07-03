@@ -27,8 +27,7 @@ bool eveningVisible = false,
     afternoonVisible = false,
     morningVisible = false,
     changed = false,
-    deleted = false,
-    firstCheck = true;
+    deleted = false;
 double anyTimeHeight = 0,
     containerHeight = 0,
     eveningHeight = 0,
@@ -457,38 +456,22 @@ class HomePageState extends State<HomePage> {
       final existingHabit = habitBox.getAt(index);
 
       if (existingHabit != null) {
-        if (firstCheck) {
-          final updatedHabit = HabitData(
-            name: existingHabit.name,
-            completed: !existingHabit.completed,
-            icon: existingHabit.icon,
-            category: existingHabit.category,
-            streak: existingHabit.streak,
-            amount: existingHabit.amount,
-            amountName: existingHabit.amountName,
-            amountCompleted: existingHabit.amount,
-            duration: existingHabit.duration,
-            durationCompleted: existingHabit.duration,
-          );
+        final updatedHabit = HabitData(
+          name: existingHabit.name,
+          completed: !existingHabit.completed,
+          icon: existingHabit.icon,
+          category: existingHabit.category,
+          streak: existingHabit.streak,
+          amount: existingHabit.amount,
+          amountName: existingHabit.amountName,
+          amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+          duration: existingHabit.duration,
+          durationCompleted:
+              !existingHabit.completed ? existingHabit.duration : 0,
+        );
 
-          habitBox.putAt(index, updatedHabit);
-        } else {
-          final updatedHabit = HabitData(
-              name: existingHabit.name,
-              completed: !existingHabit.completed,
-              icon: existingHabit.icon,
-              category: existingHabit.category,
-              streak: existingHabit.streak,
-              amount: existingHabit.amount,
-              amountName: existingHabit.amountName,
-              amountCompleted: 0,
-              duration: existingHabit.duration,
-              durationCompleted: 0);
-
-          habitBox.putAt(index, updatedHabit);
-        }
+        habitBox.putAt(index, updatedHabit);
       }
-      firstCheck = !firstCheck;
     });
   }
 
