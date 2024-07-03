@@ -435,10 +435,12 @@ class HomePageState extends State<HomePage> {
             icon: getIconString(updatedIcon.icon),
             category: dropDownValue,
             streak: habitBox.getAt(index)?.streak ?? 0,
-            amount: habitGoalEdit == 2 ? 1 : amount,
+            amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
             amountName: amountNameControllerEdit.text,
             amountCompleted: 0,
-            duration: duration,
+            duration: habitGoalEdit == 2
+                ? duration
+                : habitBox.getAt(index)?.duration ?? 0,
             durationCompleted: 0,
           ));
     });

@@ -18,7 +18,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
     builder: (BuildContext context, StateSetter mystate) {
       return SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.65,
+          height: MediaQuery.of(context).size.height * 0.7,
           child: Form(
             key: formKey,
             child: Column(
@@ -197,6 +197,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                             LengthLimitingTextInputFormatter(10),
                             LowerCaseTextInputFormatter(),
                           ],
+                          validator: validateText,
                           controller: amountNameController,
                           decoration: const InputDecoration(
                               contentPadding:

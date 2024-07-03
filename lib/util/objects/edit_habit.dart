@@ -15,9 +15,13 @@ bool updated = false;
 TextEditingController amountNameControllerEdit = TextEditingController();
 bool dropDownChanged = false;
 
-Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
+Widget editHabit(formKey, deletetask, edithabit, index) {
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) {
+      if (amountNameControllerEdit.text.isEmpty) {
+        amountNameControllerEdit.text = "times";
+      }
+
       if (!changed) {
         updatedIcon = Icon(getIcon(index));
       }
@@ -31,7 +35,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
           amount = habitBox.getAt(index)!.amount;
           amountNameControllerEdit.text = habitBox.getAt(index)!.amountName;
           duration = 1;
-        } else {
+        } else if (habitBox.getAt(index)!.duration > 0) {
           habitGoalEdit = 2;
           duration = habitBox.getAt(index)!.duration == 0
               ? 1
@@ -39,6 +43,10 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
           amount = habitBox.getAt(index)!.amount == 1
               ? 2
               : habitBox.getAt(index)!.amount;
+        } else {
+          habitGoalEdit = 0;
+          amount = 2;
+          duration = 1;
         }
         updated = true;
       }
@@ -47,7 +55,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
 
       return SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.65,
+          height: MediaQuery.of(context).size.height * 0.7,
           child: Form(
             key: formKey,
             child: Column(
@@ -156,6 +164,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                             } else {
                               amount = 2;
                               habitGoalEdit = 1;
+                              habitBox.getAt(index)!.duration = 0;
                             }
                           });
                         },
@@ -184,6 +193,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                             } else {
                               duration = 1;
                               habitGoalEdit = 2;
+                              habitBox.getAt(index)!.amount = 1;
                             }
                           });
                         },
@@ -231,6 +241,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                             LengthLimitingTextInputFormatter(10),
                             LowerCaseTextInputFormatter(),
                           ],
+                          validator: validateText,
                           controller: amountNameControllerEdit,
                           decoration: const InputDecoration(
                               contentPadding:
@@ -339,4 +350,13 @@ class LowerCaseTextInputFormatter extends TextInputFormatter {
       selection: newValue.selection,
     );
   }
+}
+
+String? validateText(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'Please enter some text';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  }
+  return null;
 }

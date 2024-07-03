@@ -199,7 +199,7 @@ class _HabitTileState extends State<HabitTile> {
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  child: editHabit(_formKey, _validateText, widget.deletehabit,
+                  child: editHabit(_formKey, widget.deletehabit,
                       widget.edithabit, widget.index),
                 );
               },
