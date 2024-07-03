@@ -204,6 +204,7 @@ class _HabitTileState extends State<HabitTile> {
                 );
               },
             ).whenComplete(() {
+              habitGoalEdit = 0;
               updated = false;
               dropDownChanged = false;
               editcontroller.clear();
@@ -292,7 +293,9 @@ class _HabitTileState extends State<HabitTile> {
                             ),
                           ),
                           Text(
-                            "minutes",
+                            habitBox.getAt(widget.index)!.duration == 1
+                                ? "minute"
+                                : "minutes",
                             style: TextStyle(
                                 fontSize: 12,
                                 color: habitBox.getAt(widget.index)!.completed

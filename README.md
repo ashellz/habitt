@@ -24,6 +24,8 @@ Things to fix:
 - possible fix: time is 7 on phone and not 19
 
 4. Editing normal habits bring duration to 1 as default, fix so nothing apepars
+5. Check if amount name is empty or just spaces
+6. Remove all spaces placed in front of the input
 
 Fixed things:
 
@@ -54,6 +56,7 @@ Fixed things:
 25. Reset amount name after a habit is created
 26. Fix only spacebars as habit name
 27. Limit characters to 10 in naming the amount
+28. Display minute if it's only 1 minute instead of minutes
 
 Add Features:
 
@@ -84,8 +87,11 @@ Add a feature so a user can edit completion values of habits the last 5 days
 - Add DateTime field to the habit database
 
 ## ADDED
+
 Make new amount and duration features editable within a habit
 
 Add cookie icon
 
 Add chef top icon
+
+Add changelog section in the menu below settings

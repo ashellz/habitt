@@ -8,7 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 final habitBox = Hive.box<HabitData>('habits');
-late int habitGoalEdit;
+int habitGoalEdit = 0;
 late int amount;
 late int duration;
 bool updated = false;
@@ -152,6 +152,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                           mystate(() {
                             if (habitGoalEdit == 1) {
                               habitGoalEdit = 0;
+                              habitBox.getAt(index)!.amount = 1;
                             } else {
                               amount = 2;
                               habitGoalEdit = 1;
@@ -179,6 +180,7 @@ Widget editHabit(formKey, validateText, deletetask, edithabit, index) {
                           mystate(() {
                             if (habitGoalEdit == 2) {
                               habitGoalEdit = 0;
+                              habitBox.getAt(index)!.duration = 0;
                             } else {
                               duration = 1;
                               habitGoalEdit = 2;
