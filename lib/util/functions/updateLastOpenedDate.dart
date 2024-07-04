@@ -47,6 +47,8 @@ void resetOrUpdateStreaks(int daysDifference) {
       allHabitsCompleted = false;
       habit.streak = 0;
     }
+    habit.amountCompleted = 0;
+    habit.durationCompleted = 0;
     habit.completed = false;
     habit.save();
   }

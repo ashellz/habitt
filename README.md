@@ -23,7 +23,7 @@ Things to fix:
 
 - possible fix: time is 7 on phone and not 19
 
-6. Remove all spaces placed in front of the input
+6. Remove all spaces placed in front and the end of an input
 
 Fixed things:
 

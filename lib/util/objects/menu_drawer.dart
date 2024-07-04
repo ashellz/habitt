@@ -39,7 +39,7 @@ Widget buildHeader(BuildContext context) {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           Text(
-            "$streak days",
+            streak == 1 ? "$streak day" : "$streak days",
             style: const TextStyle(
                 color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
           ),
