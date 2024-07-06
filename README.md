@@ -1,6 +1,5 @@
 # habit_tracker
 
-
 A new Flutter project.
 
 ## Getting Started
@@ -94,5 +93,7 @@ Make new amount and duration features editable within a habit
 Add cookie icon
 
 Add chef top icon
+
+## ADDED
 
 Add changelog section in the menu below settings

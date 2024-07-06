@@ -92,6 +92,9 @@ Widget editHabit(formKey, deletetask, edithabit, index) {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextFormField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(35),
+                    ],
                     validator: validateText,
                     controller: editcontroller,
                     decoration: InputDecoration(

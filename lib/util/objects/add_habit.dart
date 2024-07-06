@@ -42,6 +42,9 @@ Widget addHabit(formKey, validateText, createNewTask) {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextFormField(
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(35),
+                    ],
                     validator: validateText,
                     controller: createcontroller,
                     decoration: InputDecoration(

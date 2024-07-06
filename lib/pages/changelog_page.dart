@@ -26,7 +26,7 @@ class ChangelogPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-                "- Fixed amount and duration completed don't save when leaving the app"),
+                "- Fixed amount and duration completed don't save when leaving the app\n- Improved screen responsivnes for multiple screen widths"),
           ),
 
           // 05.07.2024
@@ -53,7 +53,7 @@ class ChangelogPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-                "- Fixed amount and duration completed don't reset on a new day\n - Fixed on all habits completed streak when it is just 1 day streak it was displaying 1 days"),
+                "- Fixed amount and duration completed don't reset on a new day\n- Fixed on all habits completed streak when it is just 1 day streak it was displaying 1 days"),
           ),
         ],
       ),

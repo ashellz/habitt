@@ -40,11 +40,25 @@ class _HabitTileState extends State<HabitTile> {
     return null;
   }
 
-  String truncatedText(index) {
-    if (habitBox.getAt(index)!.name.length > 22) {
-      return '${habitBox.getAt(index)!.name.substring(0, 22)}...';
+  String truncatedText(BuildContext context, int index) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    int maxLength;
+
+    if (screenWidth < 300) {
+      maxLength = 10; // very small screen
+    } else if (screenWidth < 400) {
+      maxLength = 18; // small screen
+    } else if (screenWidth < 500) {
+      maxLength = 20; // medium screen
+    } else {
+      maxLength = 35; // larger screen
     }
-    return habitBox.getAt(index)!.name;
+
+    String name = habitBox.getAt(index)!.name;
+    if (name.length > maxLength) {
+      return '${name.substring(0, maxLength)}...';
+    }
+    return name;
   }
 
   Widget streakWidget() {
@@ -226,7 +240,7 @@ class _HabitTileState extends State<HabitTile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        truncatedText(widget.index),
+                        truncatedText(context, widget.index),
                         style: TextStyle(
                             color: habitBox.getAt(widget.index)!.completed
                                 ? Colors.grey.shade600
