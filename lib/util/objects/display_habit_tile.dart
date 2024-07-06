@@ -33,7 +33,7 @@ class _HabitTileState extends State<HabitTile> {
     Navigator.pop(context);
   }
 
-  String? _validateText(String? value) {
+  String? validateText(String? value) {
     if (value?.isEmpty ?? true) {
       return 'Please enter some text';
     }
