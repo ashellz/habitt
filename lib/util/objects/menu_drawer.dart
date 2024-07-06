@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/pages/changelog_page.dart';
 import 'package:habit_tracker/pages/settings_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -67,6 +68,22 @@ Widget buildMenuItems(BuildContext context) => Container(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const SettingsPage(),
+                    ),
+                  )),
+          ListTile(
+              leading: const Icon(
+                Icons.update,
+                color: Colors.white,
+                size: 25,
+              ),
+              title: const Text(
+                'Changelog',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChangelogPage(),
                     ),
                   ))
         ],

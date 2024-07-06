@@ -64,11 +64,19 @@ class _HabitTileState extends State<HabitTile> {
     return const SizedBox();
   }
 
+  late int theAmountValue;
+  late int theDurationValue;
+  bool firstTime = true;
+
   @override
   Widget build(BuildContext context) {
     IconData displayIcon = getIcon(widget.index);
-    int theAmountValue = habitBox.getAt(widget.index)!.amountCompleted;
-    int theDurationValue = habitBox.getAt(widget.index)!.durationCompleted;
+
+    if (firstTime) {
+      theAmountValue = habitBox.getAt(widget.index)!.amountCompleted;
+      theDurationValue = habitBox.getAt(widget.index)!.durationCompleted;
+      firstTime = false;
+    }
 
     bool amountCheck = false;
 
@@ -92,6 +100,7 @@ class _HabitTileState extends State<HabitTile> {
                     habitBox.getAt(widget.index)!.amount > 1)
                   SlidableAction(
                     onPressed: (context) => showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (BuildContext context) => StatefulBuilder(
                         builder: (BuildContext context, StateSetter mystate) =>
@@ -149,6 +158,7 @@ class _HabitTileState extends State<HabitTile> {
                                         }
                                       });
                                       setState(() {
+                                        firstTime = true;
                                         if (amountCheck) {
                                           habitBox
                                               .getAt(widget.index)!

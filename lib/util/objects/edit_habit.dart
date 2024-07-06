@@ -114,8 +114,7 @@ Widget editHabit(formKey, deletetask, edithabit, index) {
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       filled: true,
-                      fillColor: const Color.fromARGB(
-                          255, 183, 181, 151), // Apply background color
+                      fillColor: const Color.fromARGB(255, 183, 181, 151),
                     ),
                   ),
                 ),
