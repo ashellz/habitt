@@ -6,6 +6,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 bool morningHasHabits = false;
 bool afternoonHasHabits = false;
@@ -18,6 +20,9 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   AwesomeNotifications().initialize(
     'resource://drawable/notification2',
     [
@@ -84,7 +89,6 @@ bool dailyNotification = false;
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await Hive.initFlutter();
     Hive.registerAdapter(HabitDataAdapter());
     await Hive.openBox<HabitData>('habits');
     await hasHabits();
