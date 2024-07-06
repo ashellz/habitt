@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/pages/signup_page.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
@@ -19,7 +20,6 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -151,6 +151,20 @@ void openCategory() {
   }
 }
 
+hasHabits() {
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == 'Morning') {
+      morningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+      afternoonHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Evening') {
+      eveningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Any time') {
+      anytimeHasHabits = true;
+    }
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -177,21 +191,7 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Poppins',
             ),
       ),
-      home: const HomePage(),
+      home: SignupPage(),
     );
-  }
-}
-
-hasHabits() {
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == 'Morning') {
-      morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
-      afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening') {
-      eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time') {
-      anytimeHasHabits = true;
-    }
   }
 }
