@@ -64,19 +64,11 @@ class _HabitTileState extends State<HabitTile> {
     return const SizedBox();
   }
 
-  late int theAmountValue;
-  late int theDurationValue;
-  bool firstTime = true;
-
   @override
   Widget build(BuildContext context) {
     IconData displayIcon = getIcon(widget.index);
-
-    if (firstTime) {
-      theAmountValue = habitBox.getAt(widget.index)!.amountCompleted;
-      theDurationValue = habitBox.getAt(widget.index)!.durationCompleted;
-      firstTime = false;
-    }
+    int theAmountValue = habitBox.getAt(widget.index)!.amountCompleted;
+    int theDurationValue = habitBox.getAt(widget.index)!.durationCompleted;
 
     bool amountCheck = false;
 
@@ -100,7 +92,6 @@ class _HabitTileState extends State<HabitTile> {
                     habitBox.getAt(widget.index)!.amount > 1)
                   SlidableAction(
                     onPressed: (context) => showDialog(
-                      barrierDismissible: false,
                       context: context,
                       builder: (BuildContext context) => StatefulBuilder(
                         builder: (BuildContext context, StateSetter mystate) =>
@@ -147,27 +138,20 @@ class _HabitTileState extends State<HabitTile> {
                                     onPressed: () {
                                       mystate(() {
                                         if (amountCheck) {
-                                          habitBox
-                                              .getAt(widget.index)!
-                                              .amountCompleted = theAmountValue;
+                                          applyAmountCompleted(
+                                              widget.index, theAmountValue);
                                         } else {
-                                          habitBox
-                                                  .getAt(widget.index)!
-                                                  .durationCompleted =
-                                              theDurationValue;
+                                          applyDurationCompleted(
+                                              widget.index, theDurationValue);
                                         }
                                       });
                                       setState(() {
-                                        firstTime = true;
                                         if (amountCheck) {
-                                          habitBox
-                                              .getAt(widget.index)!
-                                              .amountCompleted = theAmountValue;
+                                          applyAmountCompleted(
+                                              widget.index, theAmountValue);
                                         } else {
-                                          habitBox
-                                                  .getAt(widget.index)!
-                                                  .durationCompleted =
-                                              theDurationValue;
+                                          applyDurationCompleted(
+                                              widget.index, theDurationValue);
                                         }
                                       });
                                       Navigator.pop(context);
@@ -344,4 +328,36 @@ class _HabitTileState extends State<HabitTile> {
       ],
     );
   }
+}
+
+applyDurationCompleted(index, theDurationValue) {
+  habitBox.putAt(
+      index,
+      HabitData(
+          name: habitBox.getAt(index)!.name,
+          completed: habitBox.getAt(index)!.completed,
+          icon: habitBox.getAt(index)!.icon,
+          category: habitBox.getAt(index)!.category,
+          streak: habitBox.getAt(index)!.streak,
+          amount: habitBox.getAt(index)!.amount,
+          amountName: habitBox.getAt(index)!.amountName,
+          amountCompleted: habitBox.getAt(index)!.amountCompleted,
+          duration: habitBox.getAt(index)!.duration,
+          durationCompleted: theDurationValue));
+}
+
+applyAmountCompleted(index, theAmountValue) {
+  habitBox.putAt(
+      index,
+      HabitData(
+          name: habitBox.getAt(index)!.name,
+          completed: habitBox.getAt(index)!.completed,
+          icon: habitBox.getAt(index)!.icon,
+          category: habitBox.getAt(index)!.category,
+          streak: habitBox.getAt(index)!.streak,
+          amount: theAmountValue,
+          amountName: habitBox.getAt(index)!.amountName,
+          amountCompleted: theAmountValue,
+          duration: habitBox.getAt(index)!.duration,
+          durationCompleted: habitBox.getAt(index)!.durationCompleted));
 }

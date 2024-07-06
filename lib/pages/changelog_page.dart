@@ -26,7 +26,7 @@ class ChangelogPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
-                "- Fixed amount and duration completed don't save when leaving the app (not really)"),
+                "- Fixed amount and duration completed don't save when leaving the app"),
           ),
 
           // 05.07.2024
