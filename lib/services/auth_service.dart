@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 
+late String errorMessage;
+
 class AuthService {
   Future<void> signUp(
       {required String email,
@@ -20,14 +22,15 @@ class AuthService {
           MaterialPageRoute(
               builder: (BuildContext context) => const HomePage()));
     } on FirebaseException catch (e) {
-      String message = '';
+      errorMessage = 'error';
       if (e.code == 'weak-password') {
-        message = 'The password provided is too weak.';
+        errorMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        message = 'An account with that email already exists.';
+        errorMessage = 'An account with that email already exists.';
       }
+
       Fluttertoast.showToast(
-        msg: message,
+        msg: errorMessage,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.SNACKBAR,
         backgroundColor: Colors.black54,
@@ -53,14 +56,14 @@ class AuthService {
           MaterialPageRoute(
               builder: (BuildContext context) => const HomePage()));
     } on FirebaseException catch (e) {
-      String message = '';
+      errorMessage = 'error';
       if (e.code == 'user-not-found') {
-        message = 'User with that email is not found';
+        errorMessage = 'user-not-found';
       } else if (e.code == 'wrong-password') {
-        message = 'The password is incorrect';
+        errorMessage = 'The password is incorrect';
       }
       Fluttertoast.showToast(
-        msg: message,
+        msg: errorMessage,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.SNACKBAR,
         backgroundColor: Colors.black54,

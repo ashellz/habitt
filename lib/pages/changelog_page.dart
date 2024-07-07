@@ -25,8 +25,15 @@ class ChangelogPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-                "- Fixed amount and duration completed don't save when leaving the app\n- Improved screen responsivnes for multiple screen widths"),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    "- Fixed amount and duration completed don't save when leaving the app\n- Improved screen responsivnes for multiple screen widths"),
+                Text(
+                    "- Added firebase\n- Added sign in and out pages\n- Added authentication"),
+              ],
+            ),
           ),
 
           // 05.07.2024

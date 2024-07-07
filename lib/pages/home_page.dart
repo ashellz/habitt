@@ -18,7 +18,8 @@ final editcontroller = TextEditingController();
 final habitBox = Hive.box<HabitData>('habits');
 final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
-final notificationsBox = Hive.box<bool>('notifications');
+final boolBox = Hive.box<bool>('bool');
+final stringBox = Hive.box<String>('string');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
 final _formKey = GlobalKey<FormState>();
@@ -49,14 +50,14 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    if (notificationsBox.get("hasNotificationAccess") == false) {
+    if (boolBox.get("hasNotificationAccess") == false) {
       AwesomeNotifications().requestPermissionToSendNotifications();
     }
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (isAllowed) {
-        notificationsBox.put("hasNotificationAccess", true);
+        boolBox.put("hasNotificationAccess", true);
       } else {
-        notificationsBox.put("hasNotificationAccess", false);
+        boolBox.put("hasNotificationAccess", false);
       }
     });
 

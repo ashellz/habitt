@@ -53,10 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 setState(() {
                   notifValue = value!;
                   streakBox.put('notifValue', value);
-                  notificationsBox.put('dailyNotification', true);
-                  notificationsBox.put('morningNotification', false);
-                  notificationsBox.put('afternoonNotification', false);
-                  notificationsBox.put('eveningNotification', false);
+                  boolBox.put('dailyNotification', true);
+                  boolBox.put('morningNotification', false);
+                  boolBox.put('afternoonNotification', false);
+                  boolBox.put('eveningNotification', false);
                 });
               },
             ),
@@ -74,10 +74,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 setState(() {
                   notifValue = value!;
                   streakBox.put('notifValue', value);
-                  notificationsBox.put('dailyNotification', false);
-                  notificationsBox.put('morningNotification', true);
-                  notificationsBox.put('afternoonNotification', true);
-                  notificationsBox.put('eveningNotification', true);
+                  boolBox.put('dailyNotification', false);
+                  boolBox.put('morningNotification', true);
+                  boolBox.put('afternoonNotification', true);
+                  boolBox.put('eveningNotification', true);
                 });
               },
             ),
@@ -95,10 +95,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 setState(() {
                   notifValue = value!;
                   streakBox.put('notifValue', value);
-                  notificationsBox.put('dailyNotification', false);
-                  notificationsBox.put('morningNotification', false);
-                  notificationsBox.put('afternoonNotification', false);
-                  notificationsBox.put('eveningNotification', false);
+                  boolBox.put('dailyNotification', false);
+                  boolBox.put('morningNotification', false);
+                  boolBox.put('afternoonNotification', false);
+                  boolBox.put('eveningNotification', false);
                 });
               },
             ),
@@ -116,11 +116,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: notificationsBox.get('morningNotification'),
+                      value: boolBox.get('morningNotification'),
                       onChanged: (value) {
                         setState(() {
-                          notificationsBox.put('morningNotification',
-                              !notificationsBox.get('morningNotification')!);
+                          boolBox.put('morningNotification',
+                              !boolBox.get('morningNotification')!);
                         });
                       },
                     ),
@@ -143,11 +143,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: notificationsBox.get('afternoonNotification'),
+                      value: boolBox.get('afternoonNotification'),
                       onChanged: (value) {
                         setState(() {
-                          notificationsBox.put('afternoonNotification',
-                              !notificationsBox.get('afternoonNotification')!);
+                          boolBox.put('afternoonNotification',
+                              !boolBox.get('afternoonNotification')!);
                         });
                       },
                     ),
@@ -170,11 +170,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: notificationsBox.get('eveningNotification'),
+                      value: boolBox.get('eveningNotification'),
                       onChanged: (value) {
                         setState(() {
-                          notificationsBox.put('eveningNotification',
-                              !notificationsBox.get('eveningNotification')!);
+                          boolBox.put('eveningNotification',
+                              !boolBox.get('eveningNotification')!);
                         });
                       },
                     ),
@@ -197,13 +197,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      value: notificationsBox.get('dailyNotification'),
+                      value: boolBox.get('dailyNotification'),
                       onChanged: (value) {
                         setState(() {
-                          notificationsBox.put('dailyNotification',
-                              !notificationsBox.get('dailyNotification')!);
+                          boolBox.put('dailyNotification',
+                              !boolBox.get('dailyNotification')!);
                         });
-                        print(notificationsBox.get('dailyNotification'));
+                        print(boolBox.get('dailyNotification'));
                       },
                     ),
                     const Text("Daily notification"),
@@ -214,7 +214,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const Spacer(),
           Visibility(
-            visible: notificationsBox.get("hasNotificationAccess") == false,
+            visible: boolBox.get("hasNotificationAccess") == false,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Center(
