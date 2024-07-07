@@ -22,7 +22,7 @@ class AuthService {
           MaterialPageRoute(
               builder: (BuildContext context) => const HomePage()));
     } on FirebaseException catch (e) {
-      errorMessage = 'error';
+      errorMessage = 'An unexpected error occurred';
       if (e.code == 'weak-password') {
         errorMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
@@ -56,7 +56,7 @@ class AuthService {
           MaterialPageRoute(
               builder: (BuildContext context) => const HomePage()));
     } on FirebaseException catch (e) {
-      errorMessage = 'error';
+      errorMessage = 'The email or password is incorrect';
       if (e.code == 'user-not-found') {
         errorMessage = 'user-not-found';
       } else if (e.code == 'wrong-password') {
