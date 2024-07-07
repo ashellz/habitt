@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/objects/add_habit.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
@@ -48,6 +49,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    backupHiveBoxesToFirebase(userId);
     super.initState();
 
     if (boolBox.get("hasNotificationAccess") == false) {
@@ -177,6 +179,7 @@ class HomePageState extends State<HomePage> {
     habitGoal = 0;
     Navigator.pop(context);
     showPopup(context, "Habit added!");
+    backupHiveBoxesToFirebase(userId);
   }
 
   void openCategory(String key) {
@@ -451,6 +454,7 @@ class HomePageState extends State<HomePage> {
     updatedIcon = startIcon;
     Navigator.pop(context);
     showPopup(context, "Habit edited!");
+    backupHiveBoxesToFirebase(userId);
   }
 
   void checkHabit(int index) {
@@ -476,6 +480,7 @@ class HomePageState extends State<HomePage> {
         habitBox.putAt(index, updatedHabit);
       }
     });
+    backupHiveBoxesToFirebase(userId);
   }
 
   String? _validateText(String? value) {

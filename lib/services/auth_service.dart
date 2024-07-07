@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 
 late String errorMessage;
 
@@ -49,6 +50,8 @@ class AuthService {
         email: email,
         password: password,
       );
+
+      restoreHiveBoxesFromFirebase(userId);
 
       await Future.delayed(const Duration(seconds: 1));
       Navigator.pushReplacement(
