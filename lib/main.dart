@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/pages/login_page.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
@@ -19,7 +21,6 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -40,7 +41,12 @@ Future<void> main() async {
   await Hive.openBox<HabitData>('habits');
   await Hive.openBox<DateTime>('metadata');
   await Hive.openBox<int>('streak');
-  await Hive.openBox<bool>('notifications');
+  await Hive.openBox<bool>('bool');
+  await Hive.openBox<String>('string');
+
+  if (boolBox.get("isGuest") == null) {
+    boolBox.put("isGuest", false);
+  }
 
   if (Hive.box<HabitData>('habits').isEmpty) {
     await Hive.box<HabitData>('habits').add(HabitData(
@@ -90,11 +96,9 @@ bool dailyNotification = false;
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     Hive.registerAdapter(HabitDataAdapter());
-    await Hive.openBox<HabitData>('habits');
     await hasHabits();
-    await Hive.openBox<bool>('notifications');
 
-    var notificationBox = Hive.box('notifications');
+    var notificationBox = Hive.box('bool');
 
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
@@ -151,6 +155,20 @@ void openCategory() {
   }
 }
 
+hasHabits() {
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == 'Morning') {
+      morningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+      afternoonHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Evening') {
+      eveningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Any time') {
+      anytimeHasHabits = true;
+    }
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -177,21 +195,26 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Poppins',
             ),
       ),
-      home: const HomePage(),
+      home: AuthCheck(),
     );
   }
 }
 
-hasHabits() {
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == 'Morning') {
-      morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
-      afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening') {
-      eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time') {
-      anytimeHasHabits = true;
-    }
+class AuthCheck extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasData || boolBox.get("isGuest") == true) {
+          return const HomePage();
+        } else {
+          return LoginPage();
+        }
+      },
+    );
   }
 }

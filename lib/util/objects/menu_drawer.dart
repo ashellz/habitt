@@ -1,21 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/changelog_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/login_page.dart';
 import 'package:habit_tracker/pages/settings_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/services/auth_service.dart';
 
 var streakBox = Hive.box<int>('streak');
 
 Widget menuDrawer(context) {
   return Drawer(
     backgroundColor: const Color.fromARGB(255, 37, 67, 54),
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          buildHeader(context),
-          buildMenuItems(context),
-        ],
-      ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              buildHeader(context),
+              buildMenuItems(context),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                  "Signed in as: ${boolBox.get('isGuest')! ? 'Guest' : stringBox.get('username') ?? 'Unknown'}",
+                  style: const TextStyle(color: Colors.white, fontSize: 16)),
+              GestureDetector(
+                  child: const Text(
+                    "Sign out?",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    AuthService().signOut();
+                    boolBox.put('isGuest', false);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  })
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }

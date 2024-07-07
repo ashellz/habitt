@@ -1,0 +1,47 @@
+String? validateUsername(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'This field cannot be empty';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  } else if (value.length < 2) {
+    return 'Username must be at least 2 characters long';
+  }
+  return null;
+}
+
+String? validateEmail(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'This field cannot be empty';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  } else if (!value.contains("@") || !value.contains(".")) {
+    return 'The email is invalid';
+  }
+  return null;
+}
+
+String? validatePassword(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'This field cannot be empty';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  } else if (value.length < 6) {
+    return 'Password must be at least 6 characters long';
+  } else if (!value.contains(RegExp(r'[A-Z]'))) {
+    return 'Password must contain at least one uppercase character';
+  } else if (!value.contains(RegExp(r'[a-z]'))) {
+    return 'Password must contain at least one lowercase character';
+  } else if (!value.contains(RegExp(r'[0-9]'))) {
+    return 'Password must contain at least one digit';
+  }
+  return null;
+}
+
+String? validatePasswordLogin(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'This field cannot be empty';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  }
+  return null;
+}

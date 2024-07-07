@@ -94,6 +94,6 @@ Add cookie icon
 
 Add chef top icon
 
-## ADDED
-
-Add changelog section in the menu below settings
+At the bottom of menu drawer add profile username and signout option
+If user is signed in, display home page right away
+Fix some bugs along the way

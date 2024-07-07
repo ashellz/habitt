@@ -61,7 +61,6 @@ Widget addHabit(formKey, validateText, createNewTask) {
                         },
                         icon: updatedIcon,
                       ),
-
                       labelStyle: const TextStyle(fontSize: 16.0),
                       labelText: "Habit Name",
                       border: const OutlineInputBorder(
@@ -69,8 +68,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       filled: true,
-                      fillColor: const Color.fromARGB(
-                          255, 183, 181, 151), // Added background color
+                      fillColor: const Color.fromARGB(255, 183, 181, 151),
                     ),
                   ),
                 ),

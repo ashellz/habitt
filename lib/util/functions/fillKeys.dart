@@ -16,19 +16,19 @@ void fillKeys() {
   if (!streakBox.containsKey('allHabitsCompletedStreak')) {
     streakBox.put('allHabitsCompletedStreak', 0);
   }
-  if (!notificationsBox.containsKey('morningNotification')) {
-    notificationsBox.put('morningNotification', false);
+  if (!boolBox.containsKey('morningNotification')) {
+    boolBox.put('morningNotification', false);
   }
-  if (!notificationsBox.containsKey('afternoonNotification')) {
-    notificationsBox.put('afternoonNotification', false);
+  if (!boolBox.containsKey('afternoonNotification')) {
+    boolBox.put('afternoonNotification', false);
   }
-  if (!notificationsBox.containsKey('eveningNotification')) {
-    notificationsBox.put('eveningNotification', false);
+  if (!boolBox.containsKey('eveningNotification')) {
+    boolBox.put('eveningNotification', false);
   }
-  if (!notificationsBox.containsKey('dailyNotification')) {
-    notificationsBox.put('dailyNotification', true);
+  if (!boolBox.containsKey('dailyNotification')) {
+    boolBox.put('dailyNotification', true);
   }
-  if (!notificationsBox.containsKey('hasNotificationAccess')) {
-    notificationsBox.put('hasNotificationAccess', false);
+  if (!boolBox.containsKey('hasNotificationAccess')) {
+    boolBox.put('hasNotificationAccess', false);
   }
 }
