@@ -15,6 +15,23 @@ class ChangelogPage extends StatelessWidget {
       ),
       body: ListView(
         children: const [
+          // 08.07.2024
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "08.07.2024",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Made cloud storage work and connected to accounts\n- Bug fixes")
+                  ])),
+
           // 07.07.2024
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -25,8 +42,14 @@ class ChangelogPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-                "- Polished sign in and sing out pages\n- Improved the way authentication works\n- Implemented sign in as a guest"),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    "- Polished sign in and sing out pages\n- Improved the way authentication works\n- Implemented sign in as a guest"),
+                Text("- Implemented cloud storage"),
+              ],
+            ),
           ),
 
           // 06.07.2024

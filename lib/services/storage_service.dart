@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit_tracker/pages/settings_page.dart';
 import 'package:path_provider/path_provider.dart';
 
 String? userId = FirebaseAuth.instance.currentUser?.uid;
+bool dataDownloaded = false;
 
 Future<String> getApplicationDocumentsDirectoryPath() async {
   final directory = await getApplicationDocumentsDirectory();
@@ -42,6 +44,7 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
         }
       }
     }
+    uploadButtonEnabled = true;
     Fluttertoast.showToast(
       msg: 'Data uploaded',
       toastLength: Toast.LENGTH_SHORT,
@@ -87,4 +90,5 @@ Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
       print('Failed to download file: ${item.name}, error: $e');
     }
   }
+  dataDownloaded = true;
 }

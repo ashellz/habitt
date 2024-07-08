@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,7 +5,7 @@ import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
-bool enabled = true;
+bool uploadButtonEnabled = true;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -236,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: IconButton(
-                    onPressed: !enabled
+                    onPressed: !uploadButtonEnabled
                         ? null
                         : () async {
                             if (userId == null) {
@@ -249,10 +247,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 fontSize: 14.0,
                               );
                             } else {
-                              setState(() => enabled = false);
+                              setState(() => uploadButtonEnabled = false);
                               await backupHiveBoxesToFirebase(userId);
-                              Timer(const Duration(seconds: 10),
-                                  () => setState(() => enabled = true));
                             }
                           },
                     icon: const Icon(Icons.upload)),

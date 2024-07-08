@@ -33,7 +33,8 @@ double anyTimeHeight = 0,
     containerHeight = 0,
     eveningHeight = 0,
     afternoonHeight = 0,
-    morningHeight = 0;
+    morningHeight = 0,
+    invisibleText = 0;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, Key? homePageKey});
@@ -49,6 +50,9 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    habitBox.watch().listen((event) => setState(() {
+          invisibleText++;
+        }));
 
     if (boolBox.get("hasNotificationAccess") == false) {
       AwesomeNotifications().requestPermissionToSendNotifications();
@@ -809,7 +813,8 @@ class HomePageState extends State<HomePage> {
             width: double.infinity,
             height: containerHeight,
             color: const Color.fromARGB(255, 218, 211, 190),
-          )
+          ),
+          Visibility(visible: false, child: Text(invisibleText.toString()))
         ],
       ),
     );

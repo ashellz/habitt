@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/login_page.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
+import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -38,44 +39,14 @@ Future<void> main() async {
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
 
-  await Hive.openBox<HabitData>('habits');
-  await Hive.openBox<DateTime>('metadata');
-  await Hive.openBox<int>('streak');
-  await Hive.openBox<bool>('bool');
-  await Hive.openBox<String>('string');
+  await openHiveBoxes();
 
-  if (boolBox.get("isGuest") == null) {
-    boolBox.put("isGuest", false);
-  }
-
-  if (Hive.box<HabitData>('habits').isEmpty) {
-    await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Add new habits",
-        completed: false,
-        icon: "Icons.add",
-        category: "Any time",
-        streak: 0,
-        amount: 2,
-        amountName: "habits",
-        amountCompleted: 0,
-        duration: 0,
-        durationCompleted: 0));
-    await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Open the app",
-        completed: true,
-        icon: "Icons.door_front_door",
-        category: "Any time",
-        streak: 0,
-        amount: 1,
-        amountName: "times",
-        amountCompleted: 1,
-        duration: 0,
-        durationCompleted: 0));
-  }
-
+  //if (isLoggedIn || boolBox.get("isGuest") == true) {
   hasHabits();
   openCategory();
-  fillKeys();
+  //}
+
+  await fillKeys();
 
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
@@ -96,8 +67,6 @@ bool dailyNotification = false;
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     Hive.registerAdapter(HabitDataAdapter());
-    await hasHabits();
-
     var notificationBox = Hive.box('bool');
 
     DateTime now = DateTime.now();

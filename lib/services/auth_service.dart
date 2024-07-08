@@ -4,8 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 
 late String errorMessage;
+
+bool isLoggedIn = boolBox.get('isLoggedIn')!;
 
 class AuthService {
   Future<void> signUp(
@@ -17,6 +20,8 @@ class AuthService {
         email: email,
         password: password,
       );
+      isLoggedIn = true;
+      await backupHiveBoxesToFirebase(userId);
 
       await Future.delayed(const Duration(seconds: 1));
       Navigator.pushReplacement(
@@ -59,9 +64,12 @@ class AuthService {
 
       if (userId == null) {
         throw FirebaseAuthException(
-            code: 'user-not-authenticated',
-            message: 'User is not authenticated');
+          code: 'user-not-authenticated',
+          message: 'User is not authenticated',
+        );
       }
+
+      await closeHiveBoxes();
 
       // Restore Hive boxes from Firebase
       await restoreHiveBoxesFromFirebase(userId);
@@ -74,11 +82,22 @@ class AuthService {
         fontSize: 14.0,
       );
 
-      await Future.delayed(const Duration(seconds: 5));
+      // Wait for data restoration to complete
+      while (!dataDownloaded) {
+        await Future.delayed(const Duration(seconds: 1));
+      }
 
-      // Navigate to HomePage
+      await openHiveBoxes();
+
+      // Reset the flag
+      dataDownloaded = false;
+      isLoggedIn = true;
+
+      // Call hasHabits() and openCategory() to update any necessary state
       hasHabits();
       openCategory();
+
+      // Navigate to HomePage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -115,5 +134,6 @@ class AuthService {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+    isLoggedIn = false;
   }
 }
