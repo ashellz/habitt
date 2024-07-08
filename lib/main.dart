@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/pages/login_page.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
+import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/home_page.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 bool morningHasHabits = false;
 bool afternoonHasHabits = false;
@@ -17,7 +22,9 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   AwesomeNotifications().initialize(
     'resource://drawable/notification2',
     [
@@ -29,42 +36,15 @@ Future<void> main() async {
       ),
     ],
   );
-  await Hive.initFlutter();
+  await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
 
-  await Hive.openBox<HabitData>('habits');
-  await Hive.openBox<DateTime>('metadata');
-  await Hive.openBox<int>('streak');
-  await Hive.openBox<bool>('notifications');
-
-  if (Hive.box<HabitData>('habits').isEmpty) {
-    await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Add new habits",
-        completed: false,
-        icon: "Icons.add",
-        category: "Any time",
-        streak: 0,
-        amount: 2,
-        amountName: "habits",
-        amountCompleted: 0,
-        duration: 0,
-        durationCompleted: 0));
-    await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Open the app",
-        completed: true,
-        icon: "Icons.door_front_door",
-        category: "Any time",
-        streak: 0,
-        amount: 1,
-        amountName: "times",
-        amountCompleted: 1,
-        duration: 0,
-        durationCompleted: 0));
-  }
+  await openHiveBoxes();
 
   hasHabits();
   openCategory();
-  fillKeys();
+
+  await fillKeys();
 
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
@@ -84,13 +64,8 @@ bool dailyNotification = false;
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await Hive.initFlutter();
     Hive.registerAdapter(HabitDataAdapter());
-    await Hive.openBox<HabitData>('habits');
-    await hasHabits();
-    await Hive.openBox<bool>('notifications');
-
-    var notificationBox = Hive.box('notifications');
+    var notificationBox = Hive.box('bool');
 
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
@@ -147,6 +122,20 @@ void openCategory() {
   }
 }
 
+hasHabits() {
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == 'Morning') {
+      morningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+      afternoonHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Evening') {
+      eveningHasHabits = true;
+    } else if (habitBox.getAt(i)?.category == 'Any time') {
+      anytimeHasHabits = true;
+    }
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -173,21 +162,26 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Poppins',
             ),
       ),
-      home: const HomePage(),
+      home: AuthCheck(),
     );
   }
 }
 
-hasHabits() {
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == 'Morning') {
-      morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
-      afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening') {
-      eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time') {
-      anytimeHasHabits = true;
-    }
+class AuthCheck extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasData || boolBox.get("isGuest") == true) {
+          return const HomePage();
+        } else {
+          return LoginPage();
+        }
+      },
+    );
   }
 }

@@ -1,0 +1,94 @@
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit_tracker/pages/settings_page.dart';
+import 'package:path_provider/path_provider.dart';
+
+String? userId = FirebaseAuth.instance.currentUser?.uid;
+bool dataDownloaded = false;
+
+Future<String> getApplicationDocumentsDirectoryPath() async {
+  final directory = await getApplicationDocumentsDirectory();
+  return directory.path;
+}
+
+Future<String> getHiveBoxesDirectory() async {
+  final directoryPath = await getApplicationDocumentsDirectoryPath();
+  return '$directoryPath/hive_folder';
+}
+
+Future<void> ensureDirectoryExists(String path) async {
+  final directory = Directory(path);
+  if (!await directory.exists()) {
+    await directory.create(recursive: true);
+  }
+}
+
+Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
+  final directory = Directory(folderPath);
+  if (await directory.exists()) {
+    final files = directory.listSync();
+    for (var file in files) {
+      if (file is File) {
+        final fileName = file.path.split('/').last;
+        final storageRef =
+            FirebaseStorage.instance.ref().child('$userId/$fileName');
+        try {
+          print('Uploading file: ${file.path}');
+          await storageRef.putFile(file);
+          print('Successfully uploaded file: $fileName');
+        } catch (e) {
+          print('Failed to upload file: ${file.path}, error: $e');
+        }
+      }
+    }
+    uploadButtonEnabled = true;
+    Fluttertoast.showToast(
+      msg: 'Data uploaded',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.SNACKBAR,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 14.0,
+    );
+  } else {
+    print('Directory does not exist: $folderPath');
+  }
+}
+
+Future<void> backupHiveBoxesToFirebase(String? userId) async {
+  if (userId == null) {
+    print('User is not authenticated');
+    return;
+  }
+
+  final hiveDirectory = await getHiveBoxesDirectory();
+  print('Hive directory: $hiveDirectory');
+  await ensureDirectoryExists(hiveDirectory);
+  await uploadFolderToFirebase(hiveDirectory, userId);
+}
+
+Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
+  if (userId == null) {
+    print('User is not authenticated');
+    return;
+  }
+
+  final storageRef = FirebaseStorage.instance.ref().child('$userId/');
+  final listResult = await storageRef.listAll();
+  final hiveDirectory = await getHiveBoxesDirectory();
+  await ensureDirectoryExists(hiveDirectory);
+  for (final item in listResult.items) {
+    final file = File('$hiveDirectory/${item.name}');
+    try {
+      print('Downloading file: ${item.name}');
+      await item.writeToFile(file);
+      print('Successfully downloaded file: ${item.name}');
+    } catch (e) {
+      print('Failed to download file: ${item.name}, error: $e');
+    }
+  }
+  dataDownloaded = true;
+}

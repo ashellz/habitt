@@ -15,6 +15,45 @@ class ChangelogPage extends StatelessWidget {
       ),
       body: ListView(
         children: const [
+          // 08.07.2024
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "08.07.2024",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Made cloud storage work and connected to accounts\n- Bug fixes\n- Minor improvements\n- Made it so you don't have to restart the app yourself to update downloaded user data"),
+                    Text(
+                        "- Added a loading screen when logging in and creating an account")
+                  ])),
+
+          // 07.07.2024
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "07.07.2024",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    "- Polished sign in and sing out pages\n- Improved the way authentication works\n- Implemented sign in as a guest"),
+                Text("- Implemented cloud storage"),
+              ],
+            ),
+          ),
+
           // 06.07.2024
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -25,8 +64,15 @@ class ChangelogPage extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-                "- Fixed amount and duration completed don't save when leaving the app\n- Improved screen responsivnes for multiple screen widths"),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    "- Fixed amount and duration completed don't save when leaving the app\n- Improved screen responsivnes for multiple screen widths"),
+                Text(
+                    "- Added firebase\n- Added sign in and out pages\n- Added authentication"),
+              ],
+            ),
           ),
 
           // 05.07.2024
