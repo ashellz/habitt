@@ -35,7 +35,7 @@ Future<void> main() async {
       ),
     ],
   );
-  await Hive.initFlutter();
+  await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
 
   await Hive.openBox<HabitData>('habits');

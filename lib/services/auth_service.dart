@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 
@@ -38,30 +39,56 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
-    } catch (e) {}
+    }
   }
 
-  Future<void> signIn(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
+  Future<void> signIn({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
     try {
+      // Sign in the user
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      restoreHiveBoxesFromFirebase(userId);
+      // Ensure user is authenticated before accessing userId
+      userId = FirebaseAuth.instance.currentUser?.uid;
 
-      await Future.delayed(const Duration(seconds: 1));
+      if (userId == null) {
+        throw FirebaseAuthException(
+            code: 'user-not-authenticated',
+            message: 'User is not authenticated');
+      }
+
+      // Restore Hive boxes from Firebase
+      await restoreHiveBoxesFromFirebase(userId);
+      Fluttertoast.showToast(
+        msg: 'Downloading data... Please wait',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+
+      await Future.delayed(const Duration(seconds: 5));
+
+      // Navigate to HomePage
+      hasHabits();
+      openCategory();
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage()));
-    } on FirebaseException catch (e) {
-      errorMessage = 'The email or password is incorrect';
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const HomePage(),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'The email or password is incorrect';
       if (e.code == 'user-not-found') {
-        errorMessage = 'user-not-found';
+        errorMessage = 'User not found';
       } else if (e.code == 'wrong-password') {
         errorMessage = 'The password is incorrect';
       }
@@ -73,7 +100,17 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
-    } catch (e) {}
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'An unexpected error occurred',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+      print(e.toString());
+    }
   }
 
   Future<void> signOut() async {

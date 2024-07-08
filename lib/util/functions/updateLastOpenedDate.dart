@@ -1,4 +1,5 @@
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 final streakBox = Hive.box<int>('streak');
@@ -27,6 +28,7 @@ void updateLastOpenedDate() async {
         resetOrUpdateStreaks(2);
       }
     }
+    await backupHiveBoxesToFirebase(userId);
   }
   streakBox.put('lastOpenedDay', day);
   streakBox.put('lastOpenedMonth', month);

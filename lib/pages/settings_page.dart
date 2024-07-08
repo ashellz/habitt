@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
+bool enabled = true;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -27,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "Notifications",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -211,6 +216,48 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "Data",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  "Upload Data Manually",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: IconButton(
+                    onPressed: !enabled
+                        ? null
+                        : () async {
+                            if (userId == null) {
+                              Fluttertoast.showToast(
+                                msg: 'You are not logged in.',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.SNACKBAR,
+                                backgroundColor: Colors.black54,
+                                textColor: Colors.white,
+                                fontSize: 14.0,
+                              );
+                            } else {
+                              setState(() => enabled = false);
+                              await backupHiveBoxesToFirebase(userId);
+                              Timer(const Duration(seconds: 10),
+                                  () => setState(() => enabled = true));
+                            }
+                          },
+                    icon: const Icon(Icons.upload)),
+              ),
+            ],
           ),
           const Spacer(),
           Visibility(

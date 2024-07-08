@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
 import 'package:habit_tracker/util/objects/edit_habit.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -170,7 +169,6 @@ class _HabitTileState extends State<HabitTile> {
                                         }
                                       });
                                       Navigator.pop(context);
-                                      backupHiveBoxesToFirebase(userId);
                                     },
                                     child: const Text(
                                       "Enter",
