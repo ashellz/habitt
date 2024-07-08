@@ -41,10 +41,8 @@ Future<void> main() async {
 
   await openHiveBoxes();
 
-  //if (isLoggedIn || boolBox.get("isGuest") == true) {
   hasHabits();
   openCategory();
-  //}
 
   await fillKeys();
 

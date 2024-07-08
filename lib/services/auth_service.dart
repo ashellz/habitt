@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
-import 'package:habit_tracker/util/functions/hiveBoxes.dart';
+import 'package:restart_app/restart_app.dart';
 
 late String errorMessage;
 
-bool isLoggedIn = boolBox.get('isLoggedIn')!;
+bool isLoggedIn = boolBox.get('isLoggedIn') ?? false;
 
 class AuthService {
   Future<void> signUp(
@@ -58,7 +57,7 @@ class AuthService {
         email: email,
         password: password,
       );
-
+      WidgetsFlutterBinding.ensureInitialized();
       // Ensure user is authenticated before accessing userId
       userId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -69,9 +68,8 @@ class AuthService {
         );
       }
 
-      await closeHiveBoxes();
-
       // Restore Hive boxes from Firebase
+      print("Restoring Hive boxes from Firebase...");
       await restoreHiveBoxesFromFirebase(userId);
       Fluttertoast.showToast(
         msg: 'Downloading data... Please wait',
@@ -87,23 +85,19 @@ class AuthService {
         await Future.delayed(const Duration(seconds: 1));
       }
 
-      await openHiveBoxes();
-
       // Reset the flag
       dataDownloaded = false;
       isLoggedIn = true;
 
-      // Call hasHabits() and openCategory() to update any necessary state
-      hasHabits();
-      openCategory();
+      await Restart.restartApp();
 
       // Navigate to HomePage
-      Navigator.pushReplacement(
+      /*Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => const HomePage(),
         ),
-      );
+      );*/
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'The email or password is incorrect';
       if (e.code == 'user-not-found') {

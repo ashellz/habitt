@@ -29,7 +29,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Made cloud storage work and connected to accounts\n- Bug fixes")
+                        "- Made cloud storage work and connected to accounts\n- Bug fixes\- Minor improvements\n- Made a temporary solution for having to restart the app yourself to update downloaded user data")
                   ])),
 
           // 07.07.2024
