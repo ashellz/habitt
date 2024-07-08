@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/loading_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -20,6 +21,12 @@ class AuthService {
         password: password,
       );
       isLoggedIn = true;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const LoadingScreen(),
+        ),
+      );
       await backupHiveBoxesToFirebase(userId);
 
       await Future.delayed(const Duration(seconds: 1));
@@ -57,7 +64,12 @@ class AuthService {
         email: email,
         password: password,
       );
-      WidgetsFlutterBinding.ensureInitialized();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const LoadingScreen(),
+        ),
+      );
       // Ensure user is authenticated before accessing userId
       userId = FirebaseAuth.instance.currentUser?.uid;
 

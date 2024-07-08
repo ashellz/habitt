@@ -43,7 +43,7 @@ Widget menuDrawer(context) {
                   onTap: () {
                     AuthService().signOut();
                     boolBox.put('isGuest', false);
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LoginPage(),

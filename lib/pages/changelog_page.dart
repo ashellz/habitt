@@ -29,7 +29,9 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Made cloud storage work and connected to accounts\n- Bug fixes\- Minor improvements\n- Made a temporary solution for having to restart the app yourself to update downloaded user data")
+                        "- Made cloud storage work and connected to accounts\n- Bug fixes\n- Minor improvements\n- Made it so you don't have to restart the app yourself to update downloaded user data"),
+                    Text(
+                        "- Added a loading screen when logging in and creating an account")
                   ])),
 
           // 07.07.2024
