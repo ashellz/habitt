@@ -369,7 +369,7 @@ applyAmountCompleted(index, theAmountValue) {
           icon: habitBox.getAt(index)!.icon,
           category: habitBox.getAt(index)!.category,
           streak: habitBox.getAt(index)!.streak,
-          amount: theAmountValue,
+          amount: habitBox.getAt(index)!.amount,
           amountName: habitBox.getAt(index)!.amountName,
           amountCompleted: theAmountValue,
           duration: habitBox.getAt(index)!.duration,

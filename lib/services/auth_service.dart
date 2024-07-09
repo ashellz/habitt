@@ -30,10 +30,7 @@ class AuthService {
       await backupHiveBoxesToFirebase(userId);
 
       await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage()));
+      await Restart.restartApp();
     } on FirebaseException catch (e) {
       errorMessage = 'An unexpected error occurred';
       if (e.code == 'weak-password') {
