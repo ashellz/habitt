@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/settings_page.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:restart_app/restart_app.dart';
 
 String? userId = FirebaseAuth.instance.currentUser?.uid;
 bool dataDownloaded = false;
@@ -91,4 +92,24 @@ Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
     }
   }
   dataDownloaded = true;
+}
+
+Future<void> newAccountDownloadData(BuildContext context) async {
+  final storageRef = FirebaseStorage.instance.ref().child('new_account/');
+  final listResult = await storageRef.listAll();
+  final hiveDirectory = await getHiveBoxesDirectory();
+  await ensureDirectoryExists(hiveDirectory);
+
+  for (final item in listResult.items) {
+    final file = File('$hiveDirectory/${item.name}');
+    try {
+      print('Downloading file: ${item.name}');
+      await item.writeToFile(file);
+      print('Successfully downloaded file: ${item.name}');
+    } catch (e) {
+      print('Failed to download file: ${item.name}, error: $e');
+    }
+  }
+  dataDownloaded = true;
+  Restart.restartApp();
 }
