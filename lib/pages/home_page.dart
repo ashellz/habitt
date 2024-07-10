@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
+import 'package:habit_tracker/pages/add_habit_page.dart';
 import 'package:habit_tracker/util/objects/add_habit.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
@@ -9,6 +10,7 @@ import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/edit_habit.dart';
 import 'package:habit_tracker/util/objects/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/util/functions/validate_text.dart';
 import 'dart:async';
 
 Icon startIcon = const Icon(Icons.book);
@@ -478,14 +480,6 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  String? _validateText(String? value) {
-    if (value?.isEmpty ?? true) {
-      return 'Please enter some text';
-    } else if (value == null || value.trim().isEmpty) {
-      return 'Input cannot be just spaces';
-    }
-    return null;
-  }
   // THE SCAFFOLD STARTS HERE, ALL ABOVE ARE FUNCTIONS AND DECLARATIONS
 
   @override
@@ -499,33 +493,38 @@ class HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromARGB(255, 37, 67, 54),
         actions: [
           IconButton(
-            iconSize: 30,
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: () => showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: addHabit(_formKey, _validateText, createNewHabit),
-                );
-              },
-            ).whenComplete(() {
-              createcontroller.clear();
-              updatedIcon = startIcon;
-              habitGoal = 0;
-              dropDownValue = 'Any time';
-              amountNameController.text = "times";
-              currentAmountValue = 2;
-              currentDurationValue = 1;
-            }),
-          ),
+              iconSize: 30,
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AddHabitPage(
+                          createNewHabit: createNewHabit,
+                        )));
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+                  builder: (BuildContext context) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                      ),
+                      child: addHabit(_formKey, validateText, createNewHabit),
+                    );
+                  },
+                ).whenComplete(() {
+                  createcontroller.clear();
+                  updatedIcon = startIcon;
+                  habitGoal = 0;
+                  dropDownValue = 'Any time';
+                  amountNameController.text = "times";
+                  currentAmountValue = 2;
+                  currentDurationValue = 1;
+                });
+              }),
         ],
       ),
       drawer: menuDrawer(context),

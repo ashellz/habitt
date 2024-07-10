@@ -6,6 +6,7 @@ import 'package:habit_tracker/pages/icons_page.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
 import 'package:hive/hive.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:habit_tracker/util/functions/validate_text.dart';
 
 final habitBox = Hive.box<HabitData>('habits');
 int habitGoalEdit = 0;
@@ -341,24 +342,4 @@ Widget editHabit(formKey, deletetask, edithabit, index) {
       );
     },
   );
-}
-
-class LowerCaseTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    return newValue.copyWith(
-      text: newValue.text.toLowerCase(),
-      selection: newValue.selection,
-    );
-  }
-}
-
-String? validateText(String? value) {
-  if (value?.isEmpty ?? true) {
-    return 'Please enter some text';
-  } else if (value == null || value.trim().isEmpty) {
-    return 'Input cannot be just spaces';
-  }
-  return null;
 }

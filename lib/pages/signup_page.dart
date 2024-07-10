@@ -5,7 +5,7 @@ import 'package:habit_tracker/pages/loading_page.dart';
 import 'package:habit_tracker/pages/login_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
-import 'package:habit_tracker/util/functions/validate_auth.dart';
+import 'package:habit_tracker/util/functions/validate_text.dart';
 
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});

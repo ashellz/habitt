@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 String? validateUsername(String? value) {
   if (value?.isEmpty ?? true) {
     return 'This field cannot be empty';
@@ -44,4 +46,24 @@ String? validatePasswordLogin(String? value) {
     return 'Input cannot be just spaces';
   }
   return null;
+}
+
+String? validateText(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'Please enter some text';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  }
+  return null;
+}
+
+class LowerCaseTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return newValue.copyWith(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
+  }
 }

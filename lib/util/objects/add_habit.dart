@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habit_tracker/pages/add_habit_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/icons_page.dart';
+import 'package:habit_tracker/util/functions/validate_text.dart';
 import 'package:numberpicker/numberpicker.dart';
-
-int currentAmountValue = 2;
-int currentDurationValue = 1;
-int habitGoal = 0;
-
-TextEditingController amountNameController = TextEditingController();
 
 Widget addHabit(formKey, validateText, createNewTask) {
   if (amountNameController.text.isEmpty) {
@@ -278,15 +274,4 @@ Widget addHabit(formKey, validateText, createNewTask) {
       );
     },
   );
-}
-
-class LowerCaseTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    return newValue.copyWith(
-      text: newValue.text.toLowerCase(),
-      selection: newValue.selection,
-    );
-  }
 }
