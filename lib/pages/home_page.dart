@@ -432,7 +432,7 @@ class HomePageState extends State<HomePage> {
           index,
           HabitData(
             name: editcontroller.text,
-            completed: habitBox.getAt(index)?.completed ?? false,
+            completed: false,
             icon: getIconString(updatedIcon.icon),
             category: dropDownValue,
             streak: habitBox.getAt(index)?.streak ?? 0,

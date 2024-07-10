@@ -16,24 +16,17 @@ class AuthService {
       required String password,
       required BuildContext context}) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      isLoggedIn = true;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => const LoadingScreen(),
         ),
       );
-      await backupHiveBoxesToFirebase(userId);
-
-      await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage()));
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      isLoggedIn = true;
     } on FirebaseException catch (e) {
       errorMessage = 'An unexpected error occurred';
       if (e.code == 'weak-password') {
@@ -136,6 +129,11 @@ class AuthService {
       );
       print(e.toString());
     }
+  }
+
+  Future<void> signInAnonimusly() async {
+    await FirebaseAuth.instance.signInAnonymously();
+    isLoggedIn = true;
   }
 
   Future<void> signOut() async {

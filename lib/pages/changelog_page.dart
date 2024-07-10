@@ -15,6 +15,27 @@ class ChangelogPage extends StatelessWidget {
       ),
       body: ListView(
         children: const [
+          // 09.07.2024
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "09.07.2024",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Fixed when changing how many times you have done a habit it changes the amount of times you have to do it too\n- Fixed ap stuck on loading screen after registering"),
+                    Text(
+                        "- Fixed when continuing as a guest, previous logged in account data will be shown\n- Fixed when creating a new account, also previous logged in data was shown"),
+                    Text(
+                        "- Fixed when changing amount of times or duration of the habit, on a habit that is complete, it would show 0 out of times/duration but will be completed"),
+                  ])),
+
           // 08.07.2024
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
