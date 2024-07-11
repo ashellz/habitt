@@ -41,6 +41,7 @@ Widget addHabit(formKey, validateText, createNewTask) {
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(35),
                     ],
+                    onChanged: (value) => createcontroller.text = value,
                     validator: validateText,
                     controller: createcontroller,
                     decoration: InputDecoration(

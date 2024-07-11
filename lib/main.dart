@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/login_page.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -70,6 +71,8 @@ void callbackDispatcher() {
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");
 
+    backupHiveBoxesToFirebase(userId);
+/*
     if (now.hour == 5 && notificationBox.get('morningNotification') == true) {
       if (morningHasHabits == true) {
         await AwesomeNotifications().createNotification(
@@ -82,7 +85,7 @@ void callbackDispatcher() {
         );
       }
     }
-
+*/
     return Future.value(true);
   });
 }

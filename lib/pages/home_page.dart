@@ -499,10 +499,23 @@ class HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AddHabitPage(
-                          createNewHabit: createNewHabit,
-                        )));
+                if (createcontroller.text.isEmpty) {
+                  createcontroller.text = "Habit Name";
+                }
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => AddHabitPage(
+                              createNewHabit: createNewHabit,
+                            )))
+                    .whenComplete(() {
+                  createcontroller.clear();
+                  updatedIcon = startIcon;
+                  habitGoal = 0;
+                  dropDownValue = 'Any time';
+                  amountNameController.text = "times";
+                  currentAmountValue = 2;
+                  currentDurationValue = 1;
+                });
                 showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
@@ -515,15 +528,7 @@ class HomePageState extends State<HomePage> {
                       child: addHabit(_formKey, validateText, createNewHabit),
                     );
                   },
-                ).whenComplete(() {
-                  createcontroller.clear();
-                  updatedIcon = startIcon;
-                  habitGoal = 0;
-                  dropDownValue = 'Any time';
-                  amountNameController.text = "times";
-                  currentAmountValue = 2;
-                  currentDurationValue = 1;
-                });
+                );
               }),
         ],
       ),
