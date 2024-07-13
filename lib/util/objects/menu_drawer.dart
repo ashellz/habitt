@@ -41,7 +41,7 @@ Widget menuDrawer(context) {
                         fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
-                    AuthService().signOut();
+                    AuthService().signOut(context);
                     boolBox.put('isGuest', false);
                     Navigator.pushReplacement(
                       context,

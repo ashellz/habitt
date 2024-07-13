@@ -12,15 +12,16 @@ Future<void> openHiveBoxes() async {
   }
   if (!Hive.isBoxOpen('streak')) {
     print("Opening 'streak' box...");
-    await Hive.openBox<int>('streak');
+    await Hive.openBox<int>('streak'); // wont need to upload after first time
   }
   if (!Hive.isBoxOpen('bool')) {
     print("Opening 'bool' box...");
-    await Hive.openBox<bool>('bool');
+    await Hive.openBox<bool>('bool'); // wont need to upload after first time
   }
   if (!Hive.isBoxOpen('string')) {
     print("Opening 'string' box...");
-    await Hive.openBox<String>('string');
+    await Hive.openBox<String>(
+        'string'); // wont need to upload after first time
   }
 }
 

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/pages/add_habit_page.dart';
 
 class LoadingScreen extends StatelessWidget {
-  const LoadingScreen({super.key});
+  const LoadingScreen({super.key, required this.text});
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 37, 67, 54),
+    return Scaffold(
+      backgroundColor: theDarkGreen,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
+            const CircularProgressIndicator(
               color: Colors.white,
             ),
-            SizedBox(height: 10),
-            Text("Loading Data...",
-                style: TextStyle(color: Colors.white, fontSize: 18)),
+            const SizedBox(height: 10),
+            Text(text,
+                style: const TextStyle(color: Colors.white, fontSize: 18)),
           ],
         ),
       ),

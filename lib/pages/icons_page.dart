@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/pages/add_habit_page.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 
 Icon chosenIcon = const Icon(Icons.book);
@@ -10,89 +11,65 @@ class IconsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      backgroundColor: Colors.black,
       body: ListView(
+        physics: const BouncingScrollPhysics(),
         children: const [
-          Padding(
-            padding: EdgeInsets.only(left: 25, top: 20, bottom: 5),
+          const Padding(
+            padding: EdgeInsets.only(
+              top: 20.0,
+              left: 25.0,
+              bottom: 10.0,
+            ),
             child: Text(
-              'Choose an icon',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              "Choose an icon",
+              style: TextStyle(
+                fontSize: 32.0,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.add)),
-              IconWidget(icon: Icon(Icons.fastfood_outlined)),
-              IconWidget(icon: Icon(Icons.shopping_bag_outlined)),
-              IconWidget(icon: Icon(Icons.attach_money_rounded)),
-            ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Wrap(
+              spacing: 30,
+              children: [
+                IconWidget(icon: Icon(Icons.add)),
+                IconWidget(icon: Icon(Icons.fastfood_outlined)),
+                IconWidget(icon: Icon(Icons.shopping_bag_outlined)),
+                IconWidget(icon: Icon(Icons.attach_money_rounded)),
+                IconWidget(icon: Icon(Icons.audiotrack)),
+                IconWidget(icon: Icon(Icons.delete_rounded)),
+                IconWidget(icon: Icon(Icons.book)),
+                IconWidget(icon: Icon(Icons.edit_document)),
+                IconWidget(icon: Icon(Icons.laptop_mac_rounded)),
+                IconWidget(icon: Icon(Ionicons.md_shirt)),
+                IconWidget(icon: Icon(Icons.directions_bike)),
+                IconWidget(icon: Icon(Icons.directions_car)),
+                IconWidget(icon: Icon(Icons.camera_alt_rounded)),
+                IconWidget(icon: Icon(Icons.celebration)),
+                IconWidget(icon: Icon(Icons.cake_rounded)),
+                IconWidget(icon: Icon(Icons.call)),
+                IconWidget(icon: Icon(Icons.checkroom_rounded)),
+                IconWidget(icon: Icon(MaterialCommunityIcons.puzzle)),
+                IconWidget(icon: Icon(Icons.clean_hands_rounded)),
+                IconWidget(icon: Icon(MaterialCommunityIcons.tooth)),
+                IconWidget(icon: Icon(Icons.coffee_rounded)),
+                IconWidget(icon: Icon(Icons.science_rounded)),
+                IconWidget(icon: Icon(Icons.door_front_door_rounded)),
+                IconWidget(icon: Icon(Icons.sports_esports_rounded)),
+                IconWidget(icon: Icon(Icons.sports_football_rounded)),
+                IconWidget(icon: Icon(MaterialIcons.fitness_center)),
+                IconWidget(icon: Icon(MaterialIcons.directions_walk)),
+                IconWidget(icon: Icon(Icons.water_drop_rounded)),
+                IconWidget(icon: Icon(Icons.egg_alt)),
+                IconWidget(icon: Icon(MaterialIcons.hotel)),
+                IconWidget(icon: Icon(FontAwesome.shower)),
+                IconWidget(icon: Icon(FontAwesome.book)),
+              ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.audiotrack)),
-              IconWidget(icon: Icon(Icons.delete_rounded)),
-              IconWidget(icon: Icon(Icons.book)),
-              IconWidget(icon: Icon(Icons.edit_document)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.laptop_mac_rounded)),
-              IconWidget(icon: Icon(Ionicons.md_shirt)),
-              IconWidget(icon: Icon(Icons.directions_bike)),
-              IconWidget(icon: Icon(Icons.directions_car)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.camera_alt_rounded)),
-              IconWidget(icon: Icon(Icons.celebration)),
-              IconWidget(icon: Icon(Icons.cake_rounded)),
-              IconWidget(icon: Icon(Icons.call)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.checkroom_rounded)),
-              IconWidget(icon: Icon(MaterialCommunityIcons.puzzle)),
-              IconWidget(icon: Icon(Icons.clean_hands_rounded)),
-              IconWidget(icon: Icon(MaterialCommunityIcons.tooth)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.coffee_rounded)),
-              IconWidget(icon: Icon(Icons.science_rounded)),
-              IconWidget(icon: Icon(Icons.door_front_door_rounded)),
-              IconWidget(icon: Icon(Icons.sports_esports_rounded)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.sports_football_rounded)),
-              IconWidget(icon: Icon(MaterialIcons.fitness_center)),
-              IconWidget(icon: Icon(MaterialIcons.directions_walk)),
-              IconWidget(icon: Icon(Icons.water_drop_rounded)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconWidget(icon: Icon(Icons.egg_alt)),
-              IconWidget(icon: Icon(MaterialIcons.hotel)),
-              IconWidget(icon: Icon(FontAwesome.shower)),
-              IconWidget(icon: Icon(FontAwesome.book)),
-            ],
-          ),
-          SizedBox(height: 25),
         ],
       ),
     );
@@ -112,8 +89,8 @@ class IconWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 25),
       child: SizedBox(
-        width: 60,
-        height: 60,
+        width: 65,
+        height: 65,
         child: ElevatedButton(
           onPressed: () {
             theIcon = icon;
@@ -121,13 +98,17 @@ class IconWidget extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),
-            backgroundColor: const Color.fromARGB(255, 183, 181, 151),
+            backgroundColor: theLightGreen,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
             ),
           ),
-          child: Icon(icon.icon, color: Colors.black),
+          child: Icon(
+            icon.icon,
+            color: Colors.white,
+            size: 30,
+          ),
         ),
       ),
     );

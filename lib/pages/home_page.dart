@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/add_habit_page.dart';
-import 'package:habit_tracker/util/objects/add_habit.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/getIcon.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/edit_habit.dart';
 import 'package:habit_tracker/util/objects/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:habit_tracker/util/functions/validate_text.dart';
 import 'dart:async';
 
 Icon startIcon = const Icon(Icons.book);
@@ -490,7 +488,7 @@ class HomePageState extends State<HomePage> {
         title: const Text("HABIT TRACKER"),
         centerTitle: true,
         toolbarHeight: 80.0,
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+        backgroundColor: theDarkGreen,
         actions: [
           IconButton(
               iconSize: 30,
@@ -516,19 +514,6 @@ class HomePageState extends State<HomePage> {
                   currentAmountValue = 2;
                   currentDurationValue = 1;
                 });
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-                  builder: (BuildContext context) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      child: addHabit(_formKey, validateText, createNewHabit),
-                    );
-                  },
-                );
               }),
         ],
       ),

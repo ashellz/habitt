@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/loading_page.dart';
+import 'package:habit_tracker/pages/login_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -19,7 +20,9 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const LoadingScreen(),
+          builder: (BuildContext context) => const LoadingScreen(
+            text: "Signing up...",
+          ),
         ),
       );
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -60,7 +63,8 @@ class AuthService {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const LoadingScreen(),
+          builder: (BuildContext context) =>
+              const LoadingScreen(text: "Signing in..."),
         ),
       );
       // Ensure user is authenticated before accessing userId
@@ -136,7 +140,19 @@ class AuthService {
     isLoggedIn = true;
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(context) async {
+    await backupHiveBoxesToFirebase(userId);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+          builder: (BuildContext context) => const LoadingScreen(
+                text: "Signing out...",
+              )),
+    );
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+    );
+
     await FirebaseAuth.instance.signOut();
     isLoggedIn = false;
   }

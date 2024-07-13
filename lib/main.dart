@@ -66,7 +66,6 @@ bool dailyNotification = false;
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     Hive.registerAdapter(HabitDataAdapter());
-    var notificationBox = Hive.box('bool');
 
     DateTime now = DateTime.now();
     print("Hour: ${now.hour}");

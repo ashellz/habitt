@@ -182,7 +182,9 @@ class LoginPage extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const LoadingScreen(),
+                      builder: (BuildContext context) => const LoadingScreen(
+                        text: "Loading data...",
+                      ),
                     ),
                   );
                   newAccountDownloadData(context);
