@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/util/objects/menu_drawer.dart';
+
+class NewHomePage extends StatefulWidget {
+  const NewHomePage({super.key});
+
+  @override
+  State<NewHomePage> createState() => _NewHomePageState();
+}
+
+class _NewHomePageState extends State<NewHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    String username = stringBox.get('username') ?? 'Guest';
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+        ),
+        drawer: menuDrawer(context),
+        backgroundColor: Colors.black,
+        body: ListView(
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+          children: [
+            const SizedBox(height: 30),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Hi there",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Transform.translate(
+                  offset: const Offset(0, -10),
+                  child: Text(
+                    username,
+                    style: TextStyle(
+                      color: theButtonGreen,
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

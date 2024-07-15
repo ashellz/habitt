@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/add_habit_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
@@ -487,6 +488,11 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return const NewHomePage();
+        }));
+      }),
       appBar: AppBar(
         title: const Text("HABIT TRACKER"),
         centerTitle: true,
