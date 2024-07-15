@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/add_habit_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key, required this.text});

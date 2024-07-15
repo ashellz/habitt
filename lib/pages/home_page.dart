@@ -11,6 +11,10 @@ import 'package:habit_tracker/util/objects/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 
+Color theLightGreen = const Color.fromARGB(255, 62, 80, 71);
+Color theButtonGreen = const Color.fromARGB(255, 124, 175, 151);
+Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
+
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
 final createcontroller = TextEditingController();

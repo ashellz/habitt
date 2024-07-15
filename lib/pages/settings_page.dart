@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
-              "Notifications",
+              "Notifications (in development)",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),

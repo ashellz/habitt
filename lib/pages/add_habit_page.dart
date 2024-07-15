@@ -8,9 +8,6 @@ import 'package:habit_tracker/util/functions/validate_text.dart';
 int habitGoal = 0;
 int currentAmountValue = 2;
 int currentDurationValue = 1;
-Color theLightGreen = const Color.fromARGB(255, 62, 80, 71);
-Color theButtonGreen = const Color.fromARGB(255, 124, 175, 151);
-Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
 
 TextEditingController amountNameController = TextEditingController();
 
