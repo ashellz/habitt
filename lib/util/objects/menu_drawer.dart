@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/changelog_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/login_page.dart';
+import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/settings_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/services/auth_service.dart';

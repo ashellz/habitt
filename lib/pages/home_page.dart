@@ -4,9 +4,9 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/add_habit_page.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
-import 'package:habit_tracker/util/functions/getIcon.dart';
+import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
-import 'package:habit_tracker/util/objects/edit_habit.dart';
+import 'package:habit_tracker/old/edit_habit.dart';
 import 'package:habit_tracker/util/objects/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
@@ -176,7 +176,7 @@ class HomePageState extends State<HomePage> {
     currentDurationValue = 1;
     habitGoal = 0;
     Navigator.pop(context);
-    showPopup(context, "Habit added!");
+    //showPopup(context, "Habit added!");
   }
 
   void openCategory(String key) {
@@ -261,49 +261,6 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  String checkCategory(String category) {
-    if (category == "Morning") {
-      return "Morning";
-    } else if (category == "Afternoon") {
-      return "Afternoon";
-    } else if (category == "Evening") {
-      return "Evening";
-    } else if (category == "Any time") {
-      return "Any time";
-    }
-    return "";
-  }
-
-  void checkIfEmpty(String category) {
-    bool hasHabits = false;
-    for (int i = 0; i < habitListLenght; i++) {
-      if (habitBox.getAt(i)?.category == category) {
-        hasHabits = true;
-        break;
-      }
-    }
-
-    if (hasHabits == false) {
-      setState(() {
-        if (category == "Morning") {
-          morningHasHabits = false;
-          morningVisible = false;
-        } else if (category == "Afternoon") {
-          afternoonHasHabits = false;
-          afternoonVisible = false;
-        } else if (category == "Evening") {
-          eveningHasHabits = false;
-          eveningVisible = false;
-        } else if (category == "Any time") {
-          anytimeHasHabits = false;
-          anyTimeVisible = false;
-        }
-      });
-    }
-  }
-
-  late String category;
-
   Future<void> deleteHabit(int index) async {
     await showDialog(
       context: context,
@@ -378,6 +335,49 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  String checkCategory(String category) {
+    if (category == "Morning") {
+      return "Morning";
+    } else if (category == "Afternoon") {
+      return "Afternoon";
+    } else if (category == "Evening") {
+      return "Evening";
+    } else if (category == "Any time") {
+      return "Any time";
+    }
+    return "";
+  }
+
+  void checkIfEmpty(String category) {
+    bool hasHabits = false;
+    for (int i = 0; i < habitListLenght; i++) {
+      if (habitBox.getAt(i)?.category == category) {
+        hasHabits = true;
+        break;
+      }
+    }
+
+    if (hasHabits == false) {
+      setState(() {
+        if (category == "Morning") {
+          morningHasHabits = false;
+          morningVisible = false;
+        } else if (category == "Afternoon") {
+          afternoonHasHabits = false;
+          afternoonVisible = false;
+        } else if (category == "Evening") {
+          eveningHasHabits = false;
+          eveningVisible = false;
+        } else if (category == "Any time") {
+          anytimeHasHabits = false;
+          anyTimeVisible = false;
+        }
+      });
+    }
+  }
+
+  late String category;
+
   late String editedFrom;
   late String editedTo;
 
@@ -449,7 +449,6 @@ class HomePageState extends State<HomePage> {
     dropDownValue = 'Any time';
     editcontroller.text = "";
     updatedIcon = startIcon;
-    Navigator.pop(context);
     showPopup(context, "Habit edited!");
   }
 

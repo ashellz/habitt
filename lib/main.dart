@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/login_page.dart';
+import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';

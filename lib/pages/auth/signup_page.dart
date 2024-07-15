@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/loading_page.dart';
-import 'package:habit_tracker/pages/login_page.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
+import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';

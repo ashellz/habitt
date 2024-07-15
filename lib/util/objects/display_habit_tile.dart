@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/pages/edit_habit_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/functions/getIcon.dart';
-import 'package:habit_tracker/util/objects/edit_habit.dart';
+import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -198,20 +198,14 @@ class _HabitTileState extends State<HabitTile> {
             ],
           ),
           child: GestureDetector(
-            onTap: () => showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: editHabit(_formKey, widget.deletehabit,
-                      widget.edithabit, widget.index),
-                );
-              },
-            ).whenComplete(() {
+            onTap: () => Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (context) => EditHabitPage(
+                          index: widget.index,
+                          deletehabit: widget.deletehabit,
+                          edithabit: widget.edithabit,
+                        )))
+                .whenComplete(() {
               habitGoalEdit = 0;
               updated = false;
               dropDownChanged = false;

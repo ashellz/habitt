@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/loading_page.dart';
-import 'package:habit_tracker/pages/login_page.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
+import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 

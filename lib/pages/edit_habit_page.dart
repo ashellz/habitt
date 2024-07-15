@@ -1,60 +1,124 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:habit_tracker/pages/add_habit_page.dart";
 import "package:habit_tracker/pages/home_page.dart";
 import "package:habit_tracker/pages/icons_page.dart";
+import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
+import "package:habit_tracker/util/functions/habit/editHabit.dart";
+import "package:habit_tracker/util/functions/habit/getIcon.dart";
+import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:numberpicker/numberpicker.dart";
-import 'package:habit_tracker/util/functions/validate_text.dart';
 
-int habitGoal = 0;
-int currentAmountValue = 2;
-int currentDurationValue = 1;
-Color theLightGreen = const Color.fromARGB(255, 62, 80, 71);
-Color theButtonGreen = const Color.fromARGB(255, 124, 175, 151);
-Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
-
-TextEditingController amountNameController = TextEditingController();
+int habitGoalEdit = 0;
+late int amount;
+late int duration;
+bool updated = false;
+TextEditingController amountNameControllerEdit = TextEditingController();
+bool dropDownChanged = false;
 
 final formKey = GlobalKey<FormState>();
 
-class AddHabitPage extends StatefulWidget {
-  const AddHabitPage({super.key, required this.createNewHabit});
+class EditHabitPage extends StatefulWidget {
+  const EditHabitPage(
+      {super.key,
+      required this.index,
+      required this.deletehabit,
+      required this.edithabit});
 
-  final Function createNewHabit;
+  final int index;
+  final Future<void> Function(int index) deletehabit;
+  final void Function(int index) edithabit;
 
   @override
-  State<AddHabitPage> createState() => _AddHabitPageState();
+  State<EditHabitPage> createState() => _EditHabitPageState();
 }
 
-class _AddHabitPageState extends State<AddHabitPage> {
+class _EditHabitPageState extends State<EditHabitPage> {
   @override
   Widget build(BuildContext context) {
+    if (!changed) {
+      updatedIcon = Icon(getIcon(widget.index));
+    }
+
+    if (!updated) {
+      if (habitBox.getAt(widget.index)!.amount > 1) {
+        habitGoalEdit = 1;
+        amount = habitBox.getAt(widget.index)!.amount;
+        amountNameControllerEdit.text =
+            habitBox.getAt(widget.index)!.amountName;
+        duration = 1;
+      } else if (habitBox.getAt(widget.index)!.duration > 0) {
+        habitGoalEdit = 2;
+        duration = habitBox.getAt(widget.index)!.duration == 0
+            ? 1
+            : habitBox.getAt(widget.index)!.duration;
+        amount = habitBox.getAt(widget.index)!.amount == 1
+            ? 2
+            : habitBox.getAt(widget.index)!.amount;
+      } else {
+        habitGoalEdit = 0;
+        amount = 2;
+        duration = 1;
+      }
+
+      if (editcontroller.text.isEmpty) {
+        editcontroller.text = habitBox.getAt(widget.index)!.name;
+      }
+
+      if (amountNameControllerEdit.text.isEmpty) {
+        amountNameControllerEdit.text = "times";
+      }
+      updated = true;
+    }
+
+    if (!dropDownChanged) {
+      dropDownValue = habitBox.getAt(widget.index)!.category;
+    }
+
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.black,
-        body: Form(
-          key: formKey,
-          child: ListView(
+        child: Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.black,
+      body: Form(
+        key: formKey,
+        child: ListView(
             padding: const EdgeInsets.only(bottom: 60),
             physics: const BouncingScrollPhysics(),
             children: [
-              const Padding(
-                padding: EdgeInsets.only(
-                  top: 20.0,
-                  left: 25.0,
-                  bottom: 10.0,
-                ),
-                child: Text(
-                  "New Habit",
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
+                      left: 25.0,
+                      bottom: 10.0,
+                    ),
+                    child: Text(
+                      "Habit Info",
+                      style: TextStyle(
+                        fontSize: 32.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10, top: 5),
+                    child: IconButton(
+                        onPressed: () {
+                          deleteHabit(widget.index, context);
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          size: 30,
+                          color: Colors.white,
+                        )),
+                  ),
+                ],
               ),
 
-              // ICON
+              // HABIT DISPLAY
               Padding(
                 padding: const EdgeInsets.only(
                   top: 10.0,
@@ -67,6 +131,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                   child: Row(
                     children: [
+                      // ICON
                       Expanded(
                         flex: 1,
                         child: IconButton(
@@ -108,7 +173,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       ),
 
                       Expanded(
-                        flex: habitGoal == 0 ? 0 : 1,
+                        flex: habitGoalEdit == 0 ? 0 : 1,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,7 +203,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                 ),
               ),
-
               //NAME
 
               Padding(
@@ -146,13 +210,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     left: 20.0, right: 20, top: 20, bottom: 15),
                 child: TextFormField(
                   onChanged: (newValue) => setState(() {
-                    createcontroller.text = newValue;
+                    editcontroller.text = newValue;
                   }),
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(35),
                   ],
                   validator: validateText,
-                  controller: createcontroller,
+                  controller: editcontroller,
                   cursorColor: Colors.white,
                   cursorWidth: 2.0,
                   style: const TextStyle(color: Colors.white),
@@ -184,7 +248,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ),
 
-              // DROPDOWN MENU
+              //DROPDOWN MENU
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
@@ -209,15 +273,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     hint: const Text("Any Time",
                         style: TextStyle(color: Colors.white)),
                     items: dropdownItems,
+                    value: habitBox.getAt(widget.index)!.category,
                     onChanged: (String? newValue) {
                       setState(() {
+                        dropDownChanged = true;
                         dropDownValue = newValue!;
                       });
                     },
                   ),
                 ),
               ),
-
               // HABIT GOAL
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
@@ -227,11 +292,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          if (habitGoal == 1) {
-                            habitGoal = 0;
+                          if (habitGoalEdit == 1) {
+                            habitGoalEdit = 0;
+                            habitBox.getAt(widget.index)!.amount = 1;
                           } else {
-                            currentAmountValue = 2;
-                            habitGoal = 1;
+                            amount = 2;
+                            habitGoalEdit = 1;
+                            habitBox.getAt(widget.index)!.duration = 0;
                           }
                         });
                       },
@@ -244,7 +311,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         fixedSize: WidgetStateProperty.all<Size>(
                             Size(MediaQuery.of(context).size.width * 0.42, 50)),
                         backgroundColor: WidgetStateProperty.all<Color>(
-                          habitGoal == 1
+                          habitGoalEdit == 1
                               ? const Color.fromARGB(255, 107, 138, 122)
                               : theLightGreen,
                         ),
@@ -259,11 +326,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          if (habitGoal == 2) {
-                            habitGoal = 0;
+                          if (habitGoalEdit == 2) {
+                            habitGoalEdit = 0;
+                            habitBox.getAt(widget.index)!.duration = 0;
                           } else {
-                            currentDurationValue = 1;
-                            habitGoal = 2;
+                            duration = 1;
+                            habitGoalEdit = 2;
+                            habitBox.getAt(widget.index)!.amount = 1;
                           }
                         });
                       },
@@ -276,7 +345,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         fixedSize: WidgetStateProperty.all<Size>(
                             Size(MediaQuery.of(context).size.width * 0.43, 50)),
                         backgroundColor: WidgetStateProperty.all<Color>(
-                          habitGoal == 2
+                          habitGoalEdit == 2
                               ? const Color.fromARGB(255, 107, 138, 122)
                               : theLightGreen,
                         ),
@@ -288,20 +357,19 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ),
               Visibility(
-                visible: habitGoal == 1,
+                visible: habitGoalEdit == 1,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
                       Center(
                         child: NumberPicker(
-                          value: currentAmountValue,
+                          value: amount,
                           minValue: 2,
-                          maxValue: 90,
+                          maxValue: 100,
                           haptics: true,
                           axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => currentAmountValue = value),
+                          onChanged: (value) => setState(() => amount = value),
                           textStyle: const TextStyle(color: Colors.white),
                           selectedTextStyle: const TextStyle(
                               color: Colors.white,
@@ -311,7 +379,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       ),
                       Center(
                         child: Text(
-                          "$currentAmountValue ${amountNameController.text}",
+                          "$amount ${amountNameControllerEdit.text}",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -320,13 +388,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       ),
                       TextFormField(
                         onChanged: (newValue) => setState(() {
-                          amountNameController.text = newValue;
+                          amountNameControllerEdit.text = newValue;
                         }),
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(35),
                         ],
                         validator: validateText,
-                        controller: amountNameController,
+                        controller: amountNameControllerEdit,
                         cursorColor: Colors.white,
                         cursorWidth: 2.0,
                         style: const TextStyle(color: Colors.white),
@@ -348,20 +416,20 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ),
               Visibility(
-                visible: habitGoal == 2,
+                visible: habitGoalEdit == 2,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
                       Center(
                         child: NumberPicker(
-                          value: currentDurationValue,
+                          value: duration,
                           minValue: 1,
                           maxValue: 90,
                           haptics: true,
                           axis: Axis.horizontal,
                           onChanged: (value) =>
-                              setState(() => currentDurationValue = value),
+                              setState(() => duration = value),
                           textStyle: const TextStyle(color: Colors.white),
                           selectedTextStyle: const TextStyle(
                               color: Colors.white,
@@ -373,7 +441,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         child: Text(
                           currentDurationValue == 1
                               ? "1 minute"
-                              : "$currentDurationValue minutes",
+                              : "$duration minutes",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -381,52 +449,57 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomSheet: SizedBox(
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theButtonGreen,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
-              ),
+            ]),
+      ),
+      bottomSheet: SizedBox(
+        height: 50,
+        width: MediaQuery.of(context).size.width,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theButtonGreen,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             ),
-            child:
-                const Text('Add Habit', style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                widget.createNewHabit();
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const HomePage()));
-              }
-            },
           ),
+          child:
+              const Text('Save Changes', style: TextStyle(color: Colors.white)),
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              editHabit(widget.index, context);
+
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
+              }
+            }
+          },
         ),
       ),
-    );
+    ));
   }
 }
 
 String habitGoalNumber() {
-  if (habitGoal == 0) {
+  if (habitGoalEdit == 0) {
     return "";
-  } else if (habitGoal == 1) {
-    return "$currentAmountValue";
+  } else if (habitGoalEdit == 1) {
+    return "$amount";
   } else {
-    return "$currentDurationValue";
+    return "$duration";
   }
 }
 
 String habitGoalText() {
-  if (habitGoal == 0) {
+  if (habitGoalEdit == 0) {
     return "";
-  } else if (habitGoal == 1) {
-    return amountNameController.text;
+  } else if (habitGoalEdit == 1) {
+    return amountNameControllerEdit.text;
   } else {
     return habitGoalNumber() == "1" ? "minute" : "minutes";
   }
@@ -446,7 +519,7 @@ String truncatedText(BuildContext context) {
     maxLength = 24; // larger screen
   }
 
-  String name = createcontroller.text;
+  String name = editcontroller.text;
   if (name.length > maxLength) {
     return '${name.substring(0, maxLength)}...';
   }
