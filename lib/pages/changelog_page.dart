@@ -15,6 +15,23 @@ class ChangelogPage extends StatelessWidget {
       ),
       body: ListView(
         children: const [
+          // 15.07.2024
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "09.07.2024",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Changed design when adding, editing or deleting a habit\n- Improved data storing\n- Added different page transition effect (might have bugs)"),
+                  ])),
+
           // 09.07.2024
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
