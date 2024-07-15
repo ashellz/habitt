@@ -147,6 +147,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Habit Tracker',
       theme: ThemeData(
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        }),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
         primarySwatch: Colors.green,
