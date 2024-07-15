@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/pages/add_habit_page.dart';
+import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/icons_page.dart';
+import 'package:habit_tracker/pages/habit/icons_page.dart';
 
 Widget addHabit(formKey, validateText, createNewHabit) {
   if (amountNameController.text.isEmpty) {

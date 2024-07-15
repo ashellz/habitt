@@ -2,13 +2,13 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/add_habit_page.dart';
+import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/objects/display_habit_tile.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/old/edit_habit.dart';
-import 'package:habit_tracker/util/objects/menu_drawer.dart';
+import 'package:habit_tracker/old/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 

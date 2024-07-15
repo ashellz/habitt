@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/objects/menu_drawer.dart';
+import 'package:habit_tracker/pages/menu/menu_page.dart';
 
 class NewHomePage extends StatefulWidget {
   const NewHomePage({super.key});
@@ -16,10 +16,16 @@ class _NewHomePageState extends State<NewHomePage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-        ),
-        drawer: menuDrawer(context),
+        appBar: AppBar(backgroundColor: Colors.black, actions: [
+          IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return const MenuPage();
+              }));
+            },
+          ),
+        ]),
         backgroundColor: Colors.black,
         body: ListView(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),

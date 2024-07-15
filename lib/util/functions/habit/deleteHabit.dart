@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/edit_habit_page.dart';
+import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/util/functions/habit/checkCategory.dart';
 import 'package:habit_tracker/util/functions/habit/checkIfEmpty.dart';
