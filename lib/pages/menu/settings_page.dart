@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text("Settings"),
         centerTitle: true,
@@ -33,14 +33,17 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "Notifications (in development)",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 20),
             child: Text(
               "How often should you be notified?",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
           Padding(
@@ -49,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
               groupValue: notifValue,
               title: const Text(
                 "Once a day",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               value: 0,
               onChanged: (value) {
@@ -70,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
               groupValue: notifValue,
               title: const Text(
                 "Three times a day",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               value: 1,
               onChanged: (value) {
@@ -91,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
               groupValue: notifValue,
               title: const Text(
                 "Custom",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               value: 2,
               onChanged: (value) {
@@ -107,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -127,14 +130,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                     ),
-                    const Text("Morning notification"),
+                    const Text(
+                      "Morning notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -154,14 +160,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                     ),
-                    const Text("Afternoon notification"),
+                    const Text(
+                      "Afternoon notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -181,14 +190,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                     ),
-                    const Text("Evening notification"),
+                    const Text(
+                      "Evening notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -209,7 +221,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         print(boolBox.get('dailyNotification'));
                       },
                     ),
-                    const Text("Daily notification"),
+                    const Text(
+                      "Daily notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
@@ -219,7 +234,11 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "Data",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
           Row(
@@ -228,7 +247,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: EdgeInsets.only(left: 20),
                 child: Text(
                   "Upload Data Manually",
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               Padding(
@@ -251,7 +273,10 @@ class _SettingsPageState extends State<SettingsPage> {
                               await backupHiveBoxesToFirebase(userId);
                             }
                           },
-                    icon: const Icon(Icons.upload)),
+                    icon: const Icon(
+                      Icons.upload,
+                      color: Colors.white,
+                    )),
               ),
             ],
           ),

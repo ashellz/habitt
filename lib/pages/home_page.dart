@@ -488,11 +488,15 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return const NewHomePage();
-        }));
-      }),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: theDarkGreen,
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return const NewHomePage();
+          }));
+        },
+        child: Icon(Icons.new_releases, color: Colors.white),
+      ),
       appBar: AppBar(
         title: const Text("HABIT TRACKER"),
         centerTitle: true,
