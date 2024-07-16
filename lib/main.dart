@@ -150,20 +150,19 @@ class MyApp extends StatelessWidget {
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.fromSeed(seedColor: theLightGreen),
         useMaterial3: true,
-        primarySwatch: Colors.green,
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
+        appBarTheme: AppBarTheme(
+          iconTheme: const IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
-              color: Colors.white,
+              color: theLightGreen,
               fontSize: 22,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700),
         ),
         textTheme: ThemeData.light().textTheme.apply(
-              bodyColor: Colors.black,
-              displayColor: Colors.black,
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
               fontFamily: 'Poppins',
             ),
       ),

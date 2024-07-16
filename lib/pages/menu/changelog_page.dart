@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 
 class ChangelogPage extends StatelessWidget {
   const ChangelogPage({super.key});
@@ -6,41 +8,55 @@ class ChangelogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Changelog"),
-        centerTitle: true,
-        toolbarHeight: 80.0,
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+        backgroundColor: Colors.black,
       ),
       body: ListView(
-        children: const [
-          // 15.07.2024
+        children: [
+          //TITLE
           Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            padding: const EdgeInsets.only(top: 30, left: 20, bottom: 10),
             child: Text(
-              "09.07.2024",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              "Changelog",
+              style: TextStyle(
+                  fontSize: 42,
+                  color: theLightGreen,
+                  fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+
+          // 15.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "15.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                         "- Changed design when adding, editing or deleting a habit\n- Improved data storing\n- Added different page transition effect (might have bugs)"),
+                    Text(
+                        "- Updated app design\n- Added profile page, along with abilities to change username, email, password and to delete the account"),
                   ])),
 
           // 09.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "09.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,14 +70,14 @@ class ChangelogPage extends StatelessWidget {
                   ])),
 
           // 08.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "08.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,14 +89,14 @@ class ChangelogPage extends StatelessWidget {
                   ])),
 
           // 07.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "07.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,14 +109,14 @@ class ChangelogPage extends StatelessWidget {
           ),
 
           // 06.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "06.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,27 +130,27 @@ class ChangelogPage extends StatelessWidget {
           ),
 
           // 05.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "05.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text("- Added changelog page"),
           ),
 
           // 03.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "03.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
                 "- Fixed amount and duration completed don't reset on a new day\n- Fixed on all habits completed streak when it is just 1 day streak it was displaying 1 days"),

@@ -47,7 +47,7 @@ class _NewHomePageState extends State<NewHomePage> {
                   child: Text(
                     username,
                     style: TextStyle(
-                      color: theButtonGreen,
+                      color: theLightGreen,
                       fontSize: 42,
                       fontWeight: FontWeight.bold,
                     ),

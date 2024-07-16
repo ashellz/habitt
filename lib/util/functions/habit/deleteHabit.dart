@@ -14,7 +14,7 @@ Future<void> deleteHabit(int index, context) async {
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: theLightGreen,
+        backgroundColor: theGreen,
         content: SizedBox(
           height: 122,
           child: Column(
@@ -39,7 +39,7 @@ Future<void> deleteHabit(int index, context) async {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 204, 86, 110),
+                      backgroundColor: theRedColor,
                     ),
                     child: const Text(
                       "Delete",
@@ -75,7 +75,7 @@ Future<void> deleteHabit(int index, context) async {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theButtonGreen,
+                      backgroundColor: theLightGreen,
                     ),
                     child: const Text("Cancel",
                         style: TextStyle(color: Colors.white)),

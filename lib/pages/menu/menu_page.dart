@@ -82,7 +82,7 @@ Widget buildHeader(BuildContext context) {
             Text(
               streak == 1 ? "$streak day" : "$streak days",
               style: TextStyle(
-                  color: theButtonGreen,
+                  color: theLightGreen,
                   fontSize: 42,
                   fontWeight: FontWeight.bold),
             ),

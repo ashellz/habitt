@@ -127,7 +127,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 child: Container(
                   height: 170,
                   decoration: BoxDecoration(
-                    color: theLightGreen,
+                    color: theGreen,
                   ),
                   child: Row(
                     children: [
@@ -239,7 +239,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     filled: true,
-                    fillColor: theLightGreen,
+                    fillColor: theGreen,
                     label: const Text(
                       "Habit Name",
                       style: TextStyle(color: Colors.white),
@@ -255,7 +255,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 child: ButtonTheme(
                   alignedDropdown: true,
                   child: DropdownButtonFormField(
-                    dropdownColor: theLightGreen,
+                    dropdownColor: theGreen,
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 20.0),
@@ -263,7 +263,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       filled: true,
-                      fillColor: theLightGreen,
+                      fillColor: theGreen,
                     ),
                     style: const TextStyle(
                       fontFamily: 'Poppins',
@@ -313,7 +313,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoalEdit == 1
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theLightGreen,
+                              : theGreen,
                         ),
                       ),
                       child: const Text("Number of times",
@@ -347,7 +347,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoalEdit == 2
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theLightGreen,
+                              : theGreen,
                         ),
                       ),
                       child: const Text("Duration",
@@ -404,7 +404,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theLightGreen,
+                          fillColor: theGreen,
                           label: const Text(
                             "Amount Name",
                             style: TextStyle(color: Colors.white),
@@ -456,7 +456,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theButtonGreen,
+            backgroundColor: theLightGreen,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),

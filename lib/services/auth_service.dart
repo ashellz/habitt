@@ -156,4 +156,38 @@ class AuthService {
     await FirebaseAuth.instance.signOut();
     isLoggedIn = false;
   }
+
+  Future<void> changeEmail(String newEmail) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        await user.verifyBeforeUpdateEmail(newEmail);
+        print("Email updated successfully");
+      } catch (e) {
+        print("Failed to update email: $e");
+      }
+    }
+  }
+
+  Future<void> reauthenticateUser(String email, String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+      try {
+        await user.reauthenticateWithCredential(credential);
+        print("User re-authenticated");
+      } catch (e) {
+        print("Failed to re-authenticate user: $e");
+      }
+    }
+  }
+
+  Future<void> updateEmail(
+      String email, String password, String newEmail) async {
+    await reauthenticateUser(email, password);
+    await changeEmail(newEmail);
+  }
 }

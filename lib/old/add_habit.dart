@@ -68,7 +68,7 @@ Widget addHabit(formKey, validateText, createNewHabit) {
                         borderRadius: BorderRadius.all(Radius.circular(20.0)),
                       ),
                       filled: true,
-                      fillColor: theLightGreen,
+                      fillColor: theGreen,
                       label: const Text(
                         "Habit Name",
                         style: TextStyle(color: Colors.white),
@@ -82,7 +82,7 @@ Widget addHabit(formKey, validateText, createNewHabit) {
                   child: ButtonTheme(
                     alignedDropdown: true,
                     child: DropdownButtonFormField(
-                      dropdownColor: theLightGreen,
+                      dropdownColor: theGreen,
                       decoration: InputDecoration(
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 20.0),
@@ -90,7 +90,7 @@ Widget addHabit(formKey, validateText, createNewHabit) {
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         filled: true,
-                        fillColor: theLightGreen,
+                        fillColor: theGreen,
                       ),
                       style: const TextStyle(
                         fontFamily: 'Poppins',
@@ -114,7 +114,7 @@ Widget addHabit(formKey, validateText, createNewHabit) {
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theButtonGreen,
+                      backgroundColor: theLightGreen,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),

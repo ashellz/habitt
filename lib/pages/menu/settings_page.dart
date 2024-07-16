@@ -20,15 +20,18 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Settings"),
-        centerTitle: true,
-        toolbarHeight: 80.0,
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+        backgroundColor: Colors.black,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 30),
+            child: Text("Settings",
+                style: TextStyle(
+                    fontSize: 42,
+                    color: theLightGreen,
+                    fontWeight: FontWeight.bold)),
+          ),
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
@@ -50,6 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
+              activeColor: theLightGreen,
               title: const Text(
                 "Once a day",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -71,6 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
+              activeColor: theLightGreen,
               title: const Text(
                 "Three times a day",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -92,6 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
+              activeColor: theLightGreen,
               title: const Text(
                 "Custom",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -122,6 +128,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('morningNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -152,6 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('afternoonNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -182,6 +190,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('eveningNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -212,6 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('dailyNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -288,8 +298,8 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Center(
                 child: TextButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        const Color.fromARGB(255, 183, 181, 151)),
+                    backgroundColor:
+                        WidgetStateProperty.all<Color>(theLightGreen),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -299,7 +309,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () => requestNotificationAccess(),
                   child: const Text(
                     "Request Notification Access",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),

@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 
 String? userId = FirebaseAuth.instance.currentUser?.uid;
+String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
 bool dataDownloaded = false;
 
 Future<String> getApplicationDocumentsDirectoryPath() async {
