@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 
 class ChangelogPage extends StatelessWidget {

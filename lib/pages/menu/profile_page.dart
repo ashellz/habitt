@@ -1,11 +1,13 @@
 import 'dart:async';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/objects/edit_profile_dialog.dart';
+
+bool uploadButtonEnabled = true;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -23,12 +25,13 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
 
+    /*
     Future<void> updateEmail(changeEmailController, password) async {
       await AuthService()
           .updateEmail(userEmail, password, changeEmailController);
-    }
+    }*/
 
-    if (userEmail == '') {
+    if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
       return Scaffold(
         appBar: AppBar(backgroundColor: Colors.black),
         backgroundColor: Colors.black,
@@ -75,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Transform.translate(
                   offset: const Offset(0, -10),
                   child: Text(
-                    stringBox.get("username")!,
+                    stringBox.get("username") ?? 'Guest',
                     style: TextStyle(
                       color: theLightGreen,
                       fontSize: 42,
@@ -160,18 +163,42 @@ class _ProfilePageState extends State<ProfilePage> {
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       fixedSize: const Size(170, 170),
+                      disabledForegroundColor: Colors.grey,
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theLightGreen, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
-                    onPressed: () {
-                      backupHiveBoxesToFirebase(userId);
-                    },
+                    onPressed: !uploadButtonEnabled
+                        ? null
+                        : () {
+                            setState(() => uploadButtonEnabled = false);
+                            backupHiveBoxesToFirebase(userId).whenComplete(() =>
+                                setState(() => uploadButtonEnabled = true));
+                          },
                     child: const Text(
                         textAlign: TextAlign.center,
                         "Upload Data",
+                        style: TextStyle(
+                          fontSize: 18,
+                        )),
+                  ),
+
+                  //sign out
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      fixedSize: const Size(170, 170),
+                      foregroundColor: Colors.white,
+                      side: BorderSide(color: theYellowColor, width: 3),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                      ),
+                    ),
+                    onPressed: () => AuthService().signOut(context),
+                    child: const Text(
+                        textAlign: TextAlign.center,
+                        "Sign out",
                         style: TextStyle(
                           fontSize: 18,
                         )),

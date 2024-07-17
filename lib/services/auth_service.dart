@@ -141,21 +141,22 @@ class AuthService {
   }
 
   Future<void> signOut(context) async {
-    await backupHiveBoxesToFirebase(userId);
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       MaterialPageRoute(
           builder: (BuildContext context) => const LoadingScreen(
                 text: "Signing out...",
               )),
     );
+    await backupHiveBoxesToFirebase(userId);
+    await FirebaseAuth.instance.signOut();
+    isLoggedIn = false;
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
     );
-
-    await FirebaseAuth.instance.signOut();
-    isLoggedIn = false;
   }
+
+  /*
 
   Future<void> changeEmail(String newEmail) async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -198,5 +199,5 @@ class AuthService {
     await reauthenticateUser(email, password);
     await changeEmail(newEmail);
     userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
-  }
+  }*/
 }

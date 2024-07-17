@@ -61,7 +61,7 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
 }
 
 Future<void> backupHiveBoxesToFirebase(String? userId) async {
-  if (userId == null) {
+  if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
     print('User is not authenticated');
     return;
   }

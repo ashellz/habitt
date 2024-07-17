@@ -17,7 +17,7 @@ Widget editProfileDialog(context, title, updateFunction) {
     if (changeController.text.isEmpty) {
       switch (title) {
         case 'Change username':
-          changeController.text = stringBox.get('username')!;
+          changeController.text = stringBox.get('username') ?? 'Guest';
           validator = validateUsername;
           break;
         case 'Change email':
