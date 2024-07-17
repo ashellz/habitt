@@ -122,13 +122,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         })),
                     child: const Text(
                         textAlign: TextAlign.center,
-                        "Change username",
+                        "Change Username",
                         style: TextStyle(
                           fontSize: 18,
                         )),
                   ),
 
                   //change email
+                  /*
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       fixedSize: const Size(170, 170),
@@ -152,9 +153,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(
                           fontSize: 18,
                         )),
-                  ),
+                  ),*/
 
-                  // change password
+                  // Upload data
 
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
@@ -165,10 +166,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      backupHiveBoxesToFirebase(userId);
+                    },
                     child: const Text(
                         textAlign: TextAlign.center,
-                        "Change password",
+                        "Upload Data",
                         style: TextStyle(
                           fontSize: 18,
                         )),
@@ -188,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {},
                     child: const Text(
                         textAlign: TextAlign.center,
-                        "Delete account",
+                        "Delete Account",
                         style: TextStyle(
                           fontSize: 18,
                         )),
