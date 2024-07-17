@@ -156,6 +156,13 @@ class AuthService {
     );
   }
 
+  Future<void> deleteAccount() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.delete();
+    }
+  }
+
   /*
 
   Future<void> changeEmail(String newEmail) async {

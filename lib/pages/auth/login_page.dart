@@ -53,6 +53,12 @@ class LoginPage extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
                         prefixIcon: const Icon(Icons.mail_outline_rounded,
                             color: Colors.white),
                         contentPadding: const EdgeInsets.symmetric(
@@ -69,7 +75,7 @@ class LoginPage extends StatelessWidget {
                         hintText: "example@mail.com",
                         hintStyle: const TextStyle(color: Colors.white38),
                         filled: true,
-                        fillColor: theOtherGreen,
+                        fillColor: Colors.grey.shade900,
                       ),
                     ),
                   ),
@@ -92,6 +98,12 @@ class LoginPage extends StatelessWidget {
                       keyboardType: TextInputType.visiblePassword,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
                         prefixIcon: const Icon(Icons.lock_open_outlined,
                             color: Colors.white),
                         contentPadding: const EdgeInsets.symmetric(
@@ -106,7 +118,7 @@ class LoginPage extends StatelessWidget {
                           borderSide: BorderSide(color: Colors.black),
                         ),
                         filled: true,
-                        fillColor: theOtherGreen,
+                        fillColor: Colors.grey.shade900,
                       ),
                     ),
                   ),
@@ -137,7 +149,8 @@ class LoginPage extends StatelessWidget {
                                 'SIGN IN',
                                 style: TextStyle(
                                     fontSize: 16.0,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
                               )))),
                   Padding(
                     padding: const EdgeInsets.only(top: 5),

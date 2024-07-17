@@ -1,8 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/storage_service.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
 bool uploadButtonEnabled = true;
@@ -239,56 +237,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-            child: Text(
-              "Data",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  "Upload Data Manually",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: IconButton(
-                    onPressed: !uploadButtonEnabled
-                        ? null
-                        : () async {
-                            if (userId == null) {
-                              Fluttertoast.showToast(
-                                msg: 'You are not logged in.',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.SNACKBAR,
-                                backgroundColor: Colors.black54,
-                                textColor: Colors.white,
-                                fontSize: 14.0,
-                              );
-                            } else {
-                              setState(() => uploadButtonEnabled = false);
-                              await backupHiveBoxesToFirebase(userId);
-                            }
-                          },
-                    icon: const Icon(
-                      Icons.upload,
-                      color: Colors.white,
-                    )),
-              ),
-            ],
           ),
           Visibility(
             visible: boolBox.get("hasNotificationAccess") == false,

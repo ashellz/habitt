@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/menu/settings_page.dart';
+import 'package:habit_tracker/services/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -113,4 +114,27 @@ Future<void> newAccountDownloadData(BuildContext context) async {
   }
   dataDownloaded = true;
   Restart.restartApp();
+}
+
+Future<void> deleteUserCloudStorage() async {
+  if (userId == null) {
+    print('User is not authenticated');
+    return;
+  }
+
+  final storageRef = FirebaseStorage.instance.ref().child('$userId/');
+  final listResult = await storageRef.listAll();
+
+  for (final item in listResult.items) {
+    try {
+      print('Deleting from cloud storage: ${item.name}');
+      await item.delete();
+      print('Successfully deleted file from cloud storage: ${item.name}');
+    } catch (e) {
+      print(
+          'Failed to delete file from cloud storage: ${item.name}, error: $e');
+    }
+  }
+
+  AuthService().deleteAccount();
 }
