@@ -12,11 +12,11 @@ import 'package:habit_tracker/old/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 
-Color theGreen = const Color.fromARGB(255, 62, 80, 71);
-Color theLightGreen = const Color.fromARGB(255, 124, 175, 151);
 Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
+Color theGreen = const Color.fromARGB(255, 62, 80, 71);
+Color theOtherGreen = const Color.fromARGB(255, 107, 138, 122);
+Color theLightGreen = const Color.fromARGB(255, 124, 175, 151);
 Color theRedColor = const Color.fromARGB(255, 204, 86, 110);
-
 Color theYellowColor = const Color.fromARGB(255, 223, 223, 129);
 
 Icon startIcon = const Icon(Icons.book);

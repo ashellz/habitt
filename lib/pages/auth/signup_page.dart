@@ -18,7 +18,7 @@ class SignupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           Padding(
@@ -53,22 +53,22 @@ class SignupPage extends StatelessWidget {
                       enableInteractiveSelection: true,
                       controller: _usernameController,
                       style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person_outline_rounded,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_outline_rounded,
                             color: Colors.white),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-                        labelStyle: TextStyle(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 20),
+                        labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
                             fontWeight: FontWeight.bold),
                         labelText: "USERNAME",
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.black),
                         ),
                         filled: true,
-                        fillColor: Color.fromARGB(255, 107, 138, 122),
+                        fillColor: theOtherGreen,
                       ),
                     ),
                   ),
@@ -89,24 +89,24 @@ class SignupPage extends StatelessWidget {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.mail_outline_rounded,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.mail_outline_rounded,
                             color: Colors.white),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-                        labelStyle: TextStyle(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 20),
+                        labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
                             fontWeight: FontWeight.bold),
                         labelText: "EMAIL",
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.black),
                         ),
                         hintText: "example@mail.com",
-                        hintStyle: TextStyle(color: Colors.white38),
+                        hintStyle: const TextStyle(color: Colors.white38),
                         filled: true,
-                        fillColor: Color.fromARGB(255, 107, 138, 122),
+                        fillColor: theOtherGreen,
                       ),
                     ),
                   ),
@@ -128,22 +128,22 @@ class SignupPage extends StatelessWidget {
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
                       style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon:
-                            Icon(Icons.lock_open_outlined, color: Colors.white),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-                        labelStyle: TextStyle(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.lock_open_outlined,
+                            color: Colors.white),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 20),
+                        labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
                             fontWeight: FontWeight.bold),
                         labelText: "PASSWORD",
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.black),
                         ),
                         filled: true,
-                        fillColor: Color.fromARGB(255, 107, 138, 122),
+                        fillColor: theOtherGreen,
                       ),
                     ),
                   ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
 
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key, required this.text});
@@ -9,7 +8,7 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theDarkGreen,
+      backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
