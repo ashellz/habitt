@@ -13,19 +13,11 @@ class MenuPage extends StatelessWidget {
       appBar: AppBar(backgroundColor: Colors.black),
       backgroundColor: Colors.black,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              buildHeader(context),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: buildMenuItems(context),
-              ),
-            ],
-          ),
+          buildHeader(context),
+          buildMenuItems(context),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
