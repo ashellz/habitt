@@ -45,7 +45,7 @@ class ChangelogPage extends StatelessWidget {
                     Text(
                         "- Changed design when adding, editing or deleting a habit\n- Improved data storing\n- Added different page transition effect (might have bugs)"),
                     Text(
-                        "- Updated app design\n- Added profile page, along with abilities to change username, email, password and to delete the account"),
+                        "- Updated app design\n- Added profile page, along with abilities to change username"),
                   ])),
 
           // 09.07.2024

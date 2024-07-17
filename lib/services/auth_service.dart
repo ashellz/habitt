@@ -162,7 +162,7 @@ class AuthService {
 
     if (user != null) {
       try {
-        await user.verifyBeforeUpdateEmail(newEmail);
+        await user.updateEmail(newEmail);
         print("Email updated successfully");
       } catch (e) {
         print("Failed to update email: $e");
@@ -181,6 +181,14 @@ class AuthService {
         print("User re-authenticated");
       } catch (e) {
         print("Failed to re-authenticate user: $e");
+        Fluttertoast.showToast(
+          msg: 'Password incorrect',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.SNACKBAR,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 14.0,
+        );
       }
     }
   }
@@ -189,5 +197,6 @@ class AuthService {
       String email, String password, String newEmail) async {
     await reauthenticateUser(email, password);
     await changeEmail(newEmail);
+    userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
   }
 }
