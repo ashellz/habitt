@@ -198,21 +198,29 @@ class _HabitTileState extends State<HabitTile> {
             ],
           ),
           child: GestureDetector(
-            onTap: () => Navigator.of(context)
-                .push(MaterialPageRoute(
-                    builder: (context) => EditHabitPage(
-                          index: widget.index,
-                          deletehabit: widget.deletehabit,
-                          edithabit: widget.edithabit,
-                        )))
-                .whenComplete(() {
+            onTap: () {
               habitGoalEdit = 0;
               updated = false;
               dropDownChanged = false;
               editcontroller.clear();
               changed = false;
               updatedIcon = startIcon;
-            }),
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => EditHabitPage(
+                            index: widget.index,
+                            deletehabit: widget.deletehabit,
+                            edithabit: widget.edithabit,
+                          )))
+                  .whenComplete(() {
+                habitGoalEdit = 0;
+                updated = false;
+                dropDownChanged = false;
+                editcontroller.clear();
+                changed = false;
+                updatedIcon = startIcon;
+              });
+            },
             child: ListTile(
               minTileHeight: 65,
               contentPadding: const EdgeInsets.only(

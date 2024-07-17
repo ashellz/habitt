@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/menu/settings_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
@@ -116,7 +118,11 @@ Future<void> newAccountDownloadData(BuildContext context) async {
   Restart.restartApp();
 }
 
-Future<void> deleteUserCloudStorage() async {
+Future<void> deleteUserCloudStorage(context) async {
+  Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (BuildContext context) =>
+          const LoadingScreen(text: "Deleting account...")));
+
   if (userId == null) {
     print('User is not authenticated');
     return;
@@ -135,6 +141,8 @@ Future<void> deleteUserCloudStorage() async {
           'Failed to delete file from cloud storage: ${item.name}, error: $e');
     }
   }
-
-  AuthService().deleteAccount();
+  await AuthService().deleteAccount();
+  Timer(const Duration(milliseconds: 500), () {
+    Restart.restartApp();
+  });
 }

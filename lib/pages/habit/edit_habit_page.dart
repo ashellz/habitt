@@ -77,6 +77,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(backgroundColor: Colors.black),
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
       body: Form(
@@ -163,6 +164,13 @@ class _EditHabitPageState extends State<EditHabitPage> {
                             ),
                             Text(
                               dropDownValue,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Streak: ${habitBox.getAt(widget.index)!.completed ? habitBox.getAt(widget.index)!.streak + 1 : habitBox.getAt(widget.index)!.streak}",
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

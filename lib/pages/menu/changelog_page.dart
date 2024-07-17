@@ -44,6 +44,8 @@ class ChangelogPage extends StatelessWidget {
                     Text(
                         "- Redesigned profile page, changed a couple of things\n- More app design changes (loading, login, signup pages)"),
                     Text("- Fixed some bugs on authentication and storage"),
+                    Text(
+                        "- Added ability to delete account\n- Fixed some design issues\n- Other bug fixes"),
                   ])),
 
           // 15.07.2024

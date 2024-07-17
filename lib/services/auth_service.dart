@@ -7,6 +7,7 @@ import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 
+bool passwordIncorrect = false;
 late String errorMessage;
 
 bool isLoggedIn = boolBox.get('isLoggedIn') ?? false;
@@ -160,6 +161,7 @@ class AuthService {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await user.delete();
+      print("Account deleted successfully");
     }
   }
 
@@ -177,7 +179,7 @@ class AuthService {
       }
     }
   }
-
+*/
   Future<void> reauthenticateUser(String email, String password) async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -186,9 +188,11 @@ class AuthService {
           EmailAuthProvider.credential(email: email, password: password);
       try {
         await user.reauthenticateWithCredential(credential);
+        passwordIncorrect = false;
         print("User re-authenticated");
       } catch (e) {
         print("Failed to re-authenticate user: $e");
+        passwordIncorrect = true;
         Fluttertoast.showToast(
           msg: 'Password incorrect',
           toastLength: Toast.LENGTH_SHORT,
@@ -200,7 +204,7 @@ class AuthService {
       }
     }
   }
-
+/*
   Future<void> updateEmail(
       String email, String password, String newEmail) async {
     await reauthenticateUser(email, password);

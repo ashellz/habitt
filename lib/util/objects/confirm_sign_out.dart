@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 
@@ -42,7 +41,8 @@ Widget confirmSignOut(context) {
                       color: theYellowColor,
                       width: 3.0,
                     )),
-                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor:
+                        const WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

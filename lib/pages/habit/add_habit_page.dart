@@ -27,6 +27,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+        ),
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.black,
         body: Form(

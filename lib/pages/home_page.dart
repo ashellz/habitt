@@ -513,6 +513,13 @@ class HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
               onPressed: () {
+                createcontroller.clear();
+                updatedIcon = startIcon;
+                habitGoal = 0;
+                dropDownValue = 'Any time';
+                amountNameController.text = "times";
+                currentAmountValue = 2;
+                currentDurationValue = 1;
                 if (createcontroller.text.isEmpty) {
                   createcontroller.text = "Habit Name";
                 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habit_tracker/util/objects/confirm_delete_account.dart';
 import 'package:habit_tracker/util/objects/confirm_sign_out.dart';
 import 'package:habit_tracker/util/objects/edit_profile_dialog.dart';
 
@@ -104,7 +105,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: const Size(170, 170),
+                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
+                          MediaQuery.of(context).size.width / 2.4),
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theLightGreen, width: 3),
                       shape: const RoundedRectangleBorder(
@@ -162,7 +164,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: const Size(170, 170),
+                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
+                          MediaQuery.of(context).size.width / 2.4),
                       disabledForegroundColor: Colors.grey,
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theLightGreen, width: 3),
@@ -188,7 +191,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   //sign out
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: const Size(170, 170),
+                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
+                          MediaQuery.of(context).size.width / 2.4),
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theYellowColor, width: 3),
                       shape: const RoundedRectangleBorder(
@@ -210,14 +214,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: const Size(170, 170),
+                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
+                          MediaQuery.of(context).size.width / 2.4),
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theRedColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  confirmDeleteAccount(context))
+                          .whenComplete(() => confirmAgain = false);
+                    },
                     child: const Text(
                         textAlign: TextAlign.center,
                         "Delete Account",
