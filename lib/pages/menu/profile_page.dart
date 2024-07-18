@@ -116,15 +116,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () => showDialog(
                         context: context,
                         builder: (context) {
-                          controllerEmpty = true;
+                          changeController.text = "";
+                          passwordController.text = "";
                           return editProfileDialog(
                               context, "Change username", updateUsername);
-                        }).whenComplete(() => setState(() {
-                          Timer(const Duration(milliseconds: 1000), () {
-                            changeController.text = "";
-                            passwordController.text = "";
-                          });
-                        })),
+                        }),
                     child: const Text(
                         textAlign: TextAlign.center,
                         "Change Username",

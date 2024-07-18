@@ -29,7 +29,7 @@ Widget confirmDeleteAccount(context) {
             ElevatedButton(
                 style: ButtonStyle(
                     fixedSize: const WidgetStatePropertyAll(
-                      Size(120, 50),
+                      Size(110, 50),
                     ),
                     backgroundColor: WidgetStatePropertyAll(theRedColor)),
                 onPressed: () {
@@ -46,12 +46,12 @@ Widget confirmDeleteAccount(context) {
                 },
                 child: const Text(
                   "Delete",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
             OutlinedButton(
                 style: ButtonStyle(
                     fixedSize: const WidgetStatePropertyAll(
-                      Size(120, 50),
+                      Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
                       color: theRedColor,
@@ -64,7 +64,7 @@ Widget confirmDeleteAccount(context) {
                 },
                 child: const Text(
                   "Cancel",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
           ],
         )

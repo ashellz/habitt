@@ -22,7 +22,7 @@ Widget confirmSignOut(context) {
             ElevatedButton(
                 style: ButtonStyle(
                     fixedSize: const WidgetStatePropertyAll(
-                      Size(120, 50),
+                      Size(110, 50),
                     ),
                     backgroundColor: WidgetStatePropertyAll(theYellowColor)),
                 onPressed: () {
@@ -30,12 +30,12 @@ Widget confirmSignOut(context) {
                 },
                 child: const Text(
                   "Sign out",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
             OutlinedButton(
                 style: ButtonStyle(
                     fixedSize: const WidgetStatePropertyAll(
-                      Size(120, 50),
+                      Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
                       color: theYellowColor,
@@ -48,7 +48,7 @@ Widget confirmSignOut(context) {
                 },
                 child: const Text(
                   "Cancel",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
           ],
         )
