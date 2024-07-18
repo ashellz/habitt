@@ -107,7 +107,7 @@ Widget mainCategoryList() {
         height: anyTimeHeight, // change
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: const Color.fromARGB(255, 55, 54, 54),
+          color: theDarkGrey,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
