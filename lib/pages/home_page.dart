@@ -12,6 +12,7 @@ import 'package:habit_tracker/old/menu_drawer.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
 
+Color theDarkGrey = const Color.fromARGB(255, 17, 17, 17);
 Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
 Color theGreen = const Color.fromARGB(255, 62, 80, 71);
 Color theOtherGreen = const Color.fromARGB(255, 107, 138, 122);
@@ -524,10 +525,8 @@ class HomePageState extends State<HomePage> {
                   createcontroller.text = "Habit Name";
                 }
                 Navigator.of(context)
-                    .push(MaterialPageRoute(
-                        builder: (context) => AddHabitPage(
-                              createNewHabit: createNewHabit,
-                            )))
+                    .push(
+                        MaterialPageRoute(builder: (context) => AddHabitPage()))
                     .whenComplete(() {
                   createcontroller.clear();
                   updatedIcon = startIcon;

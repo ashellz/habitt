@@ -14,9 +14,7 @@ TextEditingController amountNameController = TextEditingController();
 final formKey = GlobalKey<FormState>();
 
 class AddHabitPage extends StatefulWidget {
-  const AddHabitPage({super.key, required this.createNewHabit});
-
-  final Function createNewHabit;
+  const AddHabitPage({super.key});
 
   @override
   State<AddHabitPage> createState() => _AddHabitPageState();
@@ -400,7 +398,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 const Text('Add Habit', style: TextStyle(color: Colors.white)),
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                widget.createNewHabit();
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => const HomePage()));
               }
