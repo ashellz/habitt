@@ -262,6 +262,43 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "Appearance",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Checkbox(
+                    activeColor: theLightGreen,
+                    value: boolBox.get('displayEmptyCategories'),
+                    onChanged: (value) {
+                      setState(() {
+                        boolBox.put('displayEmptyCategories',
+                            !boolBox.get('displayEmptyCategories')!);
+                      });
+                    },
+                  ),
+                ),
+                const Expanded(
+                  flex: 6,
+                  child: Text(
+                    "Dispay empty categories on home page",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

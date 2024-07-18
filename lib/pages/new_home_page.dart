@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
@@ -106,7 +107,7 @@ Widget mainCategoryList() {
         height: anyTimeHeight, // change
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Color.fromARGB(255, 55, 54, 54),
+          color: const Color.fromARGB(255, 55, 54, 54),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,65 +156,127 @@ otherCategoriesList() {
 }
 
 Widget anyTime() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text("Any time",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-      for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Any time')
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: NewHabitTile(index: i),
-          ),
-    ],
-  );
+  if (anytimeHasHabits) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Any time",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitBox.length; i++)
+          if (habitBox.getAt(i)?.category == 'Any time')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: NewHabitTile(index: i),
+            ),
+      ],
+    );
+  }
+
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Any time",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+        ]);
+  } else {
+    return Container();
+  }
 }
 
 Widget morning() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text("Morning",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-      for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Morning')
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: NewHabitTile(index: i),
-          ),
-    ],
-  );
+  if (morningHasHabits) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Morning",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitBox.length; i++)
+          if (habitBox.getAt(i)?.category == 'Morning')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: NewHabitTile(index: i),
+            ),
+      ],
+    );
+  }
+
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Morning",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+        ]);
+  } else {
+    return Container();
+  }
 }
 
 Widget afternoon() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text("Afternoon",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-      for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Afternoon')
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: NewHabitTile(index: i),
-          ),
-    ],
-  );
+  if (afternoonHasHabits) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Afternoon",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitBox.length; i++)
+          if (habitBox.getAt(i)?.category == 'Afternoon')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: NewHabitTile(index: i),
+            ),
+      ],
+    );
+  }
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Afternoon",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+        ]);
+  } else {
+    return Container();
+  }
 }
 
 Widget evening() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text("Evening",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-      for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Evening')
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: NewHabitTile(index: i),
-          ),
-    ],
-  );
+  if (eveningHasHabits) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Evening",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitBox.length; i++)
+          if (habitBox.getAt(i)?.category == 'Evening')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: NewHabitTile(index: i),
+            ),
+      ],
+    );
+  }
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Evening",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+        ]);
+  } else {
+    return Container();
+  }
 }

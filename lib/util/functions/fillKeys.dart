@@ -3,6 +3,10 @@ import 'package:habit_tracker/pages/home_page.dart';
 import 'package:hive/hive.dart';
 
 Future<void> fillKeys() async {
+  if (!boolBox.containsKey("displayEmptyCategories")) {
+    boolBox.put("displayEmptyCategories", false);
+  }
+
   if (!streakBox.containsKey('lastOpenedDay')) {
     streakBox.put(
       'lastOpenedDay',
