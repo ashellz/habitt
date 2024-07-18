@@ -34,15 +34,25 @@ class _NewHomePageState extends State<NewHomePage> {
         ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            createcontroller.clear();
+            updatedIcon = startIcon;
+            habitGoal = 0;
+            dropDownValue = 'Any time';
+            amountNameController.text = "times";
+            currentAmountValue = 2;
+            currentDurationValue = 1;
+            if (createcontroller.text.isEmpty) {
+              createcontroller.text = "Habit Name";
+            }
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return const AddHabitPage();
             }));
           },
+          backgroundColor: theLightGreen,
           child: const Icon(
             Icons.add,
             color: Colors.white,
           ),
-          backgroundColor: theLightGreen,
         ),
         backgroundColor: Colors.black,
         body: ListView(
@@ -96,9 +106,10 @@ Widget mainCategoryList() {
         height: anyTimeHeight, // change
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theDarkGrey,
+          color: Color.fromARGB(255, 55, 54, 54),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 95),
             for (int i = 0; i < habitBox.length; i++)
@@ -134,8 +145,11 @@ Widget mainCategoryList() {
 otherCategoriesList() {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     anyTime(),
+    const SizedBox(height: 20),
     morning(),
+    const SizedBox(height: 20),
     afternoon(),
+    const SizedBox(height: 20),
     evening(),
   ]);
 }
@@ -147,7 +161,11 @@ Widget anyTime() {
       const Text("Any time",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Any time') NewHabitTile(index: i),
+        if (habitBox.getAt(i)?.category == 'Any time')
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: NewHabitTile(index: i),
+          ),
     ],
   );
 }
@@ -159,7 +177,11 @@ Widget morning() {
       const Text("Morning",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Morning') NewHabitTile(index: i),
+        if (habitBox.getAt(i)?.category == 'Morning')
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: NewHabitTile(index: i),
+          ),
     ],
   );
 }
@@ -171,7 +193,11 @@ Widget afternoon() {
       const Text("Afternoon",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Afternoon') NewHabitTile(index: i),
+        if (habitBox.getAt(i)?.category == 'Afternoon')
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: NewHabitTile(index: i),
+          ),
     ],
   );
 }
@@ -183,7 +209,11 @@ Widget evening() {
       const Text("Evening",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == 'Evening') NewHabitTile(index: i),
+        if (habitBox.getAt(i)?.category == 'Evening')
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: NewHabitTile(index: i),
+          ),
     ],
   );
 }
