@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/objects/confirm_delete_account.dart';
 import 'package:habit_tracker/util/objects/confirm_sign_out.dart';

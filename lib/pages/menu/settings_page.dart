@@ -1,6 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 

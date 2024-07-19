@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:habit_tracker/old/home_page.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
+import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:numberpicker/numberpicker.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
@@ -16,7 +16,9 @@ TextEditingController amountNameController = TextEditingController();
 final formKey = GlobalKey<FormState>();
 
 class AddHabitPage extends StatefulWidget {
-  const AddHabitPage({super.key});
+  const AddHabitPage({super.key, required this.createcontroller});
+
+  final TextEditingController createcontroller;
 
   @override
   State<AddHabitPage> createState() => _AddHabitPageState();
@@ -25,6 +27,7 @@ class AddHabitPage extends StatefulWidget {
 class _AddHabitPageState extends State<AddHabitPage> {
   @override
   Widget build(BuildContext context) {
+    var createcontroller = widget.createcontroller;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -90,7 +93,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              truncatedText(context),
+                              truncatedText(context, createcontroller),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -400,7 +403,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 const Text('Add Habit', style: TextStyle(color: Colors.white)),
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                context.read<HabitProvider>().createNewHabitProvider();
+                context
+                    .read<HabitProvider>()
+                    .createNewHabitProvider(createcontroller);
                 Navigator.pop(context);
               }
             },
@@ -431,7 +436,7 @@ String habitGoalText() {
   }
 }
 
-String truncatedText(BuildContext context) {
+String truncatedText(BuildContext context, createcontroller) {
   double screenWidth = MediaQuery.of(context).size.width;
   int maxLength;
 

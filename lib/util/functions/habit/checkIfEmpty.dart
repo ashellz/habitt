@@ -1,6 +1,6 @@
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:hive/hive.dart';
 
 var habitListLenght = Hive.box<HabitData>('habits').length;

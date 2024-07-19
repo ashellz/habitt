@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 
 IconData getIcon(int index) {

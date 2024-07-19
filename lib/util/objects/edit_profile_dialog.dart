@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
 
 final formKey = GlobalKey<FormState>();

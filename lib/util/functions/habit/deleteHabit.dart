@@ -9,7 +9,7 @@ import 'package:hive/hive.dart';
 var habitListLenght = Hive.box<HabitData>('habits').length;
 late String category;
 
-Future<void> deleteHabit(int index, context) async {
+Future<void> deleteHabit(int index, context, editcontroller) async {
   await showDialog(
     context: context,
     builder: (context) {

@@ -22,9 +22,11 @@ bool dropDownChanged = false;
 final formKey = GlobalKey<FormState>();
 
 class EditHabitPage extends StatefulWidget {
-  const EditHabitPage({super.key, required this.index});
+  const EditHabitPage(
+      {super.key, required this.index, required this.editcontroller});
 
   final int index;
+  final TextEditingController editcontroller;
 
   @override
   State<EditHabitPage> createState() => _EditHabitPageState();
@@ -33,6 +35,8 @@ class EditHabitPage extends StatefulWidget {
 class _EditHabitPageState extends State<EditHabitPage> {
   @override
   Widget build(BuildContext context) {
+    final editcontroller = widget.editcontroller;
+
     if (!changed) {
       updatedIcon = Icon(getIcon(widget.index));
     }
@@ -122,9 +126,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     padding: const EdgeInsets.only(right: 10, top: 5),
                     child: IconButton(
                         onPressed: () {
-                          context
-                              .read<HabitProvider>()
-                              .deleteHabitProvider(widget.index, context);
+                          context.read<HabitProvider>().deleteHabitProvider(
+                              widget.index, context, editcontroller);
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -172,7 +175,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              truncatedText(context),
+                              truncatedText(context, editcontroller),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -483,7 +486,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
               const Text('Save Changes', style: TextStyle(color: Colors.white)),
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              editHabit(widget.index, context);
+              editHabit(widget.index, context, editcontroller);
 
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop();
@@ -522,7 +525,7 @@ String habitGoalText() {
   }
 }
 
-String truncatedText(BuildContext context) {
+String truncatedText(BuildContext context, editcontroller) {
   double screenWidth = MediaQuery.of(context).size.width;
   int maxLength;
 

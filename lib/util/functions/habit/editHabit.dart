@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
-import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/functions/habit/checkIfEmpty.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive/hive.dart';
@@ -12,7 +12,7 @@ var habitListLenght = Hive.box<HabitData>('habits').length;
 late String editedFrom;
 late String editedTo;
 
-void editHabit(int index, context) {
+void editHabit(int index, context, editcontroller) {
   editedFrom = habitBox.getAt(index)!.category;
   editedTo = dropDownValue;
   editHeights();

@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
-import "package:habit_tracker/main.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
@@ -8,11 +7,27 @@ import "package:hive_flutter/hive_flutter.dart";
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
+  String mainCategory = "Morning";
+
   int get habitListLength => Hive.box<HabitData>('habits').length;
   bool get displayEmptyCategories =>
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
   double get mainCategoryHeight => _mainCategoryHeight;
+  String get _mainCategory => mainCategory;
+
+  void chooseMainCategory() {
+    int hour = DateTime.now().hour;
+    print("Hour $hour");
+    if (hour >= 4 && hour < 12) {
+      mainCategory = "Morning";
+    } else if (hour >= 12 && hour < 19) {
+      mainCategory = "Afternoon";
+    } else {
+      mainCategory = "Evening";
+    }
+    notifyListeners();
+  }
 
   void updateMainCategoryHeight() {
     _mainCategoryHeight = 200;
@@ -44,8 +59,8 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createNewHabitProvider() async {
-    await createNewHabit();
+  Future<void> createNewHabitProvider(createcontroller) async {
+    await createNewHabit(createcontroller);
     updateMainCategoryHeight();
     notifyListeners();
   }
@@ -77,14 +92,14 @@ class HabitProvider extends ChangeNotifier {
     return habitBox.getAt(index)!;
   }
 
-  Future<void> editHabitProvider(int index, context) async {
-    editHabit(index, context);
+  Future<void> editHabitProvider(int index, context, editcontroller) async {
+    editHabit(index, context, editcontroller);
     updateMainCategoryHeight();
     notifyListeners();
   }
 
-  Future<void> deleteHabitProvider(index, context) async {
-    await deleteHabit(index, context);
+  Future<void> deleteHabitProvider(index, context, editcontroller) async {
+    await deleteHabit(index, context, editcontroller);
     updateMainCategoryHeight();
     notifyListeners();
   }

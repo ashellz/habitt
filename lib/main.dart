@@ -18,7 +18,6 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
-String mainCategory = "Any Time";
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -48,15 +47,6 @@ Future<void> main() async {
 
   await fillKeys();
 
-  int hour = DateTime.now().hour;
-  if (hour >= 4 && hour < 12) {
-    mainCategory = "Morning";
-  } else if (hour >= 12 && hour < 19) {
-    mainCategory = "Afternoon";
-  } else if (hour >= 19 && hour <= 3) {
-    mainCategory = "Evening";
-  }
-
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
     "1",
@@ -69,16 +59,16 @@ Future<void> main() async {
 }
 
 @pragma('vm:entry-point')
-void callbackDispatcher() {
+void callbackDispatcher(context) {
   Workmanager().executeTask((task, inputData) async {
     int hour = DateTime.now().hour;
 
     if (hour >= 4 && hour < 12) {
-      mainCategory = "Morning";
+      context.watch<HabitProvider>()._mainCategory = "Morning";
     } else if (hour >= 12 && hour < 19) {
-      mainCategory = "Afternoon";
+      context.watch<HabitProvider>()._mainCategory = "Afternoon";
     } else if (hour >= 19 && hour <= 3) {
-      mainCategory = "Evening";
+      context.watch<HabitProvider>()._mainCategory = "Evening";
     }
 
     return Future.value(true);
