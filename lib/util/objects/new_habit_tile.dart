@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 class NewHabitTile extends StatefulWidget {
   const NewHabitTile({super.key, required this.index});
@@ -18,27 +21,53 @@ class _NewHabitTileState extends State<NewHabitTile> {
   @override
   Widget build(BuildContext context) {
     int index = widget.index;
-    return ListTile(
-      leading: Icon(
-        getIcon(index),
-        color: Colors.white,
-      ),
-      title: Text(
-        habitBox.getAt(index)!.name,
-        style: const TextStyle(color: Colors.white),
-      ),
-      trailing: Container(
-        height: 50,
-        width: 50,
-        decoration: BoxDecoration(
-          color: habitBox.getAt(index)!.completed
-              ? theOtherGreen
-              : Colors.grey.shade900,
-          borderRadius: BorderRadius.circular(15),
+    var habit = context.read<HabitProvider>().getHabitAt(index);
+    return GestureDetector(
+      onTap: () {
+        habitGoalEdit = 0;
+        updated = false;
+        dropDownChanged = false;
+        editcontroller.text = "";
+        changed = false;
+        updatedIcon = startIcon;
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+                builder: (context) => EditHabitPage(
+                      index: index,
+                    )))
+            .whenComplete(() {
+          habitGoalEdit = 0;
+          updated = false;
+          dropDownChanged = false;
+          editcontroller.clear();
+          changed = false;
+          updatedIcon = startIcon;
+        });
+      },
+      child: ListTile(
+        leading: Icon(
+          getIcon(index),
+          color: Colors.white,
         ),
-        child: Icon(
-            habitBox.getAt(index)!.completed ? Icons.check : Icons.close,
-            color: Colors.white),
+        title: Text(
+          habitBox.getAt(index)!.name,
+          style: const TextStyle(color: Colors.white),
+        ),
+        trailing: GestureDetector(
+          onTap: () => setState(() {
+            context.read<HabitProvider>().completeHabitProvider(index);
+          }),
+          child: Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: habit.completed ? theOtherGreen : Colors.grey.shade900,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Icon(habit.completed ? Icons.check : Icons.close,
+                color: Colors.white),
+          ),
+        ),
       ),
     );
   }

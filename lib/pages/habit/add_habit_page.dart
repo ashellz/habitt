@@ -1,10 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:habit_tracker/pages/home_page.dart";
+import "package:habit_tracker/old/home_page.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
-import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
+import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:numberpicker/numberpicker.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import "package:provider/provider.dart";
 
 int habitGoal = 0;
 int currentAmountValue = 2;
@@ -399,7 +400,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 const Text('Add Habit', style: TextStyle(color: Colors.white)),
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                createNewHabit();
+                context.read<HabitProvider>().createNewHabitProvider();
                 Navigator.pop(context);
               }
             },

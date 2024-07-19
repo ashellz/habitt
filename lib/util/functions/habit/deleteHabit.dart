@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/functions/habit/checkCategory.dart';
 import 'package:habit_tracker/util/functions/habit/checkIfEmpty.dart';
 import 'package:hive/hive.dart';
@@ -57,7 +57,7 @@ Future<void> deleteHabit(int index, context) async {
                       editcontroller.text = "";
                       await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                              builder: (context) => const HomePage()));
+                              builder: (context) => const NewHomePage()));
 
                       habitGoalEdit = 0;
                       updated = false;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/old/home_page.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -205,21 +205,10 @@ class _HabitTileState extends State<HabitTile> {
               editcontroller.clear();
               changed = false;
               updatedIcon = startIcon;
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (context) => EditHabitPage(
-                            index: widget.index,
-                            deletehabit: widget.deletehabit,
-                            edithabit: widget.edithabit,
-                          )))
-                  .whenComplete(() {
-                habitGoalEdit = 0;
-                updated = false;
-                dropDownChanged = false;
-                editcontroller.clear();
-                changed = false;
-                updatedIcon = startIcon;
-              });
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditHabitPage(
+                        index: widget.index,
+                      )));
             },
             child: ListTile(
               minTileHeight: 65,

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:habit_tracker/pages/menu/changelog_page.dart";
-import "package:habit_tracker/pages/home_page.dart";
+import "package:habit_tracker/old/home_page.dart";
 import "package:habit_tracker/pages/menu/profile_page.dart";
 import "package:habit_tracker/pages/menu/settings_page.dart";
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/old/home_page.dart';
 
 class ChangelogPage extends StatelessWidget {
   const ChangelogPage({super.key});

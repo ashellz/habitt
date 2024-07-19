@@ -1,5 +1,5 @@
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/old/home_page.dart';
 import 'package:hive/hive.dart';
 
 Future<void> fillKeys() async {

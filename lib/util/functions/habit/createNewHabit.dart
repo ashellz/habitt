@@ -1,11 +1,12 @@
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/old/home_page.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 
 late HabitData myHabit;
 
-void createNewHabit() {
+Future<void> createNewHabit() async {
   myHabit = HabitData(
     name: createcontroller.text,
     completed: false,
@@ -18,7 +19,8 @@ void createNewHabit() {
     duration: habitGoal == 2 ? currentDurationValue : 0,
     durationCompleted: 0,
   );
-  habitBox.add(myHabit);
+  await habitBox.add(myHabit);
+  hasHabits();
 
   createcontroller.clear();
   updatedIcon = startIcon;

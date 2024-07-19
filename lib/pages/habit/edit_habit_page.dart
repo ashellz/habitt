@@ -1,13 +1,16 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:habit_tracker/pages/habit/add_habit_page.dart";
-import "package:habit_tracker/pages/home_page.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
-import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
+import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:numberpicker/numberpicker.dart";
+import "package:provider/provider.dart";
+
+import 'package:icons_flutter/icons_flutter.dart';
 
 int habitGoalEdit = 0;
 late int amount;
@@ -19,15 +22,9 @@ bool dropDownChanged = false;
 final formKey = GlobalKey<FormState>();
 
 class EditHabitPage extends StatefulWidget {
-  const EditHabitPage(
-      {super.key,
-      required this.index,
-      required this.deletehabit,
-      required this.edithabit});
+  const EditHabitPage({super.key, required this.index});
 
   final int index;
-  final Future<void> Function(int index) deletehabit;
-  final void Function(int index) edithabit;
 
   @override
   State<EditHabitPage> createState() => _EditHabitPageState();
@@ -77,7 +74,24 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: AppBar(backgroundColor: Colors.black, actions: [
+        Row(
+          children: [
+            const Icon(MaterialCommunityIcons.fire),
+            const SizedBox(width: 3),
+            Transform.translate(
+              offset: const Offset(0, 1),
+              child: Text(
+                "${habitBox.getAt(widget.index)!.completed ? habitBox.getAt(widget.index)!.streak + 1 : habitBox.getAt(widget.index)!.streak.toString()}",
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            )
+          ],
+        ),
+      ]),
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
       body: Form(
@@ -108,7 +122,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     padding: const EdgeInsets.only(right: 10, top: 5),
                     child: IconButton(
                         onPressed: () {
-                          deleteHabit(widget.index, context);
+                          context
+                              .read<HabitProvider>()
+                              .deleteHabitProvider(widget.index, context);
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -164,13 +180,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
                             ),
                             Text(
                               dropDownValue,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "Streak: ${habitBox.getAt(widget.index)!.completed ? habitBox.getAt(widget.index)!.streak + 1 : habitBox.getAt(widget.index)!.streak}",
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -481,7 +490,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
               } else {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => const HomePage(),
+                    builder: (context) => const NewHomePage(),
                   ),
                 );
               }

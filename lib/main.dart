@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'pages/home_page.dart';
+import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +18,7 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
-
+String mainCategory = "Any Time";
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -47,6 +48,15 @@ Future<void> main() async {
 
   await fillKeys();
 
+  int hour = DateTime.now().hour;
+  if (hour >= 4 && hour < 12) {
+    mainCategory = "Morning";
+  } else if (hour >= 12 && hour < 19) {
+    mainCategory = "Afternoon";
+  } else if (hour >= 19 && hour <= 3) {
+    mainCategory = "Evening";
+  }
+
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
     "1",
@@ -54,37 +64,23 @@ Future<void> main() async {
     frequency: const Duration(minutes: 15),
   );
 
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => HabitProvider(), child: const MyApp()));
 }
-
-bool morningNotification = false;
-bool afternoonNotification = false;
-bool eveningNotification = false;
-bool dailyNotification = false;
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    Hive.registerAdapter(HabitDataAdapter());
+    int hour = DateTime.now().hour;
 
-    DateTime now = DateTime.now();
-    print("Hour: ${now.hour}");
-
-    backupHiveBoxesToFirebase(userId);
-/*
-    if (now.hour == 5 && notificationBox.get('morningNotification') == true) {
-      if (morningHasHabits == true) {
-        await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: 1239,
-            channelKey: 'basic_channel',
-            title: 'Morning Habits',
-            body: "Good morning! Time to start your day!",
-          ),
-        );
-      }
+    if (hour >= 4 && hour < 12) {
+      mainCategory = "Morning";
+    } else if (hour >= 12 && hour < 19) {
+      mainCategory = "Afternoon";
+    } else if (hour >= 19 && hour <= 3) {
+      mainCategory = "Evening";
     }
-*/
+
     return Future.value(true);
   });
 }
@@ -181,7 +177,7 @@ class AuthCheck extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData || boolBox.get("isGuest") == true) {
-          return const HomePage();
+          return const NewHomePage();
         } else {
           return LoginPage();
         }

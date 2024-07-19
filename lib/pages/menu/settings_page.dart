@@ -1,6 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/old/home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
 bool uploadButtonEnabled = true;
@@ -280,11 +282,13 @@ class _SettingsPageState extends State<SettingsPage> {
                   flex: 1,
                   child: Checkbox(
                     activeColor: theLightGreen,
-                    value: boolBox.get('displayEmptyCategories'),
+                    value:
+                        context.watch<HabitProvider>().displayEmptyCategories,
                     onChanged: (value) {
                       setState(() {
-                        boolBox.put('displayEmptyCategories',
-                            !boolBox.get('displayEmptyCategories')!);
+                        context
+                            .read<HabitProvider>()
+                            .updateDisplayEmptyCategories(!value!);
                       });
                     },
                   ),
