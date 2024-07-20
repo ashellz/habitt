@@ -17,13 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 Things to fix:
 
-1. Change the way animations work
-2. Redesign the app
-3. Make notifications work
-
-- possible fix: time is 7 on phone and not 19
-
-6. Remove all spaces placed in front and the end of an input
+1. Remove all spaces placed in front and the end of an input
 
 Fixed things:
 
@@ -57,43 +51,38 @@ Fixed things:
 28. Display minute if it's only 1 minute instead of minutes
 29. Editing normal habits bring duration to 1 as default, fix so nothing apepars
 30. Check if amount name is empty or just spaces
+31. Redesign the app
 
 Add Features:
 
-## ADDED
 
-Add how many times to complete the habit (the quantity of the habit).
+# Add how many times to complete the habit (the quantity of the habit).
 
-- In the database file of a habit add a quantity field as of int (default: 1).
-- When completing the habit with a quantity more than 1 you will be given more slideable options, or at least a dialog box to enter if you've done the habit that many times (default: max amount)
-- Add a new field left to the completion icon displaying how many times you've done the habit out of the specified amount
+# In the database file of a habit add a quantity field as of int (default: 1).
+# When completing the habit with a quantity more than 1 you will be given more slideable options, or at least a dialog box to enter if you've done the habit that many times (default: max amount)
+# Add a new field left to the completion icon displaying how many times you've done the habit out of the specified amount
 
-## ADDED
 
-Add how long to do the task.
+# Add how long to do the task.
 
-- In the database file of a habit add a time field as an int (default: 0).
+# In the database file of a habit add a time field as an int (default: 0).
 
-#### YET TO ADD - Limit the time to 12h a day.
+# Add a new field left to the completion icon displaying how long you've done the habit for compared to the specified amount of time
 
-- Add a new field left to the completion icon displaying how long you've done the habit for compared to the specified amount of time
 
-## ADDED
-
-When creating the habit make the user choose between creating a task based on time goal or amount goal.
+# When creating the habit make the user choose between creating a task based on time goal or amount goal.
 
 Add a feature so a user can edit completion values of habits the last 5 days
 
-- Add DateTime field to the habit database
+Add animations
+Add notifications
 
-## ADDED
-
-Make new amount and duration features editable within a habit
+# Make new amount and duration features editable within a habit
 
 Add cookie icon
 
 Add chef top icon
 
-At the bottom of menu drawer add profile username and signout option
-If user is signed in, display home page right away
-Fix some bugs along the way
+# At the bottom of menu drawer add profile username and signout option
+# If user is signed in, display home page right away
+# Fix some bugs along the way
