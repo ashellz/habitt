@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:habit_tracker/pages/habit/add_habit_page.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
@@ -21,8 +20,11 @@ bool dropDownChanged = false;
 final formKey = GlobalKey<FormState>();
 
 class EditHabitPage extends StatefulWidget {
-  const EditHabitPage(
-      {super.key, required this.index, required this.editcontroller});
+  const EditHabitPage({
+    super.key,
+    required this.index,
+    required this.editcontroller,
+  });
 
   final int index;
   final TextEditingController editcontroller;

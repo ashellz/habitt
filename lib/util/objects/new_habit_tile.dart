@@ -8,8 +8,11 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitTile extends StatefulWidget {
-  const NewHabitTile(
-      {super.key, required this.index, required this.editcontroller});
+  const NewHabitTile({
+    super.key,
+    required this.index,
+    required this.editcontroller,
+  });
   final int index;
   final TextEditingController editcontroller;
 

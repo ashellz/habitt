@@ -28,7 +28,6 @@ final stringBox = Hive.box<String>('string');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
 
-final _formKey = GlobalKey<FormState>();
 bool eveningVisible = false,
     anyTimeVisible = false,
     afternoonVisible = false,
@@ -125,9 +124,10 @@ class _NewHomePageState extends State<NewHomePage> {
             header(username),
             const SizedBox(height: 20),
             mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
-                editcontroller),
+                editcontroller, context),
             const SizedBox(height: 20),
-            otherCategoriesList(habitListLength, mainCategory, editcontroller),
+            otherCategoriesList(habitListLength, mainCategory, editcontroller,
+                anytimeHasHabits),
           ],
         ),
       ),
@@ -162,8 +162,8 @@ Widget header(username) {
   );
 }
 
-Widget mainCategoryList(
-    habitListLength, mainCategoryHeight, mainCategory, editcontroller) {
+Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
+    editcontroller, BuildContext context) {
   return Stack(
     children: [
       Container(
@@ -189,16 +189,8 @@ Widget mainCategoryList(
                           ),
                     ],
                   )
-                : const Column(children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 125,
-                    ),
-                    Text(
-                      "No habits in this category",
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                  ])
+                : anyTimeMainCategory(
+                    habitListLength, editcontroller, anytimeHasHabits)
             : mainCategory == "Afternoon"
                 ? afternoonHasHabits
                     ? Column(
@@ -216,16 +208,8 @@ Widget mainCategoryList(
                               ),
                         ],
                       )
-                    : const Column(children: [
-                        SizedBox(
-                          width: double.infinity,
-                          height: 125,
-                        ),
-                        Text(
-                          "No habits in this category",
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
-                        ),
-                      ])
+                    : anyTimeMainCategory(
+                        habitListLength, editcontroller, anytimeHasHabits)
                 : mainCategory == "Evening"
                     ? eveningHasHabits
                         ? Column(
@@ -243,18 +227,10 @@ Widget mainCategoryList(
                                   ),
                             ],
                           )
-                        : const Column(children: [
-                            SizedBox(
-                              width: double.infinity,
-                              height: 125,
-                            ),
-                            Text(
-                              "No habits in this category",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
-                            ),
-                          ])
-                    : Container(),
+                        : anyTimeMainCategory(
+                            habitListLength, editcontroller, anytimeHasHabits)
+                    : anyTimeMainCategory(
+                        habitListLength, editcontroller, anytimeHasHabits),
       ),
       Container(
         alignment: Alignment.centerLeft,
@@ -276,36 +252,44 @@ Widget mainCategoryList(
   );
 }
 
-otherCategoriesList(habitListLength, mainCategory, editcontroller) {
+otherCategoriesList(
+    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(habitListLength, editcontroller),
+    anyTime(
+        habitListLength, editcontroller, mainCategory, mainCategoryListVisible),
     const SizedBox(height: 20),
-    morning(habitListLength, mainCategory, editcontroller),
+    morning(
+        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
     const SizedBox(height: 20),
-    afternoon(habitListLength, mainCategory, editcontroller),
+    afternoon(
+        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
     const SizedBox(height: 20),
-    evening(habitListLength, mainCategory, editcontroller),
+    evening(
+        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
   ]);
 }
 
-Widget anyTime(habitListLength, editcontroller) {
-  if (anytimeHasHabits) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Any time",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        for (int i = 0; i < habitListLength; i++)
-          if (habitBox.getAt(i)?.category == 'Any time')
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: NewHabitTile(
-                index: i,
-                editcontroller: editcontroller,
+Widget anyTime(
+    habitListLength, editcontroller, mainCategory, mainCategoryListVisible) {
+  if (mainCategory != 'Any time') {
+    if (anytimeHasHabits) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Any time",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          for (int i = 0; i < habitListLength; i++)
+            if (habitBox.getAt(i)?.category == 'Any time')
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: NewHabitTile(
+                  index: i,
+                  editcontroller: editcontroller,
+                ),
               ),
-            ),
-      ],
-    );
+        ],
+      );
+    }
   }
 
   if (boolBox.get("displayEmptyCategories")!) {
@@ -323,7 +307,8 @@ Widget anyTime(habitListLength, editcontroller) {
   }
 }
 
-Widget morning(habitListLength, mainCategory, editcontroller) {
+Widget morning(
+    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
   if (mainCategory != 'Morning') {
     if (morningHasHabits) {
       return Column(
@@ -359,7 +344,8 @@ Widget morning(habitListLength, mainCategory, editcontroller) {
   return Container();
 }
 
-Widget afternoon(habitListLength, mainCategory, editcontroller) {
+Widget afternoon(
+    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
   if (mainCategory != 'Afternoon') {
     if (afternoonHasHabits) {
       return Column(
@@ -394,7 +380,8 @@ Widget afternoon(habitListLength, mainCategory, editcontroller) {
   return Container();
 }
 
-Widget evening(habitListLength, mainCategory, editcontroller) {
+Widget evening(
+    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
   if (mainCategory != 'Evening') {
     if (eveningHasHabits) {
       return Column(
@@ -427,6 +414,50 @@ Widget evening(habitListLength, mainCategory, editcontroller) {
     }
   }
   return Container();
+}
+
+Widget anyTimeMainCategory(
+    int habitListLength, editcontroller, anyTimeHasHabits) {
+  if (anyTimeHasHabits) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 95),
+        for (int i = 0; i < habitListLength; i++)
+          if (habitBox.getAt(i)?.category == "Any time")
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: NewHabitTile(
+                index: i,
+                editcontroller: editcontroller,
+              ),
+            ),
+      ],
+    );
+  } else {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 70),
+        Container(
+          alignment: Alignment.centerLeft,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: theDarkGrey,
+          ),
+          child: const Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              "No habits in this category",
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 List<DropdownMenuItem<String>> get dropdownItems {

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
+import "package:habit_tracker/main.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
@@ -13,6 +14,7 @@ class HabitProvider extends ChangeNotifier {
   bool get displayEmptyCategories =>
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
+
   double get mainCategoryHeight => _mainCategoryHeight;
   String get _mainCategory => mainCategory;
 
@@ -20,9 +22,19 @@ class HabitProvider extends ChangeNotifier {
     int hour = DateTime.now().hour;
     print("Hour $hour");
     if (hour >= 4 && hour < 12) {
-      mainCategory = "Morning";
+      if (!morningHasHabits) {
+        mainCategory = "Any time";
+      } else {
+        mainCategory = "Morning";
+      }
     } else if (hour >= 12 && hour < 19) {
-      mainCategory = "Afternoon";
+      if (!afternoonHasHabits) {
+        mainCategory = "Any time";
+      } else {
+        mainCategory = "Afternoon";
+      }
+    } else if (!eveningHasHabits) {
+      mainCategory = "Any time";
     } else {
       mainCategory = "Evening";
     }
@@ -44,6 +56,8 @@ class HabitProvider extends ChangeNotifier {
         if (mainCategory == 'Evening') {
           _mainCategoryHeight += 70;
         }
+      } else if (mainCategory == 'Any time') {
+        _mainCategoryHeight += 70;
       }
     }
     _mainCategoryHeight -= 70;
@@ -61,6 +75,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> createNewHabitProvider(createcontroller) async {
     await createNewHabit(createcontroller);
+    chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();
   }
@@ -84,7 +99,7 @@ class HabitProvider extends ChangeNotifier {
       );
 
       await habitBox.putAt(index, updatedHabit);
-      notifyListeners(); // Notify listeners to update the UI
+      notifyListeners();
     }
   }
 
@@ -94,12 +109,15 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
     editHabit(index, context, editcontroller);
+    chooseMainCategory();
+
     updateMainCategoryHeight();
     notifyListeners();
   }
 
   Future<void> deleteHabitProvider(index, context, editcontroller) async {
     await deleteHabit(index, context, editcontroller);
+    chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();
   }

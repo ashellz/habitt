@@ -97,6 +97,7 @@ class IconWidget extends StatelessWidget {
           onPressed: () {
             theIcon = icon;
             Navigator.pop(context);
+            changed = true;
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),

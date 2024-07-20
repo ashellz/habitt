@@ -55,13 +55,13 @@ Fixed things:
 
 Add Features:
 
-
 # Add how many times to complete the habit (the quantity of the habit).
 
 # In the database file of a habit add a quantity field as of int (default: 1).
-# When completing the habit with a quantity more than 1 you will be given more slideable options, or at least a dialog box to enter if you've done the habit that many times (default: max amount)
-# Add a new field left to the completion icon displaying how many times you've done the habit out of the specified amount
 
+# When completing the habit with a quantity more than 1 you will be given more slideable options, or at least a dialog box to enter if you've done the habit that many times (default: max amount)
+
+# Add a new field left to the completion icon displaying how many times you've done the habit out of the specified amount
 
 # Add how long to do the task.
 
@@ -69,20 +69,18 @@ Add Features:
 
 # Add a new field left to the completion icon displaying how long you've done the habit for compared to the specified amount of time
 
-
 # When creating the habit make the user choose between creating a task based on time goal or amount goal.
-
-Add a feature so a user can edit completion values of habits the last 5 days
-
-Add animations
-Add notifications
 
 # Make new amount and duration features editable within a habit
 
 Add cookie icon
-
 Add chef top icon
+Add a feature so a user can edit completion values of habits the last 5 days
+Add animations
+Add notifications
 
 # At the bottom of menu drawer add profile username and signout option
+
 # If user is signed in, display home page right away
+
 # Fix some bugs along the way
