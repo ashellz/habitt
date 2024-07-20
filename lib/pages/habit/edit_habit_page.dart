@@ -4,7 +4,6 @@ import "package:habit_tracker/pages/habit/add_habit_page.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
-import "package:habit_tracker/util/functions/habit/editHabit.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:numberpicker/numberpicker.dart";
@@ -459,9 +458,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       ),
                       Center(
                         child: Text(
-                          currentDurationValue == 1
-                              ? "1 minute"
-                              : "$duration minutes",
+                          duration == 1 ? "1 minute" : "$duration minutes",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -486,7 +483,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
               const Text('Save Changes', style: TextStyle(color: Colors.white)),
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              editHabit(widget.index, context, editcontroller);
+              context
+                  .read<HabitProvider>()
+                  .editHabitProvider(widget.index, context, editcontroller);
 
               if (Navigator.of(context).canPop()) {
                 Navigator.of(context).pop();

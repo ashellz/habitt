@@ -115,7 +115,7 @@ Future<void> newAccountDownloadData(BuildContext context) async {
     }
   }
   dataDownloaded = true;
-  Restart.restartApp();
+  await Restart.restartApp();
 }
 
 Future<void> deleteUserCloudStorage(context) async {
