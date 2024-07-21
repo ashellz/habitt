@@ -18,6 +18,10 @@ class AuthService {
       required String password,
       required BuildContext context}) async {
     try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -25,10 +29,6 @@ class AuthService {
             text: "Signing up...",
           ),
         ),
-      );
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
       );
       isLoggedIn = true;
     } on FirebaseException catch (e) {
