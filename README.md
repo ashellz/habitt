@@ -52,6 +52,7 @@ Fixed things:
 29. Editing normal habits bring duration to 1 as default, fix so nothing apepars
 30. Check if amount name is empty or just spaces
 31. Redesign the app
+32. Don't display the home page until all the data is downloaded when first ever launching the app
 
 Add Features:
 

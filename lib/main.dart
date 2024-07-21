@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -167,7 +168,12 @@ class AuthCheck extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData || boolBox.get("isGuest") == true) {
-          return const NewHomePage();
+          if (boolBox.get("firstTimeOpened")!) {
+            boolBox.put("firstTimeOpened", false);
+            return const LoadingScreen(text: " ");
+          } else {
+            return const NewHomePage();
+          }
         } else {
           return LoginPage();
         }

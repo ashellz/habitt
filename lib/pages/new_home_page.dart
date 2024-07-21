@@ -190,7 +190,7 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                     ],
                   )
                 : anyTimeMainCategory(
-                    habitListLength, editcontroller, anytimeHasHabits)
+                    habitListLength, editcontroller, anytimeHasHabits, context)
             : mainCategory == "Afternoon"
                 ? afternoonHasHabits
                     ? Column(
@@ -208,8 +208,8 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                               ),
                         ],
                       )
-                    : anyTimeMainCategory(
-                        habitListLength, editcontroller, anytimeHasHabits)
+                    : anyTimeMainCategory(habitListLength, editcontroller,
+                        anytimeHasHabits, context)
                 : mainCategory == "Evening"
                     ? eveningHasHabits
                         ? Column(
@@ -227,10 +227,10 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                                   ),
                             ],
                           )
-                        : anyTimeMainCategory(
-                            habitListLength, editcontroller, anytimeHasHabits)
-                    : anyTimeMainCategory(
-                        habitListLength, editcontroller, anytimeHasHabits),
+                        : anyTimeMainCategory(habitListLength, editcontroller,
+                            anytimeHasHabits, context)
+                    : anyTimeMainCategory(habitListLength, editcontroller,
+                        anytimeHasHabits, context),
       ),
       Container(
         alignment: Alignment.centerLeft,
@@ -416,8 +416,8 @@ Widget evening(
   return Container();
 }
 
-Widget anyTimeMainCategory(
-    int habitListLength, editcontroller, anyTimeHasHabits) {
+Widget anyTimeMainCategory(int habitListLength, editcontroller,
+    anyTimeHasHabits, BuildContext context) {
   if (anyTimeHasHabits) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -435,27 +435,20 @@ Widget anyTimeMainCategory(
       ],
     );
   } else {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(height: 70),
-        Container(
-          alignment: Alignment.centerLeft,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: theDarkGrey,
-          ),
-          child: const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "No habits in this category",
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ),
+    return Container(
+      alignment: Alignment.centerLeft,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: theDarkGrey,
+      ),
+      child: const Padding(
+        padding: EdgeInsets.only(left: 20, top: 65),
+        child: Text(
+          "No habits in this category",
+          style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
-      ],
+      ),
     );
   }
 }

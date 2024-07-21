@@ -1,14 +1,16 @@
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
 import "package:habit_tracker/main.dart";
+import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
 import "package:hive_flutter/hive_flutter.dart";
+import "package:restart_app/restart_app.dart";
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
-  String mainCategory = "Morning";
+  String mainCategory = "";
 
   int get habitListLength => Hive.box<HabitData>('habits').length;
   bool get displayEmptyCategories =>
@@ -65,6 +67,7 @@ class HabitProvider extends ChangeNotifier {
     if (_mainCategoryHeight == 130) {
       _mainCategoryHeight = 200;
     }
+
     notifyListeners();
   }
 
@@ -117,6 +120,9 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> deleteHabitProvider(index, context, editcontroller) async {
     await deleteHabit(index, context, editcontroller);
+    if (checkIfAllEmpty()) {
+      Restart.restartApp();
+    }
     chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();

@@ -25,6 +25,28 @@ class ChangelogPage extends StatelessWidget {
             ),
           ),
 
+          // 21.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "21.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Working on home page\n- Fixed when first time launching the app, after signing in/up, it pulls you straight to home page before the data was downloaded\n- Fixed being stuck on sign up loading page when the email already exists\n-Having no habits is now possible"),
+                    Text(
+                        "- Improved design and added managing habit amount and duration completion to the new home page")
+                  ])),
+
           // 17.07.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),

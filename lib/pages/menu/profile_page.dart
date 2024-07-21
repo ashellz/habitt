@@ -128,33 +128,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         )),
                   ),
 
-                  //change email
-                  /*
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      fixedSize: const Size(170, 170),
-                      foregroundColor: Colors.white,
-                      side: BorderSide(color: theLightGreen, width: 3),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                      ),
-                    ),
-                    onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          changeController.text = "";
-                          controllerEmpty = true;
-                          return editProfileDialog(
-                              context, "Change email", updateEmail);
-                        }),
-                    child: const Text(
-                        textAlign: TextAlign.center,
-                        "Change email",
-                        style: TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),*/
-
                   // Upload data
 
                   OutlinedButton(
@@ -220,8 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {
                       showDialog(
                               context: context,
-                              builder: (context) =>
-                                  confirmDeleteAccount(context))
+                              builder: (context) => confirmDeleteAccount())
                           .whenComplete(() => confirmAgain = false);
                     },
                     child: const Text(

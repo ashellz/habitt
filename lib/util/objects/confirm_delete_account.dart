@@ -7,7 +7,7 @@ bool confirmAgain = false;
 TextEditingController emailControllerConfirm = TextEditingController();
 TextEditingController passwordControllerConfirm = TextEditingController();
 
-Widget confirmDeleteAccount(context) {
+Widget confirmDeleteAccount() {
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
       shape: RoundedRectangleBorder(

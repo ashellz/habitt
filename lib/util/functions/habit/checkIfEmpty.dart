@@ -30,3 +30,16 @@ void checkIfEmpty(String category) {
     }
   }
 }
+
+bool checkIfAllEmpty() {
+  hasHabits();
+
+  if (morningHasHabits == false &&
+      afternoonHasHabits == false &&
+      eveningHasHabits == false &&
+      anytimeHasHabits == false) {
+    return true;
+  } else {
+    return false;
+  }
+}

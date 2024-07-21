@@ -1,8 +1,10 @@
-import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
-import 'package:hive/hive.dart';
 
 Future<void> fillKeys() async {
+  if (!boolBox.containsKey("firstTimeOpened")) {
+    boolBox.put("firstTimeOpened", true);
+  }
+
   if (!boolBox.containsKey("displayEmptyCategories")) {
     boolBox.put("displayEmptyCategories", false);
   }
@@ -44,30 +46,5 @@ Future<void> fillKeys() async {
 
   if (boolBox.get("isLoggenIn") == null) {
     boolBox.put("isLoggenIn", false);
-  }
-
-  if (Hive.box<HabitData>('habits').isEmpty) {
-    await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Add new habits",
-        completed: false,
-        icon: "Icons.add",
-        category: "Any time",
-        streak: 0,
-        amount: 2,
-        amountName: "habits",
-        amountCompleted: 0,
-        duration: 0,
-        durationCompleted: 0));
-    await Hive.box<HabitData>('habits').add(HabitData(
-        name: "Open the app",
-        completed: true,
-        icon: "Icons.door_front_door",
-        category: "Any time",
-        streak: 0,
-        amount: 1,
-        amountName: "times",
-        amountCompleted: 1,
-        duration: 0,
-        durationCompleted: 0));
   }
 }
