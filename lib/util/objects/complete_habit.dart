@@ -32,7 +32,7 @@ Widget completeHabitDialog(int index) {
                   selectedTextStyle:
                       const TextStyle(color: Colors.white, fontSize: 24),
                   axis: Axis.horizontal,
-                  itemWidth: MediaQuery.of(context).size.width / 5.1,
+                  itemWidth: MediaQuery.of(context).size.width / 6,
                   minValue: 0,
                   maxValue: amountCheck
                       ? habitBox.getAt(index)!.amount - 1
