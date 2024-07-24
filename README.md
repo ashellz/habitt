@@ -77,7 +77,9 @@ Add Features:
 Add cookie icon
 Add chef top icon
 Add a feature so a user can edit completion values of habits the last 5 days
-Add animations
+
+# Add animations
+
 Add notifications
 
 # At the bottom of menu drawer add profile username and signout option
@@ -85,3 +87,11 @@ Add notifications
 # If user is signed in, display home page right away
 
 # Fix some bugs along the way
+
+Add weekly habits
+
+- Complete them 1 to 6 times a week
+- Make the user select how many times a week to do it (the exact days don't matter for now)
+- Make it so the user can skip the habit for the day in the home page
+- Streaks update every time the habit is done at the end of the day, it won't be reset until there are no more days in the week left for the habit to be completed that many times
+- If the user decides to complete the habit more times a week than specified, the streak will go up

@@ -61,6 +61,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
           updatedIcon = startIcon;
         });
       },
+      onLongPress: () => print('Long Pressed'),
       child: ListTile(
         leading: Icon(
           getIcon(index),
