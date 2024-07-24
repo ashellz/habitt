@@ -88,18 +88,41 @@ class HabitProvider extends ChangeNotifier {
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(
-        name: existingHabit.name,
-        completed: !existingHabit.completed,
-        icon: existingHabit.icon,
-        category: existingHabit.category,
-        streak: existingHabit.streak,
-        amount: existingHabit.amount,
-        amountName: existingHabit.amountName,
-        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
-        duration: existingHabit.duration,
-        durationCompleted:
-            !existingHabit.completed ? existingHabit.duration : 0,
-      );
+          name: existingHabit.name,
+          completed: !existingHabit.completed,
+          icon: existingHabit.icon,
+          category: existingHabit.category,
+          streak: existingHabit.streak,
+          amount: existingHabit.amount,
+          amountName: existingHabit.amountName,
+          amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+          duration: existingHabit.duration,
+          durationCompleted:
+              !existingHabit.completed ? existingHabit.duration : 0,
+          skipped: false);
+
+      await habitBox.putAt(index, updatedHabit);
+      notifyListeners();
+    }
+  }
+
+  void skipHabitProvider(int index) async {
+    final existingHabit = habitBox.getAt(index);
+
+    if (existingHabit != null) {
+      final updatedHabit = HabitData(
+          name: existingHabit.name,
+          completed: !existingHabit.completed,
+          icon: existingHabit.icon,
+          category: existingHabit.category,
+          streak: existingHabit.streak,
+          amount: existingHabit.amount,
+          amountName: existingHabit.amountName,
+          amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+          duration: existingHabit.duration,
+          durationCompleted:
+              !existingHabit.completed ? existingHabit.duration : 0,
+          skipped: !existingHabit.skipped);
 
       await habitBox.putAt(index, updatedHabit);
       notifyListeners();

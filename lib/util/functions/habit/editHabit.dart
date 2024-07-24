@@ -19,19 +19,19 @@ void editHabit(int index, context, editcontroller) {
   habitBox.putAt(
       index,
       HabitData(
-        name: editcontroller.text,
-        completed: false,
-        icon: getIconString(updatedIcon.icon),
-        category: dropDownValue,
-        streak: habitBox.getAt(index)?.streak ?? 0,
-        amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
-        amountName: amountNameControllerEdit.text,
-        amountCompleted: 0,
-        duration: habitGoalEdit == 2
-            ? duration
-            : habitBox.getAt(index)?.duration ?? 0,
-        durationCompleted: 0,
-      ));
+          name: editcontroller.text,
+          completed: false,
+          icon: getIconString(updatedIcon.icon),
+          category: dropDownValue,
+          streak: habitBox.getAt(index)?.streak ?? 0,
+          amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
+          amountName: amountNameControllerEdit.text,
+          amountCompleted: 0,
+          duration: habitGoalEdit == 2
+              ? duration
+              : habitBox.getAt(index)?.duration ?? 0,
+          durationCompleted: 0,
+          skipped: false));
 
   checkIfEmpty(editedFrom);
   dropDownValue = 'Any time';

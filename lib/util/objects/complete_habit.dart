@@ -116,7 +116,8 @@ applyDurationCompleted(index, theDurationValue) {
           amountName: habitBox.getAt(index)!.amountName,
           amountCompleted: habitBox.getAt(index)!.amountCompleted,
           duration: habitBox.getAt(index)!.duration,
-          durationCompleted: theDurationValue));
+          durationCompleted: theDurationValue,
+          skipped: habitBox.getAt(index)!.skipped));
 }
 
 applyAmountCompleted(index, theAmountValue) {
@@ -132,5 +133,6 @@ applyAmountCompleted(index, theAmountValue) {
           amountName: habitBox.getAt(index)!.amountName,
           amountCompleted: theAmountValue,
           duration: habitBox.getAt(index)!.duration,
-          durationCompleted: habitBox.getAt(index)!.durationCompleted));
+          durationCompleted: habitBox.getAt(index)!.durationCompleted,
+          skipped: habitBox.getAt(index)!.skipped));
 }

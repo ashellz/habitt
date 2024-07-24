@@ -42,11 +42,10 @@ Future<void> main() async {
   Hive.registerAdapter(HabitDataAdapter());
 
   await openHiveBoxes();
+  await fillKeys();
 
   hasHabits();
   openCategory();
-
-  await fillKeys();
 
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(

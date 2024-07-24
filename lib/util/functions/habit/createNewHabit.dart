@@ -8,17 +8,17 @@ late HabitData myHabit;
 
 Future<void> createNewHabit(createcontroller) async {
   myHabit = HabitData(
-    name: createcontroller.text,
-    completed: false,
-    icon: getIconString(updatedIcon.icon),
-    category: dropDownValue,
-    streak: 0,
-    amount: habitGoal == 1 ? currentAmountValue : 1,
-    amountName: amountNameController.text,
-    amountCompleted: 0,
-    duration: habitGoal == 2 ? currentDurationValue : 0,
-    durationCompleted: 0,
-  );
+      name: createcontroller.text,
+      completed: false,
+      icon: getIconString(updatedIcon.icon),
+      category: dropDownValue,
+      streak: 0,
+      amount: habitGoal == 1 ? currentAmountValue : 1,
+      amountName: amountNameController.text,
+      amountCompleted: 0,
+      duration: habitGoal == 2 ? currentDurationValue : 0,
+      durationCompleted: 0,
+      skipped: false);
   await habitBox.add(myHabit);
   hasHabits();
 
