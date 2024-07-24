@@ -83,20 +83,12 @@ class _NewHabitTileState extends State<NewHabitTile> {
         ),
         trailing: GestureDetector(
           onTap: () {
-            if (habitBox.getAt(index)!.completed == true) {
-              habitBox.getAt(index)!.completed = false;
-              habitBox.getAt(index)!.amountCompleted = 0;
-              habitBox.getAt(index)!.durationCompleted = 0;
-            } else if (habitBox.getAt(index)!.completed == false) {
-              if (amountCheck == true || durationCheck == true) {
-                showDialog(
-                    context: context,
-                    builder: (context) => completeHabitDialog(index));
-              } else {
-                habitBox.getAt(index)!.completed = true;
-                habitBox.getAt(index)!.amountCompleted = 0;
-                habitBox.getAt(index)!.durationCompleted = 0;
-              }
+            if (amountCheck == true || durationCheck == true) {
+              showDialog(
+                  context: context,
+                  builder: (context) => completeHabitDialog(index));
+            } else {
+              context.read<HabitProvider>().completeHabitProvider(index);
             }
           },
           child: Container(
