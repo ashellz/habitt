@@ -257,13 +257,10 @@ otherCategoriesList(
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     anyTime(
         habitListLength, editcontroller, mainCategory, mainCategoryListVisible),
-    const SizedBox(height: 20),
     morning(
         habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
-    const SizedBox(height: 20),
     afternoon(
         habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
-    const SizedBox(height: 20),
     evening(
         habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
   ]);
@@ -287,6 +284,7 @@ Widget anyTime(
                   editcontroller: editcontroller,
                 ),
               ),
+          const SizedBox(height: 20),
         ],
       );
     }
@@ -301,6 +299,7 @@ Widget anyTime(
           SizedBox(height: 10),
           Text("No habits in this category",
               style: TextStyle(fontSize: 18, color: Colors.grey)),
+          SizedBox(height: 20),
         ]);
   } else {
     return Container();
@@ -325,6 +324,7 @@ Widget morning(
                   editcontroller: editcontroller,
                 ),
               ),
+          const SizedBox(height: 20),
         ],
       );
     }
@@ -337,6 +337,7 @@ Widget morning(
             SizedBox(height: 10),
             Text("No habits in this category",
                 style: TextStyle(fontSize: 18, color: Colors.grey)),
+            SizedBox(height: 20),
           ]);
     }
   }
@@ -362,6 +363,7 @@ Widget afternoon(
                   editcontroller: editcontroller,
                 ),
               ),
+          const SizedBox(height: 20),
         ],
       );
     }
@@ -374,6 +376,7 @@ Widget afternoon(
             SizedBox(height: 10),
             Text("No habits in this category",
                 style: TextStyle(fontSize: 18, color: Colors.grey)),
+            SizedBox(height: 20),
           ]);
     }
   }
@@ -398,6 +401,7 @@ Widget evening(
                   editcontroller: editcontroller,
                 ),
               ),
+          const SizedBox(height: 20),
         ],
       );
     }
@@ -410,6 +414,7 @@ Widget evening(
             SizedBox(height: 10),
             Text("No habits in this category",
                 style: TextStyle(fontSize: 18, color: Colors.grey)),
+            SizedBox(height: 20),
           ]);
     }
   }

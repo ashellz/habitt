@@ -41,7 +41,10 @@ class ChangelogPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text("- Implemented skip habit feature")])),
+                  children: [
+                    Text(
+                        "- Implemented skip habit feature\n- Added bouncy scroll physics to changelog page\n- Fixed not properly unchecking a done habit for habits with duration or amount\n- Fixed app resetting streaks twice a day")
+                  ])),
 
           // 21.07.2024
           const Padding(
