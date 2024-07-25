@@ -12,6 +12,7 @@ class ChangelogPage extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       body: ListView(
+        physics: const BouncingScrollPhysics(),
         children: [
           //TITLE
           Padding(

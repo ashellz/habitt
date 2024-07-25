@@ -106,9 +106,13 @@ class _NewHabitTileState extends State<NewHabitTile> {
           trailing: GestureDetector(
             onTap: () {
               if (amountCheck == true || durationCheck == true) {
-                showDialog(
-                    context: context,
-                    builder: (context) => completeHabitDialog(index));
+                if (habitBox.getAt(index)!.completed) {
+                  context.read<HabitProvider>().completeHabitProvider(index);
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) => completeHabitDialog(index));
+                }
               } else {
                 context.read<HabitProvider>().completeHabitProvider(index);
               }
