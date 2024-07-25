@@ -30,8 +30,8 @@ void updateLastOpenedDate() async {
     }
     await backupHiveBoxesToFirebase(userId);
   }
-  streakBox.put('lastOpenedDay', day);
-  streakBox.put('lastOpenedMonth', month);
+  await streakBox.put('lastOpenedDay', day);
+  await streakBox.put('lastOpenedMonth', month);
 }
 
 void resetOrUpdateStreaks(int daysDifference) {
