@@ -2,11 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/login_page.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
+import 'package:habit_tracker/pages/auth/login_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'pages/home_page.dart';
+import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +19,6 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -40,11 +42,10 @@ Future<void> main() async {
   Hive.registerAdapter(HabitDataAdapter());
 
   await openHiveBoxes();
+  await fillKeys();
 
   hasHabits();
   openCategory();
-
-  await fillKeys();
 
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
@@ -53,34 +54,21 @@ Future<void> main() async {
     frequency: const Duration(minutes: 15),
   );
 
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => HabitProvider(), child: const MyApp()));
 }
 
-bool morningNotification = false;
-bool afternoonNotification = false;
-bool eveningNotification = false;
-bool dailyNotification = false;
-
 @pragma('vm:entry-point')
-void callbackDispatcher() {
+void callbackDispatcher(context) {
   Workmanager().executeTask((task, inputData) async {
-    Hive.registerAdapter(HabitDataAdapter());
-    var notificationBox = Hive.box('bool');
+    int hour = DateTime.now().hour;
 
-    DateTime now = DateTime.now();
-    print("Hour: ${now.hour}");
-
-    if (now.hour == 5 && notificationBox.get('morningNotification') == true) {
-      if (morningHasHabits == true) {
-        await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: 1239,
-            channelKey: 'basic_channel',
-            title: 'Morning Habits',
-            body: "Good morning! Time to start your day!",
-          ),
-        );
-      }
+    if (hour >= 4 && hour < 12) {
+      context.watch<HabitProvider>()._mainCategory = "Morning";
+    } else if (hour >= 12 && hour < 19) {
+      context.watch<HabitProvider>()._mainCategory = "Afternoon";
+    } else if (hour >= 19 && hour <= 3) {
+      context.watch<HabitProvider>()._mainCategory = "Evening";
     }
 
     return Future.value(true);
@@ -145,20 +133,22 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Habit Tracker',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        }),
+        colorScheme: ColorScheme.fromSeed(seedColor: theLightGreen),
         useMaterial3: true,
-        primarySwatch: Colors.green,
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
+        appBarTheme: AppBarTheme(
+          iconTheme: const IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
-              color: Colors.white,
+              color: theLightGreen,
               fontSize: 22,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700),
         ),
         textTheme: ThemeData.light().textTheme.apply(
-              bodyColor: Colors.black,
-              displayColor: Colors.black,
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
               fontFamily: 'Poppins',
             ),
       ),
@@ -177,7 +167,12 @@ class AuthCheck extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData || boolBox.get("isGuest") == true) {
-          return const HomePage();
+          if (boolBox.get("firstTimeOpened")!) {
+            boolBox.put("firstTimeOpened", false);
+            return const LoadingScreen(text: " ");
+          } else {
+            return const NewHomePage();
+          }
         } else {
           return LoginPage();
         }

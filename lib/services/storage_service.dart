@@ -1,13 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit_tracker/pages/settings_page.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
+import 'package:habit_tracker/pages/menu/settings_page.dart';
+import 'package:habit_tracker/services/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 
 String? userId = FirebaseAuth.instance.currentUser?.uid;
+String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
 bool dataDownloaded = false;
 
 Future<String> getApplicationDocumentsDirectoryPath() async {
@@ -60,7 +64,7 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
 }
 
 Future<void> backupHiveBoxesToFirebase(String? userId) async {
-  if (userId == null) {
+  if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
     print('User is not authenticated');
     return;
   }
@@ -111,5 +115,34 @@ Future<void> newAccountDownloadData(BuildContext context) async {
     }
   }
   dataDownloaded = true;
-  Restart.restartApp();
+  await Restart.restartApp();
+}
+
+Future<void> deleteUserCloudStorage(context) async {
+  Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (BuildContext context) =>
+          const LoadingScreen(text: "Deleting account...")));
+
+  if (userId == null) {
+    print('User is not authenticated');
+    return;
+  }
+
+  final storageRef = FirebaseStorage.instance.ref().child('$userId/');
+  final listResult = await storageRef.listAll();
+
+  for (final item in listResult.items) {
+    try {
+      print('Deleting from cloud storage: ${item.name}');
+      await item.delete();
+      print('Successfully deleted file from cloud storage: ${item.name}');
+    } catch (e) {
+      print(
+          'Failed to delete file from cloud storage: ${item.name}, error: $e');
+    }
+  }
+  await AuthService().deleteAccount();
+  Timer(const Duration(milliseconds: 500), () {
+    Restart.restartApp();
+  });
 }

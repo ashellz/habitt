@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/loading_page.dart';
-import 'package:habit_tracker/pages/login_page.dart';
+import 'package:flutter/widgets.dart';
+import 'package:habit_tracker/pages/auth/loading_page.dart';
+import 'package:habit_tracker/pages/auth/signup_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
-import 'package:habit_tracker/util/functions/validate_auth.dart';
+import 'package:habit_tracker/util/functions/validate_text.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -18,7 +17,7 @@ class SignupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           Padding(
@@ -34,44 +33,8 @@ class SignupPage extends StatelessWidget {
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
                           color: Colors.white)),
-                  const Text('Sign up to continue',
+                  const Text('Sign in to continue',
                       style: TextStyle(fontSize: 16, color: Colors.white)),
-
-                  //USERNAME
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: TextFormField(
-                      validator: validateUsername,
-                      inputFormatters: [LengthLimitingTextInputFormatter(20)],
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
-                      cursorColor: Colors.white,
-                      cursorWidth: 2.0,
-                      cursorHeight: 22.0,
-                      cursorRadius: const Radius.circular(10.0),
-                      cursorOpacityAnimates: true,
-                      enableInteractiveSelection: true,
-                      controller: _usernameController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person_outline_rounded,
-                            color: Colors.white),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-                        labelStyle: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.white38,
-                            fontWeight: FontWeight.bold),
-                        labelText: "USERNAME",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 107, 138, 122),
-                      ),
-                    ),
-                  ),
 
                   // EMAIL
                   Padding(
@@ -89,24 +52,30 @@ class SignupPage extends StatelessWidget {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.mail_outline_rounded,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        prefixIcon: const Icon(Icons.mail_outline_rounded,
                             color: Colors.white),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-                        labelStyle: TextStyle(
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 20),
+                        labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
                             fontWeight: FontWeight.bold),
                         labelText: "EMAIL",
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.black),
                         ),
                         hintText: "example@mail.com",
-                        hintStyle: TextStyle(color: Colors.white38),
+                        hintStyle: const TextStyle(color: Colors.white38),
                         filled: true,
-                        fillColor: Color.fromARGB(255, 107, 138, 122),
+                        fillColor: Colors.grey.shade900,
                       ),
                     ),
                   ),
@@ -115,7 +84,7 @@ class SignupPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: TextFormField(
-                      validator: validatePassword,
+                      validator: validatePasswordLogin,
                       onEditingComplete: () =>
                           FocusScope.of(context).nextFocus(),
                       cursorColor: Colors.white,
@@ -128,27 +97,33 @@ class SignupPage extends StatelessWidget {
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
                       style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon:
-                            Icon(Icons.lock_open_outlined, color: Colors.white),
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-                        labelStyle: TextStyle(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        prefixIcon: const Icon(Icons.lock_open_outlined,
+                            color: Colors.white),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 20),
+                        labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
                             fontWeight: FontWeight.bold),
                         labelText: "PASSWORD",
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.black),
                         ),
                         filled: true,
-                        fillColor: Color.fromARGB(255, 107, 138, 122),
+                        fillColor: Colors.grey.shade900,
                       ),
                     ),
                   ),
 
-                  // SIGN UP BUTTON
+                  // SIGN IN BUTTON
                   Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: SizedBox(
@@ -157,14 +132,11 @@ class SignupPage extends StatelessWidget {
                           child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  await AuthService().signUp(
+                                  await AuthService().signIn(
                                       context: context,
                                       email: _emailController.text,
                                       password: _passwordController.text);
-                                  stringBox.put(
-                                      'username', _usernameController.text);
                                 }
-                                newAccountDownloadData(context);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -174,10 +146,11 @@ class SignupPage extends StatelessWidget {
                                 ),
                               ),
                               child: const Text(
-                                'SIGN UP',
+                                'SIGN IN',
                                 style: TextStyle(
                                     fontSize: 16.0,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
                               )))),
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
@@ -185,7 +158,7 @@ class SignupPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          "Already have an account?",
+                          "Don't have an account?",
                           style: TextStyle(color: Colors.white),
                         ),
                         const SizedBox(width: 5),
@@ -194,11 +167,11 @@ class SignupPage extends StatelessWidget {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
+                                  builder: (context) => SignupPage()),
                             );
                           },
                           child: const Text(
-                            "Sign in",
+                            "Sign up",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -206,7 +179,7 @@ class SignupPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -222,7 +195,9 @@ class SignupPage extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const LoadingScreen(),
+                      builder: (BuildContext context) => const LoadingScreen(
+                        text: "Loading data...",
+                      ),
                     ),
                   );
                   newAccountDownloadData(context);

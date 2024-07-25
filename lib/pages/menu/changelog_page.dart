@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 
 class ChangelogPage extends StatelessWidget {
   const ChangelogPage({super.key});
@@ -6,24 +7,117 @@ class ChangelogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Changelog"),
-        centerTitle: true,
-        toolbarHeight: 80.0,
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+        backgroundColor: Colors.black,
       ),
       body: ListView(
-        children: const [
-          // 09.07.2024
+        children: [
+          //TITLE
           Padding(
+            padding: const EdgeInsets.only(top: 30, left: 20, bottom: 10),
+            child: Text(
+              "Changelog",
+              style: TextStyle(
+                  fontSize: 42,
+                  color: theLightGreen,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+
+          // 25.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "25.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Text("- Implemented skip habit feature")])),
+
+          // 21.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "21.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Working on home page\n- Fixed when first time launching the app, after signing in/up, it pulls you straight to home page before the data was downloaded\n- Fixed being stuck on sign up loading page when the email already exists\n- Having no habits is now possible"),
+                    Text(
+                        "- Improved design and added managing habit amount and duration completion to the new home page")
+                  ])),
+
+          // 17.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "17.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Redesigned profile page, changed a couple of things\n- More app design changes (loading, login, signup pages)"),
+                    Text("- Fixed some bugs on authentication and storage"),
+                    Text(
+                        "- Added ability to delete account\n- Fixed some design issues\n- Other bug fixes"),
+                  ])),
+
+          // 15.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "15.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Changed design when adding, editing or deleting a habit\n- Improved data storing\n- Added different page transition effect"),
+                    Text(
+                        "- Updated app design\n- Added profile page, along with abilities to change username"),
+                  ])),
+
+          // 09.07.2024
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "09.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,14 +131,14 @@ class ChangelogPage extends StatelessWidget {
                   ])),
 
           // 08.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "08.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,14 +150,14 @@ class ChangelogPage extends StatelessWidget {
                   ])),
 
           // 07.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "07.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,14 +170,14 @@ class ChangelogPage extends StatelessWidget {
           ),
 
           // 06.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "06.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,27 +191,27 @@ class ChangelogPage extends StatelessWidget {
           ),
 
           // 05.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "05.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text("- Added changelog page"),
           ),
 
           // 03.07.2024
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
               "03.07.2024",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Text(
                 "- Fixed amount and duration completed don't reset on a new day\n- Fixed on all habits completed streak when it is just 1 day streak it was displaying 1 days"),

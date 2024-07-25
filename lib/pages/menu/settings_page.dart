@@ -1,8 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
 bool uploadButtonEnabled = true;
@@ -18,38 +18,45 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 211, 190),
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Settings"),
-        centerTitle: true,
-        toolbarHeight: 80.0,
-        backgroundColor: const Color.fromARGB(255, 37, 67, 54),
+        backgroundColor: Colors.black,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 30),
+            child: Text("Settings",
+                style: TextStyle(
+                    fontSize: 42,
+                    color: theLightGreen,
+                    fontWeight: FontWeight.bold)),
+          ),
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
-              "Notifications",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              "Notifications (in development)",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 20),
             child: Text(
               "How often should you be notified?",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
+              activeColor: theLightGreen,
               title: const Text(
                 "Once a day",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               value: 0,
               onChanged: (value) {
@@ -68,9 +75,10 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
+              activeColor: theLightGreen,
               title: const Text(
                 "Three times a day",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               value: 1,
               onChanged: (value) {
@@ -89,9 +97,10 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
+              activeColor: theLightGreen,
               title: const Text(
                 "Custom",
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               value: 2,
               onChanged: (value) {
@@ -107,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -119,6 +128,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('morningNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -127,14 +137,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                     ),
-                    const Text("Morning notification"),
+                    const Text(
+                      "Morning notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -146,6 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('afternoonNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -154,14 +168,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                     ),
-                    const Text("Afternoon notification"),
+                    const Text(
+                      "Afternoon notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -173,6 +190,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('eveningNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -181,14 +199,17 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                     ),
-                    const Text("Evening notification"),
+                    const Text(
+                      "Evening notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
           AnimatedContainer(
-            color: const Color.fromARGB(255, 218, 211, 190),
+            color: Colors.black,
             duration: const Duration(milliseconds: 250),
             height: notifValue == 2 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
@@ -200,6 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
+                      activeColor: theLightGreen,
                       value: boolBox.get('dailyNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -209,62 +231,24 @@ class _SettingsPageState extends State<SettingsPage> {
                         print(boolBox.get('dailyNotification'));
                       },
                     ),
-                    const Text("Daily notification"),
+                    const Text(
+                      "Daily notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-            child: Text(
-              "Data",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  "Upload Data Manually",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: IconButton(
-                    onPressed: !uploadButtonEnabled
-                        ? null
-                        : () async {
-                            if (userId == null) {
-                              Fluttertoast.showToast(
-                                msg: 'You are not logged in.',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.SNACKBAR,
-                                backgroundColor: Colors.black54,
-                                textColor: Colors.white,
-                                fontSize: 14.0,
-                              );
-                            } else {
-                              setState(() => uploadButtonEnabled = false);
-                              await backupHiveBoxesToFirebase(userId);
-                            }
-                          },
-                    icon: const Icon(Icons.upload)),
-              ),
-            ],
-          ),
-          const Spacer(),
           Visibility(
             visible: boolBox.get("hasNotificationAccess") == false,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 20, top: 20),
               child: Center(
                 child: TextButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        const Color.fromARGB(255, 183, 181, 151)),
+                    backgroundColor:
+                        WidgetStateProperty.all<Color>(theLightGreen),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -274,10 +258,49 @@ class _SettingsPageState extends State<SettingsPage> {
                   onPressed: () => requestNotificationAccess(),
                   child: const Text(
                     "Request Notification Access",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "Appearance",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Checkbox(
+                    activeColor: theLightGreen,
+                    value:
+                        context.watch<HabitProvider>().displayEmptyCategories,
+                    onChanged: (value) {
+                      setState(() {
+                        context
+                            .read<HabitProvider>()
+                            .updateDisplayEmptyCategories(!value!);
+                      });
+                    },
+                  ),
+                ),
+                const Expanded(
+                  flex: 6,
+                  child: Text(
+                    "Dispay empty categories on home page",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

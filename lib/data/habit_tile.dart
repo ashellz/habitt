@@ -14,7 +14,8 @@ class HabitData extends HiveObject {
       required this.amountName,
       required this.amountCompleted,
       required this.duration,
-      required this.durationCompleted});
+      required this.durationCompleted,
+      required this.skipped});
   @HiveField(0)
   String name;
 
@@ -44,4 +45,7 @@ class HabitData extends HiveObject {
 
   @HiveField(9)
   int durationCompleted;
+
+  @HiveField(10)
+  bool skipped;
 }

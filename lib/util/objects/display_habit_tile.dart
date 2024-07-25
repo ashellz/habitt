@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/functions/getIcon.dart';
-import 'package:habit_tracker/util/objects/edit_habit.dart';
+import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -17,12 +17,14 @@ class HabitTile extends StatefulWidget {
     required this.deletehabit,
     required this.index,
     required this.checkHabit,
+    required this.editcontroller,
   });
 
   final int index;
   final Future<void> Function(int index) deletehabit;
   final void Function(int index) edithabit;
   final void Function(int index) checkHabit;
+  final TextEditingController editcontroller;
 
   @override
   State<HabitTile> createState() => _HabitTileState();
@@ -80,6 +82,7 @@ class _HabitTileState extends State<HabitTile> {
 
   @override
   Widget build(BuildContext context) {
+    var editcontroller = widget.editcontroller;
     IconData displayIcon = getIcon(widget.index);
     int theAmountValue = habitBox.getAt(widget.index)!.amountCompleted;
     int theDurationValue = habitBox.getAt(widget.index)!.durationCompleted;
@@ -198,27 +201,19 @@ class _HabitTileState extends State<HabitTile> {
             ],
           ),
           child: GestureDetector(
-            onTap: () => showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              backgroundColor: const Color.fromARGB(255, 218, 211, 190),
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: editHabit(_formKey, widget.deletehabit,
-                      widget.edithabit, widget.index),
-                );
-              },
-            ).whenComplete(() {
+            onTap: () {
               habitGoalEdit = 0;
               updated = false;
               dropDownChanged = false;
               editcontroller.clear();
               changed = false;
               updatedIcon = startIcon;
-            }),
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditHabitPage(
+                        index: widget.index,
+                        editcontroller: editcontroller,
+                      )));
+            },
             child: ListTile(
               minTileHeight: 65,
               contentPadding: const EdgeInsets.only(
@@ -357,7 +352,8 @@ applyDurationCompleted(index, theDurationValue) {
           amountName: habitBox.getAt(index)!.amountName,
           amountCompleted: habitBox.getAt(index)!.amountCompleted,
           duration: habitBox.getAt(index)!.duration,
-          durationCompleted: theDurationValue));
+          durationCompleted: theDurationValue,
+          skipped: habitBox.getAt(index)!.skipped));
 }
 
 applyAmountCompleted(index, theAmountValue) {
@@ -373,5 +369,6 @@ applyAmountCompleted(index, theAmountValue) {
           amountName: habitBox.getAt(index)!.amountName,
           amountCompleted: theAmountValue,
           duration: habitBox.getAt(index)!.duration,
-          durationCompleted: habitBox.getAt(index)!.durationCompleted));
+          durationCompleted: habitBox.getAt(index)!.durationCompleted,
+          skipped: habitBox.getAt(index)!.skipped));
 }

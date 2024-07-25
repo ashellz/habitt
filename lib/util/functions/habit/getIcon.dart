@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:icons_flutter/icons_flutter.dart';
-
-final habitBox = Hive.box<HabitData>('habits');
 
 IconData getIcon(int index) {
   String icon = habitBox.getAt(index)!.icon;
