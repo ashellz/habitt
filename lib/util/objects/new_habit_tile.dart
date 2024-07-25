@@ -63,17 +63,27 @@ class _NewHabitTileState extends State<NewHabitTile> {
         });
       },
       child: Slidable(
-        startActionPane:
-            ActionPane(extentRatio: 0.2, motion: ScrollMotion(), children: [
-          Container(
-            padding: const EdgeInsets.only(left: 20),
-            child: Center(
-                child: Text(
-              "Skip",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )),
-          )
-        ]),
+        enabled: !habitBox.getAt(index)!.completed,
+        closeOnScroll: true,
+        startActionPane: ActionPane(
+          dragDismissible: true,
+          extentRatio: 0.35,
+          motion: const ScrollMotion(),
+          children: [
+            const SizedBox(
+              width: 10,
+            ),
+            SlidableAction(
+              onPressed: (context) {
+                context.read<HabitProvider>().skipHabitProvider(index);
+              },
+              backgroundColor: Colors.grey.shade900,
+              foregroundColor: Colors.white,
+              label: habitBox.getAt(index)!.skipped ? 'Undo' : 'Skip',
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ],
+        ),
         child: ListTile(
           leading: Icon(
             getIcon(index),
@@ -129,7 +139,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
                                   builder: (context, value, _) {
                                     return LinearProgressIndicator(
                                       value: value,
-                                      color: theOtherGreen,
+                                      color: habitBox.getAt(index)!.skipped
+                                          ? Colors.grey.shade800
+                                          : theOtherGreen,
                                       backgroundColor: Colors.grey.shade900,
                                     );
                                   }),
@@ -162,7 +174,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
                                       builder: (context, value, _) {
                                         return LinearProgressIndicator(
                                           value: value,
-                                          color: theOtherGreen,
+                                          color: habitBox.getAt(index)!.skipped
+                                              ? Colors.grey.shade800
+                                              : theOtherGreen,
                                           backgroundColor: Colors.grey.shade900,
                                         );
                                       }),

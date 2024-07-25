@@ -36,11 +36,16 @@ void updateLastOpenedDate() async {
 
 void resetOrUpdateStreaks(int daysDifference) {
   bool allHabitsCompleted = true;
+  bool skipAllHabitsCompleted = false;
   for (int i = 0; i < habitBox.length; i++) {
     var habit = habitBox.getAt(i)!;
     if (daysDifference == 1) {
       if (habit.completed) {
-        habit.streak += 1;
+        if (!habit.skipped) {
+          habit.streak += 1;
+        } else {
+          skipAllHabitsCompleted = true;
+        }
       } else {
         allHabitsCompleted = false;
         habit.streak = 0;
@@ -52,14 +57,17 @@ void resetOrUpdateStreaks(int daysDifference) {
     habit.amountCompleted = 0;
     habit.durationCompleted = 0;
     habit.completed = false;
+    habit.skipped = false;
     habit.save();
   }
 
   int allHabitsCompletedStreak = streakBox.get('allHabitsCompletedStreak') ?? 0;
 
   if (allHabitsCompleted) {
-    allHabitsCompletedStreak += 1;
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
+    if (!skipAllHabitsCompleted) {
+      allHabitsCompletedStreak += 1;
+      streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
+    }
   } else {
     streakBox.put('allHabitsCompletedStreak', 0);
   }
