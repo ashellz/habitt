@@ -300,7 +300,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         child: NumberPicker(
                           value: currentAmountValue,
                           minValue: 2,
-                          maxValue: 90,
+                          maxValue: 100,
                           haptics: true,
                           axis: Axis.horizontal,
                           onChanged: (value) =>
