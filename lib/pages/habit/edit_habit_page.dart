@@ -533,11 +533,15 @@ String truncatedText(BuildContext context, editcontroller) {
   if (screenWidth < 300) {
     maxLength = 8; // very small screen
   } else if (screenWidth < 400) {
-    maxLength = 12; // small screen
+    maxLength = 10; // small screen
   } else if (screenWidth < 500) {
     maxLength = 15; // medium screen
+  } else if (screenWidth < 600) {
+    maxLength = 20; // larger screen
+  } else if (screenWidth < 800) {
+    maxLength = 24; // very large screen
   } else {
-    maxLength = 24; // larger screen
+    maxLength = 32; // very very large screen
   }
 
   String name = editcontroller.text;

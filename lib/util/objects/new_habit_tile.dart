@@ -276,14 +276,18 @@ String truncatedText(BuildContext context, String text) {
   double screenWidth = MediaQuery.of(context).size.width;
   int maxLength;
 
-  if (screenWidth < 300) {
+  if (screenWidth < 270) {
+    maxLength = 6; // very very small screen
+  } else if (screenWidth < 320) {
     maxLength = 10; // very small screen
   } else if (screenWidth < 400) {
-    maxLength = 14; // small screen
+    maxLength = 12; // small screen
   } else if (screenWidth < 500) {
     maxLength = 18; // medium screen
-  } else {
+  } else if (screenWidth < 600) {
     maxLength = 24; // larger screen
+  } else {
+    maxLength = 32; // very large screen
   }
 
   String name = text;
