@@ -43,7 +43,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Implemented skip habit feature\n- Added bouncy scroll physics to changelog page\n- Fixed not properly unchecking a done habit for habits with duration or amount\n- Fixed app resetting streaks twice a day")
+                        "- Implemented skip habit feature\n- Added bouncy scroll physics to changelog page\n- Fixed not properly unchecking a done habit for habits with duration or amount\n- Fixed app resetting streaks twice a day\n- Fixed empty space left when habit category is empty")
                   ])),
 
           // 21.07.2024
