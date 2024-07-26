@@ -26,6 +26,26 @@ class ChangelogPage extends StatelessWidget {
             ),
           ),
 
+          // 26.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "26.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Made the app more responsive for different screen sizes\n- Fixed max amount when creating a habit was 90 instead of 100")
+                  ])),
+
           // 25.07.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -43,7 +63,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Implemented skip habit feature\n- Added bouncy scroll physics to changelog page\n- Fixed not properly unchecking a done habit for habits with duration or amount\n- Fixed app resetting streaks twice a day\n- Fixed empty space left when habit category is empty\- Made the app more responsive for different screen sizes\n- Fixed max amount when creating a habit was 90 instead of 100")
+                        "- Implemented skip habit feature\n- Added bouncy scroll physics to changelog page\n- Fixed not properly unchecking a done habit for habits with duration or amount\n- Fixed app resetting streaks twice a day\n- Fixed empty space left when habit category is empty")
                   ])),
 
           // 21.07.2024
