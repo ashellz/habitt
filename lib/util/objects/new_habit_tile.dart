@@ -92,7 +92,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
                 : Colors.white,
           ),
           title: Text(
-            habitBox.getAt(index)!.name,
+            truncatedText(context, habitBox.getAt(index)!.name),
             style: TextStyle(
                 color: habitBox.getAt(index)!.completed
                     ? Colors.grey.shade700
@@ -270,4 +270,25 @@ class _NewHabitTileState extends State<NewHabitTile> {
       ),
     );
   }
+}
+
+String truncatedText(BuildContext context, String text) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  int maxLength;
+
+  if (screenWidth < 300) {
+    maxLength = 10; // very small screen
+  } else if (screenWidth < 400) {
+    maxLength = 14; // small screen
+  } else if (screenWidth < 500) {
+    maxLength = 18; // medium screen
+  } else {
+    maxLength = 24; // larger screen
+  }
+
+  String name = text;
+  if (name.length > maxLength) {
+    return '${name.substring(0, maxLength)}...';
+  }
+  return name;
 }
