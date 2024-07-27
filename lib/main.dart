@@ -1,8 +1,8 @@
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -47,6 +47,24 @@ Future<void> main() async {
   hasHabits();
   openCategory();
 
+  // checking for notification access
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      boolBox.put('hasNotificationAccess', false);
+    } else {
+      boolBox.put('hasNotificationAccess', true);
+    }
+  });
+
+  // checking for battery optimization
+  bool? isBatteryOptimizationDisabled =
+      await DisableBatteryOptimization.isBatteryOptimizationDisabled;
+  if (isBatteryOptimizationDisabled == false) {
+    await boolBox.put('disabledBatteryOptimization', false);
+  } else {
+    await boolBox.put('disabledBatteryOptimization', true);
+  }
+
   Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
   Workmanager().registerPeriodicTask(
     "1",
@@ -69,6 +87,48 @@ void callbackDispatcher(context) {
       context.watch<HabitProvider>()._mainCategory = "Afternoon";
     } else if (hour >= 19 && hour <= 3) {
       context.watch<HabitProvider>()._mainCategory = "Evening";
+    }
+
+    if (hour == 9) {
+      if (boolBox.get("morningNotification") == true) {
+        await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+          id: 1,
+          channelKey: 'basic_channel',
+          title: 'Morning Habits',
+          body:
+              "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
+        ));
+      }
+    } else if (hour == 14) {
+      if (boolBox.get("afternoonNotification") == true) {
+        await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+          id: 2,
+          channelKey: 'basic_channel',
+          title: 'Afternoon Habits',
+          body: 'Keep the momentum going with your afternoon habits! ☀️',
+        ));
+      }
+    } else if (hour == 21) {
+      if (boolBox.get("eveningNotification") == true) {
+        await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+          id: 3,
+          channelKey: 'basic_channel',
+          title: 'Evening Habits',
+          body: 'Finish strong by completing your evening habits! 🌙',
+        ));
+      } else if (hour == 19) {
+        await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+          id: 4,
+          channelKey: 'basic_channel',
+          title: 'Remaining Habits',
+          body:
+              "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
+        ));
+      }
     }
 
     return Future.value(true);
@@ -166,13 +226,8 @@ class AuthCheck extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasData || boolBox.get("isGuest") == true) {
-          if (boolBox.get("firstTimeOpened")!) {
-            boolBox.put("firstTimeOpened", false);
-            return const LoadingScreen(text: " ");
-          } else {
-            return const NewHomePage();
-          }
+        if (snapshot.hasData) {
+          return const NewHomePage();
         } else {
           return LoginPage();
         }

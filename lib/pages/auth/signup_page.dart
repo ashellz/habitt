@@ -246,6 +246,7 @@ class SignupPage extends StatelessWidget {
                       ),
                     ),
                   );
+                  stringBox.put("username", "Guest");
                   newAccountDownloadData(context);
                 },
                 child: const Text(

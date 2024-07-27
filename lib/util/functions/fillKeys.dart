@@ -39,6 +39,9 @@ Future<void> fillKeys() async {
   if (!boolBox.containsKey('hasNotificationAccess')) {
     boolBox.put('hasNotificationAccess', false);
   }
+  if (!boolBox.containsKey('disabledBatteryOptimization')) {
+    boolBox.put('disabledBatteryOptimization', false);
+  }
 
   if (boolBox.get("isGuest") == null) {
     boolBox.put("isGuest", false);

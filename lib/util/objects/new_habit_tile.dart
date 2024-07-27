@@ -314,10 +314,14 @@ String truncatedText(BuildContext context, String text) {
     maxLength = 16; // medium screen
   } else if (screenWidth < 500) {
     maxLength = 18; // larger medium screen
+  } else if (screenWidth < 550) {
+    maxLength = 20; // large screen
   } else if (screenWidth < 600) {
-    maxLength = 24; // large screen
+    maxLength = 24; // larger screen
+  } else if (screenWidth < 700) {
+    maxLength = 30; // very large screen
   } else {
-    maxLength = 32; // very large screen
+    maxLength = 35; // very very large screen
   }
 
   String name = text;

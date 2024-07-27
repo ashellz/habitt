@@ -26,6 +26,26 @@ class ChangelogPage extends StatelessWidget {
             ),
           ),
 
+          // 27.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "27.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Improving app responsiveness\n- Streaks are now displayed on the home page for each habit")
+                  ])),
+
           // 26.07.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
