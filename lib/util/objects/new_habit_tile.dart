@@ -7,6 +7,7 @@ import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/objects/complete_habit.dart';
 import 'package:hive/hive.dart';
+import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 class NewHabitTile extends StatefulWidget {
@@ -91,17 +92,42 @@ class _NewHabitTileState extends State<NewHabitTile> {
                 ? Colors.grey.shade700
                 : Colors.white,
           ),
-          title: Text(
-            truncatedText(context, habitBox.getAt(index)!.name),
-            style: TextStyle(
-                color: habitBox.getAt(index)!.completed
-                    ? Colors.grey.shade700
-                    : Colors.white,
-                decoration: habitBox.getAt(widget.index)!.completed
-                    ? TextDecoration.lineThrough
-                    : null,
-                decorationColor: Colors.grey.shade700,
-                decorationThickness: 3.0),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                truncatedText(context, habitBox.getAt(index)!.name),
+                style: TextStyle(
+                    color: habitBox.getAt(index)!.completed
+                        ? Colors.grey.shade700
+                        : Colors.white,
+                    decoration: habitBox.getAt(widget.index)!.completed
+                        ? TextDecoration.lineThrough
+                        : null,
+                    decorationColor: Colors.grey.shade700,
+                    decorationThickness: 3.0),
+              ),
+              Row(children: [
+                Icon(
+                  MaterialCommunityIcons.fire,
+                  color: habitBox.getAt(index)!.completed
+                      ? Colors.white
+                      : Colors.grey,
+                  size: 21,
+                ),
+                Transform.translate(
+                  offset: const Offset(0, 1),
+                  child: Text(
+                    "${habitBox.getAt(index)!.completed ? habitBox.getAt(index)!.streak + 1 : habitBox.getAt(index)!.streak}",
+                    style: TextStyle(
+                        color: habitBox.getAt(index)!.completed
+                            ? Colors.white
+                            : Colors.grey,
+                        fontSize: 14),
+                  ),
+                )
+              ]),
+            ],
           ),
           trailing: GestureDetector(
             onTap: () {
