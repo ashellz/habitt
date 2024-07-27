@@ -531,17 +531,43 @@ String truncatedText(BuildContext context, editcontroller) {
   int maxLength;
 
   if (screenWidth < 300) {
-    maxLength = 8; // very small screen
+    if (habitGoalEdit == 0) {
+      maxLength = 12;
+    } else {
+      maxLength = 8;
+    } // very small screen
   } else if (screenWidth < 400) {
-    maxLength = 10; // small screen
+    if (habitGoalEdit == 0) {
+      maxLength = 14;
+    } else {
+      maxLength = 10;
+    } // small screen
   } else if (screenWidth < 500) {
-    maxLength = 15; // medium screen
+    if (habitGoalEdit == 0) {
+      maxLength = 19;
+    } else {
+      maxLength = 15;
+    } // medium screen
   } else if (screenWidth < 600) {
-    maxLength = 20; // larger screen
-  } else if (screenWidth < 800) {
-    maxLength = 24; // very large screen
+    if (habitGoalEdit == 0) {
+      maxLength = 24;
+    } else {
+      maxLength = 20;
+    } // larger screen
+  } else if (screenWidth < 650) {
+    if (habitGoalEdit == 0) {
+      maxLength = 30;
+    } else {
+      maxLength = 24;
+    } // very large screen
+  } else if (screenWidth < 750) {
+    if (habitGoalEdit == 0) {
+      maxLength = 35;
+    } else {
+      maxLength = 28;
+    } // very very large screen
   } else {
-    maxLength = 32; // very very large screen
+    maxLength = 35; // tablet
   }
 
   String name = editcontroller.text;
