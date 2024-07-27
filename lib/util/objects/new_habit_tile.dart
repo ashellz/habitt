@@ -313,9 +313,9 @@ String truncatedText(BuildContext context, String text) {
   } else if (screenWidth < 450) {
     maxLength = 16; // medium screen
   } else if (screenWidth < 500) {
-    maxLength = 18; // medium screen
+    maxLength = 18; // larger medium screen
   } else if (screenWidth < 600) {
-    maxLength = 24; // larger screen
+    maxLength = 24; // large screen
   } else {
     maxLength = 32; // very large screen
   }
