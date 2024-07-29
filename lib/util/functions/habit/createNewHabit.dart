@@ -7,6 +7,9 @@ import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 late HabitData myHabit;
 
 Future<void> createNewHabit(createcontroller) async {
+  currentDurationValue =
+      currentDurationValueMinutes + (currentDurationValueHours * 60);
+
   myHabit = HabitData(
       name: createcontroller.text,
       completed: false,
@@ -27,7 +30,9 @@ Future<void> createNewHabit(createcontroller) async {
   dropDownValue = 'Any time';
   amountNameController.text = "times";
   currentAmountValue = 2;
-  currentDurationValue = 1;
+  currentDurationValueMinutes = 0;
+  currentDurationValueHours = 0;
+  currentDurationValue = 0;
   habitGoal = 0;
   //showPopup(context, "Habit added!");
 }

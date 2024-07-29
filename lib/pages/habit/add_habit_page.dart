@@ -3,15 +3,18 @@ import "package:flutter/services.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
-import "package:numberpicker/numberpicker.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
 import "package:provider/provider.dart";
+import 'package:flutter_spinbox/material.dart';
 
 int habitGoal = 0;
 int currentAmountValue = 2;
-int currentDurationValue = 1;
+int currentDurationValueHours = 0;
+int currentDurationValueMinutes = 0;
+int currentDurationValue = 0;
 
 TextEditingController amountNameController = TextEditingController();
+TextEditingController amountController = TextEditingController();
 
 final formKey = GlobalKey<FormState>();
 
@@ -118,19 +121,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           children: [
                             Column(
                               children: [
-                                Text(
-                                  habitGoalNumber(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  habitGoalText(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                habitGoalNumber(),
+                                Visibility(
+                                  visible: habitGoal == 1,
+                                  child: Text(
+                                    habitGoalText(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 )
                               ],
                             )
@@ -241,7 +241,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(
@@ -265,7 +265,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           if (habitGoal == 2) {
                             habitGoal = 0;
                           } else {
-                            currentDurationValue = 1;
+                            currentDurationValueHours = 0;
+                            currentDurationValueMinutes = 0;
                             habitGoal = 2;
                           }
                         });
@@ -273,7 +274,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(
@@ -296,30 +297,41 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      Center(
-                        child: NumberPicker(
-                          value: currentAmountValue,
-                          minValue: 2,
-                          maxValue: 100,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => currentAmountValue = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          "$currentAmountValue ${amountNameController.text}",
-                          style: const TextStyle(color: Colors.white),
+                      TextFormField(
+                        onChanged: (newValue) => setState(() {
+                          String input = amountController.text;
+                          if (input.isNotEmpty) {
+                            int value = int.parse(input);
+                            setState(() {
+                              currentAmountValue = value;
+                            });
+                          }
+                        }),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(4),
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: validateAmount,
+                        controller: amountController,
+                        cursorColor: Colors.white,
+                        cursorWidth: 2.0,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Amount",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       TextFormField(
                         onChanged: (newValue) => setState(() {
@@ -356,27 +368,50 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      Center(
-                        child: NumberPicker(
-                          value: currentDurationValue,
-                          minValue: 1,
-                          maxValue: 90,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => currentDurationValue = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Hours",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
+                        min: 0,
+                        max: 23,
+                        value: currentDurationValueHours.toDouble(),
+                        onChanged: (value) => setState(
+                            () => currentDurationValueHours = value.toInt()),
+                      ),
+                      const SizedBox(height: 15),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Minutes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        min: 0,
+                        max: 59,
+                        value: currentDurationValueMinutes.toDouble(),
+                        onChanged: (value) => setState(
+                            () => currentDurationValueMinutes = value.toInt()),
                       ),
                       Center(
                         child: Text(
-                          currentDurationValue == 1
-                              ? "1 minute"
-                              : "$currentDurationValue minutes",
+                          "${currentDurationValueHours}h ${currentDurationValueMinutes}m",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -416,13 +451,36 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 }
 
-String habitGoalNumber() {
+Widget habitGoalNumber() {
   if (habitGoal == 0) {
-    return "";
+    return Container();
   } else if (habitGoal == 1) {
-    return "$currentAmountValue";
+    return Text(
+      currentAmountValue.toString(),
+      style: const TextStyle(
+          color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+    );
   } else {
-    return "$currentDurationValue";
+    return Column(
+      children: [
+        Visibility(
+          visible: currentDurationValueHours != 0,
+          child: Text(
+            "${currentDurationValueHours}h",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Visibility(
+          visible: currentDurationValueMinutes != 0,
+          child: Text(
+            "${currentDurationValueMinutes}m",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -432,7 +490,7 @@ String habitGoalText() {
   } else if (habitGoal == 1) {
     return amountNameController.text;
   } else {
-    return habitGoalNumber() == "1" ? "minute" : "minutes";
+    return "";
   }
 }
 

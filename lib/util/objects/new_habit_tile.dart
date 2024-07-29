@@ -213,9 +213,39 @@ class _NewHabitTileState extends State<NewHabitTile> {
                                 ),
                               ),
                               Center(
-                                child: Text(
-                                  "${habitBox.getAt(index)!.amountCompleted}/${habitBox.getAt(index)!.amount}",
-                                  style: const TextStyle(color: Colors.white),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Transform.translate(
+                                      offset: const Offset(0, 3),
+                                      child: Text(
+                                        habitBox
+                                            .getAt(index)!
+                                            .amountCompleted
+                                            .toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 10),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      color: Colors.white,
+                                      thickness: 1,
+                                      indent: 15,
+                                      endIndent: 15,
+                                    ),
+                                    Transform.translate(
+                                      offset: const Offset(0, -3),
+                                      child: Text(
+                                        habitBox
+                                            .getAt(index)!
+                                            .amount
+                                            .toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 10),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -248,10 +278,40 @@ class _NewHabitTileState extends State<NewHabitTile> {
                                     ),
                                   ),
                                   Center(
-                                    child: Text(
-                                      "${habitBox.getAt(index)!.durationCompleted}/${habitBox.getAt(index)!.duration}",
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Transform.translate(
+                                          offset: const Offset(0, 3),
+                                          child: Text(
+                                            habitBox
+                                                .getAt(index)!
+                                                .durationCompleted
+                                                .toString(),
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10),
+                                          ),
+                                        ),
+                                        const Divider(
+                                          color: Colors.white,
+                                          thickness: 1,
+                                          indent: 15,
+                                          endIndent: 15,
+                                        ),
+                                        Transform.translate(
+                                          offset: const Offset(0, -3),
+                                          child: Text(
+                                            "${habitBox.getAt(index)!.duration ~/ 60}h ${habitBox.getAt(index)!.duration % 60}m",
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],

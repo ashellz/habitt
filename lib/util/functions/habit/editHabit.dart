@@ -15,6 +15,8 @@ late String editedTo;
 void editHabit(int index, context, editcontroller) {
   editedFrom = habitBox.getAt(index)!.category;
   editedTo = dropDownValue;
+
+  duration = durationMinutes + (durationHours * 60);
   editHeights();
   habitBox.putAt(
       index,

@@ -91,8 +91,10 @@ class _NewHomePageState extends State<NewHomePage> {
             habitGoal = 0;
             dropDownValue = 'Any time';
             amountNameController.text = "times";
+            amountController.text = "2";
             currentAmountValue = 2;
-            currentDurationValue = 1;
+            currentDurationValueHours = 0;
+            currentDurationValueMinutes = 0;
             createcontroller.text = "Habit Name";
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -104,8 +106,10 @@ class _NewHomePageState extends State<NewHomePage> {
               habitGoal = 0;
               dropDownValue = 'Any time';
               amountNameController.text = "times";
+              amountController.text = "2";
               currentAmountValue = 2;
-              currentDurationValue = 1;
+              currentDurationValueHours = 0;
+              currentDurationValueMinutes = 0;
               createcontroller.text = "Habit Name";
             });
           },

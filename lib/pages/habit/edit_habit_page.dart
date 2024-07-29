@@ -1,21 +1,25 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_spinbox/material.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
-import "package:numberpicker/numberpicker.dart";
 import "package:provider/provider.dart";
-
 import 'package:icons_flutter/icons_flutter.dart';
 
 int habitGoalEdit = 0;
 late int amount;
 late int duration;
+late int durationHours;
+late int durationMinutes;
+
 bool updated = false;
-TextEditingController amountNameControllerEdit = TextEditingController();
 bool dropDownChanged = false;
+
+TextEditingController amountNameControllerEdit = TextEditingController();
+TextEditingController amountControllerEdit = TextEditingController();
 
 final formKey = GlobalKey<FormState>();
 
@@ -48,19 +52,21 @@ class _EditHabitPageState extends State<EditHabitPage> {
         amount = habitBox.getAt(widget.index)!.amount;
         amountNameControllerEdit.text =
             habitBox.getAt(widget.index)!.amountName;
-        duration = 1;
+        duration = 0;
+        durationHours = 0;
+        durationMinutes = 0;
       } else if (habitBox.getAt(widget.index)!.duration > 0) {
         habitGoalEdit = 2;
-        duration = habitBox.getAt(widget.index)!.duration == 0
-            ? 1
-            : habitBox.getAt(widget.index)!.duration;
-        amount = habitBox.getAt(widget.index)!.amount == 1
-            ? 2
-            : habitBox.getAt(widget.index)!.amount;
+        duration = habitBox.getAt(widget.index)!.duration;
+        amount = 1;
+        durationHours = duration ~/ 60;
+        durationMinutes = duration % 60;
       } else {
         habitGoalEdit = 0;
-        amount = 2;
-        duration = 1;
+        amount = 1;
+        duration = 0;
+        durationHours = 0;
+        durationMinutes = 0;
       }
 
       if (editcontroller.text.isEmpty) {
@@ -70,6 +76,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
       if (amountNameControllerEdit.text.isEmpty) {
         amountNameControllerEdit.text = "times";
       }
+
+      amountControllerEdit.text = amount.toString();
+
       updated = true;
     }
 
@@ -201,19 +210,16 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           children: [
                             Column(
                               children: [
-                                Text(
-                                  habitGoalNumber(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  habitGoalText(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                habitGoalNumber(),
+                                Visibility(
+                                  visible: habitGoalEdit == 1,
+                                  child: Text(
+                                    habitGoalText(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 )
                               ],
                             )
@@ -281,7 +287,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 20.0),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       filled: true,
                       fillColor: theGreen,
@@ -326,7 +332,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(
@@ -383,6 +389,68 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
+                      TextFormField(
+                        onChanged: (newValue) => setState(() {
+                          String input = amountControllerEdit.text;
+                          if (input.isNotEmpty) {
+                            int value = int.parse(input);
+                            setState(() {
+                              amount = value;
+                            });
+                          }
+                        }),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(4),
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: validateAmount,
+                        controller: amountControllerEdit,
+                        cursorColor: Colors.white,
+                        cursorWidth: 2.0,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Amount",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      TextFormField(
+                        onChanged: (newValue) => setState(() {
+                          amountNameControllerEdit.text = newValue;
+                        }),
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(35),
+                        ],
+                        validator: validateText,
+                        controller: amountNameControllerEdit,
+                        cursorColor: Colors.white,
+                        cursorWidth: 2.0,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Amount Name",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      /*
                       Center(
                         child: NumberPicker(
                           value: amount,
@@ -431,11 +499,70 @@ class _EditHabitPageState extends State<EditHabitPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
+                      ),*/
+                    ],
+                  ),
+                ),
+              ),
+
+              Visibility(
+                visible: habitGoalEdit == 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Column(
+                    children: [
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Hours",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        min: 0,
+                        max: 23,
+                        value: durationHours.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => durationHours = value.toInt()),
+                      ),
+                      const SizedBox(height: 15),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Minutes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        min: 0,
+                        max: 59,
+                        value: durationMinutes.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => durationMinutes = value.toInt()),
+                      ),
+                      Center(
+                        child: Text(
+                          "${durationHours}h ${durationMinutes}m",
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
+              /*
               Visibility(
                 visible: habitGoalEdit == 2,
                 child: Padding(
@@ -446,7 +573,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         child: NumberPicker(
                           value: duration,
                           minValue: 1,
-                          maxValue: 90,
+                          maxValue: 9999,
                           haptics: true,
                           axis: Axis.horizontal,
                           onChanged: (value) =>
@@ -467,7 +594,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     ],
                   ),
                 ),
-              ),
+              ),*/
             ]),
       ),
       bottomSheet: SizedBox(
@@ -506,13 +633,36 @@ class _EditHabitPageState extends State<EditHabitPage> {
   }
 }
 
-String habitGoalNumber() {
+Widget habitGoalNumber() {
   if (habitGoalEdit == 0) {
-    return "";
+    return Container();
   } else if (habitGoalEdit == 1) {
-    return "$amount";
+    return Text(
+      amount.toString(),
+      style: const TextStyle(
+          color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+    );
   } else {
-    return "$duration";
+    return Column(
+      children: [
+        Visibility(
+          visible: durationHours != 0,
+          child: Text(
+            "${durationHours}h",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Visibility(
+          visible: durationMinutes != 0,
+          child: Text(
+            "${durationMinutes}m",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
   }
 }
 
