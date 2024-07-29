@@ -43,7 +43,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Habit duration can now be up to 23 hours and 59 minutes and habit amount up to 9999 times\n- Habit completion is now displayed differently on the home page\n- Changed design when completing the habit\n- Changed design for amount and duration when adding or editing the habit\n- Changed design for the delete habit dialog")
+                        "- Habit duration can now be up to 23 hours and 59 minutes and habit amount up to 9999 times\n- Habit completion is now displayed differently on the home page\n- Changed design when completing the habit\n- Changed design for amount and duration when adding or editing the habit\n- Changed design for the delete habit dialog\n- Changed how picking habit category works")
                   ])),
 
           // 27.07.2024

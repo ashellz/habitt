@@ -188,7 +188,7 @@ class StreakDisplay extends StatelessWidget {
   }
 }
 
-class CheckBox extends StatelessWidget {
+class CheckBox extends StatefulWidget {
   const CheckBox({
     super.key,
     required this.amountCheck,
@@ -205,20 +205,25 @@ class CheckBox extends StatelessWidget {
   final HabitData habit;
 
   @override
+  State<CheckBox> createState() => _CheckBoxState();
+}
+
+class _CheckBoxState extends State<CheckBox> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        checkCompleteHabit(amountCheck, durationCheck, index, context);
+        checkCompleteHabit(widget.amountCheck, widget.durationCheck, widget.index, context);
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-            color: habit.completed ? theOtherGreen : Colors.grey.shade900,
+            color: widget.habit.completed ? theOtherGreen : Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: habitBox.getAt(index)!.completed
+          child: widget.habitBox.getAt(widget.index)!.completed
               ? Stack(
                   children: [
                     Positioned.fill(
@@ -229,12 +234,12 @@ class CheckBox extends StatelessWidget {
                             curve: Curves.easeInOut,
                             tween: Tween<double>(
                               begin: 0,
-                              end: habitBox.getAt(index)!.completed ? 1 : 0,
+                              end: widget.habitBox.getAt(widget.index)!.completed ? 1 : 0,
                             ),
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color: habitBox.getAt(index)!.skipped
+                                color: widget.habitBox.getAt(widget.index)!.skipped
                                     ? Colors.grey.shade800
                                     : theOtherGreen,
                                 backgroundColor: Colors.grey.shade900,
@@ -243,12 +248,12 @@ class CheckBox extends StatelessWidget {
                       ),
                     ),
                     Center(
-                      child: Icon(habit.completed ? Icons.check : Icons.close,
+                      child: Icon(widget.habit.completed ? Icons.check : Icons.close,
                           color: Colors.white),
                     ),
                   ],
                 )
-              : amountCheck
+              : widget.amountCheck
                   ? Stack(
                       children: [
                         Positioned.fill(
@@ -259,13 +264,13 @@ class CheckBox extends StatelessWidget {
                                 curve: Curves.easeInOut,
                                 tween: Tween<double>(
                                   begin: 0,
-                                  end: habitBox.getAt(index)!.amountCompleted /
-                                      habitBox.getAt(index)!.amount,
+                                  end: widget.habitBox.getAt(widget.index)!.amountCompleted /
+                                      widget.habitBox.getAt(widget.index)!.amount,
                                 ),
                                 builder: (context, value, _) {
                                   return LinearProgressIndicator(
                                     value: value,
-                                    color: habitBox.getAt(index)!.skipped
+                                    color: widget.habitBox.getAt(widget.index)!.skipped
                                         ? Colors.grey.shade800
                                         : theOtherGreen,
                                     backgroundColor: Colors.grey.shade900,
@@ -281,8 +286,8 @@ class CheckBox extends StatelessWidget {
                               Transform.translate(
                                 offset: const Offset(0, 3),
                                 child: Text(
-                                  habitBox
-                                      .getAt(index)!
+                                  widget.habitBox
+                                      .getAt(widget.index)!
                                       .amountCompleted
                                       .toString(),
                                   style: const TextStyle(
@@ -298,7 +303,7 @@ class CheckBox extends StatelessWidget {
                               Transform.translate(
                                 offset: const Offset(0, -3),
                                 child: Text(
-                                  habitBox.getAt(index)!.amount.toString(),
+                                  widget.habitBox.getAt(widget.index)!.amount.toString(),
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 10),
                                 ),
@@ -308,7 +313,7 @@ class CheckBox extends StatelessWidget {
                         ),
                       ],
                     )
-                  : durationCheck
+                  : widget.durationCheck
                       ? Stack(
                           children: [
                             Positioned.fill(
@@ -320,10 +325,10 @@ class CheckBox extends StatelessWidget {
                                     curve: Curves.easeInOut,
                                     tween: Tween<double>(
                                       begin: 0,
-                                      end: habitBox
-                                              .getAt(index)!
+                                      end: widget.habitBox
+                                              .getAt(widget.index)!
                                               .durationCompleted /
-                                          habitBox.getAt(index)!.duration,
+                                          widget.habitBox.getAt(widget.index)!.duration,
                                     ),
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
@@ -342,19 +347,19 @@ class CheckBox extends StatelessWidget {
                                   Transform.translate(
                                     offset: const Offset(0, 3),
                                     child: Text(
-                                      habitBox
-                                                      .getAt(index)!
+                                      widget.habitBox
+                                                      .getAt(widget.index)!
                                                       .durationCompleted ~/
                                                   60 ==
                                               0
-                                          ? "${habitBox.getAt(index)!.durationCompleted % 60}m"
-                                          : habitBox
-                                                          .getAt(index)!
+                                          ? "${widget.habitBox.getAt(widget.index)!.durationCompleted % 60}m"
+                                          : widget.habitBox
+                                                          .getAt(widget.index)!
                                                           .durationCompleted %
                                                       60 ==
                                                   0
-                                              ? "${habitBox.getAt(index)!.durationCompleted ~/ 60}h"
-                                              : "${habitBox.getAt(index)!.durationCompleted ~/ 60}h${habitBox.getAt(index)!.durationCompleted % 60}m",
+                                              ? "${widget.habitBox.getAt(widget.index)!.durationCompleted ~/ 60}h"
+                                              : "${widget.habitBox.getAt(widget.index)!.durationCompleted ~/ 60}h${widget.habitBox.getAt(widget.index)!.durationCompleted % 60}m",
                                       style: const TextStyle(
                                           color: Colors.white, fontSize: 10),
                                     ),
@@ -368,7 +373,7 @@ class CheckBox extends StatelessWidget {
                                   Transform.translate(
                                     offset: const Offset(0, -3),
                                     child: Text(
-                                      "${habitBox.getAt(index)!.duration ~/ 60}h${habitBox.getAt(index)!.duration % 60}m",
+                                      "${widget.habitBox.getAt(widget.index)!.duration ~/ 60}h${widget.habitBox.getAt(widget.index)!.duration % 60}m",
                                       style: const TextStyle(
                                           color: Colors.white, fontSize: 10),
                                     ),
@@ -389,7 +394,7 @@ class CheckBox extends StatelessWidget {
                                     curve: Curves.easeInOut,
                                     tween: Tween<double>(
                                       begin: 0,
-                                      end: habitBox.getAt(index)!.completed
+                                      end: widget.habitBox.getAt(widget.index)!.completed
                                           ? 1
                                           : 0,
                                     ),
@@ -404,7 +409,7 @@ class CheckBox extends StatelessWidget {
                             ),
                             Center(
                               child: Icon(
-                                  habit.completed ? Icons.check : Icons.close,
+                                  widget.habit.completed ? Icons.check : Icons.close,
                                   color: Colors.white),
                             ),
                           ],
@@ -413,7 +418,7 @@ class CheckBox extends StatelessWidget {
   }
 }
 
-void checkCompleteHabit(amountCheck, durationCheck, index, context) {
+void checkCompleteHabit(amountCheck, durationCheck, int index, BuildContext context) {
   if (amountCheck == true || durationCheck == true) {
     if (habitBox.getAt(index)!.completed) {
       context.read<HabitProvider>().completeHabitProvider(index);

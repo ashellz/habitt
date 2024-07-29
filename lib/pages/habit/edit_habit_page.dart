@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_spinbox/material.dart";
@@ -39,6 +41,37 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
+  bool _isExpanded = false;
+  bool _isVisible = false;
+  bool _isGestureEnabled = true;
+
+  void _toggleExpansion() {
+    if (_isGestureEnabled) {
+      setState(() {
+        _isGestureEnabled = false;
+      });
+
+      setState(() {
+        _isExpanded = !_isExpanded;
+        if (_isExpanded) {
+          Timer(const Duration(milliseconds: 500), () {
+            setState(() {
+              _isVisible = true;
+            });
+          });
+        } else {
+          _isVisible = false;
+        }
+      });
+
+      Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          _isGestureEnabled = true;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final editcontroller = widget.editcontroller;
@@ -279,6 +312,69 @@ class _EditHabitPageState extends State<EditHabitPage> {
               ),
 
               //DROPDOWN MENU
+
+              Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: AnimatedContainer(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(192, 62, 80, 71),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.fastOutSlowIn,
+                        height: _isExpanded ? 230.0 : 0.0,
+                        width: double.infinity,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 52),
+                              chooseTime(
+                                  _toggleExpansion, "Any time", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Morning", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Afternoon", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Evening", _isVisible),
+                            ])),
+                  ),
+                  GestureDetector(
+                    onTap: _isGestureEnabled ? _toggleExpansion : null,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: theGreen,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        height: 55,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              dropDownValue,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            Icon(
+                                _isExpanded
+                                    ? Icons.expand_less
+                                    : Icons.expand_more,
+                                color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 15),
+
+              /*
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
@@ -312,7 +408,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     },
                   ),
                 ),
-              ),
+              ),*/
               // HABIT GOAL
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
@@ -572,6 +668,27 @@ Widget habitGoalNumber() {
       ],
     );
   }
+}
+
+Widget chooseTime(Function _toggleExpansion, String category, bool _isVisible) {
+  return AnimatedOpacity(
+    opacity: _isVisible ? 1.0 : 0.0,
+    duration: const Duration(milliseconds: 200),
+    curve: Curves.fastOutSlowIn,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 10, bottom: 20),
+      child: GestureDetector(
+          onTap: () {
+            dropDownValue = category;
+            dropDownChanged = true;
+            _toggleExpansion();
+          },
+          child: Text(
+            category,
+            style: const TextStyle(fontSize: 16),
+          )),
+    ),
+  );
 }
 
 String habitGoalText() {
