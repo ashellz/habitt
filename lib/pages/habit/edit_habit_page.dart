@@ -6,6 +6,7 @@ import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
+import "package:habit_tracker/util/objects/confirm_delete_habit.dart";
 import "package:provider/provider.dart";
 import 'package:icons_flutter/icons_flutter.dart';
 
@@ -136,8 +137,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     padding: const EdgeInsets.only(right: 10, top: 5),
                     child: IconButton(
                         onPressed: () {
-                          context.read<HabitProvider>().deleteHabitProvider(
-                              widget.index, context, editcontroller);
+                          showDialog(
+                              context: context,
+                              builder: (context) => confirmDeleteHabit(
+                                  widget.index, editcontroller));
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -389,26 +392,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      TextFormField(
-                        onChanged: (newValue) => setState(() {
-                          String input = amountControllerEdit.text;
-                          if (input.isNotEmpty) {
-                            int value = int.parse(input);
-                            setState(() {
-                              amount = value;
-                            });
-                          }
-                        }),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(4),
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        validator: validateAmount,
-                        controller: amountControllerEdit,
+                      SpinBox(
                         cursorColor: Colors.white,
-                        cursorWidth: 2.0,
-                        style: const TextStyle(color: Colors.white),
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                             borderRadius:
@@ -421,6 +407,11 @@ class _EditHabitPageState extends State<EditHabitPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
+                        min: 2,
+                        max: 9999,
+                        value: amount.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => amount = value.toInt()),
                       ),
                       const SizedBox(
                         height: 15,
@@ -450,56 +441,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           ),
                         ),
                       ),
-                      /*
-                      Center(
-                        child: NumberPicker(
-                          value: amount,
-                          minValue: 2,
-                          maxValue: 100,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) => setState(() => amount = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          "$amount ${amountNameControllerEdit.text}",
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        onChanged: (newValue) => setState(() {
-                          amountNameControllerEdit.text = newValue;
-                        }),
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(35),
-                        ],
-                        validator: validateText,
-                        controller: amountNameControllerEdit,
-                        cursorColor: Colors.white,
-                        cursorWidth: 2.0,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          filled: true,
-                          fillColor: theGreen,
-                          label: const Text(
-                            "Amount Name",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),*/
                     ],
                   ),
                 ),
@@ -562,39 +503,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                 ),
               ),
-              /*
-              Visibility(
-                visible: habitGoalEdit == 2,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: NumberPicker(
-                          value: duration,
-                          minValue: 1,
-                          maxValue: 9999,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => duration = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          duration == 1 ? "1 minute" : "$duration minutes",
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),*/
             ]),
       ),
       bottomSheet: SizedBox(

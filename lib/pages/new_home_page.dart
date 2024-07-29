@@ -34,11 +34,6 @@ bool eveningVisible = false,
     morningVisible = false,
     changed = false,
     deleted = false;
-double anyTimeHeight = 0,
-    containerHeight = 0,
-    eveningHeight = 0,
-    afternoonHeight = 0,
-    morningHeight = 0;
 
 class NewHomePage extends StatefulWidget {
   const NewHomePage({super.key});

@@ -81,13 +81,9 @@ void callbackDispatcher(context) {
   Workmanager().executeTask((task, inputData) async {
     int hour = DateTime.now().hour;
 
-    if (hour >= 4 && hour < 12) {
-      context.watch<HabitProvider>()._mainCategory = "Morning";
-    } else if (hour >= 12 && hour < 19) {
-      context.watch<HabitProvider>()._mainCategory = "Afternoon";
-    } else if (hour >= 19 && hour <= 3) {
-      context.watch<HabitProvider>()._mainCategory = "Evening";
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().chooseMainCategory();
+    });
 
     if (hour == 9) {
       if (boolBox.get("morningNotification") == true) {
@@ -138,35 +134,15 @@ void callbackDispatcher(context) {
 void openCategory() {
   if (morningHasHabits == true) {
     morningVisible = true;
-    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
-      if (habitBox.getAt(i)?.category == 'Morning') {
-        morningHeight += 82;
-      }
-    }
   }
   if (afternoonHasHabits == true) {
     afternoonVisible = true;
-    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
-      if (habitBox.getAt(i)?.category == 'Afternoon') {
-        afternoonHeight += 82;
-      }
-    }
   }
   if (eveningHasHabits == true) {
     eveningVisible = true;
-    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
-      if (habitBox.getAt(i)?.category == 'Evening') {
-        eveningHeight += 82;
-      }
-    }
   }
   if (anytimeHasHabits == true) {
     anyTimeVisible = true;
-    for (int i = 0; i < Hive.box<HabitData>('habits').length; i++) {
-      if (habitBox.getAt(i)?.category == 'Any time') {
-        anyTimeHeight += 82;
-      }
-    }
   }
 }
 

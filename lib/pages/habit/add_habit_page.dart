@@ -297,26 +297,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      TextFormField(
-                        onChanged: (newValue) => setState(() {
-                          String input = amountController.text;
-                          if (input.isNotEmpty) {
-                            int value = int.parse(input);
-                            setState(() {
-                              currentAmountValue = value;
-                            });
-                          }
-                        }),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(4),
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        validator: validateAmount,
-                        controller: amountController,
+                      SpinBox(
                         cursorColor: Colors.white,
-                        cursorWidth: 2.0,
-                        style: const TextStyle(color: Colors.white),
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(
                             borderRadius:
@@ -329,6 +312,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
+                        min: 2,
+                        max: 9999,
+                        value: currentAmountValue.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => currentAmountValue = value.toInt()),
                       ),
                       const SizedBox(
                         height: 15,

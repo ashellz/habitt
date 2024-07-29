@@ -17,7 +17,7 @@ void editHabit(int index, context, editcontroller) {
   editedTo = dropDownValue;
 
   duration = durationMinutes + (durationHours * 60);
-  editHeights();
+
   habitBox.putAt(
       index,
       HabitData(
@@ -45,32 +45,6 @@ void editHabit(int index, context, editcontroller) {
   // showPopup(context, "Habit edited!");
 }
 
-void editHeights() {
-  if (editedFrom == "Morning") {
-    morningHeight -= 82;
-  } else if (editedFrom == "Afternoon") {
-    afternoonHeight -= 82;
-  } else if (editedFrom == "Evening") {
-    eveningHeight -= 82;
-  } else if (editedFrom == "Any time") {
-    anyTimeHeight -= 82;
-  }
-
-  if (editedTo == "Morning") {
-    morningHeight += 82;
-    openCategory("no");
-  } else if (editedTo == "Afternoon") {
-    afternoonHeight += 82;
-    openCategory("no");
-  } else if (editedTo == "Evening") {
-    eveningHeight += 82;
-    openCategory("no");
-  } else if (editedTo == "Any time") {
-    anyTimeHeight += 82;
-    openCategory("no");
-  }
-}
-
 void openCategory(String key) {
   if (dropDownValue == "Morning") {
     if (morningHasHabits == false) {
@@ -78,13 +52,6 @@ void openCategory(String key) {
     }
     if (morningVisible == false) {
       morningVisible = true;
-      for (int i = 0; i < habitListLenght; i++) {
-        if (habitBox.getAt(i)?.category == 'Morning') {
-          morningHeight += 82;
-        }
-      }
-    } else if (key == "created") {
-      morningHeight += 82;
     }
   } else if (dropDownValue == "Afternoon") {
     if (afternoonHasHabits == false) {
@@ -92,13 +59,6 @@ void openCategory(String key) {
     }
     if (afternoonVisible == false) {
       afternoonVisible = true;
-      for (int i = 0; i < habitListLenght; i++) {
-        if (habitBox.getAt(i)?.category == 'Afternoon') {
-          afternoonHeight += 82;
-        }
-      }
-    } else if (key == "created") {
-      afternoonHeight += 82;
     }
   } else if (dropDownValue == "Evening") {
     if (eveningHasHabits == false) {
@@ -106,13 +66,6 @@ void openCategory(String key) {
     }
     if (eveningVisible == false) {
       eveningVisible = true;
-      for (int i = 0; i < habitListLenght; i++) {
-        if (habitBox.getAt(i)?.category == 'Evening') {
-          eveningHeight += 82;
-        }
-      }
-    } else if (key == "created") {
-      eveningHeight += 82;
     }
   } else if (dropDownValue == "Any time") {
     if (anytimeHasHabits == false) {
@@ -120,13 +73,6 @@ void openCategory(String key) {
     }
     if (anyTimeVisible == false) {
       anyTimeVisible = true;
-      for (int i = 0; i < habitListLenght; i++) {
-        if (habitBox.getAt(i)?.category == 'Any time') {
-          anyTimeHeight += 82;
-        }
-      }
-    } else if (key == "created") {
-      anyTimeHeight += 82;
     }
   }
 }
