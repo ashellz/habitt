@@ -1,71 +1,59 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:habit_tracker/main.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 
 void checkForNotifications() async {
-  var notificationBox = Hive.box('notifications');
-
-  DateTime now = DateTime.now();
-  print("Hour: ${now.hour}");
-
-  if (notificationBox.get('morningNotification') == true &&
-      now.hour == 7 &&
-      morningHasHabits == true) {
-    triggerMorningNotification();
-  } else if (notificationBox.get('afternoonNotification') == true &&
-      now.hour == 14 &&
-      afternoonHasHabits == true) {
-    triggerAfternoonNotification();
-  } else if (notificationBox.get('eveningNotification') == true &&
-      now.hour == 21 &&
-      eveningHasHabits == true) {
-    triggerEveningNotification();
-  } else if (notificationBox.get('dailyNotification') == true &&
-      now.hour == 19) {
-    triggerReminderNotification();
+  if (boolBox.get("morningNotification") == true) {
+    await AwesomeNotifications().createNotification(
+        schedule:
+            NotificationCalendar(hour: 9, minute: 0, second: 0, repeats: true),
+        content: NotificationContent(
+          id: 1,
+          channelKey: 'basic_channel',
+          title: 'Morning Habits',
+          body:
+              "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
+        ));
+  } else {
+    await AwesomeNotifications().cancel(1);
   }
-}
-
-void triggerMorningNotification() async {
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Morning Habits',
-      body: "Good morning! Time to start your day!",
-    ),
-  );
-}
-
-void triggerAfternoonNotification() async {
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Afternoon Habits',
-      body: "Good afternoon! Don't forget about your habits!",
-    ),
-  );
-}
-
-void triggerEveningNotification() async {
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Evening Habits',
-      body: "Good evening! Time to wind down.",
-    ),
-  );
-}
-
-void triggerReminderNotification() async {
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: 1234,
-      channelKey: 'basic_channel',
-      title: 'Check your habits',
-      body: "It's 7 PM! Daily check-in time.",
-    ),
-  );
+  if (boolBox.get("afternoonNotification") == true) {
+    await AwesomeNotifications().createNotification(
+        schedule:
+            NotificationCalendar(hour: 14, minute: 0, second: 0, repeats: true),
+        content: NotificationContent(
+          id: 2,
+          channelKey: 'basic_channel',
+          title: 'Afternoon Habits',
+          body: 'Keep the momentum going with your afternoon habits! ☀️',
+        ));
+  } else {
+    await AwesomeNotifications().cancel(2);
+  }
+  if (boolBox.get("eveningNotification") == true) {
+    await AwesomeNotifications().createNotification(
+        schedule:
+            NotificationCalendar(hour: 21, minute: 0, second: 0, repeats: true),
+        content: NotificationContent(
+          id: 3,
+          channelKey: 'basic_channel',
+          title: 'Evening Habits',
+          body: 'Finish strong by completing your evening habits! 🌙',
+        ));
+  } else {
+    await AwesomeNotifications().cancel(3);
+  }
+  if (boolBox.get("dailyNotification") == true) {
+    await AwesomeNotifications().createNotification(
+        schedule:
+            NotificationCalendar(hour: 9, minute: 0, second: 0, repeats: true),
+        content: NotificationContent(
+          id: 4,
+          channelKey: 'basic_channel',
+          title: 'Remaining Habits',
+          body:
+              "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
+        ));
+  } else {
+    await AwesomeNotifications().cancel(4);
+  }
 }

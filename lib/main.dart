@@ -6,6 +6,7 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -46,6 +47,7 @@ Future<void> main() async {
 
   hasHabits();
   openCategory();
+  checkForNotifications();
 
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
@@ -79,53 +81,9 @@ Future<void> main() async {
 @pragma('vm:entry-point')
 void callbackDispatcher(context) {
   Workmanager().executeTask((task, inputData) async {
-    int hour = DateTime.now().hour;
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
     });
-
-    if (hour == 9) {
-      if (boolBox.get("morningNotification") == true) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 1,
-          channelKey: 'basic_channel',
-          title: 'Morning Habits',
-          body:
-              "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
-        ));
-      }
-    } else if (hour == 14) {
-      if (boolBox.get("afternoonNotification") == true) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 2,
-          channelKey: 'basic_channel',
-          title: 'Afternoon Habits',
-          body: 'Keep the momentum going with your afternoon habits! ☀️',
-        ));
-      }
-    } else if (hour == 21) {
-      if (boolBox.get("eveningNotification") == true) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 3,
-          channelKey: 'basic_channel',
-          title: 'Evening Habits',
-          body: 'Finish strong by completing your evening habits! 🌙',
-        ));
-      } else if (hour == 19) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 4,
-          channelKey: 'basic_channel',
-          title: 'Remaining Habits',
-          body:
-              "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
-        ));
-      }
-    }
 
     return Future.value(true);
   });

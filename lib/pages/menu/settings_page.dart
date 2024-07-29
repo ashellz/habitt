@@ -3,6 +3,7 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
@@ -56,10 +57,34 @@ class _SettingsPageState extends State<SettingsPage> {
               groupValue: notifValue,
               activeColor: theLightGreen,
               title: const Text(
+                "Don't notify me",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              value: 1,
+              onChanged: (value) {
+                setState(() {
+                  notifValue = value!;
+                  streakBox.put('notifValue', value);
+                  boolBox.put('dailyNotification', false);
+                  boolBox.put('morningNotification', false);
+                  boolBox.put('afternoonNotification', false);
+                  boolBox.put('eveningNotification', false);
+                });
+
+                checkForNotifications();
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: RadioListTile(
+              groupValue: notifValue,
+              activeColor: theLightGreen,
+              title: const Text(
                 "Once a day",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              value: 0,
+              value: 1,
               onChanged: (value) {
                 setState(() {
                   notifValue = value!;
@@ -69,6 +94,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   boolBox.put('afternoonNotification', false);
                   boolBox.put('eveningNotification', false);
                 });
+
+                checkForNotifications();
               },
             ),
           ),
@@ -81,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 "Three times a day",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              value: 1,
+              value: 2,
               onChanged: (value) {
                 setState(() {
                   notifValue = value!;
@@ -91,6 +118,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   boolBox.put('afternoonNotification', true);
                   boolBox.put('eveningNotification', true);
                 });
+
+                checkForNotifications();
               },
             ),
           ),
@@ -103,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 "Custom",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              value: 2,
+              value: 3,
               onChanged: (value) {
                 setState(() {
                   notifValue = value!;
@@ -113,13 +142,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   boolBox.put('afternoonNotification', false);
                   boolBox.put('eveningNotification', false);
                 });
+
+                checkForNotifications();
               },
             ),
           ),
           AnimatedContainer(
             color: Colors.black,
             duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
+            height: notifValue == 3 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
             child: AnimatedOpacity(
               opacity: notifValue == 2 ? 1.0 : 0.0,
@@ -136,6 +167,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           boolBox.put('morningNotification',
                               !boolBox.get('morningNotification')!);
                         });
+
+                        checkForNotifications();
                       },
                     ),
                     const Text(
@@ -167,6 +200,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           boolBox.put('afternoonNotification',
                               !boolBox.get('afternoonNotification')!);
                         });
+
+                        checkForNotifications();
                       },
                     ),
                     const Text(
@@ -198,6 +233,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           boolBox.put('eveningNotification',
                               !boolBox.get('eveningNotification')!);
                         });
+
+                        checkForNotifications();
                       },
                     ),
                     const Text(
@@ -229,7 +266,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           boolBox.put('dailyNotification',
                               !boolBox.get('dailyNotification')!);
                         });
-                        print(boolBox.get('dailyNotification'));
+
+                        checkForNotifications();
                       },
                     ),
                     const Text(
