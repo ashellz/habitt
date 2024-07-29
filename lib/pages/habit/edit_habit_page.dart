@@ -1,21 +1,28 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_spinbox/material.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
-import "package:numberpicker/numberpicker.dart";
+import "package:habit_tracker/util/objects/confirm_delete_habit.dart";
 import "package:provider/provider.dart";
-
 import 'package:icons_flutter/icons_flutter.dart';
 
 int habitGoalEdit = 0;
 late int amount;
 late int duration;
+late int durationHours;
+late int durationMinutes;
+
 bool updated = false;
-TextEditingController amountNameControllerEdit = TextEditingController();
 bool dropDownChanged = false;
+
+TextEditingController amountNameControllerEdit = TextEditingController();
+TextEditingController amountControllerEdit = TextEditingController();
 
 final formKey = GlobalKey<FormState>();
 
@@ -34,6 +41,37 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
+  bool _isExpanded = false;
+  bool _isVisible = false;
+  bool _isGestureEnabled = true;
+
+  void _toggleExpansion() {
+    if (_isGestureEnabled) {
+      setState(() {
+        _isGestureEnabled = false;
+      });
+
+      setState(() {
+        _isExpanded = !_isExpanded;
+        if (_isExpanded) {
+          Timer(const Duration(milliseconds: 500), () {
+            setState(() {
+              _isVisible = true;
+            });
+          });
+        } else {
+          _isVisible = false;
+        }
+      });
+
+      Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          _isGestureEnabled = true;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final editcontroller = widget.editcontroller;
@@ -48,19 +86,21 @@ class _EditHabitPageState extends State<EditHabitPage> {
         amount = habitBox.getAt(widget.index)!.amount;
         amountNameControllerEdit.text =
             habitBox.getAt(widget.index)!.amountName;
-        duration = 1;
+        duration = 0;
+        durationHours = 0;
+        durationMinutes = 0;
       } else if (habitBox.getAt(widget.index)!.duration > 0) {
         habitGoalEdit = 2;
-        duration = habitBox.getAt(widget.index)!.duration == 0
-            ? 1
-            : habitBox.getAt(widget.index)!.duration;
-        amount = habitBox.getAt(widget.index)!.amount == 1
-            ? 2
-            : habitBox.getAt(widget.index)!.amount;
+        duration = habitBox.getAt(widget.index)!.duration;
+        amount = 1;
+        durationHours = duration ~/ 60;
+        durationMinutes = duration % 60;
       } else {
         habitGoalEdit = 0;
-        amount = 2;
-        duration = 1;
+        amount = 1;
+        duration = 0;
+        durationHours = 0;
+        durationMinutes = 0;
       }
 
       if (editcontroller.text.isEmpty) {
@@ -70,6 +110,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
       if (amountNameControllerEdit.text.isEmpty) {
         amountNameControllerEdit.text = "times";
       }
+
+      amountControllerEdit.text = amount.toString();
+
       updated = true;
     }
 
@@ -127,8 +170,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     padding: const EdgeInsets.only(right: 10, top: 5),
                     child: IconButton(
                         onPressed: () {
-                          context.read<HabitProvider>().deleteHabitProvider(
-                              widget.index, context, editcontroller);
+                          showDialog(
+                              context: context,
+                              builder: (context) => confirmDeleteHabit(
+                                  widget.index, editcontroller));
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -201,19 +246,16 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           children: [
                             Column(
                               children: [
-                                Text(
-                                  habitGoalNumber(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  habitGoalText(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                habitGoalNumber(),
+                                Visibility(
+                                  visible: habitGoalEdit == 1,
+                                  child: Text(
+                                    habitGoalText(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 )
                               ],
                             )
@@ -270,6 +312,69 @@ class _EditHabitPageState extends State<EditHabitPage> {
               ),
 
               //DROPDOWN MENU
+
+              Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: AnimatedContainer(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(192, 62, 80, 71),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.fastOutSlowIn,
+                        height: _isExpanded ? 230.0 : 0.0,
+                        width: double.infinity,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 52),
+                              chooseTime(
+                                  _toggleExpansion, "Any time", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Morning", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Afternoon", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Evening", _isVisible),
+                            ])),
+                  ),
+                  GestureDetector(
+                    onTap: _isGestureEnabled ? _toggleExpansion : null,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: theGreen,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        height: 55,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              dropDownValue,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            Icon(
+                                _isExpanded
+                                    ? Icons.expand_less
+                                    : Icons.expand_more,
+                                color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 15),
+
+              /*
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
@@ -281,7 +386,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 20.0),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       filled: true,
                       fillColor: theGreen,
@@ -303,7 +408,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     },
                   ),
                 ),
-              ),
+              ),*/
               // HABIT GOAL
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
@@ -326,7 +431,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(
@@ -383,29 +488,29 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      Center(
-                        child: NumberPicker(
-                          value: amount,
-                          minValue: 2,
-                          maxValue: 100,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) => setState(() => amount = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
+                      SpinBox(
+                        cursorColor: Colors.white,
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Amount",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                      ),
-                      Center(
-                        child: Text(
-                          "$amount ${amountNameControllerEdit.text}",
-                          style: const TextStyle(color: Colors.white),
-                        ),
+                        min: 2,
+                        max: 9999,
+                        value: amount.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => amount = value.toInt()),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       TextFormField(
                         onChanged: (newValue) => setState(() {
@@ -436,31 +541,57 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                 ),
               ),
+
               Visibility(
                 visible: habitGoalEdit == 2,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      Center(
-                        child: NumberPicker(
-                          value: duration,
-                          minValue: 1,
-                          maxValue: 90,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => duration = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Hours",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
+                        min: 0,
+                        max: 23,
+                        value: durationHours.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => durationHours = value.toInt()),
+                      ),
+                      const SizedBox(height: 15),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Minutes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        min: 0,
+                        max: 59,
+                        value: durationMinutes.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => durationMinutes = value.toInt()),
                       ),
                       Center(
                         child: Text(
-                          duration == 1 ? "1 minute" : "$duration minutes",
+                          "${durationHours}h ${durationMinutes}m",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -506,14 +637,58 @@ class _EditHabitPageState extends State<EditHabitPage> {
   }
 }
 
-String habitGoalNumber() {
+Widget habitGoalNumber() {
   if (habitGoalEdit == 0) {
-    return "";
+    return Container();
   } else if (habitGoalEdit == 1) {
-    return "$amount";
+    return Text(
+      amount.toString(),
+      style: const TextStyle(
+          color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+    );
   } else {
-    return "$duration";
+    return Column(
+      children: [
+        Visibility(
+          visible: durationHours != 0,
+          child: Text(
+            "${durationHours}h",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Visibility(
+          visible: durationMinutes != 0,
+          child: Text(
+            "${durationMinutes}m",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
   }
+}
+
+Widget chooseTime(Function _toggleExpansion, String category, bool _isVisible) {
+  return AnimatedOpacity(
+    opacity: _isVisible ? 1.0 : 0.0,
+    duration: const Duration(milliseconds: 200),
+    curve: Curves.fastOutSlowIn,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 10, bottom: 20),
+      child: GestureDetector(
+          onTap: () {
+            dropDownValue = category;
+            dropDownChanged = true;
+            _toggleExpansion();
+          },
+          child: Text(
+            category,
+            style: const TextStyle(fontSize: 16),
+          )),
+    ),
+  );
 }
 
 String habitGoalText() {
@@ -531,13 +706,43 @@ String truncatedText(BuildContext context, editcontroller) {
   int maxLength;
 
   if (screenWidth < 300) {
-    maxLength = 8; // very small screen
+    if (habitGoalEdit == 0) {
+      maxLength = 12;
+    } else {
+      maxLength = 8;
+    } // very small screen
   } else if (screenWidth < 400) {
-    maxLength = 12; // small screen
+    if (habitGoalEdit == 0) {
+      maxLength = 14;
+    } else {
+      maxLength = 10;
+    } // small screen
   } else if (screenWidth < 500) {
-    maxLength = 15; // medium screen
+    if (habitGoalEdit == 0) {
+      maxLength = 19;
+    } else {
+      maxLength = 15;
+    } // medium screen
+  } else if (screenWidth < 600) {
+    if (habitGoalEdit == 0) {
+      maxLength = 24;
+    } else {
+      maxLength = 20;
+    } // larger screen
+  } else if (screenWidth < 650) {
+    if (habitGoalEdit == 0) {
+      maxLength = 30;
+    } else {
+      maxLength = 24;
+    } // very large screen
+  } else if (screenWidth < 750) {
+    if (habitGoalEdit == 0) {
+      maxLength = 35;
+    } else {
+      maxLength = 28;
+    } // very very large screen
   } else {
-    maxLength = 24; // larger screen
+    maxLength = 35; // tablet
   }
 
   String name = editcontroller.text;

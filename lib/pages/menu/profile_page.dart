@@ -64,48 +64,51 @@ class _ProfilePageState extends State<ProfilePage> {
         body: ListView(
           padding: const EdgeInsets.only(left: 20, top: 30, right: 20),
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Profile of",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Transform.translate(
-                  offset: const Offset(0, -10),
-                  child: Text(
-                    stringBox.get("username") ?? 'Guest',
+            Padding(
+              padding: textPadding(context),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Profile of",
                     style: TextStyle(
-                      color: theLightGreen,
-                      fontSize: 42,
+                      color: Colors.white,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
-            ),
-            Transform.translate(
-                offset: const Offset(0, -15),
-                child: Text(userEmail, style: const TextStyle(fontSize: 18))),
-            const SizedBox(
-              height: 50,
+                  Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: Text(
+                      stringBox.get("username") ?? 'Guest',
+                      style: TextStyle(
+                        color: theLightGreen,
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Transform.translate(
+                      offset: const Offset(0, -15),
+                      child: Text(userEmail,
+                          style: const TextStyle(fontSize: 18))),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
             ),
 
             // change username
 
             Wrap(
                 alignment: WrapAlignment.center,
-                spacing: 20,
-                runSpacing: 20,
+                spacing: wrapSpacing(context),
+                runSpacing: wrapSpacing(context),
                 children: [
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
-                          MediaQuery.of(context).size.width / 2.4),
+                      fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theLightGreen, width: 3),
                       shape: const RoundedRectangleBorder(
@@ -120,11 +123,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           return editProfileDialog(
                               context, "Change username", updateUsername);
                         }),
-                    child: const Text(
+                    child: Text(
                         textAlign: TextAlign.center,
                         "Change Username",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: fontSize(context),
                         )),
                   ),
 
@@ -132,8 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
-                          MediaQuery.of(context).size.width / 2.4),
+                      fixedSize: buttonSize(context),
                       disabledForegroundColor: Colors.grey,
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theLightGreen, width: 3),
@@ -148,19 +150,18 @@ class _ProfilePageState extends State<ProfilePage> {
                             backupHiveBoxesToFirebase(userId).whenComplete(() =>
                                 setState(() => uploadButtonEnabled = true));
                           },
-                    child: const Text(
+                    child: Text(
                         textAlign: TextAlign.center,
                         "Upload Data",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: fontSize(context),
                         )),
                   ),
 
                   //sign out
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
-                          MediaQuery.of(context).size.width / 2.4),
+                      fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theYellowColor, width: 3),
                       shape: const RoundedRectangleBorder(
@@ -170,11 +171,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () => showDialog(
                         context: context,
                         builder: (context) => confirmSignOut(context)),
-                    child: const Text(
+                    child: Text(
                         textAlign: TextAlign.center,
                         "Sign out",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: fontSize(context),
                         )),
                   ),
 
@@ -182,8 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      fixedSize: Size(MediaQuery.of(context).size.width / 2.4,
-                          MediaQuery.of(context).size.width / 2.4),
+                      fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       side: BorderSide(color: theRedColor, width: 3),
                       shape: const RoundedRectangleBorder(
@@ -196,11 +196,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (context) => confirmDeleteAccount())
                           .whenComplete(() => confirmAgain = false);
                     },
-                    child: const Text(
+                    child: Text(
                         textAlign: TextAlign.center,
                         "Delete Account",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: fontSize(context),
                         )),
                   ),
                 ]),
@@ -208,5 +208,43 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
     }
+  }
+
+  Size buttonSize(BuildContext context) {
+    if (MediaQuery.of(context).size.width < 360) {
+      return Size(MediaQuery.of(context).size.width / 2.6,
+          MediaQuery.of(context).size.width / 2.6);
+    } else {
+      return Size(MediaQuery.of(context).size.width / 2.4,
+          MediaQuery.of(context).size.width / 2.4);
+    }
+  }
+}
+
+double fontSize(BuildContext context) {
+  if (MediaQuery.of(context).size.width < 360) {
+    return 14;
+  } else {
+    return 18;
+  }
+}
+
+double wrapSpacing(context) {
+  if (MediaQuery.of(context).size.width > 600) {
+    return 50;
+  } else {
+    return 20;
+  }
+}
+
+EdgeInsetsGeometry textPadding(context) {
+  if (MediaQuery.of(context).size.width < 400) {
+    return const EdgeInsets.all(6);
+  } else if (MediaQuery.of(context).size.width < 600) {
+    return const EdgeInsets.all(7);
+  } else if (MediaQuery.of(context).size.width < 800) {
+    return const EdgeInsets.all(20);
+  } else {
+    return const EdgeInsets.all(40);
   }
 }

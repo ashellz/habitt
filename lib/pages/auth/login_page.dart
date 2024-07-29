@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/signup_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
@@ -200,6 +199,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   );
+                  stringBox.put("username", "Guest");
                   newAccountDownloadData(context);
                 },
                 child: const Text(

@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -264,6 +265,30 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
+          Visibility(
+            visible: boolBox.get("disabledBatteryOptimization") == false,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20, top: 20),
+              child: Center(
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        WidgetStateProperty.all<Color>(theLightGreen),
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: () => disableBatteryOptimization(),
+                  child: const Text(
+                    "Disable Battery Optimization",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+          ),
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
@@ -313,12 +338,18 @@ void requestNotificationAccess() {
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
     if (!isAllowed) {
       AwesomeNotifications().requestPermissionToSendNotifications();
+    } else {
+      boolBox.put('hasNotificationAccess', true);
     }
-    AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: 1234,
-            channelKey: 'basic_channel',
-            title: 'Basic Notification',
-            body: 'Notification Body'));
   });
+}
+
+void disableBatteryOptimization() async {
+  bool? isBatteryOptimizationDisabled =
+      await DisableBatteryOptimization.isBatteryOptimizationDisabled;
+  if (isBatteryOptimizationDisabled == false) {
+    await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+  } else {
+    await boolBox.put('disabledBatteryOptimization', true);
+  }
 }

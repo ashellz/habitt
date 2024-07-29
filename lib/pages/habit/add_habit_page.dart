@@ -1,17 +1,23 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter/widgets.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
-import "package:numberpicker/numberpicker.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
 import "package:provider/provider.dart";
+import 'package:flutter_spinbox/material.dart';
 
 int habitGoal = 0;
 int currentAmountValue = 2;
-int currentDurationValue = 1;
+int currentDurationValueHours = 0;
+int currentDurationValueMinutes = 0;
+int currentDurationValue = 0;
 
 TextEditingController amountNameController = TextEditingController();
+TextEditingController amountController = TextEditingController();
 
 final formKey = GlobalKey<FormState>();
 
@@ -25,6 +31,37 @@ class AddHabitPage extends StatefulWidget {
 }
 
 class _AddHabitPageState extends State<AddHabitPage> {
+  bool _isExpanded = false;
+  bool _isVisible = false;
+  bool _isGestureEnabled = true;
+
+  void _toggleExpansion() {
+    if (_isGestureEnabled) {
+      setState(() {
+        _isGestureEnabled = false;
+      });
+
+      setState(() {
+        _isExpanded = !_isExpanded;
+        if (_isExpanded) {
+          Timer(const Duration(milliseconds: 500), () {
+            setState(() {
+              _isVisible = true;
+            });
+          });
+        } else {
+          _isVisible = false;
+        }
+      });
+
+      Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          _isGestureEnabled = true;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var createcontroller = widget.createcontroller;
@@ -118,19 +155,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           children: [
                             Column(
                               children: [
-                                Text(
-                                  habitGoalNumber(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  habitGoalText(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                habitGoalNumber(),
+                                Visibility(
+                                  visible: habitGoal == 1,
+                                  child: Text(
+                                    habitGoalText(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 )
                               ],
                             )
@@ -188,6 +222,68 @@ class _AddHabitPageState extends State<AddHabitPage> {
               ),
 
               // DROPDOWN MENU
+
+              Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: AnimatedContainer(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(192, 62, 80, 71),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.fastOutSlowIn,
+                        height: _isExpanded ? 230.0 : 0.0,
+                        width: double.infinity,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 52),
+                              chooseTime(
+                                  _toggleExpansion, "Any time", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Morning", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Afternoon", _isVisible),
+                              chooseTime(
+                                  _toggleExpansion, "Evening", _isVisible),
+                            ])),
+                  ),
+                  GestureDetector(
+                    onTap: _isGestureEnabled ? _toggleExpansion : null,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: theGreen,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        height: 55,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              dropDownValue,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            Icon(
+                                _isExpanded
+                                    ? Icons.expand_less
+                                    : Icons.expand_more,
+                                color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 15),
+              /*
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
@@ -219,7 +315,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     },
                   ),
                 ),
-              ),
+              ),*/
 
               // HABIT GOAL
               Padding(
@@ -241,7 +337,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(
@@ -265,7 +361,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           if (habitGoal == 2) {
                             habitGoal = 0;
                           } else {
-                            currentDurationValue = 1;
+                            currentDurationValueHours = 0;
+                            currentDurationValueMinutes = 0;
                             habitGoal = 2;
                           }
                         });
@@ -273,7 +370,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(
@@ -296,30 +393,29 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      Center(
-                        child: NumberPicker(
-                          value: currentAmountValue,
-                          minValue: 2,
-                          maxValue: 90,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => currentAmountValue = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
+                      SpinBox(
+                        cursorColor: Colors.white,
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Amount",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
-                      ),
-                      Center(
-                        child: Text(
-                          "$currentAmountValue ${amountNameController.text}",
-                          style: const TextStyle(color: Colors.white),
-                        ),
+                        min: 2,
+                        max: 9999,
+                        value: currentAmountValue.toDouble(),
+                        onChanged: (value) =>
+                            setState(() => currentAmountValue = value.toInt()),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
                       TextFormField(
                         onChanged: (newValue) => setState(() {
@@ -356,27 +452,50 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     children: [
-                      Center(
-                        child: NumberPicker(
-                          value: currentDurationValue,
-                          minValue: 1,
-                          maxValue: 90,
-                          haptics: true,
-                          axis: Axis.horizontal,
-                          onChanged: (value) =>
-                              setState(() => currentDurationValue = value),
-                          textStyle: const TextStyle(color: Colors.white),
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Hours",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
+                        min: 0,
+                        max: 23,
+                        value: currentDurationValueHours.toDouble(),
+                        onChanged: (value) => setState(
+                            () => currentDurationValueHours = value.toInt()),
+                      ),
+                      const SizedBox(height: 15),
+                      SpinBox(
+                        iconColor: WidgetStateProperty.all<Color>(Colors.white),
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          filled: true,
+                          fillColor: theGreen,
+                          label: const Text(
+                            "Minutes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        min: 0,
+                        max: 59,
+                        value: currentDurationValueMinutes.toDouble(),
+                        onChanged: (value) => setState(
+                            () => currentDurationValueMinutes = value.toInt()),
                       ),
                       Center(
                         child: Text(
-                          currentDurationValue == 1
-                              ? "1 minute"
-                              : "$currentDurationValue minutes",
+                          "${currentDurationValueHours}h ${currentDurationValueMinutes}m",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -416,13 +535,56 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 }
 
-String habitGoalNumber() {
+Widget chooseTime(Function _toggleExpansion, String category, bool _isVisible) {
+  return AnimatedOpacity(
+    opacity: _isVisible ? 1.0 : 0.0,
+    duration: const Duration(milliseconds: 200),
+    curve: Curves.fastOutSlowIn,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 10, bottom: 20),
+      child: GestureDetector(
+          onTap: () {
+            dropDownValue = category;
+            _toggleExpansion();
+          },
+          child: Text(
+            category,
+            style: const TextStyle(fontSize: 16),
+          )),
+    ),
+  );
+}
+
+Widget habitGoalNumber() {
   if (habitGoal == 0) {
-    return "";
+    return Container();
   } else if (habitGoal == 1) {
-    return "$currentAmountValue";
+    return Text(
+      currentAmountValue.toString(),
+      style: const TextStyle(
+          color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+    );
   } else {
-    return "$currentDurationValue";
+    return Column(
+      children: [
+        Visibility(
+          visible: currentDurationValueHours != 0,
+          child: Text(
+            "${currentDurationValueHours}h",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Visibility(
+          visible: currentDurationValueMinutes != 0,
+          child: Text(
+            "${currentDurationValueMinutes}m",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -432,7 +594,7 @@ String habitGoalText() {
   } else if (habitGoal == 1) {
     return amountNameController.text;
   } else {
-    return habitGoalNumber() == "1" ? "minute" : "minutes";
+    return "";
   }
 }
 
@@ -441,13 +603,43 @@ String truncatedText(BuildContext context, createcontroller) {
   int maxLength;
 
   if (screenWidth < 300) {
-    maxLength = 8; // very small screen
+    if (habitGoal == 0) {
+      maxLength = 12;
+    } else {
+      maxLength = 8;
+    } // very small screen
   } else if (screenWidth < 400) {
-    maxLength = 12; // small screen
+    if (habitGoal == 0) {
+      maxLength = 14;
+    } else {
+      maxLength = 10;
+    } // small screen
   } else if (screenWidth < 500) {
-    maxLength = 15; // medium screen
+    if (habitGoal == 0) {
+      maxLength = 19;
+    } else {
+      maxLength = 15;
+    } // medium screen
+  } else if (screenWidth < 600) {
+    if (habitGoal == 0) {
+      maxLength = 24;
+    } else {
+      maxLength = 20;
+    } // larger screen
+  } else if (screenWidth < 650) {
+    if (habitGoal == 0) {
+      maxLength = 30;
+    } else {
+      maxLength = 24;
+    } // very large screen
+  } else if (screenWidth < 750) {
+    if (habitGoal == 0) {
+      maxLength = 35;
+    } else {
+      maxLength = 28;
+    } // very very large screen
   } else {
-    maxLength = 24; // larger screen
+    maxLength = 35; // tablet
   }
 
   String name = createcontroller.text;

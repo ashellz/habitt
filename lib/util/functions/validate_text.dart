@@ -48,6 +48,17 @@ String? validatePasswordLogin(String? value) {
   return null;
 }
 
+String? validateAmount(String? value) {
+  if (value?.isEmpty ?? true) {
+    return 'Please enter a number';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Please enter a number';
+  } else if (int.parse(value) < 2) {
+    return 'Please enter a number greater than 1';
+  }
+  return null;
+}
+
 String? validateText(String? value) {
   if (value?.isEmpty ?? true) {
     return 'Please enter some text';

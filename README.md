@@ -92,6 +92,9 @@ Add weekly habits
 
 - Complete them 1 to 6 times a week
 - Make the user select how many times a week to do it (the exact days don't matter for now)
-- Make it so the user can skip the habit for the day in the home page
+
+# - Make it so the user can skip the habit for the day in the home page
+
 - Streaks update every time the habit is done at the end of the day, it won't be reset until there are no more days in the week left for the habit to be completed that many times
 - If the user decides to complete the habit more times a week than specified, the streak will go up
+- All habits completed streak will grow wether the weekly habit has been done or no, except if there are no more days left for the habit to be completed that many times a week
