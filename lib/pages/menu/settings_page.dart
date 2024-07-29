@@ -37,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
             child: Text(
-              "Notifications (in development)",
+              "Notification",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 "Don't notify me",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              value: 1,
+              value: 0,
               onChanged: (value) {
                 setState(() {
                   notifValue = value!;
@@ -153,7 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
             height: notifValue == 3 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
             child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
+              opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
                 padding: const EdgeInsets.only(left: 43),
@@ -183,10 +183,10 @@ class _SettingsPageState extends State<SettingsPage> {
           AnimatedContainer(
             color: Colors.black,
             duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
+            height: notifValue == 3 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
             child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
+              opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
                 padding: const EdgeInsets.only(left: 43),
@@ -216,10 +216,10 @@ class _SettingsPageState extends State<SettingsPage> {
           AnimatedContainer(
             color: Colors.black,
             duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
+            height: notifValue == 3 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
             child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
+              opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
                 padding: const EdgeInsets.only(left: 43),
@@ -249,10 +249,10 @@ class _SettingsPageState extends State<SettingsPage> {
           AnimatedContainer(
             color: Colors.black,
             duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
+            height: notifValue == 3 ? 60 : 0,
             curve: Curves.fastOutSlowIn,
             child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
+              opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
                 padding: const EdgeInsets.only(left: 43),

@@ -45,7 +45,7 @@ void checkForNotifications() async {
   if (boolBox.get("dailyNotification") == true) {
     await AwesomeNotifications().createNotification(
         schedule:
-            NotificationCalendar(hour: 9, minute: 0, second: 0, repeats: true),
+            NotificationCalendar(hour: 19, minute: 0, second: 0, repeats: true),
         content: NotificationContent(
           id: 4,
           channelKey: 'basic_channel',
