@@ -98,3 +98,6 @@ Add weekly habits
 - Streaks update every time the habit is done at the end of the day, it won't be reset until there are no more days in the week left for the habit to be completed that many times
 - If the user decides to complete the habit more times a week than specified, the streak will go up
 - All habits completed streak will grow wether the weekly habit has been done or no, except if there are no more days left for the habit to be completed that many times a week
+
+
+- Add a field above the main category to choose which category to display specifiacally, add tags + ability to create custom tags and display them on the field
