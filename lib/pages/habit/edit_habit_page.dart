@@ -589,12 +589,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         onChanged: (value) =>
                             setState(() => durationMinutes = value.toInt()),
                       ),
-                      Center(
-                        child: Text(
-                          "${durationHours}h ${durationMinutes}m",
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
                     ],
                   ),
                 ),

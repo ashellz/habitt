@@ -53,6 +53,15 @@ class _NewHomePageState extends State<NewHomePage> {
     });
   }
 
+  List<String> tagsList = [
+    'All',
+    'Any time',
+    'Morning',
+    'Afternoon',
+    'Evening',
+  ];
+  String? tagSelected = 'All';
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -121,6 +130,35 @@ class _NewHomePageState extends State<NewHomePage> {
           children: [
             const SizedBox(height: 30),
             header(username),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 30,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                children: <Widget>[
+                  for (String tag in tagsList)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () => setState(() {
+                          tagSelected = tag;
+                        }),
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: tagSelected == tag
+                                  ? theOtherGreen
+                                  : theDarkGrey,
+                            ),
+                            height: 30,
+                            child: Center(child: Text(tag))),
+                      ),
+                    ),
+                ],
+              ),
+            ),
             const SizedBox(height: 20),
             mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                 editcontroller, context),

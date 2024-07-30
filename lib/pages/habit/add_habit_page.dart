@@ -493,12 +493,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         onChanged: (value) => setState(
                             () => currentDurationValueMinutes = value.toInt()),
                       ),
-                      Center(
-                        child: Text(
-                          "${currentDurationValueHours}h ${currentDurationValueMinutes}m",
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
                     ],
                   ),
                 ),
