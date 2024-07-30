@@ -213,14 +213,16 @@ class _CheckBoxState extends State<CheckBox> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        checkCompleteHabit(widget.amountCheck, widget.durationCheck, widget.index, context);
+        checkCompleteHabit(
+            widget.amountCheck, widget.durationCheck, widget.index, context);
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-            color: widget.habit.completed ? theOtherGreen : Colors.grey.shade900,
+            color:
+                widget.habit.completed ? theOtherGreen : Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
           child: widget.habitBox.getAt(widget.index)!.completed
@@ -234,21 +236,26 @@ class _CheckBoxState extends State<CheckBox> {
                             curve: Curves.easeInOut,
                             tween: Tween<double>(
                               begin: 0,
-                              end: widget.habitBox.getAt(widget.index)!.completed ? 1 : 0,
+                              end:
+                                  widget.habitBox.getAt(widget.index)!.completed
+                                      ? 1
+                                      : 0,
                             ),
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color: widget.habitBox.getAt(widget.index)!.skipped
-                                    ? Colors.grey.shade800
-                                    : theOtherGreen,
+                                color:
+                                    widget.habitBox.getAt(widget.index)!.skipped
+                                        ? Colors.grey.shade800
+                                        : theOtherGreen,
                                 backgroundColor: Colors.grey.shade900,
                               );
                             }),
                       ),
                     ),
                     Center(
-                      child: Icon(widget.habit.completed ? Icons.check : Icons.close,
+                      child: Icon(
+                          widget.habit.completed ? Icons.check : Icons.close,
                           color: Colors.white),
                     ),
                   ],
@@ -264,13 +271,19 @@ class _CheckBoxState extends State<CheckBox> {
                                 curve: Curves.easeInOut,
                                 tween: Tween<double>(
                                   begin: 0,
-                                  end: widget.habitBox.getAt(widget.index)!.amountCompleted /
-                                      widget.habitBox.getAt(widget.index)!.amount,
+                                  end: widget.habitBox
+                                          .getAt(widget.index)!
+                                          .amountCompleted /
+                                      widget.habitBox
+                                          .getAt(widget.index)!
+                                          .amount,
                                 ),
                                 builder: (context, value, _) {
                                   return LinearProgressIndicator(
                                     value: value,
-                                    color: widget.habitBox.getAt(widget.index)!.skipped
+                                    color: widget.habitBox
+                                            .getAt(widget.index)!
+                                            .skipped
                                         ? Colors.grey.shade800
                                         : theOtherGreen,
                                     backgroundColor: Colors.grey.shade900,
@@ -303,7 +316,10 @@ class _CheckBoxState extends State<CheckBox> {
                               Transform.translate(
                                 offset: const Offset(0, -3),
                                 child: Text(
-                                  widget.habitBox.getAt(widget.index)!.amount.toString(),
+                                  widget.habitBox
+                                      .getAt(widget.index)!
+                                      .amount
+                                      .toString(),
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 10),
                                 ),
@@ -328,7 +344,9 @@ class _CheckBoxState extends State<CheckBox> {
                                       end: widget.habitBox
                                               .getAt(widget.index)!
                                               .durationCompleted /
-                                          widget.habitBox.getAt(widget.index)!.duration,
+                                          widget.habitBox
+                                              .getAt(widget.index)!
+                                              .duration,
                                     ),
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
@@ -373,7 +391,19 @@ class _CheckBoxState extends State<CheckBox> {
                                   Transform.translate(
                                     offset: const Offset(0, -3),
                                     child: Text(
-                                      "${widget.habitBox.getAt(widget.index)!.duration ~/ 60}h${widget.habitBox.getAt(widget.index)!.duration % 60}m",
+                                      widget.habitBox
+                                                      .getAt(widget.index)!
+                                                      .duration ~/
+                                                  60 ==
+                                              0
+                                          ? "${widget.habitBox.getAt(widget.index)!.duration % 60}m"
+                                          : widget.habitBox
+                                                          .getAt(widget.index)!
+                                                          .duration %
+                                                      60 ==
+                                                  0
+                                              ? "${widget.habitBox.getAt(widget.index)!.duration ~/ 60}h"
+                                              : "${widget.habitBox.getAt(widget.index)!.duration ~/ 60}h${widget.habitBox.getAt(widget.index)!.duration % 60}m",
                                       style: const TextStyle(
                                           color: Colors.white, fontSize: 10),
                                     ),
@@ -394,7 +424,9 @@ class _CheckBoxState extends State<CheckBox> {
                                     curve: Curves.easeInOut,
                                     tween: Tween<double>(
                                       begin: 0,
-                                      end: widget.habitBox.getAt(widget.index)!.completed
+                                      end: widget.habitBox
+                                              .getAt(widget.index)!
+                                              .completed
                                           ? 1
                                           : 0,
                                     ),
@@ -409,7 +441,9 @@ class _CheckBoxState extends State<CheckBox> {
                             ),
                             Center(
                               child: Icon(
-                                  widget.habit.completed ? Icons.check : Icons.close,
+                                  widget.habit.completed
+                                      ? Icons.check
+                                      : Icons.close,
                                   color: Colors.white),
                             ),
                           ],
@@ -418,7 +452,8 @@ class _CheckBoxState extends State<CheckBox> {
   }
 }
 
-void checkCompleteHabit(amountCheck, durationCheck, int index, BuildContext context) {
+void checkCompleteHabit(
+    amountCheck, durationCheck, int index, BuildContext context) {
   if (amountCheck == true || durationCheck == true) {
     if (habitBox.getAt(index)!.completed) {
       context.read<HabitProvider>().completeHabitProvider(index);
