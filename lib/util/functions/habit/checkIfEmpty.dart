@@ -6,15 +6,14 @@ import 'package:hive/hive.dart';
 var habitListLenght = Hive.box<HabitData>('habits').length;
 
 void checkIfEmpty(String category) {
-  bool hasHabits = false;
+  int hasHabits = 0;
   for (int i = 0; i < habitListLenght; i++) {
     if (habitBox.getAt(i)?.category == category) {
-      hasHabits = true;
-      break;
+      hasHabits += 1;
     }
   }
 
-  if (hasHabits == false) {
+  if (hasHabits == 1) {
     if (category == "Morning") {
       morningHasHabits = false;
       morningVisible = false;

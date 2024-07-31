@@ -35,6 +35,8 @@ bool eveningVisible = false,
     changed = false,
     deleted = false;
 
+List<String> tagsList = ['All'];
+
 class NewHomePage extends StatefulWidget {
   const NewHomePage({super.key});
 
@@ -47,19 +49,14 @@ class _NewHomePageState extends State<NewHomePage> {
   void initState() {
     super.initState();
     updateLastOpenedDate();
+    hasHabits();
+    openCategory();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
     });
   }
 
-  List<String> tagsList = [
-    'All',
-    'Any time',
-    'Morning',
-    'Afternoon',
-    'Evening',
-  ];
   String? tagSelected = 'All';
 
   @override
@@ -67,6 +64,7 @@ class _NewHomePageState extends State<NewHomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().updateMainCategoryHeight();
     });
+    fillTagsList(context);
 
     String mainCategory = context.watch<HabitProvider>().mainCategory;
     int habitListLength = context.watch<HabitProvider>().habitListLength;
@@ -79,16 +77,20 @@ class _NewHomePageState extends State<NewHomePage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black, actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return const MenuPage();
-              }));
-            },
-          ),
-        ]),
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.black,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return const MenuPage();
+                  }));
+                },
+              ),
+            ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             updatedIcon = startIcon;
@@ -160,11 +162,26 @@ class _NewHomePageState extends State<NewHomePage> {
               ),
             ),
             const SizedBox(height: 20),
-            mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
-                editcontroller, context),
-            const SizedBox(height: 20),
-            otherCategoriesList(habitListLength, mainCategory, editcontroller,
-                anytimeHasHabits),
+            if (tagSelected == 'All')
+              Column(children: [
+                mainCategoryList(habitListLength, mainCategoryHeight,
+                    mainCategory, editcontroller, context),
+                const SizedBox(height: 20),
+                otherCategoriesList(habitListLength, mainCategory,
+                    editcontroller, anytimeHasHabits)
+              ]),
+            if (tagSelected == 'Any time')
+              anyTime(habitListLength, editcontroller, mainCategory,
+                  anytimeHasHabits, true),
+            if (tagSelected == 'Morning')
+              morning(habitListLength, mainCategory, editcontroller,
+                  anytimeHasHabits, true),
+            if (tagSelected == 'Afternoon')
+              afternoon(habitListLength, mainCategory, editcontroller,
+                  anytimeHasHabits, true),
+            if (tagSelected == 'Evening')
+              evening(habitListLength, mainCategory, editcontroller,
+                  anytimeHasHabits, true),
           ],
         ),
       ),
@@ -292,20 +309,20 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
 otherCategoriesList(
     habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(
-        habitListLength, editcontroller, mainCategory, mainCategoryListVisible),
-    morning(
-        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
-    afternoon(
-        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
-    evening(
-        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
+    anyTime(habitListLength, editcontroller, mainCategory,
+        mainCategoryListVisible, false),
+    morning(habitListLength, mainCategory, editcontroller,
+        mainCategoryListVisible, false),
+    afternoon(habitListLength, mainCategory, editcontroller,
+        mainCategoryListVisible, false),
+    evening(habitListLength, mainCategory, editcontroller,
+        mainCategoryListVisible, false),
   ]);
 }
 
-Widget anyTime(
-    habitListLength, editcontroller, mainCategory, mainCategoryListVisible) {
-  if (mainCategory != 'Any time') {
+Widget anyTime(habitListLength, editcontroller, mainCategory,
+    mainCategoryListVisible, bool tag) {
+  if (mainCategory != 'Any time' || tag) {
     if (anytimeHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,9 +360,9 @@ Widget anyTime(
   }
 }
 
-Widget morning(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
-  if (mainCategory != 'Morning') {
+Widget morning(habitListLength, mainCategory, editcontroller,
+    mainCategoryListVisible, bool tag) {
+  if (mainCategory != 'Morning' || tag) {
     if (morningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,9 +399,9 @@ Widget morning(
   return Container();
 }
 
-Widget afternoon(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
-  if (mainCategory != 'Afternoon') {
+Widget afternoon(habitListLength, mainCategory, editcontroller,
+    mainCategoryListVisible, bool tag) {
+  if (mainCategory != 'Afternoon' || tag) {
     if (afternoonHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -420,9 +437,9 @@ Widget afternoon(
   return Container();
 }
 
-Widget evening(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
-  if (mainCategory != 'Evening') {
+Widget evening(habitListLength, mainCategory, editcontroller,
+    mainCategoryListVisible, bool tag) {
+  if (mainCategory != 'Evening' || tag) {
     if (eveningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -493,6 +510,86 @@ Widget anyTimeMainCategory(int habitListLength, editcontroller,
       ),
     );
   }
+}
+/*
+void chooseSelectedWidget(tagSelected, editcontroller, context) {
+    if (tagSelected == 'All') {
+      _selectedWidget = defaultWidget(editcontroller, context);
+    } else if (tagSelected == 'Any time') {
+      _selectedWidget = anyTime(habitListLength, editcontroller, mainCategory,
+          anytimeHasHabits, true);
+    } else if (tagSelected == 'Morning') {
+      _selectedWidget = morning(habitListLength, mainCategory, editcontroller,
+          anytimeHasHabits, true);
+    } else if (tagSelected == 'Afternoon') {
+      _selectedWidget = afternoon(habitListLength, mainCategory, editcontroller,
+          anytimeHasHabits, true);
+    } else if (tagSelected == 'Evening') {
+      _selectedWidget = evening(habitListLength, mainCategory, editcontroller,
+          anytimeHasHabits, true);
+    } else {
+      _selectedWidget = defaultWidget(editcontroller, context);
+    }
+    notifyListeners();
+  }*/
+
+void fillTagsList(BuildContext context) {
+  void addAnytime() {
+    if (!tagsList.contains("Any time")) {
+      tagsList.add("Any time");
+    }
+  }
+
+  void addMorning() {
+    if (!tagsList.contains("Morning")) {
+      tagsList.add("Morning");
+    }
+  }
+
+  void addAfternoon() {
+    if (!tagsList.contains("Afternoon")) {
+      tagsList.add("Afternoon");
+    }
+  }
+
+  void addEvening() {
+    if (!tagsList.contains("Evening")) {
+      tagsList.add("Evening");
+    }
+  }
+
+  if (context.watch<HabitProvider>().displayEmptyCategories) {
+    addAnytime();
+    addMorning();
+    addAfternoon();
+    addEvening();
+  } else {
+    if (anytimeHasHabits) {
+      addAnytime();
+    } else {
+      tagsList.remove("Any time");
+    }
+    if (morningHasHabits) {
+      addMorning();
+    } else {
+      tagsList.remove("Morning");
+    }
+    if (afternoonHasHabits) {
+      addAfternoon();
+    } else {
+      tagsList.remove("Afternoon");
+    }
+    if (eveningHasHabits) {
+      addEvening();
+    } else {
+      tagsList.remove("Evening");
+    }
+  }
+
+  tagsList.sort((a, b) {
+    const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
+    return order.indexOf(a).compareTo(order.indexOf(b));
+  });
 }
 
 List<DropdownMenuItem<String>> get dropdownItems {
