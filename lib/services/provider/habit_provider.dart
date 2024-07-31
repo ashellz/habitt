@@ -1,6 +1,8 @@
+import "dart:async";
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
 import "package:habit_tracker/main.dart";
+import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
@@ -136,8 +138,29 @@ class HabitProvider extends ChangeNotifier {
   Future<void> editHabitProvider(int index, context, editcontroller) async {
     editHabit(index, context, editcontroller);
     chooseMainCategory();
-
     updateMainCategoryHeight();
+    await Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const NewHomePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );
+
     notifyListeners();
   }
 
@@ -146,6 +169,7 @@ class HabitProvider extends ChangeNotifier {
     if (checkIfAllEmpty()) {
       Restart.restartApp();
     }
+
     chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();

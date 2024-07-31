@@ -45,8 +45,6 @@ Future<void> main() async {
   await openHiveBoxes();
   await fillKeys();
 
-  hasHabits();
-  openCategory();
   checkForNotifications();
 
   // checking for notification access
@@ -147,6 +145,9 @@ class MyApp extends StatelessWidget {
             ),
       ),
       home: AuthCheck(),
+      routes: {
+        "/home": (_) => const NewHomePage(),
+      },
     );
   }
 }
