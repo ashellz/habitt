@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
@@ -27,6 +28,7 @@ final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
+final player = AudioPlayer();
 
 bool eveningVisible = false,
     anyTimeVisible = false,
@@ -590,6 +592,11 @@ void fillTagsList(BuildContext context) {
     const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
+}
+
+Future<void> playSound() async {
+  print("the functio nwas run");
+  await player.play(AssetSource('sound/complete1.mp3'));
 }
 
 List<DropdownMenuItem<String>> get dropdownItems {
