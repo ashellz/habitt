@@ -26,6 +26,26 @@ class ChangelogPage extends StatelessWidget {
             ),
           ),
 
+          // 01.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "01.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Fixed streaks not updating on new month\n- Other bug fixes"),
+                  ])),
+
           // 31.07.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),

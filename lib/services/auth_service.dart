@@ -33,6 +33,7 @@ class AuthService {
       isLoggedIn = true;
     } on FirebaseException catch (e) {
       errorMessage = 'An unexpected error occurred';
+
       if (e.code == 'weak-password') {
         errorMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
@@ -47,6 +48,11 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut();
+        Restart.restartApp();
+      }
     }
   }
 
@@ -132,6 +138,12 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut().then(
+              (value) => Restart.restartApp(),
+            );
+      }
       print(e.toString());
     }
   }
