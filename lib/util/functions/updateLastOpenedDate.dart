@@ -18,7 +18,7 @@ void updateLastOpenedDate() async {
     newMonth = true;
   }
 
-  if (daysDifference > 0) {
+  if (daysDifference > 0 || daysDifference < 0) {
     if (!newMonth) {
       resetOrUpdateStreaks(daysDifference);
     } else {

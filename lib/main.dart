@@ -9,6 +9,7 @@ import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
+import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -83,6 +84,7 @@ void callbackDispatcher(context) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
+    updateLastOpenedDate();
     return Future.value(true);
   });
 }
@@ -103,6 +105,7 @@ void openCategory() {
 }
 
 hasHabits() {
+  final habitBox = Hive.box<HabitData>('habits');
   for (int i = 0; i < habitBox.length; i++) {
     if (habitBox.getAt(i)?.category == 'Morning') {
       morningHasHabits = true;

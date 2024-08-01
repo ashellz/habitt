@@ -33,10 +33,16 @@ class AuthService {
       isLoggedIn = true;
     } on FirebaseException catch (e) {
       errorMessage = 'An unexpected error occurred';
+
       if (e.code == 'weak-password') {
         errorMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
         errorMessage = 'An account with that email already exists.';
+      }
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut();
+        Restart.restartApp();
       }
 
       Fluttertoast.showToast(
