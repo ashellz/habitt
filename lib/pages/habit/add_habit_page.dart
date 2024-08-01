@@ -176,6 +176,60 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ),
 
+              //TAG
+
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: SizedBox(
+                  height: 30,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    children: <Widget>[
+                      for (String tag in tagsList)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: GestureDetector(
+                            onTap: () => setState(() {
+                              if (tag == habitTag) {
+                                habitTag = "";
+                              }
+                              habitTag = tag;
+                            }),
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      habitTag == tag ? theGreen : theDarkGrey,
+                                ),
+                                height: 30,
+                                child: Center(child: Text(tag))),
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () => setState(() {
+                            //add new tag
+                          }),
+                          child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: theDarkGrey,
+                              ),
+                              height: 30,
+                              child: Center(child: Text("+"))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
               //NAME
 
               Padding(

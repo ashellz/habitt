@@ -55,7 +55,8 @@ void editHabit(int index, context, editcontroller) {
               ? duration
               : habitBox.getAt(index)?.duration ?? 0,
           durationCompleted: 0,
-          skipped: false));
+          skipped: false,
+          tag: habitTag));
 
   dropDownValue = 'Any time';
   editcontroller.text = "";

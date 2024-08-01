@@ -21,7 +21,8 @@ Future<void> createNewHabit(createcontroller) async {
       amountCompleted: 0,
       duration: habitGoal == 2 ? currentDurationValue : 0,
       durationCompleted: 0,
-      skipped: false);
+      skipped: false,
+      tag: habitTag);
   await habitBox.add(myHabit);
   hasHabits();
 
@@ -34,5 +35,6 @@ Future<void> createNewHabit(createcontroller) async {
   currentDurationValueHours = 0;
   currentDurationValue = 0;
   habitGoal = 0;
+  habitTag = "No tag";
   //showPopup(context, "Habit added!");
 }

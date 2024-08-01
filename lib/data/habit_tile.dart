@@ -15,7 +15,8 @@ class HabitData extends HiveObject {
       required this.amountCompleted,
       required this.duration,
       required this.durationCompleted,
-      required this.skipped});
+      required this.skipped,
+      required this.tag});
   @HiveField(0)
   String name;
 
@@ -48,4 +49,7 @@ class HabitData extends HiveObject {
 
   @HiveField(10)
   bool skipped;
+
+  @HiveField(11)
+  String tag;
 }

@@ -353,7 +353,8 @@ applyDurationCompleted(index, theDurationValue) {
           amountCompleted: habitBox.getAt(index)!.amountCompleted,
           duration: habitBox.getAt(index)!.duration,
           durationCompleted: theDurationValue,
-          skipped: habitBox.getAt(index)!.skipped));
+          skipped: habitBox.getAt(index)!.skipped,
+          tag: habitBox.getAt(index)!.tag));
 }
 
 applyAmountCompleted(index, theAmountValue) {
@@ -370,5 +371,6 @@ applyAmountCompleted(index, theAmountValue) {
           amountCompleted: theAmountValue,
           duration: habitBox.getAt(index)!.duration,
           durationCompleted: habitBox.getAt(index)!.durationCompleted,
-          skipped: habitBox.getAt(index)!.skipped));
+          skipped: habitBox.getAt(index)!.skipped,
+          tag: habitBox.getAt(index)!.tag));
 }

@@ -28,6 +28,7 @@ final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
+String habitTag = "";
 final player = AudioPlayer();
 
 bool eveningVisible = false,
@@ -37,7 +38,14 @@ bool eveningVisible = false,
     changed = false,
     deleted = false;
 
-List<String> tagsList = ['All'];
+List<String> categoriesList = ['All'];
+List<String> tagsList = [
+  'No tag',
+  'Healthy Lifestyle',
+  'Better Sleep',
+  'Morning Routine',
+  'Workout',
+];
 
 class NewHomePage extends StatefulWidget {
   const NewHomePage({super.key});
@@ -141,25 +149,7 @@ class _NewHomePageState extends State<NewHomePage> {
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
                 children: <Widget>[
-                  for (String tag in tagsList)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: GestureDetector(
-                        onTap: () => setState(() {
-                          tagSelected = tag;
-                        }),
-                        child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: tagSelected == tag
-                                  ? theOtherGreen
-                                  : theDarkGrey,
-                            ),
-                            height: 30,
-                            child: Center(child: Text(tag))),
-                      ),
-                    ),
+                  tagsWidgets(tagSelected),
                 ],
               ),
             ),
@@ -513,6 +503,35 @@ Widget anyTimeMainCategory(int habitListLength, editcontroller,
     );
   }
 }
+
+Widget tagsWidgets(String? tagSelected) {
+  for (String tag in categoriesList) {
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)!.category == tag) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) => Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () => setState(() {
+                      tagSelected = tag;
+                    }),
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color:
+                              tagSelected == tag ? theOtherGreen : theDarkGrey,
+                        ),
+                        height: 30,
+                        child: Center(child: Text(tag))),
+                  ),
+                ));
+      }
+    }
+  }
+  return Container();
+}
+
 /*
 void chooseSelectedWidget(tagSelected, editcontroller, context) {
     if (tagSelected == 'All') {
@@ -536,27 +555,29 @@ void chooseSelectedWidget(tagSelected, editcontroller, context) {
   }*/
 
 void fillTagsList(BuildContext context) {
+  categoriesList = ["All"];
+
   void addAnytime() {
-    if (!tagsList.contains("Any time")) {
-      tagsList.add("Any time");
+    if (!categoriesList.contains("Any time")) {
+      categoriesList.add("Any time");
     }
   }
 
   void addMorning() {
-    if (!tagsList.contains("Morning")) {
-      tagsList.add("Morning");
+    if (!categoriesList.contains("Morning")) {
+      categoriesList.add("Morning");
     }
   }
 
   void addAfternoon() {
-    if (!tagsList.contains("Afternoon")) {
-      tagsList.add("Afternoon");
+    if (!categoriesList.contains("Afternoon")) {
+      categoriesList.add("Afternoon");
     }
   }
 
   void addEvening() {
-    if (!tagsList.contains("Evening")) {
-      tagsList.add("Evening");
+    if (!categoriesList.contains("Evening")) {
+      categoriesList.add("Evening");
     }
   }
 
@@ -569,29 +590,35 @@ void fillTagsList(BuildContext context) {
     if (anytimeHasHabits) {
       addAnytime();
     } else {
-      tagsList.remove("Any time");
+      categoriesList.remove("Any time");
     }
     if (morningHasHabits) {
       addMorning();
     } else {
-      tagsList.remove("Morning");
+      categoriesList.remove("Morning");
     }
     if (afternoonHasHabits) {
       addAfternoon();
     } else {
-      tagsList.remove("Afternoon");
+      categoriesList.remove("Afternoon");
     }
     if (eveningHasHabits) {
       addEvening();
     } else {
-      tagsList.remove("Evening");
+      categoriesList.remove("Evening");
     }
   }
 
-  tagsList.sort((a, b) {
+  categoriesList.sort((a, b) {
     const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
+
+  for (int i = 0; i < tagsList.length; i++) {
+    if (tagsList[i] != 'No tag' && !categoriesList.contains(tagsList[i])) {
+      categoriesList.add(tagsList[i]);
+    }
+  }
 }
 
 Future<void> playSound() async {
