@@ -40,11 +40,6 @@ class AuthService {
         errorMessage = 'An account with that email already exists.';
       }
 
-      if (errorMessage == 'An unexpected error occurred') {
-        await FirebaseAuth.instance.signOut();
-        Restart.restartApp();
-      }
-
       Fluttertoast.showToast(
         msg: errorMessage,
         toastLength: Toast.LENGTH_SHORT,
@@ -53,6 +48,11 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut();
+        Restart.restartApp();
+      }
     }
   }
 
@@ -138,6 +138,12 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut().then(
+              (value) => Restart.restartApp(),
+            );
+      }
       print(e.toString());
     }
   }
