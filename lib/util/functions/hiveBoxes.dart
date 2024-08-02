@@ -23,6 +23,11 @@ Future<void> openHiveBoxes() async {
     await Hive.openBox<String>(
         'string'); // wont need to upload after first time
   }
+
+  if (!Hive.isBoxOpen('tags')) {
+    print("Opening 'tags' box...");
+    await Hive.openBox<String>('tags');
+  }
 }
 
 Future<void> closeHiveBoxes() async {
@@ -45,5 +50,10 @@ Future<void> closeHiveBoxes() async {
   if (Hive.isBoxOpen('string')) {
     print("Closing 'string' box...");
     await Hive.box('string').close();
+  }
+
+  if (Hive.isBoxOpen('tags')) {
+    print("Closing 'tags' box...");
+    await Hive.box('tags').close();
   }
 }

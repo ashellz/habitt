@@ -100,4 +100,11 @@ Add weekly habits
 - All habits completed streak will grow wether the weekly habit has been done or no, except if there are no more days left for the habit to be completed that many times a week
 
 
-- Add a field above the main category to choose which category to display specifiacally, add tags + ability to create custom tags and display them on the field
+# - Add a field above the main category to choose which category to display specifiacally, add tags + ability to create custom tags and display them on the field
+- Add so user can swipe left or right on the screen to switch which tag to display
+- Add ability to delete tags
+
+- Add vibration when habit is completed
+- Add sound when all habits are completed and a longer vibration
+- Add vibration when completing a part of the habit (vibration for each number change)
+- Add an option to disable haptic feedback

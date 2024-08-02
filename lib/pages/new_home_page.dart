@@ -5,6 +5,7 @@ import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/new_habit_tile.dart';
 import 'package:hive/hive.dart';
@@ -26,6 +27,7 @@ final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
 final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
+final tagsBox = Hive.box<String>('tags');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
 String habitTag = "";
@@ -292,15 +294,6 @@ otherCategoriesList(
 }
 
 Widget tagSelectedWidget(tagSelected, editcontroller) {
-  /*if (tagSelected == 'Any time')
-              anyTime(habitListLength, editcontroller, mainCategory, true),
-            if (tagSelected == 'Morning')
-              morning(habitListLength, mainCategory, editcontroller, true),
-            if (tagSelected == 'Afternoon')
-              afternoon(habitListLength, mainCategory, editcontroller, true),
-            if (tagSelected == 'Evening')
-              evening(habitListLength, mainCategory, editcontroller, true),*/
-
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -342,22 +335,20 @@ Widget anyTime(habitListLength, editcontroller, mainCategory, bool tag) {
         ],
       );
     }
+    if (boolBox.get("displayEmptyCategories")!) {
+      return const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Any time",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text("No habits in this category",
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
+            SizedBox(height: 20),
+          ]);
+    }
   }
-
-  if (boolBox.get("displayEmptyCategories")!) {
-    return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Any time",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("No habits in this category",
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
-          SizedBox(height: 20),
-        ]);
-  } else {
-    return Container();
-  }
+  return Container();
 }
 
 Widget morning(habitListLength, mainCategory, editcontroller, bool tag) {
@@ -539,24 +530,34 @@ Widget tagsWidgets(String? tagSelected) {
     children: <Widget>[
       for (final category in visibleList)
         StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) => Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    onTap: () => setState(() {
+          builder: (BuildContext context, StateSetter setState) => Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+                onTap: () => setState(() {
                       context.read<HabitProvider>().setTagSelected(category);
                     }),
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: tagSelected == category
-                              ? theOtherGreen
-                              : theDarkGrey,
-                        ),
-                        height: 30,
-                        child: Center(child: Text(category.toString()))),
-                  ),
-                ))
+                child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color:
+                          tagSelected == category ? theOtherGreen : theDarkGrey,
+                    ),
+                    height: 30,
+                    child: Center(
+                      child: Text(category.toString(),
+                          style: TextStyle(
+                              color: categoryCompleted(category)
+                                  ? Colors.grey.shade700
+                                  : Colors.white,
+                              decoration: categoryCompleted(category)
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                              decorationColor: Colors.grey.shade700,
+                              decorationThickness: 3.0)),
+                    ))),
+          ),
+        )
     ],
   );
 }
@@ -642,6 +643,13 @@ void fillTagsList(BuildContext context) {
     const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
+
+  for (int i = 0; i < tagsBox.length; i++) {
+    final tag = tagsBox.get(i);
+    if (!tagsList.contains(tag)) {
+      tagsList.add(tag.toString());
+    }
+  }
 
   for (int i = 0; i < tagsList.length; i++) {
     if (tagsList[i] != 'No tag' && !categoriesList.contains(tagsList[i])) {

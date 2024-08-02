@@ -2,11 +2,12 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter/widgets.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import "package:habit_tracker/util/objects/add_tag.dart";
+import "package:habit_tracker/util/objects/delete_tag.dart";
 import "package:provider/provider.dart";
 import 'package:flutter_spinbox/material.dart';
 
@@ -184,9 +185,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   height: 30,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
                     children: <Widget>[
-                      for (String tag in tagsList)
+                      for (String tag in tagsBox.values.toList())
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: GestureDetector(
@@ -196,6 +196,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
                               }
                               habitTag = tag;
                             }),
+                            onLongPress: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => deleteTagWidget(tag),
+                              );
+                            },
                             child: Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
@@ -211,9 +217,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: GestureDetector(
-                          onTap: () => setState(() {
-                            //add new tag
-                          }),
+                          onTap: () => showModalBottomSheet(
+                            context: context,
+                            enableDrag: true,
+                            builder: (context) => const AddTagWidget(),
+                          ),
                           child: Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
@@ -222,7 +230,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 color: theDarkGrey,
                               ),
                               height: 30,
-                              child: Center(child: Text("+"))),
+                              child: const Center(child: Text("+"))),
                         ),
                       ),
                     ],

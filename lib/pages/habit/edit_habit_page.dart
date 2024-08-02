@@ -8,6 +8,7 @@ import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
+import "package:habit_tracker/util/objects/add_tag.dart";
 import "package:habit_tracker/util/objects/confirm_delete_habit.dart";
 import "package:provider/provider.dart";
 import 'package:icons_flutter/icons_flutter.dart';
@@ -112,6 +113,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
       }
 
       amountControllerEdit.text = amount.toString();
+
+      habitTag = habitBox.getAt(widget.index)!.tag;
 
       updated = true;
     }
@@ -266,6 +269,62 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                 ),
               ),
+
+              //TAG
+
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: SizedBox(
+                  height: 30,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      for (String tag in tagsList)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: GestureDetector(
+                            onTap: () => setState(() {
+                              if (tag == habitTag) {
+                                habitTag = "";
+                              }
+                              habitTag = tag;
+                            }),
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color:
+                                      habitTag == tag ? theGreen : theDarkGrey,
+                                ),
+                                height: 30,
+                                child: Center(child: Text(tag))),
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () => showModalBottomSheet(
+                            context: context,
+                            enableDrag: true,
+                            builder: (context) => const AddTagWidget(),
+                          ),
+                          child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: theDarkGrey,
+                              ),
+                              height: 30,
+                              child: const Center(child: Text("+"))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
               //NAME
 
               Padding(

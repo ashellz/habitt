@@ -5,6 +5,12 @@ Future<void> fillKeys() async {
     boolBox.put("firstTimeOpened", true);
   }
 
+  if (tagsBox.isEmpty) {
+    for (int i = 0; i < tagsList.length; i++) {
+      tagsBox.add(tagsList[i]);
+    }
+  }
+
   if (!boolBox.containsKey("displayEmptyCategories")) {
     boolBox.put("displayEmptyCategories", false);
   }
