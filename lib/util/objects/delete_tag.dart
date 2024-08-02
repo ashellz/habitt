@@ -24,7 +24,14 @@ Widget deleteTagWidget(int tag, context) {
                   ),
                   backgroundColor: WidgetStatePropertyAll(theRedColor)),
               onPressed: () {
+                for (int i = 0; i < tagBox.length; i++) {
+                  if (tagBox.getAt(i)!.tag == tagBox.getAt(tag)) {
+                    tagBox.getAt(i)!.tag = "No tag";
+                  }
+                }
+
                 tagBox.deleteAt(tag);
+
                 Navigator.of(context).pop();
               },
               child: const Text(

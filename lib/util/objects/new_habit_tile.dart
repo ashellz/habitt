@@ -55,6 +55,8 @@ class _NewHabitTileState extends State<NewHabitTile> {
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
+          habitBox.getAt(index)!.tag = habitTag;
+          context.read<HabitProvider>().setTagSelected("All");
           habitGoalEdit = 0;
           updated = false;
           dropDownChanged = false;

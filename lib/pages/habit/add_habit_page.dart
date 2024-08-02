@@ -10,6 +10,7 @@ import "package:habit_tracker/util/objects/add_tag.dart";
 import "package:habit_tracker/util/objects/delete_tag.dart";
 import "package:provider/provider.dart";
 import 'package:flutter_spinbox/material.dart';
+import "package:vibration/vibration.dart";
 
 int habitGoal = 0;
 int currentAmountValue = 2;
@@ -229,6 +230,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         padding: const EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () => showModalBottomSheet(
+                            isScrollControlled: true,
                             context: context,
                             enableDrag: true,
                             builder: (context) => const AddTagWidget(),
@@ -356,39 +358,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
               ),
 
               const SizedBox(height: 15),
-              /*
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButtonFormField(
-                    dropdownColor: theGreen,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      filled: true,
-                      fillColor: theGreen,
-                    ),
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                    hint: const Text("Any Time",
-                        style: TextStyle(color: Colors.white)),
-                    items: dropdownItems,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropDownValue = newValue!;
-                      });
-                    },
-                  ),
-                ),
-              ),*/
 
               // HABIT GOAL
               Padding(
@@ -484,8 +453,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         min: 2,
                         max: 9999,
                         value: currentAmountValue.toDouble(),
-                        onChanged: (value) =>
-                            setState(() => currentAmountValue = value.toInt()),
+                        onChanged: (value) {
+                          setState(() => currentAmountValue = value.toInt());
+                          Vibration.vibrate(duration: 10);
+                        },
                       ),
                       const SizedBox(
                         height: 15,
@@ -542,8 +513,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         min: 0,
                         max: 23,
                         value: currentDurationValueHours.toDouble(),
-                        onChanged: (value) => setState(
-                            () => currentDurationValueHours = value.toInt()),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(
+                              () => currentDurationValueHours = value.toInt());
+                        },
                       ),
                       const SizedBox(height: 15),
                       SpinBox(
@@ -563,8 +537,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         min: 0,
                         max: 59,
                         value: currentDurationValueMinutes.toDouble(),
-                        onChanged: (value) => setState(
-                            () => currentDurationValueMinutes = value.toInt()),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(() =>
+                              currentDurationValueMinutes = value.toInt());
+                        },
                       ),
                     ],
                   ),

@@ -41,7 +41,10 @@ class ChangelogPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text("- Implemented tags")])),
+                  children: [
+                    Text(
+                        "- Implemented tags\n- Added vibration and sound effects")
+                  ])),
 
           // 01.08.2024
           const Padding(

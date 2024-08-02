@@ -13,6 +13,7 @@ import "package:habit_tracker/util/objects/confirm_delete_habit.dart";
 import "package:habit_tracker/util/objects/delete_tag.dart";
 import "package:provider/provider.dart";
 import 'package:icons_flutter/icons_flutter.dart';
+import "package:vibration/vibration.dart";
 
 int habitGoalEdit = 0;
 late int amount;
@@ -323,6 +324,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         padding: const EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () => showModalBottomSheet(
+                            isScrollControlled: true,
                             context: context,
                             enableDrag: true,
                             builder: (context) => const AddTagWidget(),
@@ -583,8 +585,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         min: 2,
                         max: 9999,
                         value: amount.toDouble(),
-                        onChanged: (value) =>
-                            setState(() => amount = value.toInt()),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(() => amount = value.toInt());
+                        },
                       ),
                       const SizedBox(
                         height: 15,
@@ -642,8 +646,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         min: 0,
                         max: 23,
                         value: durationHours.toDouble(),
-                        onChanged: (value) =>
-                            setState(() => durationHours = value.toInt()),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(() => durationHours = value.toInt());
+                        },
                       ),
                       const SizedBox(height: 15),
                       SpinBox(
@@ -663,8 +669,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         min: 0,
                         max: 59,
                         value: durationMinutes.toDouble(),
-                        onChanged: (value) =>
-                            setState(() => durationMinutes = value.toInt()),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(() => durationMinutes = value.toInt());
+                        },
                       ),
                     ],
                   ),

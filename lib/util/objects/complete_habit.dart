@@ -4,6 +4,7 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 Widget completeHabitDialog(int index) {
   bool amountCheck = false;
@@ -51,6 +52,7 @@ Widget completeHabitDialog(int index) {
                       max: habitBox.getAt(index)!.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
+                        Vibration.vibrate(duration: 10);
                         theAmountValue = value.toInt();
                       }),
                     ),
@@ -88,6 +90,7 @@ Widget completeHabitDialog(int index) {
                         max: (habitBox.getAt(index)!.duration ~/ 60).toDouble(),
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
+                          Vibration.vibrate(duration: 10);
                           theDurationValueHours = value.toInt();
                           if (theDurationValueHours ==
                               (habitBox.getAt(index)!.duration ~/ 60)) {

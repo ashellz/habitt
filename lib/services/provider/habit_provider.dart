@@ -7,8 +7,10 @@ import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
+import "package:habit_tracker/util/functions/habit/habitsCompleted.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:restart_app/restart_app.dart";
+import 'package:vibration/vibration.dart';
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
@@ -111,6 +113,14 @@ class HabitProvider extends ChangeNotifier {
           tag: existingHabit.tag);
 
       await habitBox.putAt(index, updatedHabit);
+
+      if (allHabitsCompleted()) {
+        playSound();
+        Vibration.vibrate(duration: 500);
+      } else if (!existingHabit.completed) {
+        Vibration.vibrate(duration: 100);
+      }
+
       notifyListeners();
     }
   }

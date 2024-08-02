@@ -553,9 +553,6 @@ Widget tagsWidgets(String? tagSelected) {
                               color: categoryCompleted(category)
                                   ? Colors.grey.shade700
                                   : Colors.white,
-                              decoration: categoryCompleted(category)
-                                  ? TextDecoration.lineThrough
-                                  : null,
                               decorationColor: Colors.grey.shade700,
                               decorationThickness: 3.0)),
                     ))),
