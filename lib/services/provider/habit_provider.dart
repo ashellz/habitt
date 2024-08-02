@@ -18,9 +18,15 @@ class HabitProvider extends ChangeNotifier {
   bool get displayEmptyCategories =>
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
+  String? _tagSelected = 'All';
 
+  String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
   String get _mainCategory => mainCategory;
+
+  void setTagSelected(String? tag) {
+    _tagSelected = tag;
+  }
 
   void chooseMainCategory() {
     int hour = DateTime.now().hour;
