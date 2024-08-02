@@ -1,4 +1,5 @@
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:hive/hive.dart';
 
 Future<void> openHiveBoxes() async {
@@ -26,7 +27,7 @@ Future<void> openHiveBoxes() async {
 
   if (!Hive.isBoxOpen('tags')) {
     print("Opening 'tags' box...");
-    await Hive.openBox<String>('tags');
+    await Hive.openBox<TagData>('tags');
   }
 }
 

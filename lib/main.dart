@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -42,6 +43,7 @@ Future<void> main() async {
   );
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
+  Hive.registerAdapter(TagDataAdapter());
 
   await openHiveBoxes();
   await fillKeys();

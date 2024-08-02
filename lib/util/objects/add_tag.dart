@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
 
@@ -127,7 +128,9 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                         if (!formKey.currentState!.validate()) {
                           return;
                         }
-                        tagsBox.add(tagNameController.text);
+                        tagBox.put(
+                            "tags", TagData(tag: tagNameController.text));
+
                         Navigator.pop(context);
                       },
                     ),

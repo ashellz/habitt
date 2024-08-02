@@ -10,6 +10,7 @@ import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:habit_tracker/util/objects/add_tag.dart";
 import "package:habit_tracker/util/objects/confirm_delete_habit.dart";
+import "package:habit_tracker/util/objects/delete_tag.dart";
 import "package:provider/provider.dart";
 import 'package:icons_flutter/icons_flutter.dart';
 
@@ -279,26 +280,43 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
-                      for (String tag in tagsList)
+                      for (int i = 0; i < tagBox.length; i++)
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: GestureDetector(
                             onTap: () => setState(() {
-                              if (tag == habitTag) {
-                                habitTag = "";
-                              }
-                              habitTag = tag;
+                              habitTag = tagBox.getAt(i)!.tag;
                             }),
+                            onLongPress: () {
+                              String? tempHabitTag = tagBox.getAt(i)!.tag;
+                              if (tagBox.getAt(i)!.tag != "No tag") {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      deleteTagWidget(i, context),
+                                ).then((value) {
+                                  setState(() {
+                                    if (habitTag == tempHabitTag.toString()) {
+                                      habitTag = "No tag";
+                                    } else {
+                                      habitTag = habitTag;
+                                    }
+                                  });
+                                });
+                              }
+                            },
                             child: Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      habitTag == tag ? theGreen : theDarkGrey,
+                                  color: habitTag == tagBox.getAt(i)!.tag
+                                      ? theGreen
+                                      : theDarkGrey,
                                 ),
                                 height: 30,
-                                child: Center(child: Text(tag))),
+                                child:
+                                    Center(child: Text(tagBox.getAt(i)!.tag))),
                           ),
                         ),
                       Padding(
@@ -524,7 +542,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       style: ButtonStyle(
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         fixedSize: WidgetStateProperty.all<Size>(

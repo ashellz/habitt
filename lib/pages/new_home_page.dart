@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
@@ -27,7 +28,7 @@ final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
 final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
-final tagsBox = Hive.box<String>('tags');
+final tagBox = Hive.box<TagData>('tags');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
 String habitTag = "";
@@ -63,6 +64,8 @@ class _NewHomePageState extends State<NewHomePage> {
     updateLastOpenedDate();
     hasHabits();
     openCategory();
+
+    context.read<HabitProvider>().setTagSelected("All");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
@@ -644,8 +647,8 @@ void fillTagsList(BuildContext context) {
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
 
-  for (int i = 0; i < tagsBox.length; i++) {
-    final tag = tagsBox.get(i);
+  for (int i = 0; i < tagBox.length; i++) {
+    final tag = tagBox.get(i);
     if (!tagsList.contains(tag)) {
       tagsList.add(tag.toString());
     }

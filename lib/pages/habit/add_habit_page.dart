@@ -186,32 +186,43 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
-                      for (String tag in tagsBox.values.toList())
+                      for (int i = 0; i < tagBox.length; i++)
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: GestureDetector(
                             onTap: () => setState(() {
-                              if (tag == habitTag) {
-                                habitTag = "";
-                              }
-                              habitTag = tag;
+                              habitTag = tagBox.getAt(i)!.tag;
                             }),
                             onLongPress: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => deleteTagWidget(tag),
-                              );
+                              String? tempHabitTag = tagBox.getAt(i)!.tag;
+                              if (tagBox.getAt(i)!.tag != "No tag") {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      deleteTagWidget(i, context),
+                                ).then((value) {
+                                  setState(() {
+                                    if (habitTag == tempHabitTag.toString()) {
+                                      habitTag = "No tag";
+                                    } else {
+                                      habitTag = habitTag;
+                                    }
+                                  });
+                                });
+                              }
                             },
                             child: Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      habitTag == tag ? theGreen : theDarkGrey,
+                                  color: habitTag == tagBox.getAt(i)!.tag
+                                      ? theGreen
+                                      : theDarkGrey,
                                 ),
                                 height: 30,
-                                child: Center(child: Text(tag))),
+                                child:
+                                    Center(child: Text(tagBox.getAt(i)!.tag))),
                           ),
                         ),
                       Padding(

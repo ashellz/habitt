@@ -1,3 +1,4 @@
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 
 Future<void> fillKeys() async {
@@ -5,9 +6,9 @@ Future<void> fillKeys() async {
     boolBox.put("firstTimeOpened", true);
   }
 
-  if (tagsBox.isEmpty) {
+  if (tagBox.isEmpty) {
     for (int i = 0; i < tagsList.length; i++) {
-      tagsBox.add(tagsList[i]);
+      tagBox.add(TagData(tag: tagsList[i]));
     }
   }
 
