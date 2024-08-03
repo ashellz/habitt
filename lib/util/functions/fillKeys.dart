@@ -12,6 +12,14 @@ Future<void> fillKeys() async {
     }
   }
 
+  if (!boolBox.containsKey("hapticFeedback")) {
+    boolBox.put("hapticFeedback", true);
+  }
+
+  if (!boolBox.containsKey("sound")) {
+    boolBox.put("sound", true);
+  }
+
   if (!boolBox.containsKey("displayEmptyCategories")) {
     boolBox.put("displayEmptyCategories", false);
   }

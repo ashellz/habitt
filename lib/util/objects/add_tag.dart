@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
 
 GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -46,7 +47,7 @@ class _AddTagWidgetState extends State<AddTagWidget> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          color: theGreen,
+          color: theColor,
         ),
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),

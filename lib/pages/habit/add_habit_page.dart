@@ -5,6 +5,7 @@ import "package:flutter/services.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
+import "package:habit_tracker/util/colors.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
 import "package:habit_tracker/util/objects/add_tag.dart";
 import "package:habit_tracker/util/objects/delete_tag.dart";
@@ -105,7 +106,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 child: Container(
                   height: 170,
                   decoration: BoxDecoration(
-                    color: theGreen,
+                    color: theColor,
                   ),
                   child: Row(
                     children: [
@@ -218,7 +219,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: habitTag == tagBox.getAt(i)!.tag
-                                      ? theGreen
+                                      ? theColor
                                       : theDarkGrey,
                                 ),
                                 height: 30,
@@ -287,7 +288,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     filled: true,
-                    fillColor: theGreen,
+                    fillColor: theColor,
                     label: const Text(
                       "Habit Name",
                       style: TextStyle(color: Colors.white),
@@ -333,7 +334,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: theGreen,
+                          color: theColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         height: 55,
@@ -387,7 +388,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoal == 1
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theGreen,
+                              : theColor,
                         ),
                       ),
                       child: const Text("Number of times",
@@ -420,7 +421,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoal == 2
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theGreen,
+                              : theColor,
                         ),
                       ),
                       child: const Text("Duration",
@@ -444,7 +445,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Amount",
                             style: TextStyle(color: Colors.white),
@@ -479,7 +480,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Amount Name",
                             style: TextStyle(color: Colors.white),
@@ -504,7 +505,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Hours",
                             style: TextStyle(color: Colors.white),
@@ -528,7 +529,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Minutes",
                             style: TextStyle(color: Colors.white),
@@ -555,7 +556,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: theLightGreen,
+              backgroundColor: theLightColor,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),

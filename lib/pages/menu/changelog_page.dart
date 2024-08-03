@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/util/colors.dart';
 
 class ChangelogPage extends StatelessWidget {
   const ChangelogPage({super.key});
@@ -21,7 +21,7 @@ class ChangelogPage extends StatelessWidget {
               "Changelog",
               style: TextStyle(
                   fontSize: 42,
-                  color: theLightGreen,
+                  color: theLightColor,
                   fontWeight: FontWeight.bold),
             ),
           ),

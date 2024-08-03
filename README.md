@@ -101,8 +101,6 @@ Add weekly habits
 
 # - Add a field above the main category to choose which category to display specifiacally, add tags + ability to create custom tags and display them on the field
 
-- Add so user can swipe left or right on the screen to switch which tag to display
-
 # - Add ability to delete tags
 
 # - Add vibration when habit is completed
@@ -111,4 +109,8 @@ Add weekly habits
 
 # - Add vibration when completing a part of the habit (vibration for each number change)
 
-- Add an option to disable haptic feedback
+# - Add an option to disable haptic feedback
+
+- Add more color options
+- Add more languages
+- Add so user can swipe left or right on the screen to switch which tag to display

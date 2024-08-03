@@ -7,6 +7,7 @@ import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
@@ -133,12 +134,12 @@ class MyApp extends StatelessWidget {
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
-        colorScheme: ColorScheme.fromSeed(seedColor: theLightGreen),
+        colorScheme: ColorScheme.fromSeed(seedColor: theLightColor),
         useMaterial3: true,
         appBarTheme: AppBarTheme(
           iconTheme: const IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
-              color: theLightGreen,
+              color: theLightColor,
               fontSize: 22,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700),

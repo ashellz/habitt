@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
+import 'package:habit_tracker/util/colors.dart';
 
 Widget confirmSignOut(context) {
   return StatefulBuilder(

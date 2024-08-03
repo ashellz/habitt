@@ -1,5 +1,6 @@
 import "dart:async";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:habit_tracker/data/habit_tile.dart";
 import "package:habit_tracker/main.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
@@ -114,11 +115,16 @@ class HabitProvider extends ChangeNotifier {
 
       await habitBox.putAt(index, updatedHabit);
 
+      bool hapticFeedback = boolBox.get('hapticFeedback')!;
       if (allHabitsCompleted()) {
         playSound();
-        Vibration.vibrate(duration: 500);
+        if (hapticFeedback) {
+          Vibration.vibrate(duration: 500);
+        }
       } else if (!existingHabit.completed) {
-        Vibration.vibrate(duration: 100);
+        if (hapticFeedback) {
+          Vibration.vibrate(duration: 100);
+        }
       }
 
       notifyListeners();

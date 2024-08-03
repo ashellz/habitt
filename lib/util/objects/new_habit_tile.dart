@@ -4,6 +4,7 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/objects/complete_habit.dart';
 import 'package:hive/hive.dart';
@@ -235,7 +236,7 @@ class _CheckBoxState extends State<CheckBox> {
           width: 50,
           decoration: BoxDecoration(
             color:
-                widget.habit.completed ? theOtherGreen : Colors.grey.shade900,
+                widget.habit.completed ? theOtherColor : Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
           child: widget.habitBox.getAt(widget.index)!.completed
@@ -260,7 +261,7 @@ class _CheckBoxState extends State<CheckBox> {
                                 color:
                                     widget.habitBox.getAt(widget.index)!.skipped
                                         ? Colors.grey.shade800
-                                        : theOtherGreen,
+                                        : theOtherColor,
                                 backgroundColor: Colors.grey.shade900,
                               );
                             }),
@@ -298,7 +299,7 @@ class _CheckBoxState extends State<CheckBox> {
                                             .getAt(widget.index)!
                                             .skipped
                                         ? Colors.grey.shade800
-                                        : theOtherGreen,
+                                        : theOtherColor,
                                     backgroundColor: Colors.grey.shade900,
                                   );
                                 }),
@@ -364,7 +365,7 @@ class _CheckBoxState extends State<CheckBox> {
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
                                         value: value,
-                                        color: theOtherGreen,
+                                        color: theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),
@@ -446,7 +447,7 @@ class _CheckBoxState extends State<CheckBox> {
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
                                         value: value,
-                                        color: theOtherGreen,
+                                        color: theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),

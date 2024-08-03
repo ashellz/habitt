@@ -3,6 +3,7 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Text("Settings",
                 style: TextStyle(
                     fontSize: 42,
-                    color: theLightGreen,
+                    color: theLightColor,
                     fontWeight: FontWeight.bold)),
           ),
           const Padding(
@@ -55,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
-              activeColor: theLightGreen,
+              activeColor: theLightColor,
               title: const Text(
                 "Don't notify me",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -79,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
-              activeColor: theLightGreen,
+              activeColor: theLightColor,
               title: const Text(
                 "Once a day",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -103,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
-              activeColor: theLightGreen,
+              activeColor: theLightColor,
               title: const Text(
                 "Three times a day",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -127,7 +128,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(left: 10),
             child: RadioListTile(
               groupValue: notifValue,
-              activeColor: theLightGreen,
+              activeColor: theLightColor,
               title: const Text(
                 "Custom",
                 style: TextStyle(color: Colors.white, fontSize: 16),
@@ -160,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      activeColor: theLightGreen,
+                      activeColor: theLightColor,
                       value: boolBox.get('morningNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -193,7 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      activeColor: theLightGreen,
+                      activeColor: theLightColor,
                       value: boolBox.get('afternoonNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -226,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      activeColor: theLightGreen,
+                      activeColor: theLightColor,
                       value: boolBox.get('eveningNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -259,7 +260,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Row(
                   children: [
                     Checkbox(
-                      activeColor: theLightGreen,
+                      activeColor: theLightColor,
                       value: boolBox.get('dailyNotification'),
                       onChanged: (value) {
                         setState(() {
@@ -287,7 +288,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: TextButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        WidgetStateProperty.all<Color>(theLightGreen),
+                        WidgetStateProperty.all<Color>(theLightColor),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -311,7 +312,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: TextButton(
                   style: ButtonStyle(
                     backgroundColor:
-                        WidgetStateProperty.all<Color>(theLightGreen),
+                        WidgetStateProperty.all<Color>(theLightColor),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -344,7 +345,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Expanded(
                   flex: 1,
                   child: Checkbox(
-                    activeColor: theLightGreen,
+                    activeColor: theLightColor,
                     value:
                         context.watch<HabitProvider>().displayEmptyCategories,
                     onChanged: (value) {
@@ -383,15 +384,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 Expanded(
                   flex: 1,
                   child: Checkbox(
-                    activeColor: theLightGreen,
-                    value:
-                        context.watch<HabitProvider>().displayEmptyCategories,
+                    activeColor: theLightColor,
+                    value: boolBox.get("hapticFeedback"),
                     onChanged: (value) {
                       setState(() {
-                        context
-                            .read<HabitProvider>()
-                            .updateDisplayEmptyCategories(
-                                !value!); //change to disable haptic feedback
+                        boolBox.put(
+                            "hapticFeedback", !boolBox.get("hapticFeedback")!);
                       });
                     },
                   ),
@@ -400,6 +398,32 @@ class _SettingsPageState extends State<SettingsPage> {
                   flex: 6,
                   child: Text(
                     "Haptic feedback (vibration)",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Checkbox(
+                    activeColor: theLightColor,
+                    value: boolBox.get("sound"),
+                    onChanged: (value) {
+                      setState(() {
+                        boolBox.put("sound", !boolBox.get("sound")!);
+                      });
+                    },
+                  ),
+                ),
+                const Expanded(
+                  flex: 6,
+                  child: Text(
+                    "Sound",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),

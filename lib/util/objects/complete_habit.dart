@@ -3,6 +3,7 @@ import 'package:flutter_spinbox/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
@@ -19,7 +20,7 @@ Widget completeHabitDialog(int index) {
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theLightGreen, width: 3.0),
+        side: BorderSide(color: theLightColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       content: SizedBox(
@@ -149,7 +150,7 @@ Widget completeHabitDialog(int index) {
                     fixedSize: const WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theLightGreen)),
+                    backgroundColor: WidgetStatePropertyAll(theLightColor)),
                 onPressed: () {
                   context.read<HabitProvider>().completeHabitProvider(index);
                   Navigator.pop(context);
@@ -164,7 +165,7 @@ Widget completeHabitDialog(int index) {
                       Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theLightGreen,
+                      color: theLightColor,
                       width: 3.0,
                     )),
                     backgroundColor:

@@ -6,19 +6,12 @@ import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/new_habit_tile.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-
-Color theDarkGrey = const Color.fromARGB(255, 17, 17, 17);
-Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
-Color theGreen = const Color.fromARGB(255, 62, 80, 71);
-Color theOtherGreen = const Color.fromARGB(255, 107, 138, 122);
-Color theLightGreen = const Color.fromARGB(255, 124, 175, 151);
-Color theRedColor = const Color.fromARGB(255, 204, 86, 110);
-Color theYellowColor = const Color.fromARGB(255, 223, 223, 129);
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
@@ -136,7 +129,7 @@ class _NewHomePageState extends State<NewHomePage> {
               createcontroller.text = "Habit Name";
             });
           },
-          backgroundColor: theLightGreen,
+          backgroundColor: theLightColor,
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -186,7 +179,7 @@ Widget header(username) {
         child: Text(
           username,
           style: TextStyle(
-            color: theLightGreen,
+            color: theLightColor,
             fontSize: 42,
             fontWeight: FontWeight.bold,
           ),
@@ -272,7 +265,7 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
         height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theOtherGreen,
+          color: theOtherColor,
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 20),
@@ -544,7 +537,7 @@ Widget tagsWidgets(String? tagSelected) {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color:
-                          tagSelected == category ? theOtherGreen : theDarkGrey,
+                          tagSelected == category ? theOtherColor : theDarkGrey,
                     ),
                     height: 30,
                     child: Center(

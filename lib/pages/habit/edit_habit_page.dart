@@ -6,6 +6,7 @@ import "package:flutter_spinbox/material.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
+import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:habit_tracker/util/objects/add_tag.dart";
@@ -198,7 +199,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 child: Container(
                   height: 170,
                   decoration: BoxDecoration(
-                    color: theGreen,
+                    color: theColor,
                   ),
                   child: Row(
                     children: [
@@ -312,7 +313,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: habitTag == tagBox.getAt(i)!.tag
-                                      ? theGreen
+                                      ? theColor
                                       : theDarkGrey,
                                 ),
                                 height: 30,
@@ -381,7 +382,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     filled: true,
-                    fillColor: theGreen,
+                    fillColor: theColor,
                     label: const Text(
                       "Habit Name",
                       style: TextStyle(color: Colors.white),
@@ -427,7 +428,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: theGreen,
+                          color: theColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         height: 55,
@@ -460,7 +461,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 child: ButtonTheme(
                   alignedDropdown: true,
                   child: DropdownButtonFormField(
-                    dropdownColor: theGreen,
+                    dropdownColor: theColor,
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 20.0),
@@ -468,7 +469,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       filled: true,
-                      fillColor: theGreen,
+                      fillColor: theColor,
                     ),
                     style: const TextStyle(
                       fontFamily: 'Poppins',
@@ -518,7 +519,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoalEdit == 1
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theGreen,
+                              : theColor,
                         ),
                       ),
                       child: const Text("Number of times",
@@ -552,7 +553,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoalEdit == 2
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theGreen,
+                              : theColor,
                         ),
                       ),
                       child: const Text("Duration",
@@ -576,7 +577,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Amount",
                             style: TextStyle(color: Colors.white),
@@ -611,7 +612,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Amount Name",
                             style: TextStyle(color: Colors.white),
@@ -637,7 +638,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Hours",
                             style: TextStyle(color: Colors.white),
@@ -660,7 +661,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Minutes",
                             style: TextStyle(color: Colors.white),
@@ -685,7 +686,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: theLightGreen,
+            backgroundColor: theLightColor,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
