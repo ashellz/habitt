@@ -645,9 +645,9 @@ void fillTagsList(BuildContext context) {
   });
 
   for (int i = 0; i < tagBox.length; i++) {
-    final tag = tagBox.get(i);
+    String tag = tagBox.getAt(i)!.tag;
     if (!tagsList.contains(tag)) {
-      tagsList.add(tag.toString());
+      tagsList.add(tag);
     }
   }
 

@@ -25,7 +25,7 @@ Widget deleteTagWidget(int tag, context) {
                   backgroundColor: WidgetStatePropertyAll(theRedColor)),
               onPressed: () {
                 for (int i = 0; i < tagBox.length; i++) {
-                  if (tagBox.getAt(i)!.tag == tagBox.getAt(tag)) {
+                  if (tagBox.getAt(i)!.tag == tagBox.getAt(tag)!.tag) {
                     tagBox.getAt(i)!.tag = "No tag";
                   }
                 }

@@ -366,6 +366,46 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "Prefferences",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Checkbox(
+                    activeColor: theLightGreen,
+                    value:
+                        context.watch<HabitProvider>().displayEmptyCategories,
+                    onChanged: (value) {
+                      setState(() {
+                        context
+                            .read<HabitProvider>()
+                            .updateDisplayEmptyCategories(
+                                !value!); //change to disable haptic feedback
+                      });
+                    },
+                  ),
+                ),
+                const Expanded(
+                  flex: 6,
+                  child: Text(
+                    "Haptic feedback (vibration)",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

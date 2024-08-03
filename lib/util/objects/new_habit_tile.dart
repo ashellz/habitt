@@ -55,7 +55,18 @@ class _NewHabitTileState extends State<NewHabitTile> {
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
-          habitBox.getAt(index)!.tag = habitTag;
+          bool changeTag = true;
+          for (int i = 0; i < tagBox.length; i++) {
+            if (tagBox.getAt(i)!.tag == habitBox.getAt(index)!.tag) {
+              changeTag = false;
+              break;
+            }
+          }
+
+          if (changeTag) {
+            habitBox.getAt(index)!.tag = habitTag;
+            changeTag = true;
+          }
           context.read<HabitProvider>().setTagSelected("All");
           habitGoalEdit = 0;
           updated = false;
