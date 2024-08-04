@@ -114,3 +114,8 @@ Add weekly habits
 - Add more color options
 - Add more languages
 - Add so user can swipe left or right on the screen to switch which tag to display
+
+How to center tag display:
+Get tag number, compare it to previous tag, scroll to the side of the current tag comparing to the previous tag:
+- scroll by number of letters for each tag button in between and how many buttons there are
+- use the calculation to get width of buttons and scroll to the side by that amount of width
