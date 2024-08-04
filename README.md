@@ -113,4 +113,5 @@ Add weekly habits
 
 - Add more color options
 - Add more languages
-- Add so user can swipe left or right on the screen to switch which tag to display
+
+# - Add so user can swipe left or right on the screen to switch which tag to display

@@ -7,6 +7,7 @@ import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/functions/habit/calculateHeight.dart';
 import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/new_habit_tile.dart';
@@ -42,6 +43,8 @@ List<String> tagsList = [
   'Morning Routine',
   'Workout',
 ];
+
+final pageController = PageController(initialPage: 0);
 
 class NewHomePage extends StatefulWidget {
   const NewHomePage({super.key});
@@ -138,23 +141,59 @@ class _NewHomePageState extends State<NewHomePage> {
         backgroundColor: Colors.black,
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
           children: [
-            const SizedBox(height: 30),
-            header(username),
-            const SizedBox(height: 20),
-            SizedBox(height: 30, child: tagsWidgets(tagSelected)),
-            const SizedBox(height: 20),
-            if (tagSelected == 'All')
-              Column(children: [
-                mainCategoryList(habitListLength, mainCategoryHeight,
-                    mainCategory, editcontroller, context),
-                const SizedBox(height: 20),
-                otherCategoriesList(habitListLength, mainCategory,
-                    editcontroller, anytimeHasHabits)
-              ]),
-            if (tagSelected != 'All')
-              tagSelectedWidget(tagSelected, editcontroller),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 30),
+                  header(username),
+                  const SizedBox(height: 20),
+                  SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: calculateHabitsHeight(tagSelected, context),
+              child: PageView(
+                controller: pageController,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                onPageChanged: (value) => context
+                    .read<HabitProvider>()
+                    .setTagSelected(visibleListTags()[value]),
+                children: [
+                  for (String tag in visibleListTags())
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 40),
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          const SizedBox(height: 20),
+                          if (tag == 'All')
+                            Column(children: [
+                              mainCategoryList(
+                                  habitListLength,
+                                  mainCategoryHeight,
+                                  mainCategory,
+                                  editcontroller,
+                                  context),
+                              const SizedBox(height: 20),
+                              otherCategoriesList(habitListLength, mainCategory,
+                                  editcontroller, anytimeHasHabits)
+                            ]),
+                          if (tag != 'All')
+                            tagSelectedWidget(tag, editcontroller),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -496,7 +535,7 @@ Widget anyTimeMainCategory(int habitListLength, editcontroller,
   }
 }
 
-Widget tagsWidgets(String? tagSelected) {
+List<String> visibleListTags() {
   List<String> visibleList = ["All"];
 
   for (int i = 0; i < habitBox.length; i++) {
@@ -521,6 +560,12 @@ Widget tagsWidgets(String? tagSelected) {
     }
   }
 
+  return visibleList;
+}
+
+Widget tagsWidgets(String? tagSelected) {
+  List<String> visibleList = visibleListTags();
+
   return ListView(
     scrollDirection: Axis.horizontal,
     children: <Widget>[
@@ -530,7 +575,11 @@ Widget tagsWidgets(String? tagSelected) {
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
                 onTap: () => setState(() {
-                      context.read<HabitProvider>().setTagSelected(category);
+                      pageController.animateToPage(
+                        visibleList.indexOf(category),
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
                     }),
                 child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

@@ -29,6 +29,7 @@ class HabitProvider extends ChangeNotifier {
 
   void setTagSelected(String? tag) {
     _tagSelected = tag;
+    notifyListeners();
   }
 
   void chooseMainCategory() {

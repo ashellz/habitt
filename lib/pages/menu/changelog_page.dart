@@ -26,6 +26,26 @@ class ChangelogPage extends StatelessWidget {
             ),
           ),
 
+          // 04.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "04.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Added ability to swipe on the home page to go to the next or previous tag")
+                  ])),
+
           // 03.08.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
@@ -41,7 +61,10 @@ class ChangelogPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text("- Bug fixes")])),
+                  children: [
+                    Text(
+                        "- Bug fixes\n- Added options to disable haptic feedback and sound")
+                  ])),
 
           // 02.08.2024
           const Padding(

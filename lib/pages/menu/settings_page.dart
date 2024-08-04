@@ -283,23 +283,21 @@ class _SettingsPageState extends State<SettingsPage> {
           Visibility(
             visible: boolBox.get("hasNotificationAccess") == false,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Center(
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(theLightColor),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(theLightColor),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () => requestNotificationAccess(),
-                  child: const Text(
-                    "Request Notification Access",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                ),
+                onPressed: () => requestNotificationAccess(),
+                child: const Text(
+                  "Request Notification Access",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             ),
@@ -307,23 +305,21 @@ class _SettingsPageState extends State<SettingsPage> {
           Visibility(
             visible: boolBox.get("disabledBatteryOptimization") == false,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Center(
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(theLightColor),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(theLightColor),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () => disableBatteryOptimization(),
-                  child: const Text(
-                    "Disable Battery Optimization",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                ),
+                onPressed: () => disableBatteryOptimization(),
+                child: const Text(
+                  "Disable Battery Optimization",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             ),
