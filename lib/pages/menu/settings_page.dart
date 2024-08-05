@@ -426,6 +426,15 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
+          ElevatedButton(
+              onPressed: () {
+                for (int i = 0; i < habitBox.length; i++) {
+                  if (habitBox.getAt(i)?.name == 'Brush teeth') {
+                    habitBox.getAt(i)!.streak = 9;
+                  }
+                }
+              },
+              child: Text("press")),
         ],
       ),
     );

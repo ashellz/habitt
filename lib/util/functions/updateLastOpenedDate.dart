@@ -32,8 +32,12 @@ void updateLastOpenedDate() async {
         resetOrUpdateStreaks(2);
       }
     }
-    await backupHiveBoxesToFirebase(userId);
-    Restart.restartApp();
+
+    if (userId != null) {
+      await backupHiveBoxesToFirebase(userId).then((value) {
+        Restart.restartApp();
+      });
+    }
   }
 }
 
