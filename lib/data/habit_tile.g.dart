@@ -29,7 +29,7 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       durationCompleted: fields[9] as int,
       skipped: fields[10] == null ? false : fields[10] as bool,
       tag: fields[11] == null ? "No tag" : fields[11] as String,
-      notifications: fields[12] == null ? [] : fields[12] as List<List<int>>,
+      notifications: fields[12] == null ? [] : fields[12] as List,
     );
   }
 

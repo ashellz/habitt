@@ -55,5 +55,5 @@ class HabitData extends HiveObject {
   String tag;
 
   @HiveField(12)
-  List<List<int>> notifications;
+  List notifications;
 }
