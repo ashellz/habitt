@@ -3,6 +3,7 @@ import "dart:async";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
+import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
@@ -81,20 +82,58 @@ class _AddHabitPageState extends State<AddHabitPage> {
             padding: const EdgeInsets.only(bottom: 60),
             physics: const BouncingScrollPhysics(),
             children: [
-              const Padding(
-                padding: EdgeInsets.only(
-                  top: 20.0,
-                  left: 25.0,
-                  bottom: 10.0,
-                ),
-                child: Text(
-                  "New Habit",
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
+                      left: 25.0,
+                      bottom: 10.0,
+                    ),
+                    child: Text(
+                      "New Habit",
+                      style: TextStyle(
+                        fontSize: 32.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10, top: 5),
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const NotificationsPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
+
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.notifications,
+                          size: 30,
+                          color: Colors.white,
+                        )),
+                  ),
+                ],
               ),
 
               // ICON

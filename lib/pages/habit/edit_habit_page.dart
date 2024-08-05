@@ -174,18 +174,31 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 10, top: 5),
-                    child: IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => confirmDeleteHabit(
-                                  widget.index, editcontroller));
-                        },
-                        icon: const Icon(
-                          Icons.delete,
-                          size: 30,
-                          color: Colors.white,
-                        )),
+                    child: Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              // show either new page or modalbottomsheet
+                            },
+                            icon: const Icon(
+                              Icons.notifications,
+                              size: 30,
+                              color: Colors.white,
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => confirmDeleteHabit(
+                                      widget.index, editcontroller));
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              size: 30,
+                              color: Colors.white,
+                            )),
+                      ],
+                    ),
                   ),
                 ],
               ),

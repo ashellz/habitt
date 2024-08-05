@@ -111,7 +111,8 @@ class HabitProvider extends ChangeNotifier {
           durationCompleted:
               !existingHabit.completed ? existingHabit.duration : 0,
           skipped: false,
-          tag: existingHabit.tag);
+          tag: existingHabit.tag,
+          notifications: existingHabit.notifications);
 
       await habitBox.putAt(index, updatedHabit);
 
@@ -148,7 +149,8 @@ class HabitProvider extends ChangeNotifier {
           durationCompleted:
               !existingHabit.completed ? existingHabit.duration : 0,
           skipped: !existingHabit.skipped,
-          tag: existingHabit.tag);
+          tag: existingHabit.tag,
+          notifications: existingHabit.notifications);
 
       await habitBox.putAt(index, updatedHabit);
       notifyListeners();

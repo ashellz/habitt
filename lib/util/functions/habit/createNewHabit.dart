@@ -22,7 +22,8 @@ Future<void> createNewHabit(createcontroller) async {
       duration: habitGoal == 2 ? currentDurationValue : 0,
       durationCompleted: 0,
       skipped: false,
-      tag: habitTag);
+      tag: habitTag,
+      notifications: []);
   await habitBox.add(myHabit);
   hasHabits();
 

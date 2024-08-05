@@ -2,12 +2,40 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 
 void checkForNotifications() async {
+  /*
+  in checkForNotifications() add for loop for checking every habit if it has a
+  notification to true, if it does then its gonna go through a for loop in notificationData
+  to find all notifications wiht the same id and schedule them for hour and minute
+  */
+  /*  
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)!.notifications == true) {
+      for (int j = 0; j < notificationsBox.length; j++) {
+        if (notificationsBox.getAt(j)!.id == i) {
+          await AwesomeNotifications().createNotification(
+              schedule: NotificationCalendar(
+                  hour: notificationsBox.getAt(j)!.hour,
+                  minute: notificationsBox.getAt(j)!.minute,
+                  second: 0),
+              content: NotificationContent(
+                id: notificationsBox.getAt(j)!.id,
+                channelKey: 'basic_channel',
+                title: habitBox.getAt(i)!.name,
+                body: "Hey there! Don't forget to complete your habit!",
+              ));
+        }
+      }
+    } else {
+      await AwesomeNotifications().cancel(i);
+    }
+  }*/
+
   if (boolBox.get("morningNotification") == true) {
     await AwesomeNotifications().createNotification(
         schedule:
             NotificationCalendar(hour: 9, minute: 0, second: 0, repeats: true),
         content: NotificationContent(
-          id: 1,
+          id: 1111,
           channelKey: 'basic_channel',
           title: 'Morning Habits',
           body:
@@ -21,7 +49,7 @@ void checkForNotifications() async {
         schedule:
             NotificationCalendar(hour: 14, minute: 0, second: 0, repeats: true),
         content: NotificationContent(
-          id: 2,
+          id: 2222,
           channelKey: 'basic_channel',
           title: 'Afternoon Habits',
           body: 'Keep the momentum going with your afternoon habits! ☀️',
@@ -34,7 +62,7 @@ void checkForNotifications() async {
         schedule:
             NotificationCalendar(hour: 21, minute: 0, second: 0, repeats: true),
         content: NotificationContent(
-          id: 3,
+          id: 3333,
           channelKey: 'basic_channel',
           title: 'Evening Habits',
           body: 'Finish strong by completing your evening habits! 🌙',
@@ -47,7 +75,7 @@ void checkForNotifications() async {
         schedule:
             NotificationCalendar(hour: 19, minute: 0, second: 0, repeats: true),
         content: NotificationContent(
-          id: 4,
+          id: 4444,
           channelKey: 'basic_channel',
           title: 'Remaining Habits',
           body:

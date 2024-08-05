@@ -16,7 +16,8 @@ class HabitData extends HiveObject {
       required this.duration,
       required this.durationCompleted,
       required this.skipped,
-      required this.tag});
+      required this.tag,
+      required this.notifications});
   @HiveField(0)
   String name;
 
@@ -52,4 +53,7 @@ class HabitData extends HiveObject {
 
   @HiveField(11)
   String tag;
+
+  @HiveField(12)
+  List<List<int>> notifications;
 }

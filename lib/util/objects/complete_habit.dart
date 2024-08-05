@@ -209,7 +209,8 @@ applyDurationCompleted(
           durationCompleted:
               theDurationValueHours * 60 + theDurationValueMinutes,
           skipped: habitBox.getAt(index)!.skipped,
-          tag: habitBox.getAt(index)!.tag));
+          tag: habitBox.getAt(index)!.tag,
+          notifications: habitBox.getAt(index)!.notifications));
 }
 
 applyAmountCompleted(index, theAmountValue) {
@@ -227,5 +228,6 @@ applyAmountCompleted(index, theAmountValue) {
           duration: habitBox.getAt(index)!.duration,
           durationCompleted: habitBox.getAt(index)!.durationCompleted,
           skipped: habitBox.getAt(index)!.skipped,
-          tag: habitBox.getAt(index)!.tag));
+          tag: habitBox.getAt(index)!.tag,
+          notifications: habitBox.getAt(index)!.notifications));
 }
