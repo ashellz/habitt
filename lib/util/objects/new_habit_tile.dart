@@ -41,6 +41,12 @@ class _NewHabitTileState extends State<NewHabitTile> {
     var editcontroller = widget.editcontroller;
     int index = widget.index;
     var habit = context.read<HabitProvider>().getHabitAt(index);
+    final List habitNotifications = [
+      [19, 12],
+      [19, 14],
+      [19, 13],
+    ];
+
     return GestureDetector(
       onTap: () {
         habitGoalEdit = 0;
@@ -49,6 +55,8 @@ class _NewHabitTileState extends State<NewHabitTile> {
         editcontroller.text = "";
         changed = false;
         updatedIcon = startIcon;
+        context.read<HabitProvider>().changeNotification(habitNotifications);
+
         Navigator.of(context)
             .push(MaterialPageRoute(
                 builder: (context) => EditHabitPage(
@@ -68,6 +76,8 @@ class _NewHabitTileState extends State<NewHabitTile> {
             habitBox.getAt(index)!.tag = habitTag;
             changeTag = true;
           }
+
+          context.read<HabitProvider>().changeNotification([]);
           context.read<HabitProvider>().setTagSelected("All");
           habitGoalEdit = 0;
           updated = false;

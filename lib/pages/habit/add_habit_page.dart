@@ -608,7 +608,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               if (formKey.currentState!.validate()) {
                 context
                     .read<HabitProvider>()
-                    .createNewHabitProvider(createcontroller);
+                    .createNewHabitProvider(createcontroller, context);
                 Navigator.pop(context);
               }
             },

@@ -11,7 +11,7 @@ import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
-import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
+// import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -87,7 +87,8 @@ void callbackDispatcher(context) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
-    updateLastOpenedDate();
+    checkForNotifications();
+    // updateLastOpenedDate();
     return Future.value(true);
   });
 }

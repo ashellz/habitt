@@ -22,9 +22,23 @@ class HabitProvider extends ChangeNotifier {
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
 
+  List _habitNotifications = [];
+
+  List get habitNotifications => _habitNotifications;
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
   String get _mainCategory => mainCategory;
+
+  void changeNotification(List notification) {
+    print("notification has be changed to $notification");
+    _habitNotifications = notification;
+    notifyListeners();
+  }
+
+  void removeNotification(notification) {
+    _habitNotifications.remove(notification);
+    notifyListeners();
+  }
 
   void setTagSelected(String? tag) {
     _tagSelected = tag;
@@ -87,8 +101,9 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createNewHabitProvider(createcontroller) async {
-    await createNewHabit(createcontroller);
+  Future<void> createNewHabitProvider(
+      createcontroller, BuildContext context) async {
+    await createNewHabit(createcontroller, context);
     chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();

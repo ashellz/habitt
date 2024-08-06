@@ -76,6 +76,7 @@ Add Features:
 
 Add cookie icon
 Add chef top icon
+Add bell icon
 Add a feature so a user can edit completion values of habits the last 5 days
 
 # Add animations
@@ -122,12 +123,14 @@ Get tag number, compare it to previous tag, scroll to the side of the current ta
 - scroll by number of letters for each tag button in between and how many buttons there are
 - use the calculation to get width of buttons and scroll to the side by that amount of width
 
-
-
 Feature to add:
+
 - custom notifications for each habit
+
 # - each habit has a new bool field called notifications
+
 # - create a new box for notificationData having int id, hour and minute fields
+
 - maybe add a new field "id" in a habitTile to connect it with notifications if necesarry
 - in checkForNotifications() add for loop for checking every habit if it has a notification to true, if it does then its gonna go through a for loop in notificationData to find all notifications wiht the same id and schedule them for hour and minute
 

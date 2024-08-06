@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_spinbox/material.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
+import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
@@ -178,7 +179,31 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              // show either new page or modalbottomsheet
+                              print(
+                                  habitBox.getAt(widget.index)!.notifications);
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      const NotificationsPage(),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin = Offset(0.0, 1.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
+
+                                    var tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: curve));
+
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              ).whenComplete(() => print(
+                                  habitBox.getAt(widget.index)!.notifications));
                             },
                             icon: const Icon(
                               Icons.notifications,

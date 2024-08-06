@@ -1,14 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
+import 'package:provider/provider.dart';
 
 late HabitData myHabit;
 
-Future<void> createNewHabit(createcontroller) async {
+Future<void> createNewHabit(createcontroller, BuildContext context) async {
   currentDurationValue =
       currentDurationValueMinutes + (currentDurationValueHours * 60);
+
+  List habitNotifications = context.watch<HabitProvider>().habitNotifications;
 
   myHabit = HabitData(
       name: createcontroller.text,
@@ -23,11 +28,12 @@ Future<void> createNewHabit(createcontroller) async {
       durationCompleted: 0,
       skipped: false,
       tag: habitTag,
-      notifications: []);
+      notifications: habitNotifications);
   await habitBox.add(myHabit);
   hasHabits();
 
   createcontroller.clear();
+  habitNotifications = [];
   updatedIcon = startIcon;
   dropDownValue = 'Any time';
   amountNameController.text = "times";

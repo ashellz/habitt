@@ -7,28 +7,27 @@ void checkForNotifications() async {
   notification to true, if it does then its gonna go through a for loop in notificationData
   to find all notifications wiht the same id and schedule them for hour and minute
   */
-  /*  
+
   for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)!.notifications == true) {
-      for (int j = 0; j < notificationsBox.length; j++) {
-        if (notificationsBox.getAt(j)!.id == i) {
-          await AwesomeNotifications().createNotification(
-              schedule: NotificationCalendar(
-                  hour: notificationsBox.getAt(j)!.hour,
-                  minute: notificationsBox.getAt(j)!.minute,
-                  second: 0),
-              content: NotificationContent(
-                id: notificationsBox.getAt(j)!.id,
-                channelKey: 'basic_channel',
-                title: habitBox.getAt(i)!.name,
-                body: "Hey there! Don't forget to complete your habit!",
-              ));
-        }
+    if (habitBox.getAt(i)!.notifications != []) {
+      for (int j = 0; j < habitBox.getAt(i)!.notifications.length; j++) {
+        List notificationsList = habitBox.getAt(i)!.notifications[j];
+        await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+                hour: notificationsList[0],
+                minute: notificationsList[1],
+                second: 0),
+            content: NotificationContent(
+              id: i,
+              channelKey: 'basic_channel',
+              title: habitBox.getAt(i)!.name,
+              body: "Hey there! Don't forget to complete your habit!",
+            ));
       }
     } else {
       await AwesomeNotifications().cancel(i);
     }
-  }*/
+  }
 
   if (boolBox.get("morningNotification") == true) {
     await AwesomeNotifications().createNotification(
