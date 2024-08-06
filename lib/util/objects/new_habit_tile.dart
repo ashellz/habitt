@@ -41,10 +41,11 @@ class _NewHabitTileState extends State<NewHabitTile> {
     var editcontroller = widget.editcontroller;
     int index = widget.index;
     var habit = context.read<HabitProvider>().getHabitAt(index);
-    List habitNotifications = habitBox.getAt(index)!.notifications;
 
     return GestureDetector(
       onTap: () {
+        List habitNotifications = habitBox.getAt(index)!.notifications;
+
         habitGoalEdit = 0;
         updated = false;
         dropDownChanged = false;
@@ -67,13 +68,13 @@ class _NewHabitTileState extends State<NewHabitTile> {
               break;
             }
           }
-
           if (changeTag) {
             habitBox.getAt(index)!.tag = habitTag;
             changeTag = true;
           }
 
           context.read<HabitProvider>().changeNotification([]);
+
           context.read<HabitProvider>().setTagSelected("All");
           habitGoalEdit = 0;
           updated = false;

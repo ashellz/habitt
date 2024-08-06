@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -150,14 +149,6 @@ Widget notificationTile(List<int> notification, context) {
                                       ),
                                       onChanged: (value) {
                                         mystate(() {
-                                          for (int i = 0;
-                                              i < habitBox.length;
-                                              i++) {
-                                            print(habitBox
-                                                .getAt(i)!
-                                                .notifications);
-                                          }
-
                                           notificationMinute = value;
 
                                           notification[1] =

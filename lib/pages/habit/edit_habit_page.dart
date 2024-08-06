@@ -737,16 +737,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
               context
                   .read<HabitProvider>()
                   .editHabitProvider(widget.index, context, editcontroller);
-
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
-              } else {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const NewHomePage(),
-                  ),
-                );
-              }
             }
           },
         ),

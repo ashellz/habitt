@@ -65,8 +65,6 @@ void editHabit(int index, BuildContext context, editcontroller) {
           notifications: habitNotifications));
 
   dropDownValue = 'Any time';
-  editcontroller.text = "";
-  updatedIcon = startIcon;
 
   openCategory("edited");
   // showPopup(context, "Habit edited!");
