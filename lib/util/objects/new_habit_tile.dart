@@ -41,11 +41,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
     var editcontroller = widget.editcontroller;
     int index = widget.index;
     var habit = context.read<HabitProvider>().getHabitAt(index);
-    final List habitNotifications = [
-      [19, 12],
-      [19, 14],
-      [19, 13],
-    ];
+    List habitNotifications = habitBox.getAt(index)!.notifications;
 
     return GestureDetector(
       onTap: () {
