@@ -41,7 +41,8 @@ class ChangelogPage extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("- Added ability to add notifications to each habit")
+                    Text(
+                        "- Added ability to add notifications to each habit\n- Massive changes to notifications, including MANY more notification texts and a new algorithm for selecting the right text")
                   ])),
 
           // 04.08.2024

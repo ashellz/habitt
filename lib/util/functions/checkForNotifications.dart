@@ -7,68 +7,238 @@ import 'package:habit_tracker/pages/new_home_page.dart';
 void checkForNotifications() async {
   checkForCustomNotifications();
 
-  List oneMoreNotificationTexts = [
-    "You're crushing it! Just one more habit to go!",
+  scheduleMorningNotification();
+  scheduleAfternoonNotification();
+  scheduleEveningNotification();
+  scheduleDailyNotification();
+}
+
+void scheduleMorningNotification() async {
+  int morningHabits = 0;
+  int morningHabitsCompleted = 0;
+
+  List morningNotificationTexts = [
+    "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
+    "Rise and shine! 🌅 Let's tackle those morning habits! 💥",
+    "Morning, superstar! 🌟 Ready to conquer your habits today? 🏆",
+    "Wake up and get moving! 🌄 Time to complete your morning habits! 🚀",
+    "Start your day right! 🌼 Don't forget your morning habits!",
+    "Bright and early! ☀️ Let's get those morning habits done! 💪",
+    "Top of the morning! 🌻 Time to work on your habits! 🏋️",
+    "New day, new opportunities! 🌞 Begin with your morning habits! 🔥",
+    "Good morning! 🌸 Let's kick off the day with your habits! 💥",
+    "It's a fresh start! 🌿 Time to focus on your morning habits! 🏅"
   ];
 
-  List morningNotificationTexts = [];
-  List afternoonNotificationTexts = [];
-  List eveningNotificationTexts = [];
-  List dailyNotificationTexts = [];
+  List morningNotificationTextsOneLeft = [
+    "You're crushing it! Just one more habit to go! 💪",
+    "Almost there! Just one habit left to complete! 🌞",
+    "Great job so far! One more habit to finish your morning! 💪",
+    "Keep it up! Just one more habit and you're done! ✨",
+    "You're almost done! One more habit to complete your morning! 🌟"
+  ];
 
   if (boolBox.get("morningNotification") == true) {
-    await AwesomeNotifications().createNotification(
-        schedule:
-            NotificationCalendar(hour: 9, minute: 0, second: 0, repeats: true),
-        content: NotificationContent(
-          id: 1111,
-          channelKey: 'basic_channel',
-          title: 'Morning Habits',
-          body:
-              "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
-        ));
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)?.category == "Morning") {
+        if (habitBox.getAt(i)?.completed == true) {
+          morningHabitsCompleted++;
+        }
+        morningHabits++;
+      }
+    }
+
+    if (morningHabitsCompleted != morningHabits) {
+      if (morningHabits - morningHabitsCompleted == 1) {
+        morningNotificationTexts = morningNotificationTextsOneLeft;
+      }
+
+      await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+              hour: 9, minute: 0, second: 0, repeats: true),
+          content: NotificationContent(
+            id: 1111,
+            channelKey: 'basic_channel',
+            title: 'Morning Habits',
+            body: morningNotificationTexts[
+                Random().nextInt(morningNotificationTexts.length)],
+          ));
+    } else {
+      await AwesomeNotifications().cancel(1111);
+    }
   } else {
-    await AwesomeNotifications().cancel(1);
+    await AwesomeNotifications().cancel(1111);
   }
+}
+
+void scheduleAfternoonNotification() async {
+  int afternoonHabits = 0;
+  int afternoonHabitsCompleted = 0;
+
+  List afternoonNotificationTexts = [
+    "Keep the momentum going with your afternoon habits! ☀️",
+    "Stay productive! Time to work on your afternoon habits! 💪",
+    "Good afternoon! Don't forget your habits! 🌞",
+    "Let's make this afternoon count! Finish your habits! 🌻",
+    "Halfway through the day! Keep up with your habits! 🚀",
+    "Afternoon boost! Time to complete your habits! ⚡️",
+    "Push through the afternoon slump! Finish your habits! 🌟",
+    "Stay focused! Afternoon habits are waiting! 🏆",
+    "Make your afternoon productive! Work on your habits! 🔥",
+    "Good vibes this afternoon! Don’t forget your habits! 🌸"
+  ];
+
+  List afternoonNotificationTextsOneLeft = [
+    "You're crushing it! Just one more habit to go! 💪",
+    "Almost done! Just one more habit to go this afternoon! ☀️",
+    "Great job! Only one habit left for the afternoon! 💪",
+    "You're doing amazing! Just one more habit this afternoon! 🌞",
+    "Keep pushing! One more habit to complete your afternoon! 🔥"
+  ];
+
   if (boolBox.get("afternoonNotification") == true) {
-    await AwesomeNotifications().createNotification(
-        schedule:
-            NotificationCalendar(hour: 14, minute: 0, second: 0, repeats: true),
-        content: NotificationContent(
-          id: 2222,
-          channelKey: 'basic_channel',
-          title: 'Afternoon Habits',
-          body: 'Keep the momentum going with your afternoon habits! ☀️',
-        ));
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)?.category == "Afternoon") {
+        if (habitBox.getAt(i)?.completed == true) {
+          afternoonHabitsCompleted++;
+        }
+        afternoonHabits++;
+      }
+    }
+
+    if (afternoonHabitsCompleted != afternoonHabits) {
+      if (afternoonHabits - afternoonHabitsCompleted == 1) {
+        afternoonNotificationTexts = afternoonNotificationTextsOneLeft;
+      }
+
+      await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+              hour: 14, minute: 0, second: 0, repeats: true),
+          content: NotificationContent(
+            id: 2222,
+            channelKey: 'basic_channel',
+            title: 'Afternoon Habits',
+            body: afternoonNotificationTexts[
+                Random().nextInt(afternoonNotificationTexts.length)],
+          ));
+    } else {
+      await AwesomeNotifications().cancel(2222);
+    }
   } else {
-    await AwesomeNotifications().cancel(2);
+    await AwesomeNotifications().cancel(2222);
   }
+}
+
+void scheduleEveningNotification() async {
+  int eveningHabits = 0;
+  int eveningHabitsCompleted = 0;
+
+  List eveningNotificationTexts = [
+    "Finish strong by completing your evening habits! 🌙",
+    "Wrap up your day with your evening habits! 🌇",
+    "Evening is here! Time to complete your habits! 🌜",
+    "Wind down your day by finishing your habits! 🌟",
+    "Evening reminder! Don't forget your habits! ✨",
+    "End your day on a high note with your habits! 🌌",
+    "Good evening! Time to check off your habits! 🌃",
+    "Evening routine time! Complete your habits! 🌠",
+    "Finish the day right by completing your habits! 🌙",
+    "Evening success starts with finishing your habits! 🌆"
+  ];
+
+  List eveningNotificationTextsOneLeft = [
+    "You're crushing it! Just one more habit to go! 💪",
+    "You're nearly there! Just one more habit this evening! 🌙",
+    "Finish strong! One more habit to complete tonight! 🌟",
+    "Almost finished! Just one habit left for the evening! ✨",
+    "End your day right! One more habit to go! 🌌"
+  ];
+
   if (boolBox.get("eveningNotification") == true) {
-    await AwesomeNotifications().createNotification(
-        schedule:
-            NotificationCalendar(hour: 21, minute: 0, second: 0, repeats: true),
-        content: NotificationContent(
-          id: 3333,
-          channelKey: 'basic_channel',
-          title: 'Evening Habits',
-          body: 'Finish strong by completing your evening habits! 🌙',
-        ));
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)?.category == "Evening") {
+        if (habitBox.getAt(i)?.completed == true) {
+          eveningHabitsCompleted++;
+        }
+        eveningHabits++;
+      }
+    }
+
+    if (eveningHabitsCompleted != eveningHabits) {
+      if (eveningHabits - eveningHabitsCompleted == 1) {
+        eveningNotificationTexts = eveningNotificationTextsOneLeft;
+      }
+
+      await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+              hour: 21, minute: 0, second: 0, repeats: true),
+          content: NotificationContent(
+            id: 3333,
+            channelKey: 'basic_channel',
+            title: 'Evening Habits',
+            body: eveningNotificationTexts[
+                Random().nextInt(eveningNotificationTexts.length)],
+          ));
+    } else {
+      await AwesomeNotifications().cancel(3333);
+    }
   } else {
-    await AwesomeNotifications().cancel(3);
+    await AwesomeNotifications().cancel(3333);
   }
+}
+
+void scheduleDailyNotification() async {
+  int dailyHabits = 0;
+  int dailyHabitsCompleted = 0;
+
+  List dailyNotificationTexts = [
+    "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
+    "7 PM reminder! Time to wrap up your habits for the day! 🕖",
+    "7 PM check-in! Complete your habits before the day ends! 🌇",
+    "Don't miss out! Finish your habits before the day ends! 🕢",
+    "7 PM and it's habit time! Wrap up your day strong! 💥",
+    "Take a moment at 7 PM to check your remaining habits! 🌟",
+    "Evening is near! Make sure to finish your habits! 🌙",
+    "7 PM habit check! Complete your tasks for the day! 🕖",
+    "Daily reminder at 7 PM! Finish your habits strong! 💪"
+  ];
+
+  List dailyNotificationTextsOneLeft = [
+    "You're crushing it! Just one more habit to go! 💪",
+    "One last push! Just one more habit to complete today! 💪",
+    "You're so close! One habit left for the day! 🌅",
+    "Finish the day strong! Just one more habit! 🏅",
+    "Almost there! One more habit to wrap up your day! 🌟"
+  ];
+
   if (boolBox.get("dailyNotification") == true) {
-    await AwesomeNotifications().createNotification(
-        schedule:
-            NotificationCalendar(hour: 19, minute: 0, second: 0, repeats: true),
-        content: NotificationContent(
-          id: 4444,
-          channelKey: 'basic_channel',
-          title: 'Remaining Habits',
-          body:
-              "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
-        ));
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)?.completed == true) {
+        dailyHabitsCompleted++;
+      }
+      dailyHabits++;
+    }
+
+    if (dailyHabitsCompleted != dailyHabits) {
+      if (dailyHabits - dailyHabitsCompleted == 1) {
+        dailyNotificationTexts = dailyNotificationTextsOneLeft;
+      }
+
+      await AwesomeNotifications().createNotification(
+          schedule: NotificationCalendar(
+              hour: 19, minute: 0, second: 0, repeats: true),
+          content: NotificationContent(
+            id: 4444,
+            channelKey: 'basic_channel',
+            title: 'Remaining Habits',
+            body: dailyNotificationTexts[
+                Random().nextInt(dailyNotificationTexts.length)],
+          ));
+    } else {
+      await AwesomeNotifications().cancel(4444);
+    }
   } else {
-    await AwesomeNotifications().cancel(4);
+    await AwesomeNotifications().cancel(4444);
   }
 }
 
@@ -147,7 +317,6 @@ void checkForCustomNotifications() async {
   }
 }
 
-// checks if you have any completed habits to praise you or to motivate you
 void checkCustomNotificationTexts(texts, good, bad, neutral, index) {
   bool good = false;
   bool amountCheck = false;
@@ -169,6 +338,8 @@ void checkCustomNotificationTexts(texts, good, bad, neutral, index) {
     if (habit.durationCompleted > 0) {
       good = true;
     }
+  } else {
+    texts = neutral;
   }
 
   if (good) {
@@ -177,5 +348,7 @@ void checkCustomNotificationTexts(texts, good, bad, neutral, index) {
     texts = bad;
   }
 
-  texts.addAll(neutral);
+  if (texts != neutral) {
+    texts.addAll(neutral);
+  }
 }
