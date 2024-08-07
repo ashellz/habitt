@@ -5,6 +5,7 @@ import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
@@ -26,9 +27,10 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.black,
       ),
       body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 30),
+            padding: const EdgeInsets.only(top: 30),
             child: Text("Settings",
                 style: TextStyle(
                     fontSize: 42,
@@ -36,117 +38,165 @@ class _SettingsPageState extends State<SettingsPage> {
                     fontWeight: FontWeight.bold)),
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            padding: EdgeInsets.only(top: 20, bottom: 10),
             child: Text(
-              "Notification",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              "Notifications",
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "How often should you be notified?",
-              style: TextStyle(fontSize: 18, color: Colors.white),
+          Container(
+            padding: const EdgeInsets.all(20.0),
+            height: 130,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade900,
+                borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Transform.translate(
+                  offset: const Offset(0, -5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Morning notification",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        width: 50,
+                        height: 40,
+                        child: FittedBox(
+                          child: Switch(
+                            activeColor: theLightColor,
+                            inactiveTrackColor: Colors.grey.shade800,
+                            thumbColor: WidgetStateProperty.all(Colors.white),
+                            value: boolBox.get('morningNotification')!,
+                            onChanged: (value) {
+                              setState(() {
+                                boolBox.put('morningNotification', value);
+                                checkForNotifications();
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.grey.shade800,
+                      fixedSize: Size(MediaQuery.of(context).size.width, 50),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                    onPressed: () {
+                      int hour = 0;
+                      int minute = 0;
+                      showModalBottomSheet(
+                        isDismissible: true,
+                        context: context,
+                        builder: (context) => 
+                      );
+                    },
+                    child: const Text("Choose time",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ))),
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightColor,
-              title: const Text(
-                "Don't notify me",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 0,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', false);
-                  boolBox.put('morningNotification', false);
-                  boolBox.put('afternoonNotification', false);
-                  boolBox.put('eveningNotification', false);
-                });
+          const SizedBox(height: 20),
+          const Text(
+            "How often should you be notified?",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          RadioListTile(
+            groupValue: notifValue,
+            activeColor: theLightColor,
+            title: const Text(
+              "Don't notify me",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            value: 0,
+            onChanged: (value) {
+              setState(() {
+                notifValue = value!;
+                streakBox.put('notifValue', value);
+                boolBox.put('dailyNotification', false);
+                boolBox.put('morningNotification', false);
+                boolBox.put('afternoonNotification', false);
+                boolBox.put('eveningNotification', false);
+              });
 
-                checkForNotifications();
-              },
-            ),
+              checkForNotifications();
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightColor,
-              title: const Text(
-                "Once a day",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 1,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', true);
-                  boolBox.put('morningNotification', false);
-                  boolBox.put('afternoonNotification', false);
-                  boolBox.put('eveningNotification', false);
-                });
-
-                checkForNotifications();
-              },
+          RadioListTile(
+            groupValue: notifValue,
+            activeColor: theLightColor,
+            title: const Text(
+              "Once a day",
+              style: TextStyle(color: Colors.white, fontSize: 16),
             ),
+            value: 1,
+            onChanged: (value) {
+              setState(() {
+                notifValue = value!;
+                streakBox.put('notifValue', value);
+                boolBox.put('dailyNotification', true);
+                boolBox.put('morningNotification', false);
+                boolBox.put('afternoonNotification', false);
+                boolBox.put('eveningNotification', false);
+              });
+
+              checkForNotifications();
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightColor,
-              title: const Text(
-                "Three times a day",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 2,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', false);
-                  boolBox.put('morningNotification', true);
-                  boolBox.put('afternoonNotification', true);
-                  boolBox.put('eveningNotification', true);
-                });
-
-                checkForNotifications();
-              },
+          RadioListTile(
+            groupValue: notifValue,
+            activeColor: theLightColor,
+            title: const Text(
+              "Three times a day",
+              style: TextStyle(color: Colors.white, fontSize: 16),
             ),
+            value: 2,
+            onChanged: (value) {
+              setState(() {
+                notifValue = value!;
+                streakBox.put('notifValue', value);
+                boolBox.put('dailyNotification', false);
+                boolBox.put('morningNotification', true);
+                boolBox.put('afternoonNotification', true);
+                boolBox.put('eveningNotification', true);
+              });
+
+              checkForNotifications();
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightColor,
-              title: const Text(
-                "Custom",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 3,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', false);
-                  boolBox.put('morningNotification', false);
-                  boolBox.put('afternoonNotification', false);
-                  boolBox.put('eveningNotification', false);
-                });
-
-                checkForNotifications();
-              },
+          RadioListTile(
+            groupValue: notifValue,
+            activeColor: theLightColor,
+            title: const Text(
+              "Custom",
+              style: TextStyle(color: Colors.white, fontSize: 16),
             ),
+            value: 3,
+            onChanged: (value) {
+              setState(() {
+                notifValue = value!;
+                streakBox.put('notifValue', value);
+                boolBox.put('dailyNotification', false);
+                boolBox.put('morningNotification', false);
+                boolBox.put('afternoonNotification', false);
+                boolBox.put('eveningNotification', false);
+              });
+
+              checkForNotifications();
+            },
           ),
           AnimatedContainer(
             color: Colors.black,
@@ -157,7 +207,7 @@ class _SettingsPageState extends State<SettingsPage> {
               opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
-                padding: const EdgeInsets.only(left: 43),
+                padding: const EdgeInsets.only(left: 23),
                 child: Row(
                   children: [
                     Checkbox(
@@ -190,7 +240,7 @@ class _SettingsPageState extends State<SettingsPage> {
               opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
-                padding: const EdgeInsets.only(left: 43),
+                padding: const EdgeInsets.only(left: 23),
                 child: Row(
                   children: [
                     Checkbox(
@@ -223,7 +273,7 @@ class _SettingsPageState extends State<SettingsPage> {
               opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
-                padding: const EdgeInsets.only(left: 43),
+                padding: const EdgeInsets.only(left: 23),
                 child: Row(
                   children: [
                     Checkbox(
@@ -256,7 +306,7 @@ class _SettingsPageState extends State<SettingsPage> {
               opacity: notifValue == 3 ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 200),
               child: Padding(
-                padding: const EdgeInsets.only(left: 43),
+                padding: const EdgeInsets.only(left: 23),
                 child: Row(
                   children: [
                     Checkbox(
@@ -283,7 +333,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Visibility(
             visible: boolBox.get("hasNotificationAccess") == false,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              padding: const EdgeInsets.only(top: 10),
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor:
@@ -305,7 +355,7 @@ class _SettingsPageState extends State<SettingsPage> {
           Visibility(
             visible: boolBox.get("disabledBatteryOptimization") == false,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: TextButton(
                 style: ButtonStyle(
                   backgroundColor:
@@ -325,7 +375,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            padding: EdgeInsets.only(top: 20, bottom: 10),
             child: Text(
               "Appearance",
               style: TextStyle(
@@ -334,37 +384,33 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Colors.white),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Checkbox(
-                    activeColor: theLightColor,
-                    value:
-                        context.watch<HabitProvider>().displayEmptyCategories,
-                    onChanged: (value) {
-                      setState(() {
-                        context
-                            .read<HabitProvider>()
-                            .updateDisplayEmptyCategories(!value!);
-                      });
-                    },
-                  ),
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Checkbox(
+                  activeColor: theLightColor,
+                  value: context.watch<HabitProvider>().displayEmptyCategories,
+                  onChanged: (value) {
+                    setState(() {
+                      context
+                          .read<HabitProvider>()
+                          .updateDisplayEmptyCategories(!value!);
+                    });
+                  },
                 ),
-                const Expanded(
-                  flex: 6,
-                  child: Text(
-                    "Dispay empty categories on home page",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+              ),
+              const Expanded(
+                flex: 6,
+                child: Text(
+                  "Dispay empty categories on home page",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            padding: EdgeInsets.only(top: 20, bottom: 10),
             child: Text(
               "Prefferences",
               style: TextStyle(
@@ -373,68 +419,53 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: Colors.white),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Checkbox(
-                    activeColor: theLightColor,
-                    value: boolBox.get("hapticFeedback"),
-                    onChanged: (value) {
-                      setState(() {
-                        boolBox.put(
-                            "hapticFeedback", !boolBox.get("hapticFeedback")!);
-                      });
-                    },
-                  ),
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Checkbox(
+                  activeColor: theLightColor,
+                  value: boolBox.get("hapticFeedback"),
+                  onChanged: (value) {
+                    setState(() {
+                      boolBox.put(
+                          "hapticFeedback", !boolBox.get("hapticFeedback")!);
+                    });
+                  },
                 ),
-                const Expanded(
-                  flex: 6,
-                  child: Text(
-                    "Haptic feedback (vibration)",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+              ),
+              const Expanded(
+                flex: 6,
+                child: Text(
+                  "Haptic feedback (vibration)",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Checkbox(
-                    activeColor: theLightColor,
-                    value: boolBox.get("sound"),
-                    onChanged: (value) {
-                      setState(() {
-                        boolBox.put("sound", !boolBox.get("sound")!);
-                      });
-                    },
-                  ),
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Checkbox(
+                  activeColor: theLightColor,
+                  value: boolBox.get("sound"),
+                  onChanged: (value) {
+                    setState(() {
+                      boolBox.put("sound", !boolBox.get("sound")!);
+                    });
+                  },
                 ),
-                const Expanded(
-                  flex: 6,
-                  child: Text(
-                    "Sound",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+              ),
+              const Expanded(
+                flex: 6,
+                child: Text(
+                  "Sound",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          ElevatedButton(
-              onPressed: () {
-                for (int i = 0; i < habitBox.length; i++) {
-                  if (habitBox.getAt(i)?.name == 'Brush teeth') {
-                    habitBox.getAt(i)!.streak = 9;
-                  }
-                }
-              },
-              child: Text("press")),
         ],
       ),
     );
