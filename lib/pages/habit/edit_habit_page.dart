@@ -120,6 +120,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
       habitTag = habitBox.getAt(widget.index)!.tag;
 
+      context.read<HabitProvider>().changeNotification(
+          List.from(habitBox.getAt(widget.index)!.notifications));
+
       updated = true;
     }
 
@@ -492,41 +495,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
               const SizedBox(height: 15),
 
-              /*
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButtonFormField(
-                    dropdownColor: theColor,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      filled: true,
-                      fillColor: theColor,
-                    ),
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                    hint: const Text("Any Time",
-                        style: TextStyle(color: Colors.white)),
-                    items: dropdownItems,
-                    value: habitBox.getAt(widget.index)!.category,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropDownChanged = true;
-                        dropDownValue = newValue!;
-                      });
-                    },
-                  ),
-                ),
-              ),*/
               // HABIT GOAL
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
@@ -734,8 +702,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
               const Text('Save Changes', style: TextStyle(color: Colors.white)),
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              context
-                  .read<HabitProvider>()
+              Provider.of<HabitProvider>(context, listen: false)
                   .editHabitProvider(widget.index, context, editcontroller);
             }
           },

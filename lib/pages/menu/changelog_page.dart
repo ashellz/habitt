@@ -25,6 +25,24 @@ class ChangelogPage extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
+          // 07.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "07.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("- Added ability to add notifications to each habit")
+                  ])),
 
           // 04.08.2024
           const Padding(

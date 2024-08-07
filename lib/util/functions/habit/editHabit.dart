@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/pages/habit/notifications_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
 
 var habitListLenght = Hive.box<HabitData>('habits').length;
 
@@ -16,8 +15,6 @@ late String editedTo;
 void editHabit(int index, BuildContext context, editcontroller) {
   editedFrom = habitBox.getAt(index)!.category;
   editedTo = dropDownValue;
-
-  List habitNotifications = context.watch<HabitProvider>().habitNotifications;
 
   duration = durationMinutes + (durationHours * 60);
 
@@ -62,7 +59,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
           durationCompleted: 0,
           skipped: false,
           tag: habitTag,
-          notifications: habitNotifications));
+          notifications: editHabitNotifications));
 
   dropDownValue = 'Any time';
 

@@ -4,6 +4,8 @@ import 'package:habit_tracker/util/colors.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 
+List editHabitNotifications = [];
+
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
 
@@ -14,7 +16,7 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
-    List habitNotifications = context.watch<HabitProvider>().habitNotifications;
+    editHabitNotifications = context.watch<HabitProvider>().habitNotifications;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -34,7 +36,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ),
           ),
           const SizedBox(height: 20.0),
-          for (List<int> notification in habitNotifications)
+          for (List<int> notification in editHabitNotifications)
             Column(
               children: [
                 notificationTile(notification, context),
@@ -48,7 +50,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
               onPressed: () {
                 setState(() {
-                  habitNotifications.add([0, 0]);
+                  editHabitNotifications.add([0, 0]);
                 });
               }),
         ],

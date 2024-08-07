@@ -44,15 +44,12 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
     return GestureDetector(
       onTap: () {
-        List habitNotifications = habitBox.getAt(index)!.notifications;
-
         habitGoalEdit = 0;
         updated = false;
         dropDownChanged = false;
         editcontroller.text = "";
         changed = false;
         updatedIcon = startIcon;
-        context.read<HabitProvider>().changeNotification(habitNotifications);
 
         Navigator.of(context)
             .push(MaterialPageRoute(
