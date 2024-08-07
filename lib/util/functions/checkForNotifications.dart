@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 
 void checkForNotifications() async {
@@ -110,19 +111,20 @@ void checkForCustomNotifications() async {
     "Stay motivated! Get your habit done today!"
   ];
 
-  List<String> customNotificationTexts = [];
-
-  checkCustomNotificationTexts(
-      customNotificationTexts,
-      customNotificationTextsGood,
-      customNotificationTextsBad,
-      customNotificationTextsNeutral);
-
   for (int i = 0; i < habitBox.length; i++) {
     if (habitBox.getAt(i)!.notifications != []) {
       for (int j = 0; j < habitBox.getAt(i)!.notifications.length; j++) {
         if (!habitBox.getAt(i)!.completed) {
           List notificationsList = habitBox.getAt(i)!.notifications[j];
+          List<String> customNotificationTexts = [];
+
+          checkCustomNotificationTexts(
+              customNotificationTexts,
+              customNotificationTextsGood,
+              customNotificationTextsBad,
+              customNotificationTextsNeutral,
+              i);
+
           await AwesomeNotifications().createNotification(
               schedule: NotificationCalendar(
                   hour: notificationsList[0],
@@ -146,12 +148,26 @@ void checkForCustomNotifications() async {
 }
 
 // checks if you have any completed habits to praise you or to motivate you
-void checkCustomNotificationTexts(texts, good, bad, neutral) {
+void checkCustomNotificationTexts(texts, good, bad, neutral, index) {
   bool good = false;
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)!.completed) {
+  bool amountCheck = false;
+  bool durationCheck = false;
+
+  HabitData habit = habitBox.getAt(index)!;
+
+  if (habit.amount > 1) {
+    amountCheck = true;
+  } else if (habit.duration > 0) {
+    durationCheck = true;
+  }
+
+  if (amountCheck == true) {
+    if (habit.amountCompleted > 0) {
       good = true;
-      break;
+    }
+  } else if (durationCheck == true) {
+    if (habit.durationCompleted > 0) {
+      good = true;
     }
   }
 
