@@ -1,8 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-Widget chooseTime() {
+Widget chooseNotificationTime(time) {
+  int hour = 0;
+  int minute = 0;
+  late List timeBox;
+
+  switch (time) {
+    case "Morning":
+      timeBox = listBox.get("morningNotificationTime")!;
+      hour = timeBox[0];
+      minute = timeBox[1];
+      break;
+    case "Afternoon":
+      timeBox = listBox.get("afternoonNotificationTime")!;
+      hour = timeBox[0];
+      minute = timeBox[1];
+      break;
+    case "Evening":
+      timeBox = listBox.get("eveningNotificationTime")!;
+      hour = timeBox[0];
+      minute = timeBox[1];
+      break;
+    case "Daily":
+      timeBox = listBox.get("dailyNotificationTime")!;
+      hour = timeBox[0];
+      minute = timeBox[1];
+      break;
+  }
+
   return StatefulBuilder(
       builder: (context, setState) => Container(
             height: 300,
@@ -100,6 +129,9 @@ Widget chooseTime() {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                            timeBox[0] = hour;
+                            timeBox[1] = minute;
+                            checkForNotifications();
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(

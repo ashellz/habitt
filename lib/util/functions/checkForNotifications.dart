@@ -48,21 +48,29 @@ void scheduleMorningNotification() async {
       }
     }
 
-    if (morningHabitsCompleted != morningHabits) {
-      if (morningHabits - morningHabitsCompleted == 1) {
-        morningNotificationTexts = morningNotificationTextsOneLeft;
-      }
+    if (morningHabits != 0) {
+      if (morningHabitsCompleted != morningHabits) {
+        if (morningHabits - morningHabitsCompleted == 1) {
+          morningNotificationTexts = morningNotificationTextsOneLeft;
+        }
 
-      await AwesomeNotifications().createNotification(
-          schedule: NotificationCalendar(
-              hour: 9, minute: 0, second: 0, repeats: true),
-          content: NotificationContent(
-            id: 1111,
-            channelKey: 'basic_channel',
-            title: 'Morning Habits',
-            body: morningNotificationTexts[
-                Random().nextInt(morningNotificationTexts.length)],
-          ));
+        await AwesomeNotifications().cancel(1111);
+        await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+                hour: listBox.get("morningNotificationTime")![0],
+                minute: listBox.get("morningNotificationTime")![1],
+                second: 0,
+                repeats: true),
+            content: NotificationContent(
+              id: 1111,
+              channelKey: 'basic_channel',
+              title: 'Morning Habits',
+              body: morningNotificationTexts[
+                  Random().nextInt(morningNotificationTexts.length)],
+            ));
+      } else {
+        await AwesomeNotifications().cancel(1111);
+      }
     } else {
       await AwesomeNotifications().cancel(1111);
     }
@@ -106,21 +114,29 @@ void scheduleAfternoonNotification() async {
       }
     }
 
-    if (afternoonHabitsCompleted != afternoonHabits) {
-      if (afternoonHabits - afternoonHabitsCompleted == 1) {
-        afternoonNotificationTexts = afternoonNotificationTextsOneLeft;
-      }
+    if (afternoonHabits != 0) {
+      if (afternoonHabitsCompleted != afternoonHabits) {
+        if (afternoonHabits - afternoonHabitsCompleted == 1) {
+          afternoonNotificationTexts = afternoonNotificationTextsOneLeft;
+        }
 
-      await AwesomeNotifications().createNotification(
-          schedule: NotificationCalendar(
-              hour: 14, minute: 0, second: 0, repeats: true),
-          content: NotificationContent(
-            id: 2222,
-            channelKey: 'basic_channel',
-            title: 'Afternoon Habits',
-            body: afternoonNotificationTexts[
-                Random().nextInt(afternoonNotificationTexts.length)],
-          ));
+        await AwesomeNotifications().cancel(2222);
+        await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+                hour: listBox.get("afternoonNotificationTime")![0],
+                minute: listBox.get("afternoonNotificationTime")![1],
+                second: 0,
+                repeats: true),
+            content: NotificationContent(
+              id: 2222,
+              channelKey: 'basic_channel',
+              title: 'Afternoon Habits',
+              body: afternoonNotificationTexts[
+                  Random().nextInt(afternoonNotificationTexts.length)],
+            ));
+      } else {
+        await AwesomeNotifications().cancel(2222);
+      }
     } else {
       await AwesomeNotifications().cancel(2222);
     }
@@ -164,21 +180,29 @@ void scheduleEveningNotification() async {
       }
     }
 
-    if (eveningHabitsCompleted != eveningHabits) {
-      if (eveningHabits - eveningHabitsCompleted == 1) {
-        eveningNotificationTexts = eveningNotificationTextsOneLeft;
-      }
+    if (eveningHabits != 0) {
+      if (eveningHabitsCompleted != eveningHabits) {
+        if (eveningHabits - eveningHabitsCompleted == 1) {
+          eveningNotificationTexts = eveningNotificationTextsOneLeft;
+        }
 
-      await AwesomeNotifications().createNotification(
-          schedule: NotificationCalendar(
-              hour: 21, minute: 0, second: 0, repeats: true),
-          content: NotificationContent(
-            id: 3333,
-            channelKey: 'basic_channel',
-            title: 'Evening Habits',
-            body: eveningNotificationTexts[
-                Random().nextInt(eveningNotificationTexts.length)],
-          ));
+        await AwesomeNotifications().cancel(3333);
+        await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+                hour: listBox.get("eveningNotificationTime")![0],
+                minute: listBox.get("eveningNotificationTime")![1],
+                second: 0,
+                repeats: true),
+            content: NotificationContent(
+              id: 3333,
+              channelKey: 'basic_channel',
+              title: 'Evening Habits',
+              body: eveningNotificationTexts[
+                  Random().nextInt(eveningNotificationTexts.length)],
+            ));
+      } else {
+        await AwesomeNotifications().cancel(3333);
+      }
     } else {
       await AwesomeNotifications().cancel(3333);
     }
@@ -219,21 +243,29 @@ void scheduleDailyNotification() async {
       dailyHabits++;
     }
 
-    if (dailyHabitsCompleted != dailyHabits) {
-      if (dailyHabits - dailyHabitsCompleted == 1) {
-        dailyNotificationTexts = dailyNotificationTextsOneLeft;
-      }
+    if (dailyHabits != 0) {
+      if (dailyHabitsCompleted != dailyHabits) {
+        if (dailyHabits - dailyHabitsCompleted == 1) {
+          dailyNotificationTexts = dailyNotificationTextsOneLeft;
+        }
 
-      await AwesomeNotifications().createNotification(
-          schedule: NotificationCalendar(
-              hour: 19, minute: 0, second: 0, repeats: true),
-          content: NotificationContent(
-            id: 4444,
-            channelKey: 'basic_channel',
-            title: 'Remaining Habits',
-            body: dailyNotificationTexts[
-                Random().nextInt(dailyNotificationTexts.length)],
-          ));
+        await AwesomeNotifications().cancel(4444);
+        await AwesomeNotifications().createNotification(
+            schedule: NotificationCalendar(
+                hour: listBox.get("dailyNotificationTime")![0],
+                minute: listBox.get("dailyNotificationTime")![1],
+                second: 0,
+                repeats: true),
+            content: NotificationContent(
+              id: 4444,
+              channelKey: 'basic_channel',
+              title: 'Remaining Habits',
+              body: dailyNotificationTexts[
+                  Random().nextInt(dailyNotificationTexts.length)],
+            ));
+      } else {
+        await AwesomeNotifications().cancel(4444);
+      }
     } else {
       await AwesomeNotifications().cancel(4444);
     }

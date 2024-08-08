@@ -126,12 +126,19 @@ Get tag number, compare it to previous tag, scroll to the side of the current ta
 Feature to add:
 
 # - custom notifications for each habit
+
 # - each habit has a new List field called notifications
+
 # - in checkForNotifications() add for loop for checking every habit if it has a notification to true, if it does then its gonna go through a for loop in notificationData to find all notifications wiht the same id and schedule them for hour and minute
+
 - add more notification texts for morning, afternoon, evening and daily, and make it randomly pick one of them for each time
 - also add a couple diferent notification texts for the custom notification text for each habit
 
-
 Later in the app add tasks page too where you will have tasks you can do once in a certain day (it will reward you with coins)
+
 - all tasks that are completed or not completed will be put into history that you can see but not interact with
 - all the task names will be saved and when creating a new task given as an option to choose that name using an algorithm
+
+##### URGENT!
+
+- Bug that adds height to the pageview: the displayEmptyCategories

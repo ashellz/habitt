@@ -23,6 +23,7 @@ final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
 final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
+final listBox = Hive.box<List>('list');
 final tagBox = Hive.box<TagData>('tags');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
@@ -707,7 +708,7 @@ void fillTagsList(BuildContext context) {
 
 Future<void> playSound() async {
   print("the functio nwas run");
-  await player.play(AssetSource('sound/complete1.mp3'));
+  await player.play(AssetSource('sound/complete3.mp3'));
 }
 
 List<DropdownMenuItem<String>> get dropdownItems {

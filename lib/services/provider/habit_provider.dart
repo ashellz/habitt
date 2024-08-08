@@ -97,7 +97,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void updateDisplayEmptyCategories(bool value) {
-    Hive.box<bool>('bool').put('displayEmptyCategories', !value);
+    boolBox.put('displayEmptyCategories', value);
     notifyListeners();
   }
 

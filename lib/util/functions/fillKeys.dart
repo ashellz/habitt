@@ -6,6 +6,22 @@ Future<void> fillKeys() async {
     boolBox.put("firstTimeOpened", true);
   }
 
+  if (!listBox.containsKey("morningNotificationTime")) {
+    listBox.put("morningNotificationTime", [9, 0]);
+  }
+
+  if (!listBox.containsKey("afternoonNotificationTime")) {
+    listBox.put("afternoonNotificationTime", [14, 0]);
+  }
+
+  if (!listBox.containsKey("eveningNotificationTime")) {
+    listBox.put("eveningNotificationTime", [21, 0]);
+  }
+
+  if (!listBox.containsKey("dailyNotificationTime")) {
+    listBox.put("dailyNotificationTime", [19, 0]);
+  }
+
   if (tagBox.isEmpty) {
     for (int i = 0; i < tagsList.length; i++) {
       tagBox.add(TagData(tag: tagsList[i]));

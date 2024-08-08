@@ -24,7 +24,10 @@ Future<void> openHiveBoxes() async {
     await Hive.openBox<String>(
         'string'); // wont need to upload after first time
   }
-
+  if (!Hive.isBoxOpen('list')) {
+    print("Opening 'list' box...");
+    await Hive.openBox<List>('list'); // wont need to upload after first time
+  }
   if (!Hive.isBoxOpen('tags')) {
     print("Opening 'tags' box...");
     await Hive.openBox<TagData>('tags');
