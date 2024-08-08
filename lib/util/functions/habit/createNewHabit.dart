@@ -13,7 +13,8 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   currentDurationValue =
       currentDurationValueMinutes + (currentDurationValueHours * 60);
 
-  List habitNotifications = context.watch<HabitProvider>().habitNotifications;
+  List habitNotifications =
+      Provider.of<HabitProvider>(context, listen: false).habitNotifications;
 
   myHabit = HabitData(
       name: createcontroller.text,

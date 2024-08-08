@@ -606,8 +606,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 const Text('Add Habit', style: TextStyle(color: Colors.white)),
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                context
-                    .read<HabitProvider>()
+                Provider.of<HabitProvider>(context, listen: false)
                     .createNewHabitProvider(createcontroller, context);
                 Navigator.pop(context);
               }

@@ -11,6 +11,13 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
     "Any time"
   ];
 
+  List<String> emptyCategories = [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "Any time"
+  ];
+
   if (tagSelected == 'All') {
     double height = 260;
 
@@ -18,15 +25,19 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     if (morningHasHabits) {
       hasHabits.add('Morning');
+      emptyCategories.remove('Morning');
     }
     if (afternoonHasHabits) {
       hasHabits.add('Afternoon');
+      emptyCategories.remove('Afternoon');
     }
     if (eveningHasHabits) {
       hasHabits.add('Evening');
+      emptyCategories.remove('Evening');
     }
     if (anytimeHasHabits) {
       hasHabits.add('Any time');
+      emptyCategories.remove('Any time');
     }
 
     for (int i = 0; i < hasHabits.length; i++) {
@@ -35,6 +46,12 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     for (int i = 0; i < habitBox.length; i++) {
       height += 65;
+    }
+
+    if (boolBox.get('displayEmptyCategories')!) {
+      for (int i = 0; i < emptyCategories.length; i++) {
+        height += 85;
+      }
     }
 
     if (height < deviceHeight) {
