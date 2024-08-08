@@ -43,7 +43,7 @@ Widget notificationContainer(String category) {
                   Text(
                     "$category notification",
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     width: 50,

@@ -64,8 +64,8 @@ class _NewHomePageState extends State<NewHomePage> {
     openCategory();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().setTagSelected("All");
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<HabitProvider>().setTagSelected("All");
         context.read<HabitProvider>().chooseMainCategory();
       });
     });
@@ -80,7 +80,6 @@ class _NewHomePageState extends State<NewHomePage> {
     });
 
     fillTagsList(context);
-
     String? tagSelected = context.watch<HabitProvider>().tagSelected;
 
     String mainCategory = context.watch<HabitProvider>().mainCategory;
