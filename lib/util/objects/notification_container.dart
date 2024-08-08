@@ -76,7 +76,7 @@ Widget notificationContainer(String category) {
                 ),
                 onPressed: () {
                   showModalBottomSheet(
-                      isDismissible: true,
+                      enableDrag: false,
                       context: context,
                       builder: (context) => chooseNotificationTime(category));
                 },

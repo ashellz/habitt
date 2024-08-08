@@ -139,6 +139,4 @@ Later in the app add tasks page too where you will have tasks you can do once in
 - all tasks that are completed or not completed will be put into history that you can see but not interact with
 - all the task names will be saved and when creating a new task given as an option to choose that name using an algorithm
 
-##### URGENT!
-
-- Bug that adds height to the pageview: the displayEmptyCategories
+- Make the daily notification mention what time it is based on its real hour and not 7PM
