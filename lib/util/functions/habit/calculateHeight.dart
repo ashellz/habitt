@@ -50,7 +50,7 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     if (boolBox.get('displayEmptyCategories')!) {
       for (int i = 0; i < emptyCategories.length; i++) {
-        height += 85;
+        height += 100;
       }
     }
 
