@@ -180,7 +180,10 @@ class HabitProvider extends ChangeNotifier {
     editHabit(index, context, editcontroller);
     chooseMainCategory();
     updateMainCategoryHeight();
-    await Navigator.pushAndRemoveUntil(
+    Navigator.of(context).pop();
+
+    /*
+    pushAndRemoveUntil(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
@@ -200,7 +203,7 @@ class HabitProvider extends ChangeNotifier {
         },
       ),
       (route) => false,
-    );
+    );*/
 
     notifyListeners();
   }

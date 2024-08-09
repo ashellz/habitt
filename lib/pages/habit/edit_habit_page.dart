@@ -216,9 +216,15 @@ class _EditHabitPageState extends State<EditHabitPage> {
                         IconButton(
                             onPressed: () {
                               showDialog(
-                                  context: context,
-                                  builder: (context) => confirmDeleteHabit(
-                                      widget.index, editcontroller));
+                                      context: context,
+                                      builder: (context) => confirmDeleteHabit(
+                                          widget.index, editcontroller))
+                                  .then((value) {
+                                if (deleted) {
+                                  Navigator.popUntil(
+                                      context, (route) => route.isFirst);
+                                }
+                              });
                             },
                             icon: const Icon(
                               Icons.delete,

@@ -35,6 +35,9 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
 
   deleted = true;
   editcontroller.text = "";
+  Navigator.of(context).pop();
+  /*
+  
   await Navigator.pushAndRemoveUntil(
     context,
     PageRouteBuilder(
@@ -56,6 +59,7 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
     ),
     (route) => false,
   );
+  */
 
   habitGoalEdit = 0;
   updated = false;

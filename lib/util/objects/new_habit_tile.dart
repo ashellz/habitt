@@ -50,6 +50,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
         editcontroller.text = "";
         changed = false;
         updatedIcon = startIcon;
+        deleted = false;
 
         Navigator.of(context)
             .push(MaterialPageRoute(
@@ -74,6 +75,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
           context.read<HabitProvider>().setTagSelected("All");
           habitGoalEdit = 0;
+          deleted = false;
           updated = false;
           dropDownChanged = false;
           editcontroller.clear();
