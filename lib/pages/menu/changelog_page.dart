@@ -25,6 +25,23 @@ class ChangelogPage extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
+          // 19.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "19.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Text("- Fixed habit notifications not working")])),
+
           // 18.08.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
