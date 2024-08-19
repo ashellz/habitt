@@ -8,6 +8,7 @@ import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
+import "package:habit_tracker/util/functions/checkForNotifications.dart";
 import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:habit_tracker/util/objects/add_tag.dart";
@@ -182,8 +183,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              print(
-                                  habitBox.getAt(widget.index)!.notifications);
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
@@ -205,8 +204,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     );
                                   },
                                 ),
-                              ).whenComplete(() => print(
-                                  habitBox.getAt(widget.index)!.notifications));
+                              ).whenComplete(() => checkForNotifications());
                             },
                             icon: const Icon(
                               Icons.notifications,

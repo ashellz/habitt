@@ -314,11 +314,12 @@ void checkForCustomNotifications() async {
   ];
 
   for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)!.notifications != []) {
+    if (habitBox.getAt(i)!.notifications.isNotEmpty) {
       for (int j = 0; j < habitBox.getAt(i)!.notifications.length; j++) {
         if (!habitBox.getAt(i)!.completed) {
           List notificationsList = habitBox.getAt(i)!.notifications[j];
           List<String> customNotificationTexts = [];
+          int notificationId = i * 100 + j;
 
           checkCustomNotificationTexts(
               customNotificationTexts,
@@ -327,14 +328,14 @@ void checkForCustomNotifications() async {
               customNotificationTextsNeutral,
               i);
 
-          await AwesomeNotifications().cancel(i);
+          await AwesomeNotifications().cancel(notificationId);
           await AwesomeNotifications().createNotification(
               schedule: NotificationCalendar(
                   hour: notificationsList[0],
                   minute: notificationsList[1],
                   second: 0),
               content: NotificationContent(
-                id: i,
+                id: notificationId,
                 channelKey: 'basic_channel',
                 title: habitBox.getAt(i)!.name,
                 body: customNotificationTexts[
@@ -350,8 +351,9 @@ void checkForCustomNotifications() async {
   }
 }
 
-void checkCustomNotificationTexts(texts, good, bad, neutral, index) {
-  bool good = false;
+void checkCustomNotificationTexts(List<String> texts, List<String> good,
+    List<String> bad, List<String> neutral, int index) {
+  bool isGood = false;
   bool amountCheck = false;
   bool durationCheck = false;
 
@@ -363,25 +365,25 @@ void checkCustomNotificationTexts(texts, good, bad, neutral, index) {
     durationCheck = true;
   }
 
-  if (amountCheck == true) {
+  if (amountCheck) {
     if (habit.amountCompleted > 0) {
-      good = true;
+      isGood = true;
     }
-  } else if (durationCheck == true) {
+  } else if (durationCheck) {
     if (habit.durationCompleted > 0) {
-      good = true;
+      isGood = true;
     }
-  } else {
-    texts = neutral;
   }
 
-  if (good) {
-    texts = good;
+  // Clear the original list and add the appropriate texts
+  texts.clear();
+
+  if (isGood) {
+    texts.addAll(good);
   } else {
-    texts = bad;
+    texts.addAll(bad);
   }
 
-  if (texts != neutral) {
-    texts.addAll(neutral);
-  }
+  // Add neutral texts to the selected list
+  texts.addAll(neutral);
 }
