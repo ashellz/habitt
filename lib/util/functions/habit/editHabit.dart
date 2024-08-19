@@ -4,8 +4,10 @@ import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
 import 'package:habit_tracker/pages/habit/notifications_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 var habitListLenght = Hive.box<HabitData>('habits').length;
 
@@ -62,6 +64,11 @@ void editHabit(int index, BuildContext context, editcontroller) {
           notifications: editHabitNotifications));
 
   dropDownValue = 'Any time';
+  if (editedFrom != editedTo) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().updateMainCategoryHeight();
+    });
+  }
 
   openCategory("edited");
   // showPopup(context, "Habit edited!");

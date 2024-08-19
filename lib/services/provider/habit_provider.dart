@@ -41,6 +41,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void setTagSelected(String? tag) {
+    print("Tag selected: $tag");
     _tagSelected = tag;
     notifyListeners();
   }
@@ -216,6 +217,48 @@ class HabitProvider extends ChangeNotifier {
 
     chooseMainCategory();
     updateMainCategoryHeight();
+    notifyListeners();
+  }
+
+  applyDurationCompleted(
+      index, int theDurationValueHours, int theDurationValueMinutes) {
+    habitBox.putAt(
+        index,
+        HabitData(
+            name: habitBox.getAt(index)!.name,
+            completed: habitBox.getAt(index)!.completed,
+            icon: habitBox.getAt(index)!.icon,
+            category: habitBox.getAt(index)!.category,
+            streak: habitBox.getAt(index)!.streak,
+            amount: habitBox.getAt(index)!.amount,
+            amountName: habitBox.getAt(index)!.amountName,
+            amountCompleted: habitBox.getAt(index)!.amountCompleted,
+            duration: habitBox.getAt(index)!.duration,
+            durationCompleted:
+                theDurationValueHours * 60 + theDurationValueMinutes,
+            skipped: habitBox.getAt(index)!.skipped,
+            tag: habitBox.getAt(index)!.tag,
+            notifications: habitBox.getAt(index)!.notifications));
+    notifyListeners();
+  }
+
+  applyAmountCompleted(index, theAmountValue) {
+    habitBox.putAt(
+        index,
+        HabitData(
+            name: habitBox.getAt(index)!.name,
+            completed: habitBox.getAt(index)!.completed,
+            icon: habitBox.getAt(index)!.icon,
+            category: habitBox.getAt(index)!.category,
+            streak: habitBox.getAt(index)!.streak,
+            amount: habitBox.getAt(index)!.amount,
+            amountName: habitBox.getAt(index)!.amountName,
+            amountCompleted: theAmountValue,
+            duration: habitBox.getAt(index)!.duration,
+            durationCompleted: habitBox.getAt(index)!.durationCompleted,
+            skipped: habitBox.getAt(index)!.skipped,
+            tag: habitBox.getAt(index)!.tag,
+            notifications: habitBox.getAt(index)!.notifications));
     notifyListeners();
   }
 }

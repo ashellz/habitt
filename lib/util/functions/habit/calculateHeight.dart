@@ -45,7 +45,7 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
     }
 
     for (int i = 0; i < habitBox.length; i++) {
-      height += 65;
+      height += 67;
     }
 
     if (boolBox.get('displayEmptyCategories')!) {
@@ -63,7 +63,7 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     for (int i = 0; i < habitBox.length; i++) {
       if (habitBox.getAt(i)?.tag == tagSelected) {
-        height += 65;
+        height += 67;
       }
     }
     if (height < deviceHeight) {
@@ -75,7 +75,7 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     for (int i = 0; i < habitBox.length; i++) {
       if (habitBox.getAt(i)?.category == tagSelected) {
-        height += 65;
+        height += 67;
       }
     }
     if (height < deviceHeight) {

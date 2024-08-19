@@ -169,6 +169,10 @@ class AuthCheck extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<HabitProvider>().chooseMainCategory();
+            context.read<HabitProvider>().updateMainCategoryHeight();
+          });
           return const NewHomePage();
         } else {
           return LoginPage();

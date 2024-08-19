@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
@@ -62,23 +61,10 @@ class _NewHomePageState extends State<NewHomePage> {
     updateLastOpenedDate();
     hasHabits();
     openCategory();
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HabitProvider>().setTagSelected("All");
-        context.read<HabitProvider>().chooseMainCategory();
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HabitProvider>().updateMainCategoryHeight();
-      });
-    });
-
     fillTagsList(context);
     String? tagSelected = context.watch<HabitProvider>().tagSelected;
 
@@ -125,6 +111,14 @@ class _NewHomePageState extends State<NewHomePage> {
                 createcontroller: createcontroller,
               );
             })).whenComplete(() {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<HabitProvider>().setTagSelected("All");
+              });
+              pageController.animateToPage(
+                0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
               habitTag = "No tag";
               updatedIcon = startIcon;
               habitGoal = 0;

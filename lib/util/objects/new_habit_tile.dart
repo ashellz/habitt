@@ -73,7 +73,14 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
           context.read<HabitProvider>().changeNotification([]);
 
-          context.read<HabitProvider>().setTagSelected("All");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<HabitProvider>().setTagSelected("All");
+          });
+          pageController.animateToPage(
+            0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
           habitGoalEdit = 0;
           deleted = false;
           updated = false;
@@ -197,7 +204,7 @@ class StreakDisplay extends StatelessWidget {
       Transform.translate(
         offset: const Offset(0, 1),
         child: Text(
-          "${habitBox.getAt(index)!.completed ? habitBox.getAt(index)!.streak + 1 : habitBox.getAt(index)!.streak}",
+          "${habitBox.getAt(index)!.skipped ? habitBox.getAt(index)!.streak : habitBox.getAt(index)!.completed ? habitBox.getAt(index)!.streak + 1 : habitBox.getAt(index)!.streak}",
           style: TextStyle(
               color:
                   habitBox.getAt(index)!.completed ? Colors.white : Colors.grey,

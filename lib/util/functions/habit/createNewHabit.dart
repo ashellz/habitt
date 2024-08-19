@@ -33,6 +33,13 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   await habitBox.add(myHabit);
   hasHabits();
 
+  // Updates the main category height if new habit category is same as the main category
+  if (dropDownValue == context.watch<HabitProvider>().mainCategory) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().updateMainCategoryHeight();
+    });
+  }
+
   createcontroller.clear();
   habitNotifications = [];
   updatedIcon = startIcon;

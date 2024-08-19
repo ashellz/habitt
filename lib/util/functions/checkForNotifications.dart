@@ -327,6 +327,7 @@ void checkForCustomNotifications() async {
               customNotificationTextsNeutral,
               i);
 
+          await AwesomeNotifications().cancel(i);
           await AwesomeNotifications().createNotification(
               schedule: NotificationCalendar(
                   hour: notificationsList[0],
