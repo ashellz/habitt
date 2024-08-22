@@ -8,7 +8,7 @@ final formKey = GlobalKey<FormState>();
 TextEditingController changeController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
-Widget editProfileDialog(context, title, updateFunction) {
+Widget changeUsernameDialog(context, title, updateFunction) {
   if (changeController.text.isEmpty) {
     changeController.text = stringBox.get('username') ?? 'Guest';
   }

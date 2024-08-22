@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/signup_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
-import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
 
 class LoginPage extends StatelessWidget {
@@ -189,18 +186,7 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.all(30.0),
               child: GestureDetector(
                 onTap: () async {
-                  await AuthService().signInAnonimusly();
-                  boolBox.put("isGuest", true);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => const LoadingScreen(
-                        text: "Loading data...",
-                      ),
-                    ),
-                  );
-                  stringBox.put("username", "Guest");
-                  newAccountDownloadData(context);
+                  await AuthService().signInAsGuest(context);
                 },
                 child: const Text(
                   "CONTINUE AS A GUEST",

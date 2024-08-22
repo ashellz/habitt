@@ -34,6 +34,7 @@ bool eveningVisible = false,
     afternoonVisible = false,
     morningVisible = false,
     changed = false,
+    keepData = false,
     deleted = false;
 
 List<String> categoriesList = ['All'];

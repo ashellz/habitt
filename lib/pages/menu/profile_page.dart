@@ -6,7 +6,7 @@ import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/objects/confirm_delete_account.dart';
 import 'package:habit_tracker/util/objects/confirm_sign_out.dart';
-import 'package:habit_tracker/util/objects/edit_profile_dialog.dart';
+import 'package:habit_tracker/util/objects/change_username.dart';
 
 bool uploadButtonEnabled = true;
 
@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (context) {
                           changeController.text = "";
                           passwordController.text = "";
-                          return editProfileDialog(
+                          return changeUsernameDialog(
                               context, "Change username", updateUsername);
                         }),
                     child: Text(

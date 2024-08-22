@@ -41,7 +41,7 @@ void scheduleMorningNotification() async {
   if (boolBox.get("morningNotification") == true) {
     for (int i = 0; i < habitBox.length; i++) {
       if (habitBox.getAt(i)?.category == "Morning") {
-        if (habitBox.getAt(i)?.completed == true) {
+        if (habitBox.getAt(i)!.completed == true) {
           morningHabitsCompleted++;
         }
         morningHabits++;
@@ -214,17 +214,30 @@ void scheduleEveningNotification() async {
 void scheduleDailyNotification() async {
   int dailyHabits = 0;
   int dailyHabitsCompleted = 0;
-
+  List dailyNotificationTime = listBox.get("dailyNotificationTime")!;
+  int hour = dailyNotificationTime[0];
   List dailyNotificationTexts = [
-    "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
-    "7 PM reminder! Time to wrap up your habits for the day! 🕖",
-    "7 PM check-in! Complete your habits before the day ends! 🌇",
-    "Don't miss out! Finish your habits before the day ends! 🕢",
-    "7 PM and it's habit time! Wrap up your day strong! 💥",
-    "Take a moment at 7 PM to check your remaining habits! 🌟",
-    "Evening is near! Make sure to finish your habits! 🌙",
-    "7 PM habit check! Complete your tasks for the day! 🕖",
-    "Daily reminder at 7 PM! Finish your habits strong! 💪"
+    "It's $hour! ⏰ A quick check-in to remind you to complete your daily habits! 💪",
+    "Reminder at $hour! Stay focused and get your daily habits done! 🌟",
+    "It's $hour! Keep up the momentum and work on your daily habits! 💥",
+    "Don't forget! It's $hour and a great time to make progress on your habits! 🚀",
+    "$hour reminder! A little nudge to help you complete your habits for the day! 💪",
+    "At $hour, it's a good idea to check in on your daily habits! 🕒",
+    "Daily reminder: It's $hour! Take a moment to focus on your habits! 🌱",
+    "It's $hour! Don't miss your chance to work on your daily habits! 🌟",
+    "Friendly reminder at $hour! Make sure to stay on track with your habits! 💪",
+    "Reminder at $hour! Don't forget to complete your habits today! 🚀",
+    "It's $hour! Stay on track and work on your daily habits! 💥",
+    "$hour reminder! Take a moment to focus on your daily habits! 🌱",
+    "It's $hour! A gentle nudge to help you complete your daily habits! 💪",
+    "Don't let the time pass! It's $hour, and a great time to focus on your habits! 🕒",
+    "Daily reminder at $hour! Keep up with your habits and stay motivated! 🌟",
+    "It's $hour! Don't miss out on completing your daily habits! 💪",
+    "It's $hour! Take a moment to check in and complete your daily habits! 💪",
+    "Reminder at $hour! Time to wrap up your habits for the day! 🌟",
+    "It's $hour! A quick reminder to finish your daily habits! 💥",
+    "$hour reminder! Make sure to complete your habits for today! 💪",
+    "Friendly reminder at $hour! Make sure to wrap up your habits for the day! 💪"
   ];
 
   List dailyNotificationTextsOneLeft = [
@@ -259,7 +272,7 @@ void scheduleDailyNotification() async {
             content: NotificationContent(
               id: 4444,
               channelKey: 'basic_channel',
-              title: 'Remaining Habits',
+              title: 'Daily Notification',
               body: dailyNotificationTexts[
                   Random().nextInt(dailyNotificationTexts.length)],
             ));

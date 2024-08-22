@@ -25,6 +25,26 @@ class ChangelogPage extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
+          // 22.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "22.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Updated daily notification texts so they match every time of the day\n- Fixed prefferences tab not updating visually right after pressed\n- Users are now able to choose whether they want to keep or delete their data when registering if they were previously guests\n- Data is now saved after you press 'CONTINUE AS A GUEST' if you were already a guest")
+                  ])),
+
           // 19.08.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),

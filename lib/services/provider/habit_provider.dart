@@ -102,6 +102,16 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateHapticFeedback(bool value) {
+    boolBox.put('hapticFeedback', value);
+    notifyListeners();
+  }
+
+  void updateSound(bool value) {
+    boolBox.put('sound', value);
+    notifyListeners();
+  }
+
   Future<void> createNewHabitProvider(
       createcontroller, BuildContext context) async {
     await createNewHabit(createcontroller, context);

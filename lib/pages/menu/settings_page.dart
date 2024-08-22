@@ -127,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 thumbColor: WidgetStateProperty.all(Colors.white),
                 value: boolBox.get("hapticFeedback")!,
                 onChanged: (value) {
-                  boolBox.put("hapticFeedback", value);
+                  context.read<HabitProvider>().updateHapticFeedback(value);
                 }),
           ),
           textAndSwitchContainer(
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 thumbColor: WidgetStateProperty.all(Colors.white),
                 value: boolBox.get("sound")!,
                 onChanged: (value) {
-                  boolBox.put("sound", value);
+                  context.read<HabitProvider>().updateSound(value);
                 }),
           ),
           const Padding(
