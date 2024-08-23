@@ -3,6 +3,7 @@ import "package:habit_tracker/pages/menu/changelog_page.dart";
 import "package:habit_tracker/pages/menu/profile_page.dart";
 import "package:habit_tracker/pages/menu/settings_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/util/colors.dart";
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -50,7 +51,7 @@ Widget buildHeader(BuildContext context) {
             Text(
               streak == 1 ? "$streak day" : "$streak days",
               style: TextStyle(
-                  color: theLightGreen,
+                  color: theLightColor,
                   fontSize: 42,
                   fontWeight: FontWeight.bold),
             ),

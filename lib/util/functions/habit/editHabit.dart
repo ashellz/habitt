@@ -2,21 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/pages/habit/notifications_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
-import 'package:habit_tracker/util/functions/habit/checkIfEmpty.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 var habitListLenght = Hive.box<HabitData>('habits').length;
 
 late String editedFrom;
 late String editedTo;
 
-void editHabit(int index, context, editcontroller) {
+void editHabit(int index, BuildContext context, editcontroller) {
   editedFrom = habitBox.getAt(index)!.category;
   editedTo = dropDownValue;
 
   duration = durationMinutes + (durationHours * 60);
+
+  int categoryHabits = 0;
+  String category = editedFrom;
+
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)?.category == category) {
+      categoryHabits += 1;
+    }
+  }
+  if (categoryHabits < 2) {
+    if (category == "Morning") {
+      morningHasHabits = false;
+      morningVisible = false;
+    } else if (category == "Afternoon") {
+      afternoonHasHabits = false;
+      afternoonVisible = false;
+    } else if (category == "Evening") {
+      eveningHasHabits = false;
+      eveningVisible = false;
+    } else if (category == "Any time") {
+      anytimeHasHabits = false;
+      anyTimeVisible = false;
+    }
+  }
 
   habitBox.putAt(
       index,
@@ -33,14 +59,17 @@ void editHabit(int index, context, editcontroller) {
               ? duration
               : habitBox.getAt(index)?.duration ?? 0,
           durationCompleted: 0,
-          skipped: false));
+          skipped: false,
+          tag: habitTag,
+          notifications: editHabitNotifications));
 
-  checkIfEmpty(editedFrom);
   dropDownValue = 'Any time';
-  editcontroller.text = "";
-  updatedIcon = startIcon;
-  Navigator.pop(context);
-  hasHabits();
+  if (editedFrom != editedTo) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().updateMainCategoryHeight();
+    });
+  }
+
   openCategory("edited");
   // showPopup(context, "Habit edited!");
 }

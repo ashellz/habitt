@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
 
 final formKey = GlobalKey<FormState>();
 TextEditingController changeController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
-Widget editProfileDialog(context, title, updateFunction) {
+Widget changeUsernameDialog(context, title, updateFunction) {
   if (changeController.text.isEmpty) {
     changeController.text = stringBox.get('username') ?? 'Guest';
   }
@@ -18,7 +19,7 @@ Widget editProfileDialog(context, title, updateFunction) {
       builder: (BuildContext context, StateSetter mystate) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-          side: BorderSide(color: theLightGreen, width: 3.0),
+          side: BorderSide(color: theLightColor, width: 3.0),
         ),
         backgroundColor: Colors.black,
         content: SizedBox(
@@ -75,7 +76,7 @@ Widget editProfileDialog(context, title, updateFunction) {
                         fixedSize:
                             WidgetStateProperty.all<Size>(const Size(150, 50)),
                         backgroundColor:
-                            WidgetStateProperty.all<Color>(theLightGreen),
+                            WidgetStateProperty.all<Color>(theLightColor),
                       ),
                       child: const Text(
                         "Confirm",

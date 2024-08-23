@@ -3,6 +3,9 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/objects/notification_container.dart';
+import 'package:habit_tracker/util/objects/text_and_switch_container.dart';
 import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
@@ -16,6 +19,13 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  List<String> notificationCategories = [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "Daily"
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,243 +34,35 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.black,
       ),
       body: ListView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 30),
+            padding: const EdgeInsets.only(top: 30),
             child: Text("Settings",
                 style: TextStyle(
                     fontSize: 42,
-                    color: theLightGreen,
+                    color: theLightColor,
                     fontWeight: FontWeight.bold)),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
-            child: Text(
-              "Notifications (in development)",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "How often should you be notified?",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightGreen,
-              title: const Text(
-                "Once a day",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 0,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', true);
-                  boolBox.put('morningNotification', false);
-                  boolBox.put('afternoonNotification', false);
-                  boolBox.put('eveningNotification', false);
-                });
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightGreen,
-              title: const Text(
-                "Three times a day",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 1,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', false);
-                  boolBox.put('morningNotification', true);
-                  boolBox.put('afternoonNotification', true);
-                  boolBox.put('eveningNotification', true);
-                });
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RadioListTile(
-              groupValue: notifValue,
-              activeColor: theLightGreen,
-              title: const Text(
-                "Custom",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              value: 2,
-              onChanged: (value) {
-                setState(() {
-                  notifValue = value!;
-                  streakBox.put('notifValue', value);
-                  boolBox.put('dailyNotification', false);
-                  boolBox.put('morningNotification', false);
-                  boolBox.put('afternoonNotification', false);
-                  boolBox.put('eveningNotification', false);
-                });
-              },
-            ),
-          ),
-          AnimatedContainer(
-            color: Colors.black,
-            duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
-            curve: Curves.fastOutSlowIn,
-            child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 43),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      activeColor: theLightGreen,
-                      value: boolBox.get('morningNotification'),
-                      onChanged: (value) {
-                        setState(() {
-                          boolBox.put('morningNotification',
-                              !boolBox.get('morningNotification')!);
-                        });
-                      },
-                    ),
-                    const Text(
-                      "Morning notification",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          AnimatedContainer(
-            color: Colors.black,
-            duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
-            curve: Curves.fastOutSlowIn,
-            child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 43),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      activeColor: theLightGreen,
-                      value: boolBox.get('afternoonNotification'),
-                      onChanged: (value) {
-                        setState(() {
-                          boolBox.put('afternoonNotification',
-                              !boolBox.get('afternoonNotification')!);
-                        });
-                      },
-                    ),
-                    const Text(
-                      "Afternoon notification",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          AnimatedContainer(
-            color: Colors.black,
-            duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
-            curve: Curves.fastOutSlowIn,
-            child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 43),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      activeColor: theLightGreen,
-                      value: boolBox.get('eveningNotification'),
-                      onChanged: (value) {
-                        setState(() {
-                          boolBox.put('eveningNotification',
-                              !boolBox.get('eveningNotification')!);
-                        });
-                      },
-                    ),
-                    const Text(
-                      "Evening notification",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          AnimatedContainer(
-            color: Colors.black,
-            duration: const Duration(milliseconds: 250),
-            height: notifValue == 2 ? 60 : 0,
-            curve: Curves.fastOutSlowIn,
-            child: AnimatedOpacity(
-              opacity: notifValue == 2 ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 200),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 43),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      activeColor: theLightGreen,
-                      value: boolBox.get('dailyNotification'),
-                      onChanged: (value) {
-                        setState(() {
-                          boolBox.put('dailyNotification',
-                              !boolBox.get('dailyNotification')!);
-                        });
-                        print(boolBox.get('dailyNotification'));
-                      },
-                    ),
-                    const Text(
-                      "Daily notification",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
           Visibility(
             visible: boolBox.get("hasNotificationAccess") == false,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20, top: 20),
-              child: Center(
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(theLightGreen),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              padding: const EdgeInsets.only(top: 10),
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(theLightColor),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () => requestNotificationAccess(),
-                  child: const Text(
-                    "Request Notification Access",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                ),
+                onPressed: () => requestNotificationAccess(),
+                child: const Text(
+                  "Request Notification Access",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             ),
@@ -268,66 +70,86 @@ class _SettingsPageState extends State<SettingsPage> {
           Visibility(
             visible: boolBox.get("disabledBatteryOptimization") == false,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20, top: 20),
-              child: Center(
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(theLightGreen),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+              padding: const EdgeInsets.only(top: 5),
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(theLightColor),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onPressed: () => disableBatteryOptimization(),
-                  child: const Text(
-                    "Disable Battery Optimization",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                ),
+                onPressed: () => disableBatteryOptimization(),
+                child: const Text(
+                  "Disable Battery Optimization",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            padding: EdgeInsets.only(top: 20, bottom: 10),
             child: Text(
               "Appearance",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          textAndSwitchContainer(
+            "Display empty categories on home page",
+            Switch(
+                activeColor: theLightColor,
+                inactiveTrackColor: Colors.grey.shade800,
+                thumbColor: WidgetStateProperty.all(Colors.white),
+                value: context.watch<HabitProvider>().displayEmptyCategories,
+                onChanged: (value) {
+                  context
+                      .read<HabitProvider>()
+                      .updateDisplayEmptyCategories(value);
+                }),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
+              "Prefferences",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Checkbox(
-                    activeColor: theLightGreen,
-                    value:
-                        context.watch<HabitProvider>().displayEmptyCategories,
-                    onChanged: (value) {
-                      setState(() {
-                        context
-                            .read<HabitProvider>()
-                            .updateDisplayEmptyCategories(!value!);
-                      });
-                    },
-                  ),
-                ),
-                const Expanded(
-                  flex: 6,
-                  child: Text(
-                    "Dispay empty categories on home page",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ],
+          textAndSwitchContainer(
+            "Haptic feedback (vibration)",
+            Switch(
+                activeColor: theLightColor,
+                inactiveTrackColor: Colors.grey.shade800,
+                thumbColor: WidgetStateProperty.all(Colors.white),
+                value: boolBox.get("hapticFeedback")!,
+                onChanged: (value) {
+                  context.read<HabitProvider>().updateHapticFeedback(value);
+                }),
+          ),
+          textAndSwitchContainer(
+            "Sound",
+            Switch(
+                activeColor: theLightColor,
+                inactiveTrackColor: Colors.grey.shade800,
+                thumbColor: WidgetStateProperty.all(Colors.white),
+                value: boolBox.get("sound")!,
+                onChanged: (value) {
+                  context.read<HabitProvider>().updateSound(value);
+                }),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
+              "Notifications",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
+          for (String category in notificationCategories)
+            notificationContainer(category),
         ],
       ),
     );

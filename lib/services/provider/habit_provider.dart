@@ -1,12 +1,16 @@
+import "dart:async";
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
 import "package:habit_tracker/main.dart";
+import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
+import "package:habit_tracker/util/functions/habit/habitsCompleted.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:restart_app/restart_app.dart";
+import 'package:vibration/vibration.dart';
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
@@ -16,9 +20,31 @@ class HabitProvider extends ChangeNotifier {
   bool get displayEmptyCategories =>
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
+  String? _tagSelected = 'All';
 
+  List _habitNotifications = [];
+
+  List get habitNotifications => _habitNotifications;
+  String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
   String get _mainCategory => mainCategory;
+
+  void changeNotification(List notification) {
+    print("notification has be changed to $notification");
+    _habitNotifications = notification;
+    notifyListeners();
+  }
+
+  void removeNotification(notification) {
+    _habitNotifications.remove(notification);
+    notifyListeners();
+  }
+
+  void setTagSelected(String? tag) {
+    print("Tag selected: $tag");
+    _tagSelected = tag;
+    notifyListeners();
+  }
 
   void chooseMainCategory() {
     int hour = DateTime.now().hour;
@@ -72,12 +98,23 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void updateDisplayEmptyCategories(bool value) {
-    Hive.box<bool>('bool').put('displayEmptyCategories', !value);
+    boolBox.put('displayEmptyCategories', value);
     notifyListeners();
   }
 
-  Future<void> createNewHabitProvider(createcontroller) async {
-    await createNewHabit(createcontroller);
+  void updateHapticFeedback(bool value) {
+    boolBox.put('hapticFeedback', value);
+    notifyListeners();
+  }
+
+  void updateSound(bool value) {
+    boolBox.put('sound', value);
+    notifyListeners();
+  }
+
+  Future<void> createNewHabitProvider(
+      createcontroller, BuildContext context) async {
+    await createNewHabit(createcontroller, context);
     chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();
@@ -99,9 +136,24 @@ class HabitProvider extends ChangeNotifier {
           duration: existingHabit.duration,
           durationCompleted:
               !existingHabit.completed ? existingHabit.duration : 0,
-          skipped: false);
+          skipped: false,
+          tag: existingHabit.tag,
+          notifications: existingHabit.notifications);
 
       await habitBox.putAt(index, updatedHabit);
+
+      bool hapticFeedback = boolBox.get('hapticFeedback')!;
+      if (allHabitsCompleted()) {
+        playSound();
+        if (hapticFeedback) {
+          Vibration.vibrate(duration: 500);
+        }
+      } else if (!existingHabit.completed) {
+        if (hapticFeedback) {
+          Vibration.vibrate(duration: 100);
+        }
+      }
+
       notifyListeners();
     }
   }
@@ -122,7 +174,9 @@ class HabitProvider extends ChangeNotifier {
           duration: existingHabit.duration,
           durationCompleted:
               !existingHabit.completed ? existingHabit.duration : 0,
-          skipped: !existingHabit.skipped);
+          skipped: !existingHabit.skipped,
+          tag: existingHabit.tag,
+          notifications: existingHabit.notifications);
 
       await habitBox.putAt(index, updatedHabit);
       notifyListeners();
@@ -136,8 +190,32 @@ class HabitProvider extends ChangeNotifier {
   Future<void> editHabitProvider(int index, context, editcontroller) async {
     editHabit(index, context, editcontroller);
     chooseMainCategory();
-
     updateMainCategoryHeight();
+    Navigator.of(context).pop();
+
+    /*
+    pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const NewHomePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(-1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );*/
+
     notifyListeners();
   }
 
@@ -146,8 +224,51 @@ class HabitProvider extends ChangeNotifier {
     if (checkIfAllEmpty()) {
       Restart.restartApp();
     }
+
     chooseMainCategory();
     updateMainCategoryHeight();
+    notifyListeners();
+  }
+
+  applyDurationCompleted(
+      index, int theDurationValueHours, int theDurationValueMinutes) {
+    habitBox.putAt(
+        index,
+        HabitData(
+            name: habitBox.getAt(index)!.name,
+            completed: habitBox.getAt(index)!.completed,
+            icon: habitBox.getAt(index)!.icon,
+            category: habitBox.getAt(index)!.category,
+            streak: habitBox.getAt(index)!.streak,
+            amount: habitBox.getAt(index)!.amount,
+            amountName: habitBox.getAt(index)!.amountName,
+            amountCompleted: habitBox.getAt(index)!.amountCompleted,
+            duration: habitBox.getAt(index)!.duration,
+            durationCompleted:
+                theDurationValueHours * 60 + theDurationValueMinutes,
+            skipped: habitBox.getAt(index)!.skipped,
+            tag: habitBox.getAt(index)!.tag,
+            notifications: habitBox.getAt(index)!.notifications));
+    notifyListeners();
+  }
+
+  applyAmountCompleted(index, theAmountValue) {
+    habitBox.putAt(
+        index,
+        HabitData(
+            name: habitBox.getAt(index)!.name,
+            completed: habitBox.getAt(index)!.completed,
+            icon: habitBox.getAt(index)!.icon,
+            category: habitBox.getAt(index)!.category,
+            streak: habitBox.getAt(index)!.streak,
+            amount: habitBox.getAt(index)!.amount,
+            amountName: habitBox.getAt(index)!.amountName,
+            amountCompleted: theAmountValue,
+            duration: habitBox.getAt(index)!.duration,
+            durationCompleted: habitBox.getAt(index)!.durationCompleted,
+            skipped: habitBox.getAt(index)!.skipped,
+            tag: habitBox.getAt(index)!.tag,
+            notifications: habitBox.getAt(index)!.notifications));
     notifyListeners();
   }
 }

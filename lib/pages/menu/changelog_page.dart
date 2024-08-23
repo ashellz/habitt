@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/util/colors.dart';
 
 class ChangelogPage extends StatelessWidget {
   const ChangelogPage({super.key});
@@ -21,10 +21,206 @@ class ChangelogPage extends StatelessWidget {
               "Changelog",
               style: TextStyle(
                   fontSize: 42,
-                  color: theLightGreen,
+                  color: theLightColor,
                   fontWeight: FontWeight.bold),
             ),
           ),
+          // 22.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "22.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Updated daily notification texts so they match every time of the day\n- Fixed prefferences tab not updating visually right after pressed\n- Users are now able to choose whether they want to keep or delete their data when registering if they were previously guests\n- Data is now saved after you press 'CONTINUE AS A GUEST' if you were already a guest")
+                  ])),
+
+          // 19.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "19.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Text("- Fixed habit notifications not working")])),
+
+          // 18.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "18.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Fixed streak going up visually when habit is skipped\n- Fixed app not responding properly after a habit is created, edited or deleted\n- Fixed completing part of the habit not displaying unless reloaded")
+                  ])),
+
+// 08.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "08.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Settings page redesign + new settings (ability to change time for each notification)\n- Changed sound\n- Bug fixes")
+                  ])),
+
+          // 07.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "07.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Added ability to add notifications to each habit\n- Massive changes to notifications, including MANY more notification texts and a new algorithm for selecting the right text")
+                  ])),
+
+          // 04.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "04.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Added ability to swipe on the home page to go to the next or previous tag")
+                  ])),
+
+          // 03.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "03.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Bug fixes\n- Added options to disable haptic feedback and sound")
+                  ])),
+
+          // 02.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "02.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Implemented tags\n- Added vibration and sound effects")
+                  ])),
+
+          // 01.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "01.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Fixed streaks not updating on new month\n- Other bug fixes"),
+                  ])),
+
+          // 31.07.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "31.07.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Added a pane to show only the chosen catogory\n- Bug fixes"),
+                  ])),
 
           // 29.07.2024
           const Padding(
@@ -43,7 +239,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Habit duration can now be up to 23 hours and 59 minutes and habit amount up to 9999 times\n- Habit completion is now displayed differently on the home page\n- Changed design when completing the habit\n- Changed design for amount and duration when adding or editing the habit\n- Changed design for the delete habit dialog\n- Changed how picking habit category works")
+                        "- Habit duration can now be up to 23 hours and 59 minutes and habit amount up to 9999 times\n- Habit completion is now displayed differently on the home page\n- Changed design when completing the habit\n- Changed design for amount and duration when adding or editing the habit\n- Changed design for the delete habit dialog\n- Changed how picking habit category works\n- Made notifications work")
                   ])),
 
           // 27.07.2024

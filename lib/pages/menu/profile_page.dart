@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/objects/confirm_delete_account.dart';
 import 'package:habit_tracker/util/objects/confirm_sign_out.dart';
-import 'package:habit_tracker/util/objects/edit_profile_dialog.dart';
+import 'package:habit_tracker/util/objects/change_username.dart';
 
 bool uploadButtonEnabled = true;
 
@@ -82,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Text(
                       stringBox.get("username") ?? 'Guest',
                       style: TextStyle(
-                        color: theLightGreen,
+                        color: theLightColor,
                         fontSize: 42,
                         fontWeight: FontWeight.bold,
                       ),
@@ -110,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: OutlinedButton.styleFrom(
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: theLightGreen, width: 3),
+                      side: BorderSide(color: theLightColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
@@ -120,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (context) {
                           changeController.text = "";
                           passwordController.text = "";
-                          return editProfileDialog(
+                          return changeUsernameDialog(
                               context, "Change username", updateUsername);
                         }),
                     child: Text(
@@ -138,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       fixedSize: buttonSize(context),
                       disabledForegroundColor: Colors.grey,
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: theLightGreen, width: 3),
+                      side: BorderSide(color: theLightColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),

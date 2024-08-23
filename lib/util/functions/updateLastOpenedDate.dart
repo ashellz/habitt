@@ -1,6 +1,7 @@
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:restart_app/restart_app.dart';
 
 final streakBox = Hive.box<int>('streak');
 final habitBox = Hive.box<HabitData>('habits');
@@ -18,7 +19,10 @@ void updateLastOpenedDate() async {
     newMonth = true;
   }
 
-  if (daysDifference > 0) {
+  await streakBox.put('lastOpenedDay', day);
+  await streakBox.put('lastOpenedMonth', month);
+
+  if (daysDifference > 0 || daysDifference < 0) {
     if (!newMonth) {
       resetOrUpdateStreaks(daysDifference);
     } else {
@@ -28,10 +32,13 @@ void updateLastOpenedDate() async {
         resetOrUpdateStreaks(2);
       }
     }
-    await backupHiveBoxesToFirebase(userId);
+
+    if (userId != null) {
+      await backupHiveBoxesToFirebase(userId).then((value) {
+        Restart.restartApp();
+      });
+    }
   }
-  await streakBox.put('lastOpenedDay', day);
-  await streakBox.put('lastOpenedMonth', month);
 }
 
 void resetOrUpdateStreaks(int daysDifference) {

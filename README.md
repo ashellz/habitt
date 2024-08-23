@@ -76,11 +76,12 @@ Add Features:
 
 Add cookie icon
 Add chef top icon
+Add bell icon
 Add a feature so a user can edit completion values of habits the last 5 days
 
 # Add animations
 
-Add notifications
+# Add notifications
 
 # At the bottom of menu drawer add profile username and signout option
 
@@ -98,3 +99,45 @@ Add weekly habits
 - Streaks update every time the habit is done at the end of the day, it won't be reset until there are no more days in the week left for the habit to be completed that many times
 - If the user decides to complete the habit more times a week than specified, the streak will go up
 - All habits completed streak will grow wether the weekly habit has been done or no, except if there are no more days left for the habit to be completed that many times a week
+
+# - Add a field above the main category to choose which category to display specifiacally, add tags + ability to create custom tags and display them on the field
+
+# - Add ability to delete tags
+
+# - Add vibration when habit is completed
+
+# - Add sound when all habits are completed and a longer vibration
+
+# - Add vibration when completing a part of the habit (vibration for each number change)
+
+# - Add an option to disable haptic feedback
+
+- Add more color options
+- Add more languages
+
+# - Add so user can swipe left or right on the screen to switch which tag to display
+
+How to center tag display:
+Get tag number, compare it to previous tag, scroll to the side of the current tag comparing to the previous tag:
+
+- scroll by number of letters for each tag button in between and how many buttons there are
+- use the calculation to get width of buttons and scroll to the side by that amount of width
+
+Feature to add:
+
+# - custom notifications for each habit
+
+# - each habit has a new List field called notifications
+
+# - in checkForNotifications() add for loop for checking every habit if it has a notification to true, if it does then its gonna go through a for loop in notificationData to find all notifications wiht the same id and schedule them for hour and minute
+
+- add more notification texts for morning, afternoon, evening and daily, and make it randomly pick one of them for each time
+- also add a couple diferent notification texts for the custom notification text for each habit
+
+Later in the app add tasks page too where you will have tasks you can do once in a certain day (it will reward you with coins)
+
+- all tasks that are completed or not completed will be put into history that you can see but not interact with
+- all the task names will be saved and when creating a new task given as an option to choose that name using an algorithm
+
+- Make the daily notification mention what time it is based on its real hour and not 7PM
+- Place haptic feedback checks all over the place and not only on the complete habit

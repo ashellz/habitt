@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
+// import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -40,12 +44,12 @@ Future<void> main() async {
   );
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
+  Hive.registerAdapter(TagDataAdapter());
 
   await openHiveBoxes();
   await fillKeys();
 
-  hasHabits();
-  openCategory();
+  checkForNotifications();
 
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
@@ -79,54 +83,12 @@ Future<void> main() async {
 @pragma('vm:entry-point')
 void callbackDispatcher(context) {
   Workmanager().executeTask((task, inputData) async {
-    int hour = DateTime.now().hour;
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
-    if (hour == 9) {
-      if (boolBox.get("morningNotification") == true) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 1,
-          channelKey: 'basic_channel',
-          title: 'Morning Habits',
-          body:
-              "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
-        ));
-      }
-    } else if (hour == 14) {
-      if (boolBox.get("afternoonNotification") == true) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 2,
-          channelKey: 'basic_channel',
-          title: 'Afternoon Habits',
-          body: 'Keep the momentum going with your afternoon habits! ☀️',
-        ));
-      }
-    } else if (hour == 21) {
-      if (boolBox.get("eveningNotification") == true) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 3,
-          channelKey: 'basic_channel',
-          title: 'Evening Habits',
-          body: 'Finish strong by completing your evening habits! 🌙',
-        ));
-      } else if (hour == 19) {
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 4,
-          channelKey: 'basic_channel',
-          title: 'Remaining Habits',
-          body:
-              "It's 7 PM! ⏰ Take a moment to check in and complete your remaining habits! 💪",
-        ));
-      }
-    }
-
+    checkForNotifications();
+    // updateLastOpenedDate();
     return Future.value(true);
   });
 }
@@ -147,6 +109,7 @@ void openCategory() {
 }
 
 hasHabits() {
+  final habitBox = Hive.box<HabitData>('habits');
   for (int i = 0; i < habitBox.length; i++) {
     if (habitBox.getAt(i)?.category == 'Morning') {
       morningHasHabits = true;
@@ -172,12 +135,12 @@ class MyApp extends StatelessWidget {
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
-        colorScheme: ColorScheme.fromSeed(seedColor: theLightGreen),
+        colorScheme: ColorScheme.fromSeed(seedColor: theLightColor),
         useMaterial3: true,
         appBarTheme: AppBarTheme(
           iconTheme: const IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
-              color: theLightGreen,
+              color: theLightColor,
               fontSize: 22,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700),
@@ -189,6 +152,9 @@ class MyApp extends StatelessWidget {
             ),
       ),
       home: AuthCheck(),
+      routes: {
+        "/home": (_) => const NewHomePage(),
+      },
     );
   }
 }
@@ -203,6 +169,10 @@ class AuthCheck extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<HabitProvider>().chooseMainCategory();
+            context.read<HabitProvider>().updateMainCategoryHeight();
+          });
           return const NewHomePage();
         } else {
           return LoginPage();

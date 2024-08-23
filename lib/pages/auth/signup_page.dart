@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
 
 class SignupPage extends StatelessWidget {
@@ -175,14 +175,93 @@ class SignupPage extends StatelessWidget {
                           child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  await AuthService().signUp(
+                                  showDialog(
                                       context: context,
-                                      email: _emailController.text,
-                                      password: _passwordController.text);
-                                  stringBox.put(
-                                      'username', _usernameController.text);
+                                      builder: (context) => AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(15.0)),
+                                              side: BorderSide(
+                                                  color: theLightColor,
+                                                  width: 3.0),
+                                            ),
+                                            backgroundColor: Colors.black,
+                                            title: const Center(
+                                              child: Text(
+                                                "Keep guest data?",
+                                                style: TextStyle(fontSize: 22),
+                                              ),
+                                            ),
+                                            actions: [
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    ElevatedButton(
+                                                        onPressed: () async {
+                                                          keepData = false;
+                                                          newAccountDownloadData(
+                                                              context);
+                                                          await AuthService().signUp(
+                                                              context: context,
+                                                              email:
+                                                                  _emailController
+                                                                      .text,
+                                                              password:
+                                                                  _passwordController
+                                                                      .text);
+                                                          stringBox.put(
+                                                              'username',
+                                                              _usernameController
+                                                                  .text);
+                                                        },
+                                                        style: ButtonStyle(
+                                                          backgroundColor:
+                                                              WidgetStateProperty
+                                                                  .all<Color>(
+                                                                      theRedColor),
+                                                        ),
+                                                        child: const Text(
+                                                            "Delete",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14))),
+                                                    ElevatedButton(
+                                                        onPressed: () async {
+                                                          keepData = true;
+                                                          await AuthService().signUp(
+                                                              context: context,
+                                                              email:
+                                                                  _emailController
+                                                                      .text,
+                                                              password:
+                                                                  _passwordController
+                                                                      .text);
+                                                          stringBox.put(
+                                                              'username',
+                                                              _usernameController
+                                                                  .text);
+                                                        },
+                                                        style: ButtonStyle(
+                                                          backgroundColor:
+                                                              WidgetStateProperty
+                                                                  .all<Color>(
+                                                                      theLightColor),
+                                                        ),
+                                                        child: const Text(
+                                                          "Keep",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14),
+                                                        )),
+                                                  ]),
+                                            ],
+                                          ));
                                 }
-                                newAccountDownloadData(context);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
@@ -236,18 +315,7 @@ class SignupPage extends StatelessWidget {
               padding: const EdgeInsets.all(30.0),
               child: GestureDetector(
                 onTap: () async {
-                  await AuthService().signInAnonimusly();
-                  boolBox.put("isGuest", true);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => const LoadingScreen(
-                        text: "Loading data...",
-                      ),
-                    ),
-                  );
-                  stringBox.put("username", "Guest");
-                  newAccountDownloadData(context);
+                  await AuthService().signInAsGuest(context);
                 },
                 child: const Text(
                   "CONTINUE AS A GUEST",

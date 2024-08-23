@@ -22,17 +22,29 @@ class AuthService {
         email: email,
         password: password,
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const LoadingScreen(
-            text: "Signing up...",
+      if (keepData) {
+        boolBox.put("isGuest", false);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const NewHomePage(),
           ),
-        ),
-      );
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const LoadingScreen(
+              text: "Signing up...",
+            ),
+          ),
+        );
+      }
+
       isLoggedIn = true;
     } on FirebaseException catch (e) {
       errorMessage = 'An unexpected error occurred';
+
       if (e.code == 'weak-password') {
         errorMessage = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
@@ -47,6 +59,11 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut();
+        Restart.restartApp();
+      }
     }
   }
 
@@ -132,7 +149,37 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
+
+      if (errorMessage == 'An unexpected error occurred') {
+        await FirebaseAuth.instance.signOut().then(
+              (value) => Restart.restartApp(),
+            );
+      }
       print(e.toString());
+    }
+  }
+
+  Future<void> signInAsGuest(BuildContext context) async {
+    await signInAnonimusly();
+    if (boolBox.get("isGuest")!) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const NewHomePage(),
+        ),
+      );
+    } else {
+      boolBox.put("isGuest", true);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const LoadingScreen(
+            text: "Loading data...",
+          ),
+        ),
+      );
+      stringBox.put("username", "Guest");
+      newAccountDownloadData(context);
     }
   }
 

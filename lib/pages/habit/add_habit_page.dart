@@ -2,13 +2,17 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter/widgets.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
+import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
+import "package:habit_tracker/util/colors.dart";
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import "package:habit_tracker/util/objects/add_tag.dart";
+import "package:habit_tracker/util/objects/delete_tag.dart";
 import "package:provider/provider.dart";
 import 'package:flutter_spinbox/material.dart';
+import "package:vibration/vibration.dart";
 
 int habitGoal = 0;
 int currentAmountValue = 2;
@@ -78,20 +82,58 @@ class _AddHabitPageState extends State<AddHabitPage> {
             padding: const EdgeInsets.only(bottom: 60),
             physics: const BouncingScrollPhysics(),
             children: [
-              const Padding(
-                padding: EdgeInsets.only(
-                  top: 20.0,
-                  left: 25.0,
-                  bottom: 10.0,
-                ),
-                child: Text(
-                  "New Habit",
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      top: 20.0,
+                      left: 25.0,
+                      bottom: 10.0,
+                    ),
+                    child: Text(
+                      "New Habit",
+                      style: TextStyle(
+                        fontSize: 32.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10, top: 5),
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const NotificationsPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                const begin = Offset(0.0, 1.0);
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
+
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
+
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.notifications,
+                          size: 30,
+                          color: Colors.white,
+                        )),
+                  ),
+                ],
               ),
 
               // ICON
@@ -103,7 +145,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 child: Container(
                   height: 170,
                   decoration: BoxDecoration(
-                    color: theGreen,
+                    color: theColor,
                   ),
                   child: Row(
                     children: [
@@ -176,6 +218,79 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ),
 
+              //TAG
+
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: SizedBox(
+                  height: 30,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      for (int i = 0; i < tagBox.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: GestureDetector(
+                            onTap: () => setState(() {
+                              habitTag = tagBox.getAt(i)!.tag;
+                            }),
+                            onLongPress: () {
+                              String? tempHabitTag = tagBox.getAt(i)!.tag;
+                              if (tagBox.getAt(i)!.tag != "No tag") {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      deleteTagWidget(i, context),
+                                ).then((value) {
+                                  setState(() {
+                                    if (habitTag == tempHabitTag.toString()) {
+                                      habitTag = "No tag";
+                                    } else {
+                                      habitTag = habitTag;
+                                    }
+                                  });
+                                });
+                              }
+                            },
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: habitTag == tagBox.getAt(i)!.tag
+                                      ? theColor
+                                      : theDarkGrey,
+                                ),
+                                height: 30,
+                                child:
+                                    Center(child: Text(tagBox.getAt(i)!.tag))),
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () => showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            enableDrag: true,
+                            builder: (context) => const AddTagWidget(),
+                          ),
+                          child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: theDarkGrey,
+                              ),
+                              height: 30,
+                              child: const Center(child: Text("+"))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
               //NAME
 
               Padding(
@@ -212,7 +327,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
                     ),
                     filled: true,
-                    fillColor: theGreen,
+                    fillColor: theColor,
                     label: const Text(
                       "Habit Name",
                       style: TextStyle(color: Colors.white),
@@ -258,7 +373,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: theGreen,
+                          color: theColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         height: 55,
@@ -283,39 +398,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
               ),
 
               const SizedBox(height: 15),
-              /*
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButtonFormField(
-                    dropdownColor: theGreen,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      filled: true,
-                      fillColor: theGreen,
-                    ),
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                    hint: const Text("Any Time",
-                        style: TextStyle(color: Colors.white)),
-                    items: dropdownItems,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropDownValue = newValue!;
-                      });
-                    },
-                  ),
-                ),
-              ),*/
 
               // HABIT GOAL
               Padding(
@@ -345,7 +427,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoal == 1
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theGreen,
+                              : theColor,
                         ),
                       ),
                       child: const Text("Number of times",
@@ -378,7 +460,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(
                           habitGoal == 2
                               ? const Color.fromARGB(255, 107, 138, 122)
-                              : theGreen,
+                              : theColor,
                         ),
                       ),
                       child: const Text("Duration",
@@ -402,7 +484,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Amount",
                             style: TextStyle(color: Colors.white),
@@ -411,8 +493,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         min: 2,
                         max: 9999,
                         value: currentAmountValue.toDouble(),
-                        onChanged: (value) =>
-                            setState(() => currentAmountValue = value.toInt()),
+                        onChanged: (value) {
+                          setState(() => currentAmountValue = value.toInt());
+                          Vibration.vibrate(duration: 10);
+                        },
                       ),
                       const SizedBox(
                         height: 15,
@@ -435,7 +519,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Amount Name",
                             style: TextStyle(color: Colors.white),
@@ -460,7 +544,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Hours",
                             style: TextStyle(color: Colors.white),
@@ -469,8 +553,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         min: 0,
                         max: 23,
                         value: currentDurationValueHours.toDouble(),
-                        onChanged: (value) => setState(
-                            () => currentDurationValueHours = value.toInt()),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(
+                              () => currentDurationValueHours = value.toInt());
+                        },
                       ),
                       const SizedBox(height: 15),
                       SpinBox(
@@ -481,7 +568,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: theGreen,
+                          fillColor: theColor,
                           label: const Text(
                             "Minutes",
                             style: TextStyle(color: Colors.white),
@@ -490,14 +577,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         min: 0,
                         max: 59,
                         value: currentDurationValueMinutes.toDouble(),
-                        onChanged: (value) => setState(
-                            () => currentDurationValueMinutes = value.toInt()),
-                      ),
-                      Center(
-                        child: Text(
-                          "${currentDurationValueHours}h ${currentDurationValueMinutes}m",
-                          style: const TextStyle(color: Colors.white),
-                        ),
+                        onChanged: (value) {
+                          Vibration.vibrate(duration: 10);
+                          setState(() =>
+                              currentDurationValueMinutes = value.toInt());
+                        },
                       ),
                     ],
                   ),
@@ -511,7 +595,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
           width: MediaQuery.of(context).size.width,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: theLightGreen,
+              backgroundColor: theLightColor,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
@@ -522,9 +606,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 const Text('Add Habit', style: TextStyle(color: Colors.white)),
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                context
-                    .read<HabitProvider>()
-                    .createNewHabitProvider(createcontroller);
+                Provider.of<HabitProvider>(context, listen: false)
+                    .createNewHabitProvider(createcontroller, context);
                 Navigator.pop(context);
               }
             },

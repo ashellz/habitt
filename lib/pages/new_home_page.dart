@@ -1,21 +1,18 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/functions/habit/calculateHeight.dart';
+import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/new_habit_tile.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-
-Color theDarkGrey = const Color.fromARGB(255, 17, 17, 17);
-Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
-Color theGreen = const Color.fromARGB(255, 62, 80, 71);
-Color theOtherGreen = const Color.fromARGB(255, 107, 138, 122);
-Color theLightGreen = const Color.fromARGB(255, 124, 175, 151);
-Color theRedColor = const Color.fromARGB(255, 204, 86, 110);
-Color theYellowColor = const Color.fromARGB(255, 223, 223, 129);
 
 Icon startIcon = const Icon(Icons.book);
 Icon updatedIcon = startIcon;
@@ -25,15 +22,31 @@ final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
 final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
+final listBox = Hive.box<List>('list');
+final tagBox = Hive.box<TagData>('tags');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
+String habitTag = "";
+final player = AudioPlayer();
 
 bool eveningVisible = false,
     anyTimeVisible = false,
     afternoonVisible = false,
     morningVisible = false,
     changed = false,
+    keepData = false,
     deleted = false;
+
+List<String> categoriesList = ['All'];
+List<String> tagsList = [
+  'No tag',
+  'Healthy Lifestyle',
+  'Better Sleep',
+  'Morning Routine',
+  'Workout',
+];
+
+final pageController = PageController(initialPage: 0);
 
 class NewHomePage extends StatefulWidget {
   const NewHomePage({super.key});
@@ -47,17 +60,14 @@ class _NewHomePageState extends State<NewHomePage> {
   void initState() {
     super.initState();
     updateLastOpenedDate();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().chooseMainCategory();
-    });
+    hasHabits();
+    openCategory();
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().updateMainCategoryHeight();
-    });
+    fillTagsList(context);
+    String? tagSelected = context.watch<HabitProvider>().tagSelected;
 
     String mainCategory = context.watch<HabitProvider>().mainCategory;
     int habitListLength = context.watch<HabitProvider>().habitListLength;
@@ -70,16 +80,20 @@ class _NewHomePageState extends State<NewHomePage> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black, actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return const MenuPage();
-              }));
-            },
-          ),
-        ]),
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.black,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return const MenuPage();
+                  }));
+                },
+              ),
+            ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             updatedIcon = startIcon;
@@ -91,12 +105,22 @@ class _NewHomePageState extends State<NewHomePage> {
             currentDurationValueHours = 0;
             currentDurationValueMinutes = 0;
             createcontroller.text = "Habit Name";
+            habitTag = "No tag";
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return AddHabitPage(
                 createcontroller: createcontroller,
               );
             })).whenComplete(() {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<HabitProvider>().setTagSelected("All");
+              });
+              pageController.animateToPage(
+                0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+              habitTag = "No tag";
               updatedIcon = startIcon;
               habitGoal = 0;
               dropDownValue = 'Any time';
@@ -108,7 +132,7 @@ class _NewHomePageState extends State<NewHomePage> {
               createcontroller.text = "Habit Name";
             });
           },
-          backgroundColor: theLightGreen,
+          backgroundColor: theLightColor,
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -117,16 +141,59 @@ class _NewHomePageState extends State<NewHomePage> {
         backgroundColor: Colors.black,
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
           children: [
-            const SizedBox(height: 30),
-            header(username),
-            const SizedBox(height: 20),
-            mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
-                editcontroller, context),
-            const SizedBox(height: 20),
-            otherCategoriesList(habitListLength, mainCategory, editcontroller,
-                anytimeHasHabits),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 30),
+                  header(username),
+                  const SizedBox(height: 20),
+                  SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: calculateHabitsHeight(tagSelected, context),
+              child: PageView(
+                controller: pageController,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                onPageChanged: (value) => context
+                    .read<HabitProvider>()
+                    .setTagSelected(visibleListTags()[value]),
+                children: [
+                  for (String tag in visibleListTags())
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 40),
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          const SizedBox(height: 20),
+                          if (tag == 'All')
+                            Column(children: [
+                              mainCategoryList(
+                                  habitListLength,
+                                  mainCategoryHeight,
+                                  mainCategory,
+                                  editcontroller,
+                                  context),
+                              const SizedBox(height: 20),
+                              otherCategoriesList(habitListLength, mainCategory,
+                                  editcontroller, anytimeHasHabits)
+                            ]),
+                          if (tag != 'All')
+                            tagSelectedWidget(tag, editcontroller),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -151,7 +218,7 @@ Widget header(username) {
         child: Text(
           username,
           style: TextStyle(
-            color: theLightGreen,
+            color: theLightColor,
             fontSize: 42,
             fontWeight: FontWeight.bold,
           ),
@@ -237,7 +304,7 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
         height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theOtherGreen,
+          color: theOtherColor,
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 20),
@@ -254,20 +321,36 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
 otherCategoriesList(
     habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(
-        habitListLength, editcontroller, mainCategory, mainCategoryListVisible),
-    morning(
-        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
-    afternoon(
-        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
-    evening(
-        habitListLength, mainCategory, editcontroller, mainCategoryListVisible),
+    anyTime(habitListLength, editcontroller, mainCategory, false),
+    morning(habitListLength, mainCategory, editcontroller, false),
+    afternoon(habitListLength, mainCategory, editcontroller, false),
+    evening(habitListLength, mainCategory, editcontroller, false),
   ]);
 }
 
-Widget anyTime(
-    habitListLength, editcontroller, mainCategory, mainCategoryListVisible) {
-  if (mainCategory != 'Any time') {
+Widget tagSelectedWidget(tagSelected, editcontroller) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(tagSelected,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      for (int i = 0; i < habitBox.length; i++)
+        if (habitBox.getAt(i)?.category == tagSelected ||
+            habitBox.getAt(i)?.tag == tagSelected)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: NewHabitTile(
+              index: i,
+              editcontroller: editcontroller,
+            ),
+          ),
+      const SizedBox(height: 20),
+    ],
+  );
+}
+
+Widget anyTime(habitListLength, editcontroller, mainCategory, bool tag) {
+  if (mainCategory != 'Any time' || tag) {
     if (anytimeHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,27 +370,24 @@ Widget anyTime(
         ],
       );
     }
+    if (boolBox.get("displayEmptyCategories")!) {
+      return const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Any time",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text("No habits in this category",
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
+            SizedBox(height: 20),
+          ]);
+    }
   }
-
-  if (boolBox.get("displayEmptyCategories")!) {
-    return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Any time",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("No habits in this category",
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
-          SizedBox(height: 20),
-        ]);
-  } else {
-    return Container();
-  }
+  return Container();
 }
 
-Widget morning(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
-  if (mainCategory != 'Morning') {
+Widget morning(habitListLength, mainCategory, editcontroller, bool tag) {
+  if (mainCategory != 'Morning' || tag) {
     if (morningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,9 +424,8 @@ Widget morning(
   return Container();
 }
 
-Widget afternoon(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
-  if (mainCategory != 'Afternoon') {
+Widget afternoon(habitListLength, mainCategory, editcontroller, bool tag) {
+  if (mainCategory != 'Afternoon' || tag) {
     if (afternoonHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,9 +461,8 @@ Widget afternoon(
   return Container();
 }
 
-Widget evening(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
-  if (mainCategory != 'Evening') {
+Widget evening(habitListLength, mainCategory, editcontroller, bool tag) {
+  if (mainCategory != 'Evening' || tag) {
     if (eveningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -455,6 +533,176 @@ Widget anyTimeMainCategory(int habitListLength, editcontroller,
       ),
     );
   }
+}
+
+List<String> visibleListTags() {
+  List<String> visibleList = ["All"];
+
+  for (int i = 0; i < habitBox.length; i++) {
+    final category = habitBox.getAt(i)?.category;
+
+    if (!visibleList.contains(category)) {
+      visibleList.add(category!);
+    }
+  }
+
+  visibleList.sort((a, b) {
+    const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
+    return order.indexOf(a).compareTo(order.indexOf(b));
+  });
+
+  for (int i = 0; i < habitBox.length; i++) {
+    final tag = habitBox.getAt(i)?.tag;
+    if (!visibleList.contains(tag)) {
+      if (tag != "No tag") {
+        visibleList.add(tag!);
+      }
+    }
+  }
+
+  return visibleList;
+}
+
+Widget tagsWidgets(String? tagSelected) {
+  List<String> visibleList = visibleListTags();
+
+  return ListView(
+    scrollDirection: Axis.horizontal,
+    children: <Widget>[
+      for (final category in visibleList)
+        StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) => Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+                onTap: () => setState(() {
+                      pageController.animateToPage(
+                        visibleList.indexOf(category),
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    }),
+                child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color:
+                          tagSelected == category ? theOtherColor : theDarkGrey,
+                    ),
+                    height: 30,
+                    child: Center(
+                      child: Text(category.toString(),
+                          style: TextStyle(
+                              color: categoryCompleted(category)
+                                  ? Colors.grey.shade700
+                                  : Colors.white,
+                              decorationColor: Colors.grey.shade700,
+                              decorationThickness: 3.0)),
+                    ))),
+          ),
+        )
+    ],
+  );
+}
+
+/*
+void chooseSelectedWidget(tagSelected, editcontroller, context) {
+    if (tagSelected == 'All') {
+      _selectedWidget = defaultWidget(editcontroller, context);
+    } else if (tagSelected == 'Any time') {
+      _selectedWidget = anyTime(habitListLength, editcontroller, mainCategory,
+          anytimeHasHabits, true);
+    } else if (tagSelected == 'Morning') {
+      _selectedWidget = morning(habitListLength, mainCategory, editcontroller,
+          anytimeHasHabits, true);
+    } else if (tagSelected == 'Afternoon') {
+      _selectedWidget = afternoon(habitListLength, mainCategory, editcontroller,
+          anytimeHasHabits, true);
+    } else if (tagSelected == 'Evening') {
+      _selectedWidget = evening(habitListLength, mainCategory, editcontroller,
+          anytimeHasHabits, true);
+    } else {
+      _selectedWidget = defaultWidget(editcontroller, context);
+    }
+    notifyListeners();
+  }*/
+
+void fillTagsList(BuildContext context) {
+  categoriesList = ["All"];
+
+  void addAnytime() {
+    if (!categoriesList.contains("Any time")) {
+      categoriesList.add("Any time");
+    }
+  }
+
+  void addMorning() {
+    if (!categoriesList.contains("Morning")) {
+      categoriesList.add("Morning");
+    }
+  }
+
+  void addAfternoon() {
+    if (!categoriesList.contains("Afternoon")) {
+      categoriesList.add("Afternoon");
+    }
+  }
+
+  void addEvening() {
+    if (!categoriesList.contains("Evening")) {
+      categoriesList.add("Evening");
+    }
+  }
+
+  if (context.watch<HabitProvider>().displayEmptyCategories) {
+    addAnytime();
+    addMorning();
+    addAfternoon();
+    addEvening();
+  } else {
+    if (anytimeHasHabits) {
+      addAnytime();
+    } else {
+      categoriesList.remove("Any time");
+    }
+    if (morningHasHabits) {
+      addMorning();
+    } else {
+      categoriesList.remove("Morning");
+    }
+    if (afternoonHasHabits) {
+      addAfternoon();
+    } else {
+      categoriesList.remove("Afternoon");
+    }
+    if (eveningHasHabits) {
+      addEvening();
+    } else {
+      categoriesList.remove("Evening");
+    }
+  }
+
+  categoriesList.sort((a, b) {
+    const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
+    return order.indexOf(a).compareTo(order.indexOf(b));
+  });
+
+  for (int i = 0; i < tagBox.length; i++) {
+    String tag = tagBox.getAt(i)!.tag;
+    if (!tagsList.contains(tag)) {
+      tagsList.add(tag);
+    }
+  }
+
+  for (int i = 0; i < tagsList.length; i++) {
+    if (tagsList[i] != 'No tag' && !categoriesList.contains(tagsList[i])) {
+      categoriesList.add(tagsList[i]);
+    }
+  }
+}
+
+Future<void> playSound() async {
+  print("the functio nwas run");
+  await player.play(AssetSource('sound/complete3.mp3'));
 }
 
 List<DropdownMenuItem<String>> get dropdownItems {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 Widget completeHabitDialog(int index) {
   bool amountCheck = false;
@@ -18,7 +19,7 @@ Widget completeHabitDialog(int index) {
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theLightGreen, width: 3.0),
+        side: BorderSide(color: theLightColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       content: SizedBox(
@@ -51,6 +52,7 @@ Widget completeHabitDialog(int index) {
                       max: habitBox.getAt(index)!.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
+                        Vibration.vibrate(duration: 10);
                         theAmountValue = value.toInt();
                       }),
                     ),
@@ -88,6 +90,7 @@ Widget completeHabitDialog(int index) {
                         max: (habitBox.getAt(index)!.duration ~/ 60).toDouble(),
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
+                          Vibration.vibrate(duration: 10);
                           theDurationValueHours = value.toInt();
                           if (theDurationValueHours ==
                               (habitBox.getAt(index)!.duration ~/ 60)) {
@@ -146,7 +149,7 @@ Widget completeHabitDialog(int index) {
                     fixedSize: const WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theLightGreen)),
+                    backgroundColor: WidgetStatePropertyAll(theLightColor)),
                 onPressed: () {
                   context.read<HabitProvider>().completeHabitProvider(index);
                   Navigator.pop(context);
@@ -161,7 +164,7 @@ Widget completeHabitDialog(int index) {
                       Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theLightGreen,
+                      color: theLightColor,
                       width: 3.0,
                     )),
                     backgroundColor:
@@ -169,9 +172,13 @@ Widget completeHabitDialog(int index) {
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {
-                      applyAmountCompleted(index, theAmountValue);
+                      context
+                          .read<HabitProvider>()
+                          .applyAmountCompleted(index, theAmountValue);
                     } else {
-                      applyDurationCompleted(index, theDurationValueHours,
+                      context.read<HabitProvider>().applyDurationCompleted(
+                          index,
+                          theDurationValueHours,
                           theDurationValueMinutes);
                     }
                     Navigator.pop(context);
@@ -186,40 +193,4 @@ Widget completeHabitDialog(int index) {
       ],
     ),
   );
-}
-
-applyDurationCompleted(
-    index, int theDurationValueHours, int theDurationValueMinutes) {
-  habitBox.putAt(
-      index,
-      HabitData(
-          name: habitBox.getAt(index)!.name,
-          completed: habitBox.getAt(index)!.completed,
-          icon: habitBox.getAt(index)!.icon,
-          category: habitBox.getAt(index)!.category,
-          streak: habitBox.getAt(index)!.streak,
-          amount: habitBox.getAt(index)!.amount,
-          amountName: habitBox.getAt(index)!.amountName,
-          amountCompleted: habitBox.getAt(index)!.amountCompleted,
-          duration: habitBox.getAt(index)!.duration,
-          durationCompleted:
-              theDurationValueHours * 60 + theDurationValueMinutes,
-          skipped: habitBox.getAt(index)!.skipped));
-}
-
-applyAmountCompleted(index, theAmountValue) {
-  habitBox.putAt(
-      index,
-      HabitData(
-          name: habitBox.getAt(index)!.name,
-          completed: habitBox.getAt(index)!.completed,
-          icon: habitBox.getAt(index)!.icon,
-          category: habitBox.getAt(index)!.category,
-          streak: habitBox.getAt(index)!.streak,
-          amount: habitBox.getAt(index)!.amount,
-          amountName: habitBox.getAt(index)!.amountName,
-          amountCompleted: theAmountValue,
-          duration: habitBox.getAt(index)!.duration,
-          durationCompleted: habitBox.getAt(index)!.durationCompleted,
-          skipped: habitBox.getAt(index)!.skipped));
 }

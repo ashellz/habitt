@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/util/colors.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 
 Icon chosenIcon = const Icon(Icons.book);
@@ -101,7 +102,7 @@ class IconWidget extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),
-            backgroundColor: theGreen,
+            backgroundColor: theColor,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),

@@ -52,6 +52,8 @@ dependencies:
   restart_app: ^1.2.1
   disable_battery_optimization: ^1.1.1
   flutter_spinbox: ^0.13.1
+  audioplayers: ^6.0.0
+  vibration: ^1.9.0
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +85,7 @@ flutter:
     - assets/images/evening_picture.png
     - assets/images/anytime_picture.png
     - assets/images/ic_launcher.png
+    - assets/sound/complete3.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
