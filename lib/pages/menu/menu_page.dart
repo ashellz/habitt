@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:habit_tracker/pages/menu/calendar_page.dart";
 import "package:habit_tracker/pages/menu/changelog_page.dart";
 import "package:habit_tracker/pages/menu/profile_page.dart";
 import "package:habit_tracker/pages/menu/settings_page.dart";
@@ -67,6 +68,22 @@ Widget buildMenuItems(BuildContext context) => Center(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            ListTile(
+                leading: const Icon(
+                  Icons.calendar_month,
+                  color: Colors.white,
+                  size: 25,
+                ),
+                title: const Text(
+                  'Calendar',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CalendarPage(),
+                      ),
+                    )),
             ListTile(
                 leading: const Icon(
                   Icons.settings,
