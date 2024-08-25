@@ -97,6 +97,7 @@ class _CalendarPageState extends State<CalendarPage> {
 otherCategoriesList(today) {
   late int habitListLength = 0;
   late List habitsOnDate = [];
+  late int boxIndex;
   List<int> todayDate = [today.year, today.month, today.day];
 
   for (int i = 0; i < historicalBox.length; i++) {
@@ -107,6 +108,7 @@ otherCategoriesList(today) {
     ];
 
     if (const ListEquality().equals(date, todayDate)) {
+      boxIndex = i;
       habitListLength = historicalBox.getAt(i)!.data.length;
       habitsOnDate = historicalBox.getAt(i)!.data;
       break;
@@ -114,14 +116,14 @@ otherCategoriesList(today) {
   }
 
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(habitListLength, habitsOnDate, today),
-    morning(habitListLength, habitsOnDate, today),
-    afternoon(habitListLength, habitsOnDate, today),
-    evening(habitListLength, habitsOnDate, today),
+    anyTime(habitListLength, habitsOnDate, today, boxIndex),
+    morning(habitListLength, habitsOnDate, today, boxIndex),
+    afternoon(habitListLength, habitsOnDate, today, boxIndex),
+    evening(habitListLength, habitsOnDate, today, boxIndex),
   ]);
 }
 
-Widget anyTime(habitListLength, habitsOnDate, today) {
+Widget anyTime(habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Any time", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,10 +135,10 @@ Widget anyTime(habitListLength, habitsOnDate, today) {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                index: i,
-                habits: habitsOnDate,
-                time: today,
-              ),
+                  index: i,
+                  habits: habitsOnDate,
+                  time: today,
+                  boxIndex: boxIndex),
             ),
         const SizedBox(height: 20),
       ],
@@ -158,7 +160,7 @@ Widget anyTime(habitListLength, habitsOnDate, today) {
   return const SizedBox(height: 0);
 }
 
-Widget morning(habitListLength, habitsOnDate, today) {
+Widget morning(habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Morning", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,10 +172,10 @@ Widget morning(habitListLength, habitsOnDate, today) {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                index: i,
-                habits: habitsOnDate,
-                time: today,
-              ),
+                  index: i,
+                  habits: habitsOnDate,
+                  time: today,
+                  boxIndex: boxIndex),
             ),
         const SizedBox(height: 20),
       ],
@@ -196,7 +198,7 @@ Widget morning(habitListLength, habitsOnDate, today) {
   return const SizedBox(height: 0);
 }
 
-Widget afternoon(habitListLength, habitsOnDate, today) {
+Widget afternoon(habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Afternoon", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,10 +210,10 @@ Widget afternoon(habitListLength, habitsOnDate, today) {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                index: i,
-                habits: habitsOnDate,
-                time: today,
-              ),
+                  index: i,
+                  habits: habitsOnDate,
+                  time: today,
+                  boxIndex: boxIndex),
             ),
         const SizedBox(height: 20),
       ],
@@ -234,7 +236,7 @@ Widget afternoon(habitListLength, habitsOnDate, today) {
   return const SizedBox(height: 0);
 }
 
-Widget evening(habitListLength, habitsOnDate, today) {
+Widget evening(habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Evening", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,10 +248,10 @@ Widget evening(habitListLength, habitsOnDate, today) {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                index: i,
-                habits: habitsOnDate,
-                time: today,
-              ),
+                  index: i,
+                  habits: habitsOnDate,
+                  time: today,
+                  boxIndex: boxIndex),
             ),
         const SizedBox(height: 20),
       ],

@@ -1,6 +1,7 @@
 import "dart:async";
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
+import "package:habit_tracker/data/historical_habit.dart";
 import "package:habit_tracker/main.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
@@ -11,6 +12,7 @@ import "package:habit_tracker/util/functions/habit/habitsCompleted.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:restart_app/restart_app.dart";
 import 'package:vibration/vibration.dart';
+import 'package:collection/collection.dart';
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
@@ -22,6 +24,7 @@ class HabitProvider extends ChangeNotifier {
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
 
+  List get allHistoricalHabits => historicalBox.values.toList();
   List _habitNotifications = [];
 
   List get habitNotifications => _habitNotifications;
@@ -185,8 +188,61 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  void skipHistoricalHabit(int index, habit) async {
+    print("function skip historical habit");
+    print("habit before: ${habit.skipped}");
+
+    habit.completed = !habit.completed;
+    habit.amountCompleted = !habit.completed ? habit.amount : 0;
+    habit.durationCompleted = !habit.completed ? habit.duration : 0;
+    habit.skipped = !habit.skipped;
+
+    print("habit after: ${habit.skipped}");
+    notifyListeners();
+  }
+
+  void completeHistoricalHabit(int index, habit) async {
+    habit.completed = !habit.completed;
+    habit.amountCompleted = habit.completed ? habit.amount : 0;
+    habit.durationCompleted = habit.completed ? habit.duration : 0;
+    habit.skipped = false;
+
+    bool hapticFeedback = boolBox.get('hapticFeedback')!;
+    /*if (allHabitsCompleted()) {
+      playSound();
+      if (hapticFeedback) {
+        Vibration.vibrate(duration: 500);
+      }
+    } else*/
+    if (!habit.completed) {
+      if (hapticFeedback) {
+        Vibration.vibrate(duration: 100);
+      }
+    }
+
+    notifyListeners();
+  }
+
   HabitData getHabitAt(int index) {
     return habitBox.getAt(index)!;
+  }
+
+  HistoricalHabitData getHistoricalHabitAt(int index, DateTime today) {
+    List<int> date = [today.year, today.month, today.day];
+
+    for (int i = 0; i < historicalBox.length; i++) {
+      List<int> habitDate = [
+        historicalBox.getAt(i)!.date.year,
+        historicalBox.getAt(i)!.date.month,
+        historicalBox.getAt(i)!.date.day
+      ];
+
+      if (const ListEquality().equals(habitDate, date)) {
+        return historicalBox.getAt(i)!.data[index];
+      }
+    }
+
+    return historicalBox.getAt(0)!.data[index]; // default
   }
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
@@ -194,29 +250,6 @@ class HabitProvider extends ChangeNotifier {
     chooseMainCategory();
     updateMainCategoryHeight();
     Navigator.of(context).pop();
-
-    /*
-    pushAndRemoveUntil(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const NewHomePage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(-1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-      (route) => false,
-    );*/
 
     notifyListeners();
   }
@@ -273,6 +306,20 @@ class HabitProvider extends ChangeNotifier {
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
         ));
+    notifyListeners();
+  }
+
+  applyHistoricalAmountCompleted(habit, theAmountValue) {
+    habit.amountCompleted = theAmountValue;
+
+    notifyListeners();
+  }
+
+  applyHistoricalDurationCompleted(
+      habit, int theDurationValueHours, int theDurationValueMinutes) {
+    habit.durationCompleted =
+        theDurationValueHours * 60 + theDurationValueMinutes;
+
     notifyListeners();
   }
 }

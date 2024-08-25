@@ -16,15 +16,15 @@ class HistoricalHabit extends HiveObject {
 @HiveType(typeId: 4)
 class HistoricalHabitData {
   final String name;
-  final bool completed;
+  bool completed;
   final String icon;
   final String category;
   final int amount;
-  final int amountCompleted;
+  int amountCompleted;
   final String amountName;
   final int duration;
-  final int durationCompleted;
-  final bool skipped;
+  int durationCompleted;
+  bool skipped;
 
   HistoricalHabitData({
     required this.name,

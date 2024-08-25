@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
-import 'package:habit_tracker/util/objects/habit/complete_habit.dart';
+import 'package:habit_tracker/util/objects/habit/complete_historical_habit.dart';
+import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 class CalendarHabitTile extends StatefulWidget {
   const CalendarHabitTile(
       {super.key,
       required this.index,
       required this.habits,
-      required this.time});
+      required this.time,
+      required this.boxIndex});
   final int index;
   final List<HistoricalHabitData> habits;
   final DateTime time;
+  final int boxIndex;
 
   @override
   State<CalendarHabitTile> createState() => _CalendarHabitTileState();
@@ -22,6 +27,19 @@ class CalendarHabitTile extends StatefulWidget {
 class _CalendarHabitTileState extends State<CalendarHabitTile> {
   @override
   Widget build(BuildContext context) {
+    List<int> chosenDate = [
+      widget.time.year,
+      widget.time.month,
+      widget.time.day
+    ];
+    List<int> realDate = [
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day
+    ];
+
+    bool isToday = const ListEquality().equals(chosenDate, realDate);
+
     int index = widget.index;
     List<HistoricalHabitData> habits = widget.habits;
 
@@ -34,7 +52,10 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
       durationCheck = true;
     }
 
-    var habit = habits[index];
+    var habit = context
+        .watch<HabitProvider>()
+        .allHistoricalHabits[widget.boxIndex]
+        .data[index];
 
     return Slidable(
       enabled: !habit.completed,
@@ -49,7 +70,10 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
           ),
           SlidableAction(
             onPressed: (context) {
-              //SKIP HISTORICAL HABIT
+              context.read<HabitProvider>().skipHistoricalHabit(index, habit);
+              if (isToday) {
+                context.read<HabitProvider>().skipHabitProvider(index);
+              }
             },
             backgroundColor: Colors.grey.shade900,
             foregroundColor: Colors.white,
@@ -63,7 +87,8 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
           widget: widget,
           amountCheck: amountCheck,
           durationCheck: durationCheck,
-          habit: habit),
+          habit: habit,
+          isToday: isToday),
     );
   }
 }
@@ -76,6 +101,7 @@ class HabitTile extends StatelessWidget {
     required this.amountCheck,
     required this.durationCheck,
     required this.habit,
+    required this.isToday,
   });
 
   final int index;
@@ -83,6 +109,7 @@ class HabitTile extends StatelessWidget {
   final bool amountCheck;
   final bool durationCheck;
   final HistoricalHabitData habit;
+  final bool isToday;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +129,7 @@ class HabitTile extends StatelessWidget {
         index: index,
         habit: habit,
         time: time,
+        isToday: isToday,
       ),
     );
   }
@@ -123,6 +151,7 @@ class CheckBox extends StatefulWidget {
     required this.index,
     required this.habit,
     required this.time,
+    required this.isToday,
   });
 
   final bool amountCheck;
@@ -130,6 +159,7 @@ class CheckBox extends StatefulWidget {
   final int index;
   final HistoricalHabitData habit;
   final DateTime time;
+  final bool isToday;
 
   @override
   State<CheckBox> createState() => _CheckBoxState();
@@ -143,7 +173,7 @@ class _CheckBoxState extends State<CheckBox> {
     return GestureDetector(
       onTap: () {
         checkCompleteHabit(widget.amountCheck, widget.durationCheck,
-            widget.index, context, habit, time);
+            widget.index, context, habit, time, widget.isToday);
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
@@ -340,17 +370,31 @@ class _CheckBoxState extends State<CheckBox> {
   }
 }
 
-void checkCompleteHabit(amountCheck, durationCheck, int index,
-    BuildContext context, HistoricalHabitData habit, DateTime time) {
+void checkCompleteHabit(
+    amountCheck,
+    durationCheck,
+    int index,
+    BuildContext context,
+    HistoricalHabitData habit,
+    DateTime time,
+    bool isToday) {
   if (amountCheck == true || durationCheck == true) {
     if (habit.completed) {
-      // COMPLETE HISTORICAL HABIT
+      context.read<HabitProvider>().completeHistoricalHabit(index, habit);
+      if (isToday) {
+        context.read<HabitProvider>().completeHabitProvider(index);
+      }
     } else {
       showDialog(
-          context: context, builder: (context) => completeHabitDialog(index));
+          context: context,
+          builder: (context) =>
+              completeHistoricalHabitDialog(index, context, time));
     }
   } else {
-    // COMPLETE HISTORICAL HABIT
+    context.read<HabitProvider>().completeHistoricalHabit(index, habit);
+    if (isToday) {
+      context.read<HabitProvider>().completeHabitProvider(index);
+    }
   }
 }
 

@@ -42,7 +42,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Calendar page now shows habits on a selected day and if they were completed")
+                        "- Calendar page now shows habits on a selected day and if they were completed\n- Changing habit completion in the past is now possible\n- If you're changing habits in the same day as today, they will be changed in real time (doesn't work if the habit has an amount or duration) ")
                   ])),
 
           // 22.08.2024
