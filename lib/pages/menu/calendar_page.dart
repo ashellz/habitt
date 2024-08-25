@@ -97,7 +97,7 @@ class _CalendarPageState extends State<CalendarPage> {
 otherCategoriesList(today) {
   late int habitListLength = 0;
   late List habitsOnDate = [];
-  late int boxIndex;
+  late int boxIndex = 0;
   List<int> todayDate = [today.year, today.month, today.day];
 
   for (int i = 0; i < historicalBox.length; i++) {
