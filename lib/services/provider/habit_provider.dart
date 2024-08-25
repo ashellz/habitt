@@ -125,20 +125,21 @@ class HabitProvider extends ChangeNotifier {
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(
-          name: existingHabit.name,
-          completed: !existingHabit.completed,
-          icon: existingHabit.icon,
-          category: existingHabit.category,
-          streak: existingHabit.streak,
-          amount: existingHabit.amount,
-          amountName: existingHabit.amountName,
-          amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
-          duration: existingHabit.duration,
-          durationCompleted:
-              !existingHabit.completed ? existingHabit.duration : 0,
-          skipped: false,
-          tag: existingHabit.tag,
-          notifications: existingHabit.notifications);
+        name: existingHabit.name,
+        completed: !existingHabit.completed,
+        icon: existingHabit.icon,
+        category: existingHabit.category,
+        streak: existingHabit.streak,
+        amount: existingHabit.amount,
+        amountName: existingHabit.amountName,
+        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+        duration: existingHabit.duration,
+        durationCompleted:
+            !existingHabit.completed ? existingHabit.duration : 0,
+        skipped: false,
+        tag: existingHabit.tag,
+        notifications: existingHabit.notifications,
+      );
 
       await habitBox.putAt(index, updatedHabit);
 
@@ -163,20 +164,21 @@ class HabitProvider extends ChangeNotifier {
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(
-          name: existingHabit.name,
-          completed: !existingHabit.completed,
-          icon: existingHabit.icon,
-          category: existingHabit.category,
-          streak: existingHabit.streak,
-          amount: existingHabit.amount,
-          amountName: existingHabit.amountName,
-          amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
-          duration: existingHabit.duration,
-          durationCompleted:
-              !existingHabit.completed ? existingHabit.duration : 0,
-          skipped: !existingHabit.skipped,
-          tag: existingHabit.tag,
-          notifications: existingHabit.notifications);
+        name: existingHabit.name,
+        completed: !existingHabit.completed,
+        icon: existingHabit.icon,
+        category: existingHabit.category,
+        streak: existingHabit.streak,
+        amount: existingHabit.amount,
+        amountName: existingHabit.amountName,
+        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+        duration: existingHabit.duration,
+        durationCompleted:
+            !existingHabit.completed ? existingHabit.duration : 0,
+        skipped: !existingHabit.skipped,
+        tag: existingHabit.tag,
+        notifications: existingHabit.notifications,
+      );
 
       await habitBox.putAt(index, updatedHabit);
       notifyListeners();
@@ -235,20 +237,21 @@ class HabitProvider extends ChangeNotifier {
     habitBox.putAt(
         index,
         HabitData(
-            name: habitBox.getAt(index)!.name,
-            completed: habitBox.getAt(index)!.completed,
-            icon: habitBox.getAt(index)!.icon,
-            category: habitBox.getAt(index)!.category,
-            streak: habitBox.getAt(index)!.streak,
-            amount: habitBox.getAt(index)!.amount,
-            amountName: habitBox.getAt(index)!.amountName,
-            amountCompleted: habitBox.getAt(index)!.amountCompleted,
-            duration: habitBox.getAt(index)!.duration,
-            durationCompleted:
-                theDurationValueHours * 60 + theDurationValueMinutes,
-            skipped: habitBox.getAt(index)!.skipped,
-            tag: habitBox.getAt(index)!.tag,
-            notifications: habitBox.getAt(index)!.notifications));
+          name: habitBox.getAt(index)!.name,
+          completed: habitBox.getAt(index)!.completed,
+          icon: habitBox.getAt(index)!.icon,
+          category: habitBox.getAt(index)!.category,
+          streak: habitBox.getAt(index)!.streak,
+          amount: habitBox.getAt(index)!.amount,
+          amountName: habitBox.getAt(index)!.amountName,
+          amountCompleted: habitBox.getAt(index)!.amountCompleted,
+          duration: habitBox.getAt(index)!.duration,
+          durationCompleted:
+              theDurationValueHours * 60 + theDurationValueMinutes,
+          skipped: habitBox.getAt(index)!.skipped,
+          tag: habitBox.getAt(index)!.tag,
+          notifications: habitBox.getAt(index)!.notifications,
+        ));
     notifyListeners();
   }
 
@@ -256,19 +259,20 @@ class HabitProvider extends ChangeNotifier {
     habitBox.putAt(
         index,
         HabitData(
-            name: habitBox.getAt(index)!.name,
-            completed: habitBox.getAt(index)!.completed,
-            icon: habitBox.getAt(index)!.icon,
-            category: habitBox.getAt(index)!.category,
-            streak: habitBox.getAt(index)!.streak,
-            amount: habitBox.getAt(index)!.amount,
-            amountName: habitBox.getAt(index)!.amountName,
-            amountCompleted: theAmountValue,
-            duration: habitBox.getAt(index)!.duration,
-            durationCompleted: habitBox.getAt(index)!.durationCompleted,
-            skipped: habitBox.getAt(index)!.skipped,
-            tag: habitBox.getAt(index)!.tag,
-            notifications: habitBox.getAt(index)!.notifications));
+          name: habitBox.getAt(index)!.name,
+          completed: habitBox.getAt(index)!.completed,
+          icon: habitBox.getAt(index)!.icon,
+          category: habitBox.getAt(index)!.category,
+          streak: habitBox.getAt(index)!.streak,
+          amount: habitBox.getAt(index)!.amount,
+          amountName: habitBox.getAt(index)!.amountName,
+          amountCompleted: theAmountValue,
+          duration: habitBox.getAt(index)!.duration,
+          durationCompleted: habitBox.getAt(index)!.durationCompleted,
+          skipped: habitBox.getAt(index)!.skipped,
+          tag: habitBox.getAt(index)!.tag,
+          notifications: habitBox.getAt(index)!.notifications,
+        ));
     notifyListeners();
   }
 }

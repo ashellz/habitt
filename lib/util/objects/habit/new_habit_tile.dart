@@ -6,7 +6,7 @@ import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
-import 'package:habit_tracker/util/objects/complete_habit.dart';
+import 'package:habit_tracker/util/objects/habit/complete_habit.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';

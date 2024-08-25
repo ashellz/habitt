@@ -17,19 +17,20 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
       Provider.of<HabitProvider>(context, listen: false).habitNotifications;
 
   myHabit = HabitData(
-      name: createcontroller.text,
-      completed: false,
-      icon: getIconString(updatedIcon.icon),
-      category: dropDownValue,
-      streak: 0,
-      amount: habitGoal == 1 ? currentAmountValue : 1,
-      amountName: amountNameController.text,
-      amountCompleted: 0,
-      duration: habitGoal == 2 ? currentDurationValue : 0,
-      durationCompleted: 0,
-      skipped: false,
-      tag: habitTag,
-      notifications: habitNotifications);
+    name: createcontroller.text,
+    completed: false,
+    icon: getIconString(updatedIcon.icon),
+    category: dropDownValue,
+    streak: 0,
+    amount: habitGoal == 1 ? currentAmountValue : 1,
+    amountName: amountNameController.text,
+    amountCompleted: 0,
+    duration: habitGoal == 2 ? currentDurationValue : 0,
+    durationCompleted: 0,
+    skipped: false,
+    tag: habitTag,
+    notifications: habitNotifications,
+  );
   await habitBox.add(myHabit);
   hasHabits();
 

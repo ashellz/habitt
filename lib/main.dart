@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
@@ -10,6 +11,7 @@ import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
+import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 // import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -45,6 +47,8 @@ Future<void> main() async {
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
   Hive.registerAdapter(TagDataAdapter());
+  Hive.registerAdapter(HistoricalHabitAdapter());
+  Hive.registerAdapter(HistoricalHabitDataAdapter());
 
   await openHiveBoxes();
   await fillKeys();
@@ -87,6 +91,7 @@ void callbackDispatcher(context) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
+    saveHabitsForToday();
     checkForNotifications();
     // updateLastOpenedDate();
     return Future.value(true);

@@ -4,9 +4,9 @@ import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/confirm_delete_account.dart';
-import 'package:habit_tracker/util/objects/confirm_sign_out.dart';
-import 'package:habit_tracker/util/objects/change_username.dart';
+import 'package:habit_tracker/util/objects/profile/confirm_delete_account.dart';
+import 'package:habit_tracker/util/objects/profile/confirm_sign_out.dart';
+import 'package:habit_tracker/util/objects/profile/change_username.dart';
 
 bool uploadButtonEnabled = true;
 

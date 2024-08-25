@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/add_habit_page.dart';
@@ -9,8 +10,9 @@ import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/calculateHeight.dart';
 import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
+import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
-import 'package:habit_tracker/util/objects/new_habit_tile.dart';
+import 'package:habit_tracker/util/objects/habit/new_habit_tile.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,7 @@ final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
 final listBox = Hive.box<List>('list');
 final tagBox = Hive.box<TagData>('tags');
+final historicalBox = Hive.box<HistoricalHabit>('historicalHabits');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
 String habitTag = "";
@@ -59,6 +62,7 @@ class _NewHomePageState extends State<NewHomePage> {
   @override
   void initState() {
     super.initState();
+    saveHabitsForToday();
     updateLastOpenedDate();
     hasHabits();
     openCategory();

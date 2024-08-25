@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
+import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/util/colors.dart";
+import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
 import "package:table_calendar/table_calendar.dart";
+import 'package:collection/collection.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -35,51 +38,245 @@ class _CalendarPageState extends State<CalendarPage> {
                     color: theLightColor,
                     fontWeight: FontWeight.bold)),
           ),
-          TableCalendar(
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                color: theOtherColor,
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
+          const SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+                color: theDarkGrey, borderRadius: BorderRadius.circular(20)),
+            child: TableCalendar(
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  color: theOtherColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                ),
+                todayDecoration: BoxDecoration(
+                  color: theColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                ),
+                outsideDaysVisible: false,
+                weekendTextStyle: const TextStyle(color: Colors.white),
+                weekendDecoration: BoxDecoration(
+                  color: Colors.black,
+                  border: Border.all(color: Colors.white, width: 1),
+                  shape: BoxShape.rectangle,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                ),
+                defaultDecoration: BoxDecoration(
+                  color: Colors.black,
+                  border: Border.all(color: Colors.white, width: 1),
+                  shape: BoxShape.rectangle,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                ),
               ),
-              todayDecoration: BoxDecoration(
-                color: theColor,
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              daysOfWeekStyle: DaysOfWeekStyle(
+                  weekendStyle: TextStyle(
+                      color: theLightColor, fontWeight: FontWeight.bold),
+                  weekdayStyle: TextStyle(
+                      color: theLightColor, fontWeight: FontWeight.bold)),
+              headerStyle: const HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: false,
               ),
-              outsideDaysVisible: false,
-              weekendTextStyle: const TextStyle(color: Colors.white),
-              weekendDecoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(color: Colors.white, width: 1),
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-              ),
-              defaultDecoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(color: Colors.white, width: 1),
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-              ),
+              firstDay: DateTime.utc(2024, 1, 1),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: today,
+              selectedDayPredicate: (day) => isSameDay(day, today),
+              onDaySelected: onDaySelected,
             ),
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            daysOfWeekStyle: DaysOfWeekStyle(
-                weekendStyle: TextStyle(
-                    color: theLightColor, fontWeight: FontWeight.bold),
-                weekdayStyle: TextStyle(
-                    color: theLightColor, fontWeight: FontWeight.bold)),
-            headerStyle: const HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: false,
-            ),
-            firstDay: DateTime.utc(2024, 1, 1),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: today,
-            selectedDayPredicate: (day) => isSameDay(day, today),
-            onDaySelected: onDaySelected,
           ),
+          const SizedBox(height: 30),
+          otherCategoriesList(today),
         ],
       ),
     );
   }
+}
+
+otherCategoriesList(today) {
+  late int habitListLength = 0;
+  late List habitsOnDate = [];
+  List<int> todayDate = [today.year, today.month, today.day];
+
+  for (int i = 0; i < historicalBox.length; i++) {
+    List<int> date = [
+      historicalBox.getAt(i)!.date.year,
+      historicalBox.getAt(i)!.date.month,
+      historicalBox.getAt(i)!.date.day
+    ];
+
+    if (const ListEquality().equals(date, todayDate)) {
+      habitListLength = historicalBox.getAt(i)!.data.length;
+      habitsOnDate = historicalBox.getAt(i)!.data;
+      break;
+    }
+  }
+
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    anyTime(habitListLength, habitsOnDate, today),
+    morning(habitListLength, habitsOnDate, today),
+    afternoon(habitListLength, habitsOnDate, today),
+    evening(habitListLength, habitsOnDate, today),
+  ]);
+}
+
+Widget anyTime(habitListLength, habitsOnDate, today) {
+  if (historicalHasHabits("Any time", habitsOnDate, habitListLength)) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Any time",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitListLength; i++)
+          if (habitsOnDate[i].category == 'Any time')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: CalendarHabitTile(
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+              ),
+            ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Any time",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+          SizedBox(height: 20),
+        ]);
+  }
+
+  return const SizedBox(height: 0);
+}
+
+Widget morning(habitListLength, habitsOnDate, today) {
+  if (historicalHasHabits("Morning", habitsOnDate, habitListLength)) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Morning",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitListLength; i++)
+          if (habitsOnDate[i].category == 'Morning')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: CalendarHabitTile(
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+              ),
+            ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Morning",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+          SizedBox(height: 20),
+        ]);
+  }
+
+  return const SizedBox(height: 0);
+}
+
+Widget afternoon(habitListLength, habitsOnDate, today) {
+  if (historicalHasHabits("Afternoon", habitsOnDate, habitListLength)) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Afternoon",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitListLength; i++)
+          if (habitsOnDate[i].category == 'Afternoon')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: CalendarHabitTile(
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+              ),
+            ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Afternoon",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+          SizedBox(height: 20),
+        ]);
+  }
+
+  return const SizedBox(height: 0);
+}
+
+Widget evening(habitListLength, habitsOnDate, today) {
+  if (historicalHasHabits("Evening", habitsOnDate, habitListLength)) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Evening",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        for (int i = 0; i < habitListLength; i++)
+          if (habitsOnDate[i].category == 'Evening')
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: CalendarHabitTile(
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+              ),
+            ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  if (boolBox.get("displayEmptyCategories")!) {
+    return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Evening",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("No habits in this category",
+              style: TextStyle(fontSize: 18, color: Colors.grey)),
+          SizedBox(height: 20),
+        ]);
+  }
+
+  return const SizedBox(height: 0);
+}
+
+bool historicalHasHabits(category, habitsOnDate, habitListLength) {
+  for (int i = 0; i < habitListLength; i++) {
+    if (habitsOnDate[i].category == category) {
+      return true;
+    }
+  }
+  return false;
 }

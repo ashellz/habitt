@@ -1,4 +1,5 @@
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:hive/hive.dart';
 
@@ -32,6 +33,10 @@ Future<void> openHiveBoxes() async {
     print("Opening 'tags' box...");
     await Hive.openBox<TagData>('tags');
   }
+  if (!Hive.isBoxOpen('historicalHabits')) {
+    print("Opening 'historicalHabits' box...");
+    await Hive.openBox<HistoricalHabit>('historicalHabits');
+  }
 }
 
 Future<void> closeHiveBoxes() async {
@@ -59,5 +64,10 @@ Future<void> closeHiveBoxes() async {
   if (Hive.isBoxOpen('tags')) {
     print("Closing 'tags' box...");
     await Hive.box('tags').close();
+  }
+
+  if (Hive.isBoxOpen('historicalHabits')) {
+    print("Closing 'historicalHabits' box...");
+    await Hive.box('historicalHabits').close();
   }
 }

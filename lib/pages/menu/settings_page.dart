@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/notification_container.dart';
-import 'package:habit_tracker/util/objects/text_and_switch_container.dart';
+import 'package:habit_tracker/util/objects/settings/notification_container.dart';
+import 'package:habit_tracker/util/objects/settings/text_and_switch_container.dart';
 import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
