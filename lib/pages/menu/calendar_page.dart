@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
@@ -43,28 +44,20 @@ class _CalendarPageState extends State<CalendarPage> {
             decoration: BoxDecoration(
                 color: theDarkGrey, borderRadius: BorderRadius.circular(20)),
             child: TableCalendar(
+              availableGestures: AvailableGestures.horizontalSwipe,
+              calendarBuilders: CalendarBuilders(
+                selectedBuilder: (context, date, events) =>
+                    CalendarDay(date: date, selected: true),
+                defaultBuilder: (context, date, events) =>
+                    CalendarDay(date: date, selected: false),
+                todayBuilder: (context, day, events) =>
+                    CalendarDay(date: day, selected: false),
+              ),
               calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  color: theOtherColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                ),
-                todayDecoration: BoxDecoration(
-                  color: theColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                ),
                 outsideDaysVisible: false,
                 weekendTextStyle: const TextStyle(color: Colors.white),
-                weekendDecoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(color: Colors.white, width: 1),
-                  shape: BoxShape.rectangle,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
-                ),
-                defaultDecoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(color: Colors.white, width: 1),
+                selectedDecoration: BoxDecoration(
+                  color: theOtherColor,
                   shape: BoxShape.rectangle,
                   borderRadius: const BorderRadius.all(Radius.circular(15)),
                 ),
@@ -78,6 +71,14 @@ class _CalendarPageState extends State<CalendarPage> {
               headerStyle: const HeaderStyle(
                 titleCentered: true,
                 formatButtonVisible: false,
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Colors.white,
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.white,
+                ),
               ),
               firstDay: DateTime.utc(2024, 1, 1),
               lastDay: DateTime.utc(2030, 3, 14),
@@ -88,6 +89,93 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           const SizedBox(height: 30),
           otherCategoriesList(today),
+        ],
+      ),
+    );
+  }
+}
+
+class CalendarDay extends StatelessWidget {
+  const CalendarDay({super.key, required this.date, required this.selected});
+
+  final DateTime date;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    List todayHabits(selectedDay) {
+      List<int> habitsOnDate = [];
+      late int habitsCompleted = 0;
+      late int habitsTotal = 1;
+
+      List day = [selectedDay.year, selectedDay.month, selectedDay.day];
+
+      for (int i = 0; i < historicalBox.length; i++) {
+        List habitDay = [
+          historicalBox.getAt(i)!.date.year,
+          historicalBox.getAt(i)!.date.month,
+          historicalBox.getAt(i)!.date.day
+        ];
+        if (const ListEquality().equals(habitDay, day)) {
+          habitsTotal = historicalBox.getAt(i)!.data.length;
+
+          for (var habit in historicalBox.getAt(i)!.data) {
+            if (habit.completed) {
+              habitsCompleted++;
+            }
+          }
+
+          break;
+        }
+      }
+
+      habitsOnDate = [habitsCompleted, habitsTotal];
+
+      return habitsOnDate;
+    }
+
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: selected ? Colors.grey.shade800 : theDarkGrey,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Center(
+                child: Text(
+                  date.day.toString(),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: RotatedBox(
+              quarterTurns: -1,
+              child: TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 1000),
+                  curve: Curves.easeInOut,
+                  tween: Tween<double>(
+                    begin: 0,
+                    end: todayHabits(date)[0] / todayHabits(date)[1],
+                  ),
+                  builder: (context, value, _) {
+                    return Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        value: value,
+                        color: theOtherColor,
+                        backgroundColor: Colors.grey.shade900,
+                      ),
+                    );
+                  }),
+            ),
+          ),
         ],
       ),
     );

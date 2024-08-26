@@ -9,6 +9,7 @@ import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
 import "package:habit_tracker/util/functions/habit/editHabit.dart";
 import "package:habit_tracker/util/functions/habit/habitsCompleted.dart";
+import "package:habit_tracker/util/functions/habit/saveHabits.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:restart_app/restart_app.dart";
 import 'package:vibration/vibration.dart';
@@ -118,6 +119,7 @@ class HabitProvider extends ChangeNotifier {
   Future<void> createNewHabitProvider(
       createcontroller, BuildContext context) async {
     await createNewHabit(createcontroller, context);
+    saveHabitsForToday();
     chooseMainCategory();
     updateMainCategoryHeight();
     notifyListeners();
@@ -158,6 +160,7 @@ class HabitProvider extends ChangeNotifier {
         }
       }
 
+      saveHabitsForToday();
       notifyListeners();
     }
   }
@@ -184,6 +187,7 @@ class HabitProvider extends ChangeNotifier {
       );
 
       await habitBox.putAt(index, updatedHabit);
+      saveHabitsForToday();
       notifyListeners();
     }
   }
@@ -247,6 +251,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
     editHabit(index, context, editcontroller);
+    saveHabitsForToday();
     chooseMainCategory();
     updateMainCategoryHeight();
     Navigator.of(context).pop();
@@ -256,6 +261,7 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> deleteHabitProvider(index, context, editcontroller) async {
     await deleteHabit(index, context, editcontroller);
+    saveHabitsForToday();
     if (checkIfAllEmpty()) {
       Restart.restartApp();
     }
@@ -285,6 +291,7 @@ class HabitProvider extends ChangeNotifier {
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
         ));
+    saveHabitsForToday();
     notifyListeners();
   }
 
@@ -306,12 +313,12 @@ class HabitProvider extends ChangeNotifier {
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
         ));
+    saveHabitsForToday();
     notifyListeners();
   }
 
   applyHistoricalAmountCompleted(habit, theAmountValue) {
     habit.amountCompleted = theAmountValue;
-
     notifyListeners();
   }
 

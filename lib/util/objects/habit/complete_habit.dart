@@ -3,6 +3,7 @@ import 'package:flutter_spinbox/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
@@ -170,17 +171,30 @@ Widget completeHabitDialog(int index) {
                     backgroundColor:
                         const WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
+                  var habit = context
+                      .read<HabitProvider>()
+                      .getHistoricalHabitAt(index, DateTime.now());
                   mystate(() {
                     if (amountCheck) {
                       context
                           .read<HabitProvider>()
                           .applyAmountCompleted(index, theAmountValue);
+
+                      context
+                          .read<HabitProvider>()
+                          .applyHistoricalAmountCompleted(
+                              habit, theAmountValue);
                     } else {
                       context.read<HabitProvider>().applyDurationCompleted(
                           index,
                           theDurationValueHours,
                           theDurationValueMinutes);
+                      context
+                          .read<HabitProvider>()
+                          .applyHistoricalDurationCompleted(habit,
+                              theDurationValueHours, theDurationValueMinutes);
                     }
+                    saveHabitsForToday();
                     Navigator.pop(context);
                   });
                 },

@@ -25,6 +25,26 @@ class ChangelogPage extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
+          // 26.08.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "26.08.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Made syncing between current day habits on home page and calendar more frequent\n- Calendar days redesign (now shows your habit progress for each day)\n- If you're changing habits in the same day as today, they will be changed in real time (now works if the habit has an amount or duration)")
+                  ])),
+
           // 25.08.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),

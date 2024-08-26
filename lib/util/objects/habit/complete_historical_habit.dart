@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
 Widget completeHistoricalHabitDialog(
-    int index, BuildContext context, DateTime time) {
+    int index, BuildContext context, DateTime time, bool isToday) {
   bool amountCheck = false;
 
   var habit = context.read<HabitProvider>().getHistoricalHabitAt(index, time);
@@ -152,9 +152,13 @@ Widget completeHistoricalHabitDialog(
                     ),
                     backgroundColor: WidgetStatePropertyAll(theLightColor)),
                 onPressed: () {
-                  context
-                      .read<HabitProvider>()
-                      .completeHistoricalHabit(index, habit);
+                  if (isToday) {
+                    context.read<HabitProvider>().completeHabitProvider(index);
+                  } else {
+                    context
+                        .read<HabitProvider>()
+                        .completeHistoricalHabit(index, habit);
+                  }
                   Navigator.pop(context);
                 },
                 child: const Text(
@@ -175,15 +179,28 @@ Widget completeHistoricalHabitDialog(
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {
-                      context
-                          .read<HabitProvider>()
-                          .applyHistoricalAmountCompleted(
-                              habit, theAmountValue);
+                      if (isToday) {
+                        context
+                            .read<HabitProvider>()
+                            .applyAmountCompleted(index, theAmountValue);
+                      } else {
+                        context
+                            .read<HabitProvider>()
+                            .applyHistoricalAmountCompleted(
+                                habit, theAmountValue);
+                      }
                     } else {
-                      context
-                          .read<HabitProvider>()
-                          .applyHistoricalDurationCompleted(habit,
-                              theDurationValueHours, theDurationValueMinutes);
+                      if (isToday) {
+                        context.read<HabitProvider>().applyDurationCompleted(
+                            index,
+                            theDurationValueHours,
+                            theDurationValueMinutes);
+                      } else {
+                        context
+                            .read<HabitProvider>()
+                            .applyHistoricalDurationCompleted(habit,
+                                theDurationValueHours, theDurationValueMinutes);
+                      }
                     }
                     Navigator.pop(context);
                   });

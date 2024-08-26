@@ -31,8 +31,6 @@ void saveHabitsForToday() async {
     }
   }
 
-  print("habitsForToday: $habitsForToday");
-
   bool todayExists = false;
   for (int i = 0; i < historicalBox.length; i++) {
     List<int> date = [

@@ -380,20 +380,22 @@ void checkCompleteHabit(
     bool isToday) {
   if (amountCheck == true || durationCheck == true) {
     if (habit.completed) {
-      context.read<HabitProvider>().completeHistoricalHabit(index, habit);
       if (isToday) {
         context.read<HabitProvider>().completeHabitProvider(index);
+      } else {
+        context.read<HabitProvider>().completeHistoricalHabit(index, habit);
       }
     } else {
       showDialog(
           context: context,
           builder: (context) =>
-              completeHistoricalHabitDialog(index, context, time));
+              completeHistoricalHabitDialog(index, context, time, isToday));
     }
   } else {
-    context.read<HabitProvider>().completeHistoricalHabit(index, habit);
     if (isToday) {
       context.read<HabitProvider>().completeHabitProvider(index);
+    } else {
+      context.read<HabitProvider>().completeHistoricalHabit(index, habit);
     }
   }
 }
