@@ -42,7 +42,7 @@ class ChangelogPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "- Made syncing between current day habits on home page and calendar more frequent\n- Calendar days redesign (now shows your habit progress for each day)\n- If you're changing habits in the same day as today, they will be changed in real time (now works if the habit has an amount or duration)")
+                        "- Made syncing between current day habits on home page and calendar more frequent\n- Calendar days redesign (now shows your habit progress for each day)\n- If you're changing habits in the same day as today, they will be changed in real time (now works if the habit has an amount or duration)\n- Fixed phone vibrating when habit is uncompleted instead of completed in calendar habits")
                   ])),
 
           // 25.08.2024

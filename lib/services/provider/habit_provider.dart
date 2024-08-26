@@ -218,7 +218,7 @@ class HabitProvider extends ChangeNotifier {
         Vibration.vibrate(duration: 500);
       }
     } else*/
-    if (!habit.completed) {
+    if (habit.completed) {
       if (hapticFeedback) {
         Vibration.vibrate(duration: 100);
       }
