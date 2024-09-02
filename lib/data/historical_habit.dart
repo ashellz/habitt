@@ -14,18 +14,7 @@ class HistoricalHabit extends HiveObject {
 }
 
 @HiveType(typeId: 4)
-class HistoricalHabitData {
-  final String name;
-  bool completed;
-  final String icon;
-  final String category;
-  final int amount;
-  int amountCompleted;
-  final String amountName;
-  final int duration;
-  int durationCompleted;
-  bool skipped;
-
+class HistoricalHabitData extends HiveObject {
   HistoricalHabitData({
     required this.name,
     required this.completed,
@@ -38,4 +27,34 @@ class HistoricalHabitData {
     required this.durationCompleted,
     required this.skipped,
   });
+
+  @HiveField(0)
+  String name;
+
+  @HiveField(1)
+  bool completed;
+
+  @HiveField(2)
+  String icon;
+
+  @HiveField(3)
+  String category;
+
+  @HiveField(4)
+  int amount;
+
+  @HiveField(5)
+  int amountCompleted;
+
+  @HiveField(6)
+  String amountName;
+
+  @HiveField(7)
+  int duration;
+
+  @HiveField(8)
+  int durationCompleted;
+
+  @HiveField(9)
+  bool skipped;
 }

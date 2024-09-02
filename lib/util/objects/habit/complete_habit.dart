@@ -171,28 +171,16 @@ Widget completeHabitDialog(int index) {
                     backgroundColor:
                         const WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
-                  var habit = context
-                      .read<HabitProvider>()
-                      .getHistoricalHabitAt(index, DateTime.now());
                   mystate(() {
                     if (amountCheck) {
                       context
                           .read<HabitProvider>()
                           .applyAmountCompleted(index, theAmountValue);
-
-                      context
-                          .read<HabitProvider>()
-                          .applyHistoricalAmountCompleted(
-                              habit, theAmountValue);
                     } else {
                       context.read<HabitProvider>().applyDurationCompleted(
                           index,
                           theDurationValueHours,
                           theDurationValueMinutes);
-                      context
-                          .read<HabitProvider>()
-                          .applyHistoricalDurationCompleted(habit,
-                              theDurationValueHours, theDurationValueMinutes);
                     }
                     saveHabitsForToday();
                     Navigator.pop(context);

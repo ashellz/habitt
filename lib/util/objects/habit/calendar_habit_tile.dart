@@ -70,7 +70,9 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
           ),
           SlidableAction(
             onPressed: (context) {
-              context.read<HabitProvider>().skipHistoricalHabit(index, habit);
+              context
+                  .read<HabitProvider>()
+                  .skipHistoricalHabit(index, habit, widget.time);
               if (isToday) {
                 context.read<HabitProvider>().skipHabitProvider(index);
               }
@@ -383,7 +385,9 @@ void checkCompleteHabit(
       if (isToday) {
         context.read<HabitProvider>().completeHabitProvider(index);
       } else {
-        context.read<HabitProvider>().completeHistoricalHabit(index, habit);
+        context
+            .read<HabitProvider>()
+            .completeHistoricalHabit(index, habit, time);
       }
     } else {
       showDialog(
@@ -395,7 +399,7 @@ void checkCompleteHabit(
     if (isToday) {
       context.read<HabitProvider>().completeHabitProvider(index);
     } else {
-      context.read<HabitProvider>().completeHistoricalHabit(index, habit);
+      context.read<HabitProvider>().completeHistoricalHabit(index, habit, time);
     }
   }
 }

@@ -53,6 +53,8 @@ Future<void> main() async {
   await openHiveBoxes();
   await fillKeys();
 
+  saveHabitsForToday();
+
   checkForNotifications();
 
   // checking for notification access
@@ -96,21 +98,6 @@ void callbackDispatcher(context) {
     // updateLastOpenedDate();
     return Future.value(true);
   });
-}
-
-void openCategory() {
-  if (morningHasHabits == true) {
-    morningVisible = true;
-  }
-  if (afternoonHasHabits == true) {
-    afternoonVisible = true;
-  }
-  if (eveningHasHabits == true) {
-    eveningVisible = true;
-  }
-  if (anytimeHasHabits == true) {
-    anyTimeVisible = true;
-  }
 }
 
 hasHabits() {

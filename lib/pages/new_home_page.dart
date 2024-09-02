@@ -26,18 +26,14 @@ final stringBox = Hive.box<String>('string');
 final listBox = Hive.box<List>('list');
 final tagBox = Hive.box<TagData>('tags');
 final historicalBox = Hive.box<HistoricalHabit>('historicalHabits');
+final historicalHabitDataBox =
+    Hive.box<HistoricalHabitData>('historicalHabitData');
 late HabitData myHabit;
 String dropDownValue = 'Any time';
 String habitTag = "";
 final player = AudioPlayer();
 
-bool eveningVisible = false,
-    anyTimeVisible = false,
-    afternoonVisible = false,
-    morningVisible = false,
-    changed = false,
-    keepData = false,
-    deleted = false;
+bool changed = false, keepData = false, deleted = false;
 
 List<String> categoriesList = ['All'];
 List<String> tagsList = [
@@ -61,9 +57,10 @@ class _NewHomePageState extends State<NewHomePage> {
   @override
   void initState() {
     super.initState();
-    updateLastOpenedDate();
+    updateLastOpenedDate(context);
+
+    context.read<HabitProvider>().calculateStreak();
     hasHabits();
-    openCategory();
   }
 
   @override

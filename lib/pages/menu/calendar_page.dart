@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:habit_tracker/data/historical_habit.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
@@ -89,6 +90,13 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           const SizedBox(height: 30),
           otherCategoriesList(today),
+          ElevatedButton(
+              onPressed: () {
+                for (int i = 0; i < historicalBox.length; i++) {
+                  print("$i = ${historicalBox.getAt(i)!.date.day}");
+                }
+              },
+              child: Text("Press me"))
         ],
       ),
     );
@@ -130,6 +138,10 @@ class CalendarDay extends StatelessWidget {
       }
 
       habitsOnDate = [habitsCompleted, habitsTotal];
+
+      if (habitsTotal == 0) {
+        habitsOnDate = [0, 1];
+      }
 
       return habitsOnDate;
     }
@@ -187,6 +199,7 @@ otherCategoriesList(today) {
   late List habitsOnDate = [];
   late int boxIndex = 0;
   List<int> todayDate = [today.year, today.month, today.day];
+  bool todayExists = false;
 
   for (int i = 0; i < historicalBox.length; i++) {
     List<int> date = [
@@ -196,11 +209,48 @@ otherCategoriesList(today) {
     ];
 
     if (const ListEquality().equals(date, todayDate)) {
+      todayExists = true;
       boxIndex = i;
       habitListLength = historicalBox.getAt(i)!.data.length;
       habitsOnDate = historicalBox.getAt(i)!.data;
       break;
     }
+  }
+
+  void saveTodayHabits() {
+    List<HistoricalHabitData> todayHabitsList = [];
+    for (int i = 0; i < habitBox.length; i++) {
+      var habit = habitBox.getAt(i)!;
+
+      HistoricalHabitData newHistoricalHabit = HistoricalHabitData(
+        name: habit.name,
+        category: habit.category,
+        completed: false,
+        icon: habit.icon,
+        amount: habit.amount,
+        amountCompleted: 0,
+        amountName: habit.amountName,
+        duration: habit.duration,
+        durationCompleted: 0,
+        skipped: false,
+      );
+
+      todayHabitsList.add(newHistoricalHabit);
+    }
+
+    historicalBox.add(HistoricalHabit(date: today, data: todayHabitsList));
+    int index = historicalBox.length - 1;
+    boxIndex = index;
+    habitListLength = historicalBox.getAt(index)!.data.length;
+    habitsOnDate = historicalBox.getAt(index)!.data;
+  }
+
+  if (habitListLength == 0) {
+    saveTodayHabits();
+  }
+
+  if (!todayExists) {
+    saveTodayHabits();
   }
 
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

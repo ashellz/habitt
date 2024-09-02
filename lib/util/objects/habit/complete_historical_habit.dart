@@ -157,7 +157,7 @@ Widget completeHistoricalHabitDialog(
                   } else {
                     context
                         .read<HabitProvider>()
-                        .completeHistoricalHabit(index, habit);
+                        .completeHistoricalHabit(index, habit, time);
                   }
                   Navigator.pop(context);
                 },
@@ -187,7 +187,7 @@ Widget completeHistoricalHabitDialog(
                         context
                             .read<HabitProvider>()
                             .applyHistoricalAmountCompleted(
-                                habit, theAmountValue);
+                                habit, theAmountValue, time, index);
                       }
                     } else {
                       if (isToday) {
@@ -198,8 +198,12 @@ Widget completeHistoricalHabitDialog(
                       } else {
                         context
                             .read<HabitProvider>()
-                            .applyHistoricalDurationCompleted(habit,
-                                theDurationValueHours, theDurationValueMinutes);
+                            .applyHistoricalDurationCompleted(
+                                habit,
+                                theDurationValueHours,
+                                theDurationValueMinutes,
+                                time,
+                                index);
                       }
                     }
                     Navigator.pop(context);

@@ -36,6 +36,7 @@ Future<void> openHiveBoxes() async {
   if (!Hive.isBoxOpen('historicalHabits')) {
     print("Opening 'historicalHabits' box...");
     await Hive.openBox<HistoricalHabit>('historicalHabits');
+    await Hive.openBox<HistoricalHabitData>('historicalHabitData');
   }
 }
 

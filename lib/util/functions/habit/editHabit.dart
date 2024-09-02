@@ -31,16 +31,12 @@ void editHabit(int index, BuildContext context, editcontroller) {
   if (categoryHabits < 2) {
     if (category == "Morning") {
       morningHasHabits = false;
-      morningVisible = false;
     } else if (category == "Afternoon") {
       afternoonHasHabits = false;
-      afternoonVisible = false;
     } else if (category == "Evening") {
       eveningHasHabits = false;
-      eveningVisible = false;
     } else if (category == "Any time") {
       anytimeHasHabits = false;
-      anyTimeVisible = false;
     }
   }
 
@@ -79,29 +75,17 @@ void openCategory(String key) {
     if (morningHasHabits == false) {
       morningHasHabits = true;
     }
-    if (morningVisible == false) {
-      morningVisible = true;
-    }
   } else if (dropDownValue == "Afternoon") {
     if (afternoonHasHabits == false) {
       afternoonHasHabits = true;
-    }
-    if (afternoonVisible == false) {
-      afternoonVisible = true;
     }
   } else if (dropDownValue == "Evening") {
     if (eveningHasHabits == false) {
       eveningHasHabits = true;
     }
-    if (eveningVisible == false) {
-      eveningVisible = true;
-    }
   } else if (dropDownValue == "Any time") {
     if (anytimeHasHabits == false) {
       anytimeHasHabits = true;
-    }
-    if (anyTimeVisible == false) {
-      anyTimeVisible = true;
     }
   }
 }

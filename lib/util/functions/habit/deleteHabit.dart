@@ -18,16 +18,12 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
   if (categoryHabits == 1) {
     if (category == "Morning") {
       morningHasHabits = false;
-      morningVisible = false;
     } else if (category == "Afternoon") {
       afternoonHasHabits = false;
-      afternoonVisible = false;
     } else if (category == "Evening") {
       eveningHasHabits = false;
-      eveningVisible = false;
     } else if (category == "Any time") {
       anytimeHasHabits = false;
-      anyTimeVisible = false;
     }
   }
 
