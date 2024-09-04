@@ -78,7 +78,8 @@ Widget notificationContainer(String category) {
                   showModalBottomSheet(
                       enableDrag: false,
                       context: context,
-                      builder: (context) => chooseNotificationTime(category));
+                      builder: (context) =>
+                          chooseNotificationTime(category, setState));
                 },
                 child: const Text("Choose time",
                     style: TextStyle(

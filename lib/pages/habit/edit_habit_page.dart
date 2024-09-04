@@ -121,8 +121,10 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
       habitTag = habitBox.getAt(widget.index)!.tag;
 
-      context.read<HabitProvider>().changeNotification(
-          List.from(habitBox.getAt(widget.index)!.notifications));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<HabitProvider>().changeNotification(
+            List.from(habitBox.getAt(widget.index)!.notifications));
+      });
 
       updated = true;
     }

@@ -4,7 +4,7 @@ import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-Widget chooseNotificationTime(time) {
+Widget chooseNotificationTime(time, StateSetter mystate) {
   int hour = 0;
   int minute = 0;
   late List timeBox;
@@ -27,6 +27,11 @@ Widget chooseNotificationTime(time) {
       break;
     case "Daily":
       timeBox = listBox.get("dailyNotificationTime")!;
+      hour = timeBox[0];
+      minute = timeBox[1];
+      break;
+    default:
+      timeBox = time;
       hour = timeBox[0];
       minute = timeBox[1];
       break;
@@ -129,8 +134,10 @@ Widget chooseNotificationTime(time) {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            timeBox[0] = hour;
-                            timeBox[1] = minute;
+                            mystate(() {
+                              timeBox[0] = hour;
+                              timeBox[1] = minute;
+                            });
                             checkForNotifications();
                             Navigator.of(context).pop();
                           },

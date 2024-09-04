@@ -15,7 +15,6 @@ import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
 // import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
@@ -27,14 +26,6 @@ bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
 int timeFormat = 24;
-
-bool is12HourFormat() {
-  // Get the current time formatted according to the user's locale
-  String formattedTime = DateFormat.jm().format(DateTime.now());
-
-  // Check if the formatted time contains "AM" or "PM"
-  return formattedTime.contains('AM') || formattedTime.contains('PM');
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,10 +51,6 @@ Future<void> main() async {
   Hive.registerAdapter(TagDataAdapter());
   Hive.registerAdapter(HistoricalHabitAdapter());
   Hive.registerAdapter(HistoricalHabitDataAdapter());
-
-  if (is12HourFormat()) {
-    timeFormat = 12;
-  }
 
   await openHiveBoxes();
   await fillKeys();

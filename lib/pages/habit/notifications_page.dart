@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:habit_tracker/util/objects/habit/choose_notification_time.dart';
 import 'package:provider/provider.dart';
 
 List editHabitNotifications = [];
@@ -60,9 +61,68 @@ class _NotificationsPageState extends State<NotificationsPage> {
 }
 
 Widget notificationTile(List<int> notification, context) {
-  int notificationHour = notification[0];
-  int notificationMinute = notification[1];
+  return StatefulBuilder(
+      builder: (BuildContext context, StateSetter mystate) => Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Container(
+                  padding: const EdgeInsets.all(20.0),
+                  height: 100,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: theColor, borderRadius: BorderRadius.circular(20)),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.notifications,
+                          color: Colors.white,
+                          size: 44,
+                        ),
+                        TextButton(
+                            style: ButtonStyle(
+                              overlayColor: WidgetStatePropertyAll(theColor),
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => chooseNotificationTime(
+                                      notification, mystate));
+                            },
+                            child: Text(
+                              "${notification[0] < 10 ? "0${notification[0]}" : notification[0]}:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        timeFormat == 12
+                            ? const Text(
+                                "AM",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : const SizedBox(
+                                width: 50,
+                              ),
+                      ])),
+              IconButton(
+                onPressed: () {
+                  context
+                      .read<HabitProvider>()
+                      .removeNotification(notification);
+                },
+                highlightColor: theDarkColor,
+                icon: const Icon(Icons.close),
+                color: Colors.white,
+              ),
+            ],
+          ));
 
+  /* old notificationtile
   return StatefulBuilder(
       builder: (BuildContext context, StateSetter mystate) => Stack(
             alignment: Alignment.topRight,
@@ -164,5 +224,5 @@ Widget notificationTile(List<int> notification, context) {
                 color: Colors.white,
               ),
             ],
-          ));
+          ));*/
 }
