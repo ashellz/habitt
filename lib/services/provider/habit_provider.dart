@@ -32,13 +32,26 @@ class HabitProvider extends ChangeNotifier {
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
   String get _mainCategory => mainCategory;
+  int get allHabitsCompletedStreak =>
+      streakBox.get('allHabitsCompletedStreak')!;
 
   List<HistoricalHabitData> historicalHabits_ = [];
 
   List get historicalHabits => historicalHabits_;
 
-  void updateHistoricalHabits(List<HistoricalHabitData> newHistoricalHabits) {
-    historicalHabits_ = newHistoricalHabits;
+  void updateHistoricalHabits(DateTime date) {
+    for (int i = 0; i < historicalBox.length; i++) {
+      List intDate = [
+        historicalBox.getAt(i)!.date.year,
+        historicalBox.getAt(i)!.date.month,
+        historicalBox.getAt(i)!.date.day
+      ];
+      if (const ListEquality()
+          .equals(intDate, [date.year, date.month, date.day])) {
+        historicalHabits_ = historicalBox.getAt(i)!.data;
+      }
+    }
+
     notifyListeners();
   }
 
@@ -217,7 +230,8 @@ class HabitProvider extends ChangeNotifier {
       skipped: !habit.skipped,
     );
 
-    applyCurentHabitData(currentDate, index, habitData);
+    applyCurentHabitData(currentDate, index, habitData, time);
+
     calculateStreak();
     notifyListeners();
   }
@@ -254,7 +268,8 @@ class HabitProvider extends ChangeNotifier {
       }
     }
 
-    applyCurentHabitData(currentDate, index, habitData);
+    applyCurentHabitData(currentDate, index, habitData, time);
+
     calculateStreak();
     notifyListeners();
 
@@ -369,7 +384,7 @@ class HabitProvider extends ChangeNotifier {
         durationCompleted: habit.durationCompleted,
         skipped: habit.skipped);
 
-    applyCurentHabitData(currentDate, index, habitData);
+    applyCurentHabitData(currentDate, index, habitData, time);
 
     notifyListeners();
   }
@@ -390,30 +405,47 @@ class HabitProvider extends ChangeNotifier {
         durationCompleted: theDurationValueHours * 60 + theDurationValueMinutes,
         skipped: habit.skipped);
 
-    applyCurentHabitData(currentDate, index, habitData);
+    applyCurentHabitData(currentDate, index, habitData, time);
 
     notifyListeners();
   }
 
   void calculateStreak() {
     print("calculate streak in progress");
+
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA
+          .compareTo(dateB); // This will sort from oldest to most recent
+    });
+
     for (int i = 0; i < habitBox.length; i++) {
       var habit = habitBox.getAt(i)!;
 
       bool completed = false;
+      bool skipped = false;
       int streak = 0;
 
-      for (int j = 0; j < historicalBox.length - 1; j++) {
-        completed = historicalBox.getAt(j)!.data[0].completed;
+      for (int j = 0; j < historicalList.length - 1; j++) {
+        if (historicalList[j].data.length <= i) {
+          completed = false;
+        } else {
+          completed = historicalList[j].data[i].completed;
+          skipped = historicalList[j].data[i].skipped;
+        }
 
         if (completed) {
-          streak++;
+          if (!skipped) {
+            streak++;
+          }
         } else {
           streak = 0;
         }
       }
 
-      print("${habit.name} streak is $streak");
       habit.streak = streak;
       habit.save();
     }
@@ -421,40 +453,38 @@ class HabitProvider extends ChangeNotifier {
     //ALL HABITS COMPLETED STREAK
     int allHabitsCompletedStreak = 0;
 
-    for (int i = 0; i < historicalBox.length - 1; i++) {
-      print("day: ${historicalBox.getAt(i)!.date.day}");
-
+    for (int i = 0; i < historicalList.length - 1; i++) {
       int numberOfHabits = 0;
       int numberOfCompletedHabits = 0;
+      bool isSkipped = false;
       // -1 is because the last one is the current day
 
-      for (var habit in historicalBox.getAt(i)!.data) {
+      for (var habit in historicalList[i].data) {
         numberOfHabits++;
         if (habit.completed) {
+          if (habit.skipped) {
+            isSkipped = true;
+          }
           numberOfCompletedHabits++;
         }
       }
 
-      print("number of habits: $numberOfHabits");
-      print("number of completed habits: $numberOfCompletedHabits");
-
       if (numberOfCompletedHabits == numberOfHabits) {
-        allHabitsCompletedStreak++;
+        if (!isSkipped) {
+          allHabitsCompletedStreak++;
+        }
       } else {
         allHabitsCompletedStreak = 0;
       }
-
-      print("allHabitsCompletedStreak: $allHabitsCompletedStreak");
     }
 
-    print("allHabitsCompletedStreak is $allHabitsCompletedStreak");
     streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
 
     notifyListeners();
   }
 
-  void applyCurentHabitData(
-      List currentDate, int index, HistoricalHabitData habitData) {
+  void applyCurentHabitData(List currentDate, int index,
+      HistoricalHabitData habitData, DateTime time) {
     for (int i = 0; i < historicalBox.length; i++) {
       List<int> habitDate = [
         historicalBox.getAt(i)!.date.year,
@@ -471,6 +501,7 @@ class HabitProvider extends ChangeNotifier {
             i,
             HistoricalHabit(
                 date: historicalBox.getAt(i)!.date, data: currentHabitData));
+        updateHistoricalHabits(time);
         break;
       }
     }

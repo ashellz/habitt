@@ -388,6 +388,7 @@ void checkCompleteHabit(
         context
             .read<HabitProvider>()
             .completeHistoricalHabit(index, habit, time);
+        context.read<HabitProvider>().updateHistoricalHabits(time);
       }
     } else {
       showDialog(

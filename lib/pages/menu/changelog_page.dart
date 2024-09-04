@@ -25,6 +25,46 @@ class ChangelogPage extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
+          // 03.09.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "03.09.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Made skip feature work properly with the calendar\n- Added more greeting messages in the home page"),
+                  ])),
+
+          // 02.09.2024
+          const Padding(
+            padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),
+            child: Text(
+              "02.09.2024",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "- Streaks are now calculated using the calendar\n- Improved the way calendar works and displays habits\n- Improved the way calendar handles empty days\n- Calendar day updates in realtime if it detects a change")
+                  ])),
+
           // 26.08.2024
           const Padding(
             padding: EdgeInsets.only(top: 20, left: 20, bottom: 10),

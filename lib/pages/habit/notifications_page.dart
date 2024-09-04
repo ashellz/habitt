@@ -69,12 +69,12 @@ Widget notificationTile(List<int> notification, context) {
             children: [
               Container(
                   padding: const EdgeInsets.all(20.0),
-                  height: 120,
+                  height: 160,
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: theColor, borderRadius: BorderRadius.circular(20)),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Icon(
@@ -82,86 +82,76 @@ Widget notificationTile(List<int> notification, context) {
                           color: Colors.white,
                           size: 44,
                         ),
-                        const SizedBox(width: 20.0),
-                        Column(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Hour",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold)),
-                                  NumberPicker(
-                                      zeroPad: true,
-                                      haptics: true,
-                                      infiniteLoop: true,
-                                      itemHeight: 40,
-                                      itemWidth: 40,
-                                      minValue: 0,
-                                      maxValue: 23,
-                                      value: notificationHour,
-                                      axis: Axis.horizontal,
-                                      selectedTextStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      onChanged: (value) {
-                                        mystate(() {
-                                          notificationHour = value;
-                                          notification[0] =
-                                              value; //this is updated right to habitBox
-                                        });
-                                      })
-                                ],
-                              ),
+                              child: NumberPicker(
+                                  zeroPad: true,
+                                  haptics: true,
+                                  infiniteLoop: true,
+                                  itemHeight: 40,
+                                  itemWidth: 40,
+                                  minValue: 0,
+                                  maxValue: 23,
+                                  value: notificationHour,
+                                  selectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    border: Border.symmetric(
+                                        horizontal:
+                                            BorderSide(color: Colors.white)),
+                                  ),
+                                  onChanged: (value) {
+                                    mystate(() {
+                                      notificationHour = value;
+                                      notification[0] =
+                                          value; //this is updated right to habitBox
+                                    });
+                                  }),
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Minute",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold)),
-                                  NumberPicker(
-                                      zeroPad: true,
-                                      haptics: true,
-                                      infiniteLoop: true,
-                                      itemHeight: 40,
-                                      itemWidth: 40,
-                                      minValue: 0,
-                                      maxValue: 59,
-                                      value: notificationMinute,
-                                      axis: Axis.horizontal,
-                                      selectedTextStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      onChanged: (value) {
-                                        mystate(() {
-                                          notificationMinute = value;
+                              child: NumberPicker(
+                                  zeroPad: true,
+                                  haptics: true,
+                                  infiniteLoop: true,
+                                  itemHeight: 40,
+                                  itemWidth: 40,
+                                  minValue: 0,
+                                  maxValue: 59,
+                                  value: notificationMinute,
+                                  selectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    border: Border.symmetric(
+                                        horizontal:
+                                            BorderSide(color: Colors.white)),
+                                  ),
+                                  onChanged: (value) {
+                                    mystate(() {
+                                      notificationMinute = value;
 
-                                          notification[1] =
-                                              value; //this is updated right to habitBox
-                                        });
-                                      })
-                                ],
-                              ),
+                                      notification[1] =
+                                          value; //this is updated right to habitBox
+                                    });
+                                  }),
                             ),
                           ],
                         ),
+                        TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              "AM",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            )),
                       ])),
               IconButton(
                 onPressed: () {

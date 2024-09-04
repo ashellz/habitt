@@ -124,7 +124,7 @@ Widget chooseNotificationTime(time) {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         ElevatedButton(

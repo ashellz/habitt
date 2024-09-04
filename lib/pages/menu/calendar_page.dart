@@ -2,8 +2,10 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:habit_tracker/data/historical_habit.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
+import "package:provider/provider.dart";
 import "package:table_calendar/table_calendar.dart";
 import 'package:collection/collection.dart';
 
@@ -20,6 +22,15 @@ class _CalendarPageState extends State<CalendarPage> {
   void onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
       today = day;
+    });
+    context.read<HabitProvider>().updateHistoricalHabits(today);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().updateHistoricalHabits(today);
     });
   }
 
@@ -89,14 +100,7 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           const SizedBox(height: 30),
-          otherCategoriesList(today),
-          ElevatedButton(
-              onPressed: () {
-                for (int i = 0; i < historicalBox.length; i++) {
-                  print("$i = ${historicalBox.getAt(i)!.date.day}");
-                }
-              },
-              child: Text("Press me"))
+          otherCategoriesList(context, today),
         ],
       ),
     );
@@ -194,7 +198,7 @@ class CalendarDay extends StatelessWidget {
   }
 }
 
-otherCategoriesList(today) {
+otherCategoriesList(BuildContext context, today) {
   late int habitListLength = 0;
   late List habitsOnDate = [];
   late int boxIndex = 0;
@@ -245,31 +249,58 @@ otherCategoriesList(today) {
     habitsOnDate = historicalBox.getAt(index)!.data;
   }
 
-  if (habitListLength == 0) {
-    saveTodayHabits();
-  }
+  if (habitListLength == 0 || !todayExists) {
+    if (today.year <= DateTime.now().year) {
+      // if the year is equal or less than the current year
+      if (today.year == DateTime.now().year) {
+        // if the year is equal to the current year
 
-  if (!todayExists) {
-    saveTodayHabits();
+        if (today.month <= DateTime.now().month) {
+          // if the month is equal or less than the current month in the current year
+
+          if (today.month < DateTime.now().month) {
+            // if the month is less than the current month in the current year
+            saveTodayHabits();
+          }
+
+          if (today.month == DateTime.now().month) {
+            // if the month is equal to the current month in the current year
+
+            if (today.day < DateTime.now().day) {
+              // if the day is equal or less than the current day in the current month in the current year
+              saveTodayHabits();
+            }
+          }
+        }
+      }
+
+      if (today.year < DateTime.now().year) {
+        saveTodayHabits();
+      }
+    }
   }
 
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(habitListLength, habitsOnDate, today, boxIndex),
-    morning(habitListLength, habitsOnDate, today, boxIndex),
-    afternoon(habitListLength, habitsOnDate, today, boxIndex),
-    evening(habitListLength, habitsOnDate, today, boxIndex),
+    anyTime(context, habitListLength, habitsOnDate, today, boxIndex),
+    morning(context, habitListLength, habitsOnDate, today, boxIndex),
+    afternoon(context, habitListLength, habitsOnDate, today, boxIndex),
+    evening(context, habitListLength, habitsOnDate, today, boxIndex),
   ]);
 }
 
-Widget anyTime(habitListLength, habitsOnDate, today, boxIndex) {
+Widget anyTime(
+    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Any time", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Any time",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Any time')
+        for (int i = 0;
+            i < context.watch<HabitProvider>().historicalHabits.length;
+            i++)
+          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+              'Any time')
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -298,15 +329,19 @@ Widget anyTime(habitListLength, habitsOnDate, today, boxIndex) {
   return const SizedBox(height: 0);
 }
 
-Widget morning(habitListLength, habitsOnDate, today, boxIndex) {
+Widget morning(
+    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Morning", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Morning",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Morning')
+        for (int i = 0;
+            i < context.watch<HabitProvider>().historicalHabits.length;
+            i++)
+          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+              'Morning')
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -336,15 +371,19 @@ Widget morning(habitListLength, habitsOnDate, today, boxIndex) {
   return const SizedBox(height: 0);
 }
 
-Widget afternoon(habitListLength, habitsOnDate, today, boxIndex) {
+Widget afternoon(
+    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Afternoon", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Afternoon",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Afternoon')
+        for (int i = 0;
+            i < context.watch<HabitProvider>().historicalHabits.length;
+            i++)
+          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+              'Afternoon')
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -374,15 +413,19 @@ Widget afternoon(habitListLength, habitsOnDate, today, boxIndex) {
   return const SizedBox(height: 0);
 }
 
-Widget evening(habitListLength, habitsOnDate, today, boxIndex) {
+Widget evening(
+    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
   if (historicalHasHabits("Evening", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Evening",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Evening')
+        for (int i = 0;
+            i < context.watch<HabitProvider>().historicalHabits.length;
+            i++)
+          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+              'Evening')
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(

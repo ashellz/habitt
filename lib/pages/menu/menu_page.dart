@@ -4,7 +4,9 @@ import "package:habit_tracker/pages/menu/changelog_page.dart";
 import "package:habit_tracker/pages/menu/profile_page.dart";
 import "package:habit_tracker/pages/menu/settings_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
+import "package:provider/provider.dart";
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -33,7 +35,7 @@ class MenuPage extends StatelessWidget {
 }
 
 Widget buildHeader(BuildContext context) {
-  int streak = streakBox.get('allHabitsCompletedStreak') ?? 0;
+  int streak = context.watch<HabitProvider>().allHabitsCompletedStreak;
   return SizedBox(
     height: MediaQuery.of(context).size.height / 6,
     child: Padding(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
@@ -44,6 +46,16 @@ List<String> tagsList = [
   'Workout',
 ];
 
+List<String> greetingTexts = [
+  "Hi there",
+  "Hey there",
+  "Hello there",
+  "Hello",
+  "Hi",
+  "Hey",
+  "What's up?",
+];
+
 final pageController = PageController(initialPage: 0);
 
 class NewHomePage extends StatefulWidget {
@@ -59,7 +71,6 @@ class _NewHomePageState extends State<NewHomePage> {
     super.initState();
     updateLastOpenedDate(context);
 
-    context.read<HabitProvider>().calculateStreak();
     hasHabits();
   }
 
@@ -204,9 +215,9 @@ Widget header(username) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text(
-        "Hi there",
-        style: TextStyle(
+      Text(
+        greetingTexts[Random().nextInt(greetingTexts.length)],
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 24,
           fontWeight: FontWeight.bold,
