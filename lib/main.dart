@@ -13,7 +13,7 @@ import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
-// import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
+import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -95,6 +95,10 @@ void callbackDispatcher(context) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
+    if (task == "updateDateTask") {
+      updateLastOpenedDate();
+    }
+
     saveHabitsForToday();
     checkForNotifications();
     // updateLastOpenedDate();
@@ -115,6 +119,18 @@ hasHabits() {
       anytimeHasHabits = true;
     }
   }
+}
+
+void scheduleMidnightTask() {
+  final now = DateTime.now();
+  final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
+  final initialDelay = nextMidnight.difference(now);
+
+  Workmanager().registerOneOffTask(
+    "1",
+    "updateDateTask",
+    initialDelay: initialDelay,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -167,6 +183,8 @@ class AuthCheck extends StatelessWidget {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
             context.read<HabitProvider>().calculateStreak();
+            scheduleMidnightTask();
+            saveHabitsForToday();
           });
           return const NewHomePage();
         } else {

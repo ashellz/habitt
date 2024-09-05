@@ -2,14 +2,13 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:restart_app/restart_app.dart';
-import 'package:flutter/material.dart';
 
 final streakBox = Hive.box<int>('streak');
 final habitBox = Hive.box<HabitData>('habits');
 
 bool newMonth = false;
 
-void updateLastOpenedDate(BuildContext context) async {
+void updateLastOpenedDate() async {
   DateTime now = DateTime.now();
   int month = now.month;
   int day = now.day;

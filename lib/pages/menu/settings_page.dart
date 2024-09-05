@@ -27,6 +27,13 @@ class _SettingsPageState extends State<SettingsPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    requestNotificationAccess(true, setState);
+    disableBatteryOptimization(true, setState);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -43,49 +50,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     color: theLightColor,
                     fontWeight: FontWeight.bold)),
           ),
-          Visibility(
-            visible: boolBox.get("hasNotificationAccess") == false,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(theLightColor),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                ),
-                onPressed: () => requestNotificationAccess(),
-                child: const Text(
-                  "Request Notification Access",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            ),
+          visibilityButton(
+            visible: boolBox.get('hasNotificationAccess')!,
+            text: "Request Notification Access",
+            func: () => requestNotificationAccess(false, setState),
           ),
-          Visibility(
-            visible: boolBox.get("disabledBatteryOptimization") == false,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(theLightColor),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                ),
-                onPressed: () => disableBatteryOptimization(),
-                child: const Text(
-                  "Disable Battery Optimization",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            ),
+          visibilityButton(
+            visible: boolBox.get('disabledBatteryOptimization')!,
+            text: "Disable Battery Optimization",
+            func: () => disableBatteryOptimization(false, setState),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -154,22 +127,68 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-void requestNotificationAccess() {
+class visibilityButton extends StatelessWidget {
+  const visibilityButton({
+    super.key,
+    required this.visible,
+    required this.func,
+    required this.text,
+  });
+
+  final bool visible;
+  final Function func;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: visible == false,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: TextButton(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all<Color>(theLightColor),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+          ),
+          onPressed: func as void Function(),
+          child: Text(
+            text,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void requestNotificationAccess(bool start, StateSetter setState) {
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
     if (!isAllowed) {
-      AwesomeNotifications().requestPermissionToSendNotifications();
+      if (!start) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
     } else {
-      boolBox.put('hasNotificationAccess', true);
+      setState(() async {
+        await boolBox.put('hasNotificationAccess', true);
+      });
     }
   });
 }
 
-void disableBatteryOptimization() async {
+void disableBatteryOptimization(bool start, StateSetter setState) async {
   bool? isBatteryOptimizationDisabled =
       await DisableBatteryOptimization.isBatteryOptimizationDisabled;
   if (isBatteryOptimizationDisabled == false) {
-    await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+    if (!start) {
+      await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+    }
   } else {
-    await boolBox.put('disabledBatteryOptimization', true);
+    setState(() async {
+      await boolBox.put('disabledBatteryOptimization', true);
+    });
   }
 }

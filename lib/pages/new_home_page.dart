@@ -69,7 +69,7 @@ class _NewHomePageState extends State<NewHomePage> {
   @override
   void initState() {
     super.initState();
-    updateLastOpenedDate(context);
+    updateLastOpenedDate();
 
     hasHabits();
   }

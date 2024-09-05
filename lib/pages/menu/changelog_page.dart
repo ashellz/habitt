@@ -23,6 +23,8 @@ class ChangelogPage extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
         ),
+        changelogContainer("06.09.2024",
+            "- Habit status resets should now happen at midnight even if the app is open"),
         changelogContainer("04.09.2024",
             "- Changed habit notification page appearance\n- Optimized changelog page code"),
         changelogContainer("03.09.2024",
