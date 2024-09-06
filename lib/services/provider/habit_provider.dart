@@ -19,6 +19,8 @@ class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
   String mainCategory = "";
 
+  TextEditingController notescontroller = TextEditingController();
+
   int get habitListLength => Hive.box<HabitData>('habits').length;
   bool get displayEmptyCategories =>
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
@@ -166,6 +168,7 @@ class HabitProvider extends ChangeNotifier {
         skipped: false,
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,
+        notes: existingHabit.notes,
       );
 
       await habitBox.putAt(index, updatedHabit);
@@ -206,6 +209,7 @@ class HabitProvider extends ChangeNotifier {
         skipped: !existingHabit.skipped,
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,
+        notes: existingHabit.notes,
       );
 
       await habitBox.putAt(index, updatedHabit);
@@ -341,6 +345,7 @@ class HabitProvider extends ChangeNotifier {
           skipped: habitBox.getAt(index)!.skipped,
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
+          notes: habitBox.getAt(index)!.notes,
         ));
     saveHabitsForToday();
     notifyListeners();
@@ -363,6 +368,7 @@ class HabitProvider extends ChangeNotifier {
           skipped: habitBox.getAt(index)!.skipped,
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
+          notes: habitBox.getAt(index)!.notes,
         ));
     saveHabitsForToday();
     notifyListeners();

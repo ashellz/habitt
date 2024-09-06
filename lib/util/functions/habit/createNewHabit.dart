@@ -30,27 +30,22 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     skipped: false,
     tag: habitTag,
     notifications: habitNotifications,
+    notes:
+        Provider.of<HabitProvider>(context, listen: false).notescontroller.text,
   );
   await habitBox.add(myHabit);
   hasHabits();
 
   // Updates the main category height if new habit category is same as the main category
   if (dropDownValue == context.watch<HabitProvider>().mainCategory) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (context.mounted) {
       context.read<HabitProvider>().updateMainCategoryHeight();
-    });
+    }
   }
 
   createcontroller.clear();
+
   habitNotifications = [];
-  updatedIcon = startIcon;
-  dropDownValue = 'Any time';
-  amountNameController.text = "times";
-  currentAmountValue = 2;
-  currentDurationValueMinutes = 0;
-  currentDurationValueHours = 0;
-  currentDurationValue = 0;
-  habitGoal = 0;
-  habitTag = "No tag";
+
   //showPopup(context, "Habit added!");
 }

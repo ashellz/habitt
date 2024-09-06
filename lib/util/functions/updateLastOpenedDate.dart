@@ -1,7 +1,6 @@
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:restart_app/restart_app.dart';
 
 final streakBox = Hive.box<int>('streak');
 final habitBox = Hive.box<HabitData>('habits');
@@ -26,9 +25,7 @@ void updateLastOpenedDate() async {
     resetCompletionStatus();
 
     if (userId != null) {
-      await backupHiveBoxesToFirebase(userId).then((value) {
-        Restart.restartApp();
-      });
+      await backupHiveBoxesToFirebase(userId);
     }
   }
 }

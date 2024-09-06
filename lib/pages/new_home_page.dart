@@ -106,16 +106,20 @@ class _NewHomePageState extends State<NewHomePage> {
             ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            Provider.of<HabitProvider>(context, listen: false)
+                .notescontroller
+                .clear();
+            habitTag = "No tag";
             updatedIcon = startIcon;
             habitGoal = 0;
             dropDownValue = 'Any time';
             amountNameController.text = "times";
             amountController.text = "2";
             currentAmountValue = 2;
-            currentDurationValueHours = 0;
             currentDurationValueMinutes = 0;
+            currentDurationValueHours = 0;
+            currentDurationValue = 0;
             createcontroller.text = "Habit Name";
-            habitTag = "No tag";
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return AddHabitPage(
@@ -130,6 +134,12 @@ class _NewHomePageState extends State<NewHomePage> {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut,
               );
+
+              if (context.mounted) {
+                Provider.of<HabitProvider>(context, listen: false)
+                    .notescontroller
+                    .clear();
+              }
               habitTag = "No tag";
               updatedIcon = startIcon;
               habitGoal = 0;
@@ -137,8 +147,9 @@ class _NewHomePageState extends State<NewHomePage> {
               amountNameController.text = "times";
               amountController.text = "2";
               currentAmountValue = 2;
-              currentDurationValueHours = 0;
               currentDurationValueMinutes = 0;
+              currentDurationValueHours = 0;
+              currentDurationValue = 0;
               createcontroller.text = "Habit Name";
             });
           },

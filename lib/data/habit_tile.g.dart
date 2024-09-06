@@ -30,13 +30,14 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       skipped: fields[10] == null ? false : fields[10] as bool,
       tag: fields[11] == null ? "No tag" : fields[11] as String,
       notifications: fields[12] == null ? [] : fields[12] as List,
+      notes: fields[13] == null ? "" : fields[13] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(11)
       ..write(obj.tag)
       ..writeByte(12)
-      ..write(obj.notifications);
+      ..write(obj.notifications)
+      ..writeByte(13)
+      ..write(obj.notes);
   }
 
   @override

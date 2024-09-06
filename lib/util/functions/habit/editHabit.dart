@@ -43,23 +43,30 @@ void editHabit(int index, BuildContext context, editcontroller) {
   habitBox.putAt(
       index,
       HabitData(
-          name: editcontroller.text,
-          completed: false,
-          icon: getIconString(updatedIcon.icon),
-          category: dropDownValue,
-          streak: habitBox.getAt(index)?.streak ?? 0,
-          amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
-          amountName: amountNameControllerEdit.text,
-          amountCompleted: 0,
-          duration: habitGoalEdit == 2
-              ? duration
-              : habitBox.getAt(index)?.duration ?? 0,
-          durationCompleted: 0,
-          skipped: false,
-          tag: habitTag,
-          notifications: editHabitNotifications));
+        name: editcontroller.text,
+        completed: false,
+        icon: getIconString(updatedIcon.icon),
+        category: dropDownValue,
+        streak: habitBox.getAt(index)?.streak ?? 0,
+        amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
+        amountName: amountNameControllerEdit.text,
+        amountCompleted: 0,
+        duration: habitGoalEdit == 2
+            ? duration
+            : habitBox.getAt(index)?.duration ?? 0,
+        durationCompleted: 0,
+        skipped: false,
+        tag: habitTag,
+        notifications: editHabitNotifications,
+        notes: Provider.of<HabitProvider>(context, listen: false)
+            .notescontroller
+            .text,
+      ));
 
   dropDownValue = 'Any time';
+  if (context.mounted) {
+    Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
+  }
   if (editedFrom != editedTo) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().updateMainCategoryHeight();

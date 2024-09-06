@@ -24,6 +24,8 @@ class ChangelogPage extends StatelessWidget {
           ),
         ),
         changelogContainer("06.09.2024",
+            "- Added notes field to a habit\n- Change in appearance of add and edit habit page (easier to use)"),
+        changelogContainer("05.09.2024",
             "- Habit status resets should now happen at midnight even if the app is open"),
         changelogContainer("04.09.2024",
             "- Changed habit notification page appearance\n- Optimized changelog page code"),
