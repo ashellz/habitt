@@ -25,7 +25,7 @@ class ChangelogPage extends StatelessWidget {
         ),
 
         changelogContainer("08.09.2024",
-            "- Improved text fields in add/edit habit page\n- Changed ad appearence\n- Possibly improved habit reseting at the end of the day so you don't have to restart the app"),
+            "- Improved text fields in add/edit habit page\n- Changed ad appearance\n- Possibly improved habit resetting at the end of the day so you don't have to restart the app"),
         changelogContainer("07.09.2024",
             "- Greeting message now changes only when the app is restarted\n- More changes to the appearence of add/edit habit pages\n- Fixed only one tag can be added\n- Added habit stats (beta)\n-Added ads"),
         changelogContainer("06.09.2024",
