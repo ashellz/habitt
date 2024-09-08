@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/objects/profile/confirm_delete_account.dart';
@@ -18,6 +20,24 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  BannerAd? _banner;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _banner = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+  }
+
   @override
   Widget build(BuildContext context) {
     void updateUsername(changeUsernameController) {
@@ -57,6 +77,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           )),
         ),
+        bottomNavigationBar: _banner == null
+            ? Container()
+            : Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                height: 52,
+                child: AdWidget(ad: _banner!),
+              ),
       );
     } else {
       return Scaffold(
@@ -207,6 +234,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 ]),
           ],
         ),
+        bottomNavigationBar: _banner == null
+            ? Container()
+            : Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                height: 52,
+                child: AdWidget(ad: _banner!),
+              ),
       );
     }
   }

@@ -55,6 +55,7 @@ List<String> greetingTexts = [
   "Hey",
   "What's up?",
 ];
+String greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
 
 final pageController = PageController(initialPage: 0);
 
@@ -227,7 +228,7 @@ Widget header(username) {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        greetingTexts[Random().nextInt(greetingTexts.length)],
+        greetingText,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 24,

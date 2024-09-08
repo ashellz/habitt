@@ -20,6 +20,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 bool morningHasHabits = false;
 bool afternoonHasHabits = false;
@@ -29,6 +30,7 @@ int timeFormat = 24;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -161,7 +163,7 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Poppins',
             ),
       ),
-      home: AuthCheck(),
+      home: const AuthCheck(),
       routes: {
         "/home": (_) => const NewHomePage(),
       },
@@ -170,6 +172,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthCheck extends StatelessWidget {
+  const AuthCheck({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(

@@ -169,6 +169,7 @@ class HabitProvider extends ChangeNotifier {
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,
         notes: existingHabit.notes,
+        longestStreak: existingHabit.longestStreak,
       );
 
       await habitBox.putAt(index, updatedHabit);
@@ -210,6 +211,7 @@ class HabitProvider extends ChangeNotifier {
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,
         notes: existingHabit.notes,
+        longestStreak: existingHabit.longestStreak,
       );
 
       await habitBox.putAt(index, updatedHabit);
@@ -266,7 +268,7 @@ class HabitProvider extends ChangeNotifier {
         Vibration.vibrate(duration: 500);
       }
     } else*/
-    if (habit.completed) {
+    if (!habit.completed) {
       if (hapticFeedback) {
         Vibration.vibrate(duration: 100);
       }
@@ -346,6 +348,7 @@ class HabitProvider extends ChangeNotifier {
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
           notes: habitBox.getAt(index)!.notes,
+          longestStreak: habitBox.getAt(index)!.longestStreak,
         ));
     saveHabitsForToday();
     notifyListeners();
@@ -369,6 +372,7 @@ class HabitProvider extends ChangeNotifier {
           tag: habitBox.getAt(index)!.tag,
           notifications: habitBox.getAt(index)!.notifications,
           notes: habitBox.getAt(index)!.notes,
+          longestStreak: habitBox.getAt(index)!.longestStreak,
         ));
     saveHabitsForToday();
     notifyListeners();
@@ -429,6 +433,7 @@ class HabitProvider extends ChangeNotifier {
     });
 
     for (int i = 0; i < habitBox.length; i++) {
+      int longestStreak = 0;
       var habit = habitBox.getAt(i)!;
 
       bool completed = false;
@@ -443,6 +448,10 @@ class HabitProvider extends ChangeNotifier {
           skipped = historicalList[j].data[i].skipped;
         }
 
+        if (streak > longestStreak) {
+          longestStreak = streak;
+        }
+
         if (completed) {
           if (!skipped) {
             streak++;
@@ -453,6 +462,10 @@ class HabitProvider extends ChangeNotifier {
       }
 
       habit.streak = streak;
+      if (longestStreak > habit.longestStreak) {
+        habit.longestStreak = longestStreak;
+      }
+
       habit.save();
     }
 

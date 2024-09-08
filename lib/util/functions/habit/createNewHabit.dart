@@ -32,6 +32,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     notifications: habitNotifications,
     notes:
         Provider.of<HabitProvider>(context, listen: false).notescontroller.text,
+    longestStreak: 0,
   );
   await habitBox.add(myHabit);
   hasHabits();

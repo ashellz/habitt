@@ -16,7 +16,7 @@ class IconsPage extends StatelessWidget {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         children: const [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(
               top: 20.0,
               left: 25.0,

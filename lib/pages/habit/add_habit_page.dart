@@ -474,7 +474,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                               ),
                             ),
                             fixedSize: WidgetStateProperty.all<Size>(Size(
-                                MediaQuery.of(context).size.width * 0.42, 50)),
+                                MediaQuery.of(context).size.width * 0.42, 45)),
                             backgroundColor: WidgetStateProperty.all<Color>(
                               habitGoal == 1
                                   ? const Color.fromARGB(255, 107, 138, 122)
@@ -508,7 +508,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                               ),
                             ),
                             fixedSize: WidgetStateProperty.all<Size>(Size(
-                                MediaQuery.of(context).size.width * 0.43, 50)),
+                                MediaQuery.of(context).size.width * 0.43, 45)),
                             backgroundColor: WidgetStateProperty.all<Color>(
                               habitGoal == 2
                                   ? const Color.fromARGB(255, 107, 138, 122)
@@ -681,9 +681,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 }
 
-Widget chooseTime(Function _toggleExpansion, String category, bool _isVisible) {
+Widget chooseTime(Function toggleExpansion, String category, bool isVisible) {
   return AnimatedOpacity(
-    opacity: _isVisible ? 1.0 : 0.0,
+    opacity: isVisible ? 1.0 : 0.0,
     duration: const Duration(milliseconds: 200),
     curve: Curves.fastOutSlowIn,
     child: Padding(
@@ -691,7 +691,7 @@ Widget chooseTime(Function _toggleExpansion, String category, bool _isVisible) {
       child: GestureDetector(
           onTap: () {
             dropDownValue = category;
-            _toggleExpansion();
+            toggleExpansion();
           },
           child: Text(
             category,

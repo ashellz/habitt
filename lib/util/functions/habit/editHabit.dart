@@ -61,6 +61,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
         notes: Provider.of<HabitProvider>(context, listen: false)
             .notescontroller
             .text,
+        longestStreak: habitBox.getAt(index)!.longestStreak,
       ));
 
   dropDownValue = 'Any time';

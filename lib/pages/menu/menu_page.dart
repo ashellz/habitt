@@ -1,15 +1,39 @@
 import "package:flutter/material.dart";
+import "package:google_mobile_ads/google_mobile_ads.dart";
 import "package:habit_tracker/pages/menu/calendar_page.dart";
 import "package:habit_tracker/pages/menu/changelog_page.dart";
 import "package:habit_tracker/pages/menu/profile_page.dart";
 import "package:habit_tracker/pages/menu/settings_page.dart";
-import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/services/ad_mob_service.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:provider/provider.dart";
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
+
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  BannerAd? _banner;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _banner = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +46,16 @@ class MenuPage extends StatelessWidget {
         children: [
           buildHeader(context),
           buildMenuItems(context),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-                "Signed in as: ${boolBox.get('isGuest')! ? 'Guest' : stringBox.get('username') ?? 'Guest'}",
-                style: const TextStyle(color: Colors.white, fontSize: 16)),
-          ),
+          Container(),
         ],
       ),
+      bottomNavigationBar: _banner == null
+          ? Container()
+          : Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              height: 52,
+              child: AdWidget(ad: _banner!),
+            ),
     );
   }
 }
