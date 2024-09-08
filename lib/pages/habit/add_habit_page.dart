@@ -308,9 +308,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     padding: const EdgeInsets.only(
                         left: 20.0, right: 20, top: 20, bottom: 15),
                     child: TextFormField(
-                      onChanged: (newValue) => setState(() {
-                        createcontroller.text = newValue;
-                      }),
+                      onSaved: (newValue) => createcontroller.text = newValue!,
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(35),
                       ],
@@ -353,9 +351,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                     padding: const EdgeInsets.only(
                         left: 20.0, right: 20, bottom: 15),
                     child: TextFormField(
-                      onChanged: (newValue) => setState(() {
-                        desccontroller.text = newValue;
-                      }),
+                      onSaved: (newValue) => desccontroller.text = newValue!,
                       controller: desccontroller,
                       maxLines: 5,
                       cursorColor: Colors.white,
@@ -557,9 +553,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                             height: 15,
                           ),
                           TextFormField(
-                            onChanged: (newValue) => setState(() {
-                              amountNameController.text = newValue;
-                            }),
+                            onSaved: (newValue) =>
+                                amountNameController.text = newValue!,
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(35),
                             ],

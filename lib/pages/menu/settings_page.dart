@@ -112,6 +112,18 @@ class _SettingsPageState extends State<SettingsPage> {
                   context.read<HabitProvider>().updateSound(value);
                 }),
           ),
+          /*
+          textAndSwitchContainer(
+            "Ads",
+            Switch(
+                activeColor: theLightColor,
+                inactiveTrackColor: Colors.grey.shade800,
+                thumbColor: WidgetStateProperty.all(Colors.white),
+                value: boolBox.get("adsEnabled")!,
+                onChanged: (value) {
+                  context.read<HabitProvider>().updateAds(value);
+                }),
+          ),*/
           const Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: Text(

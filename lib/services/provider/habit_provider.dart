@@ -4,6 +4,7 @@ import "package:habit_tracker/data/habit_tile.dart";
 import "package:habit_tracker/data/historical_habit.dart";
 import "package:habit_tracker/main.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/services/storage_service.dart";
 import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
 import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
@@ -137,6 +138,11 @@ class HabitProvider extends ChangeNotifier {
 
   void updateSound(bool value) {
     boolBox.put('sound', value);
+    notifyListeners();
+  }
+
+  void updateAds(bool value) {
+    boolBox.put('adsEnabled', value);
     notifyListeners();
   }
 
@@ -524,5 +530,34 @@ class HabitProvider extends ChangeNotifier {
         break;
       }
     }
+  }
+
+  void updateLastOpenedDate() async {
+    DateTime now = DateTime.now();
+    int day = now.day;
+    int lastOpenedDate = streakBox.get('lastOpenedDay') ?? 0;
+    int daysDifference = day - lastOpenedDate;
+
+    await streakBox.put('lastOpenedDay', day);
+
+    if (daysDifference > 0 || daysDifference < 0) {
+      resetCompletionStatus();
+
+      if (userId != null) {
+        await backupHiveBoxesToFirebase(userId);
+      }
+    }
+  }
+
+  void resetCompletionStatus() {
+    for (int i = 0; i < habitBox.length; i++) {
+      var habit = habitBox.getAt(i)!;
+      habit.amountCompleted = 0;
+      habit.durationCompleted = 0;
+      habit.completed = false;
+      habit.skipped = false;
+      habit.save();
+    }
+    notifyListeners();
   }
 }

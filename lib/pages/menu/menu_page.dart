@@ -51,9 +51,9 @@ class _MenuPageState extends State<MenuPage> {
       ),
       bottomNavigationBar: _banner == null
           ? Container()
-          : Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              height: 52,
+          : SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
               child: AdWidget(ad: _banner!),
             ),
     );

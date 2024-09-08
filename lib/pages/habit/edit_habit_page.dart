@@ -667,9 +667,7 @@ Widget editWidgets(
       padding:
           const EdgeInsets.only(left: 20.0, right: 20, top: 20, bottom: 15),
       child: TextFormField(
-        onChanged: (newValue) => setState(() {
-          editcontroller.text = newValue;
-        }),
+        onSaved: (newValue) => editcontroller.text = newValue!,
         inputFormatters: [
           LengthLimitingTextInputFormatter(35),
         ],
@@ -711,9 +709,7 @@ Widget editWidgets(
     Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
       child: TextFormField(
-        onChanged: (newValue) => setState(() {
-          desccontroller.text = newValue;
-        }),
+        onSaved: (newValue) => desccontroller.text = newValue!,
         controller: desccontroller,
         maxLines: 5,
         cursorColor: Colors.white,
