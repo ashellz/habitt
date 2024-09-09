@@ -24,6 +24,8 @@ class ChangelogPage extends StatelessWidget {
           ),
         ),
 
+        changelogContainer("09.09.2024",
+            "- Changed text from field border color in login and signup pages"),
         changelogContainer("08.09.2024",
             "- Improved text fields in add/edit habit page\n- Changed ad appearance\n- Possibly improved habit resetting at the end of the day so you don't have to restart the app\n- Fixed daily notification sometimes doesn't provide the hour\n- Changed app logo"),
         changelogContainer("07.09.2024",

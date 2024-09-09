@@ -55,6 +55,10 @@ class LoginPage extends StatelessWidget {
                             color: Colors.grey,
                           ),
                         ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
                         prefixIcon: const Icon(Icons.mail_outline_rounded,
                             color: Colors.white),
                         contentPadding: const EdgeInsets.symmetric(
@@ -99,6 +103,10 @@ class LoginPage extends StatelessWidget {
                           borderSide: const BorderSide(
                             color: Colors.grey,
                           ),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.black),
                         ),
                         prefixIcon: const Icon(Icons.lock_open_outlined,
                             color: Colors.white),
