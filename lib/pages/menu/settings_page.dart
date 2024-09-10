@@ -9,7 +9,6 @@ import 'package:habit_tracker/util/objects/settings/text_and_switch_container.da
 import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
-bool uploadButtonEnabled = true;
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -29,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+
     requestNotificationAccess(true, setState);
     disableBatteryOptimization(true, setState);
   }
@@ -40,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(backgroundColor: Colors.black),
       body: ListView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 30),
@@ -49,16 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     fontSize: 42,
                     color: theLightColor,
                     fontWeight: FontWeight.bold)),
-          ),
-          visibilityButton(
-            visible: boolBox.get('hasNotificationAccess')!,
-            text: "Request Notification Access",
-            func: () => requestNotificationAccess(false, setState),
-          ),
-          visibilityButton(
-            visible: boolBox.get('disabledBatteryOptimization')!,
-            text: "Disable Battery Optimization",
-            func: () => disableBatteryOptimization(false, setState),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -112,18 +102,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   context.read<HabitProvider>().updateSound(value);
                 }),
           ),
-          /*
           textAndSwitchContainer(
-            "Ads",
+            "12-Hour Format",
             Switch(
                 activeColor: theLightColor,
                 inactiveTrackColor: Colors.grey.shade800,
                 thumbColor: WidgetStateProperty.all(Colors.white),
-                value: boolBox.get("adsEnabled")!,
+                value: boolBox.get("12hourFormat")!,
                 onChanged: (value) {
-                  context.read<HabitProvider>().updateAds(value);
+                  context.read<HabitProvider>().updateHourFormat(value);
                 }),
-          ),*/
+          ),
           const Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: Text(
@@ -133,14 +122,24 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           for (String category in notificationCategories)
             notificationContainer(category),
+          VisibilityButton(
+            visible: boolBox.get('hasNotificationAccess')!,
+            text: "Request Notification Access",
+            func: () => requestNotificationAccess(false, setState),
+          ),
+          VisibilityButton(
+            visible: boolBox.get('disabledBatteryOptimization')!,
+            text: "Disable Battery Optimization",
+            func: () => disableBatteryOptimization(false, setState),
+          ),
         ],
       ),
     );
   }
 }
 
-class visibilityButton extends StatelessWidget {
-  const visibilityButton({
+class VisibilityButton extends StatelessWidget {
+  const VisibilityButton({
     super.key,
     required this.visible,
     required this.func,

@@ -21,11 +21,30 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   BannerAd? _banner;
+  RewardedAd? _rewardedAd;
 
   @override
   void initState() {
     super.initState();
+
+    if (uploadButtonEnabled) {
+      setState(() {
+        uploadButtonEnabled = true;
+      });
+    }
     _createBannerAd();
+    _createRewardedAd();
+  }
+
+  void _createRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdMobService.rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) => setState(() => _rewardedAd = ad),
+        onAdFailedToLoad: (error) => setState(() => _rewardedAd = null),
+      ),
+    );
   }
 
   void _createBannerAd() {
@@ -37,6 +56,31 @@ class _ProfilePageState extends State<ProfilePage> {
     )..load();
   }
 
+  void showRewardedAd() {
+    if (_rewardedAd != null) {
+      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          ad.dispose();
+          _createRewardedAd();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          ad.dispose();
+          _createRewardedAd();
+        },
+      );
+      _rewardedAd!.show(onUserEarnedReward: (ad, reward) {
+        uploadData();
+      });
+      _rewardedAd = null;
+    }
+  }
+
+  void uploadData() {
+    setState(() => uploadButtonEnabled = false);
+    backupHiveBoxesToFirebase(userId)
+        .then((value) => setState(() => uploadButtonEnabled = true));
+  }
+
   @override
   Widget build(BuildContext context) {
     void updateUsername(changeUsernameController) {
@@ -44,12 +88,6 @@ class _ProfilePageState extends State<ProfilePage> {
         stringBox.put('username', changeUsernameController);
       });
     }
-
-    /*
-    Future<void> updateEmail(changeEmailController, password) async {
-      await AuthService()
-          .updateEmail(userEmail, password, changeEmailController);
-    }*/
 
     if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
       return Scaffold(
@@ -173,9 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: !uploadButtonEnabled
                         ? null
                         : () {
-                            setState(() => uploadButtonEnabled = false);
-                            backupHiveBoxesToFirebase(userId).whenComplete(() =>
-                                setState(() => uploadButtonEnabled = true));
+                            showRewardedAd();
                           },
                     child: Text(
                         textAlign: TextAlign.center,

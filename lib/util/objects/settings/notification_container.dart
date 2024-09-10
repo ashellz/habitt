@@ -79,7 +79,7 @@ Widget notificationContainer(String category) {
                       enableDrag: false,
                       context: context,
                       builder: (context) =>
-                          chooseNotificationTime(category, setState));
+                          chooseNotificationTime(category, setState, context));
                 },
                 child: const Text("Choose time",
                     style: TextStyle(

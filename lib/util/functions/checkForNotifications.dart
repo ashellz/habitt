@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 
 void checkForNotifications() async {
@@ -220,32 +219,32 @@ void scheduleDailyNotification() async {
 
   String hourSufix = "o'clock";
 
-  if (timeFormat == 12) {
+  if (boolBox.get("12hourFormat")!) {
     hourSufix = hour > 12 ? "PM" : "AM";
   }
 
   List dailyNotificationTexts = [
-    "It's $hour$hourSufix! ⏰ A quick check-in to remind you to complete your daily habits! 💪",
-    "Reminder at $hour$hourSufix! Stay focused and get your daily habits done! 🌟",
-    "It's $hour$hourSufix! Keep up the momentum and work on your daily habits! 💥",
-    "Don't forget! It's $hour$hourSufix and a great time to make progress on your habits! 🚀",
-    "$hour$hourSufix reminder! A little nudge to help you complete your habits for the day! 💪",
-    "At $hour$hourSufix, it's a good idea to check in on your daily habits! 🕒",
-    "Daily reminder: It's $hour$hourSufix! Take a moment to focus on your habits! 🌱",
-    "It's $hour$hourSufix! Don't miss your chance to work on your daily habits! 🌟",
-    "Friendly reminder at $hour$hourSufix! Make sure to stay on track with your habits! 💪",
-    "Reminder at $hour$hourSufix! Don't forget to complete your habits today! 🚀",
-    "It's $hour$hourSufix! Stay on track and work on your daily habits! 💥",
-    "$hour$hourSufix reminder! Take a moment to focus on your daily habits! 🌱",
-    "It's $hour$hourSufix! A gentle nudge to help you complete your daily habits! 💪",
-    "Don't let the time pass! It's $hour$hourSufix, and a great time to focus on your habits! 🕒",
-    "Daily reminder at $hour$hourSufix! Keep up with your habits and stay motivated! 🌟",
-    "It's $hour$hourSufix! Don't miss out on completing your daily habits! 💪",
-    "It's $hour$hourSufix! Take a moment to check in and complete your daily habits! 💪",
-    "Reminder at $hour$hourSufix! Time to wrap up your habits for the day! 🌟",
-    "It's $hour$hourSufix! A quick reminder to finish your daily habits! 💥",
-    "$hour$hourSufix reminder! Make sure to complete your habits for today! 💪",
-    "Friendly reminder at $hour$hourSufix! Make sure to wrap up your habits for the day! 💪"
+    "It's $hour $hourSufix! ⏰ A quick check-in to remind you to complete your daily habits! 💪",
+    "Reminder at $hour $hourSufix! Stay focused and get your daily habits done! 🌟",
+    "It's $hour $hourSufix! Keep up the momentum and work on your daily habits! 💥",
+    "Don't forget! It's $hour $hourSufix and a great time to make progress on your habits! 🚀",
+    "$hour $hourSufix reminder! A little nudge to help you complete your habits for the day! 💪",
+    "At $hour $hourSufix, it's a good idea to check in on your daily habits! 🕒",
+    "Daily reminder: It's $hour $hourSufix! Take a moment to focus on your habits! 🌱",
+    "It's $hour $hourSufix! Don't miss your chance to work on your daily habits! 🌟",
+    "Friendly reminder at $hour $hourSufix! Make sure to stay on track with your habits! 💪",
+    "Reminder at $hour $hourSufix! Don't forget to complete your habits today! 🚀",
+    "It's $hour $hourSufix! Stay on track and work on your daily habits! 💥",
+    "$hour $hourSufix reminder! Take a moment to focus on your daily habits! 🌱",
+    "It's $hour $hourSufix! A gentle nudge to help you complete your daily habits! 💪",
+    "Don't let the time pass! It's $hour $hourSufix, and a great time to focus on your habits! 🕒",
+    "Daily reminder at $hour $hourSufix! Keep up with your habits and stay motivated! 🌟",
+    "It's $hour $hourSufix! Don't miss out on completing your daily habits! 💪",
+    "It's $hour $hourSufix! Take a moment to check in and complete your daily habits! 💪",
+    "Reminder at $hour $hourSufix! Time to wrap up your habits for the day! 🌟",
+    "It's $hour $hourSufix! A quick reminder to finish your daily habits! 💥",
+    "$hour $hourSufix reminder! Make sure to complete your habits for today! 💪",
+    "Friendly reminder at $hour $hourSufix! Make sure to wrap up your habits for the day! 💪"
   ];
 
   List dailyNotificationTextsOneLeft = [

@@ -19,6 +19,7 @@ import 'package:collection/collection.dart';
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
   String mainCategory = "";
+  bool somethingEdited = false;
 
   TextEditingController notescontroller = TextEditingController();
 
@@ -42,6 +43,11 @@ class HabitProvider extends ChangeNotifier {
 
   List get historicalHabits => historicalHabits_;
 
+  void updateSomethingEdited() {
+    somethingEdited = true;
+    notifyListeners();
+  }
+
   void updateHistoricalHabits(DateTime date) {
     for (int i = 0; i < historicalBox.length; i++) {
       List intDate = [
@@ -59,7 +65,6 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void changeNotification(List notification) {
-    print("notification has be changed to $notification");
     _habitNotifications = notification;
     notifyListeners();
   }
@@ -70,14 +75,12 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void setTagSelected(String? tag) {
-    print("Tag selected: $tag");
     _tagSelected = tag;
     notifyListeners();
   }
 
   void chooseMainCategory() {
     int hour = DateTime.now().hour;
-    print("Hour $hour");
     if (hour >= 4 && hour < 12) {
       if (!morningHasHabits) {
         mainCategory = "Any time";
@@ -141,8 +144,8 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAds(bool value) {
-    boolBox.put('adsEnabled', value);
+  void updateHourFormat(bool value) {
+    boolBox.put('12hourFormat', value);
     notifyListeners();
   }
 
@@ -249,9 +252,6 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void completeHistoricalHabit(int index, habit, DateTime time) async {
-    print("complete historical habit");
-    print("index: $index");
-
     List<int> currentDate = [time.year, time.month, time.day];
 
     HistoricalHabitData habitData = HistoricalHabitData(
@@ -427,8 +427,6 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void calculateStreak() {
-    print("calculate streak in progress");
-
     var historicalList = historicalBox.values.toList();
 
     historicalList.sort((a, b) {

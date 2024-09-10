@@ -6,8 +6,8 @@ Future<void> fillKeys() async {
     boolBox.put("firstTimeOpened", true);
   }
 
-  if (!boolBox.containsKey("adsEnabled")) {
-    boolBox.put("adsEnabled", true);
+  if (!boolBox.containsKey("12hourFormat")) {
+    boolBox.put("12hourFormat", false);
   }
 
   if (!listBox.containsKey("morningNotificationTime")) {

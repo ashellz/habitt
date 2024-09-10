@@ -26,7 +26,6 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
-int timeFormat = 24;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

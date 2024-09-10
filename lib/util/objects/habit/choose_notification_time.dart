@@ -4,36 +4,76 @@ import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-Widget chooseNotificationTime(time, StateSetter mystate) {
+Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
+  String timeString = "";
   int hour = 0;
   int minute = 0;
+  int maxHourValue = boolBox.get("12hourFormat")! ? 12 : 23;
+  int minHourValue = boolBox.get("12hourFormat")! ? 1 : 0;
+
   late List timeBox;
+
+  void convertHour() {
+    if (boolBox.get("12hourFormat")!) {
+      if (hour > 12) {
+        hour = hour - 12;
+        timeString = "PM";
+      } else {
+        if (hour == 0) {
+          hour = 12;
+        }
+        timeString = "AM";
+      }
+    }
+  }
+
+  void changeTimeString(StateSetter setState) {
+    if (timeString == "AM") {
+      setState(() {
+        timeString = "PM";
+      });
+    } else {
+      setState(() {
+        timeString = "AM";
+      });
+    }
+  }
 
   switch (time) {
     case "Morning":
       timeBox = listBox.get("morningNotificationTime")!;
       hour = timeBox[0];
       minute = timeBox[1];
+
+      convertHour();
       break;
     case "Afternoon":
       timeBox = listBox.get("afternoonNotificationTime")!;
       hour = timeBox[0];
       minute = timeBox[1];
+
+      convertHour();
       break;
     case "Evening":
       timeBox = listBox.get("eveningNotificationTime")!;
       hour = timeBox[0];
       minute = timeBox[1];
+
+      convertHour();
       break;
     case "Daily":
       timeBox = listBox.get("dailyNotificationTime")!;
       hour = timeBox[0];
       minute = timeBox[1];
+
+      convertHour();
       break;
     default:
       timeBox = time;
       hour = timeBox[0];
       minute = timeBox[1];
+
+      convertHour();
       break;
   }
 
@@ -58,54 +98,70 @@ Widget chooseNotificationTime(time, StateSetter mystate) {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Stack(
+                    alignment: Alignment.centerRight,
                     children: [
-                      NumberPicker(
-                        axis: Axis.vertical,
-                        itemHeight: 50,
-                        itemWidth: 50,
-                        zeroPad: true,
-                        infiniteLoop: true,
-                        minValue: 0,
-                        maxValue: 23,
-                        selectedTextStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold),
-                        value: hour,
-                        onChanged: (value) {
-                          setState(() {
-                            hour = value;
-                          });
-                        },
-                        decoration: BoxDecoration(
-                          border: Border.symmetric(
-                              horizontal: BorderSide(color: theLightColor)),
-                        ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.125),
+                        child: TextButton(
+                            onPressed: () => changeTimeString(setState),
+                            child: Text(
+                              timeString,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 26),
+                            )),
                       ),
-                      NumberPicker(
-                        axis: Axis.vertical,
-                        itemHeight: 50,
-                        itemWidth: 50,
-                        zeroPad: true,
-                        infiniteLoop: true,
-                        minValue: 0,
-                        maxValue: 59,
-                        selectedTextStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold),
-                        value: minute,
-                        onChanged: (value) {
-                          setState(() {
-                            minute = value;
-                          });
-                        },
-                        decoration: BoxDecoration(
-                          border: Border.symmetric(
-                              horizontal: BorderSide(color: theLightColor)),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          NumberPicker(
+                            axis: Axis.vertical,
+                            itemHeight: 50,
+                            itemWidth: 50,
+                            zeroPad: true,
+                            infiniteLoop: true,
+                            minValue: minHourValue,
+                            maxValue: maxHourValue,
+                            selectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold),
+                            value: hour,
+                            onChanged: (value) {
+                              setState(() {
+                                hour = value;
+                              });
+                            },
+                            decoration: BoxDecoration(
+                              border: Border.symmetric(
+                                  horizontal: BorderSide(color: theLightColor)),
+                            ),
+                          ),
+                          NumberPicker(
+                            axis: Axis.vertical,
+                            itemHeight: 50,
+                            itemWidth: 50,
+                            zeroPad: true,
+                            infiniteLoop: true,
+                            minValue: 0,
+                            maxValue: 59,
+                            selectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold),
+                            value: minute,
+                            onChanged: (value) {
+                              setState(() {
+                                minute = value;
+                              });
+                            },
+                            decoration: BoxDecoration(
+                              border: Border.symmetric(
+                                  horizontal: BorderSide(color: theLightColor)),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -135,7 +191,27 @@ Widget chooseNotificationTime(time, StateSetter mystate) {
                         ElevatedButton(
                           onPressed: () {
                             mystate(() {
-                              timeBox[0] = hour;
+                              late int convertedHour;
+
+                              if (boolBox.get("12hourFormat")!) {
+                                if (timeString == "PM") {
+                                  if (hour == 12) {
+                                    convertedHour = hour;
+                                  } else {
+                                    convertedHour = hour + 12;
+                                  }
+                                } else {
+                                  if (hour == 12) {
+                                    convertedHour = 0;
+                                  } else {
+                                    convertedHour = hour;
+                                  }
+                                }
+                              } else {
+                                convertedHour = hour;
+                              }
+
+                              timeBox[0] = convertedHour;
                               timeBox[1] = minute;
                             });
                             checkForNotifications();

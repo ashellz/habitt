@@ -197,6 +197,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           children: [
                             IconButton(
                                 onPressed: () {
+                                  context
+                                      .read<HabitProvider>()
+                                      .updateSomethingEdited();
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
@@ -272,6 +275,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                   .push(MaterialPageRoute(
                                       builder: (context) => const IconsPage()))
                                   .then((value) => setState(() {
+                                        context
+                                            .read<HabitProvider>()
+                                            .updateSomethingEdited();
                                         updatedIcon = theIcon;
                                       })),
                               icon: updatedIcon,
@@ -450,7 +456,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   ),
                 ]),
             Visibility(
-              visible: edit,
+              visible: context.watch<HabitProvider>().somethingEdited,
               child: Transform.translate(
                 offset: Offset(0, keyboardOpen ? 100 : 0),
                 child: SizedBox(
@@ -607,6 +613,7 @@ Widget editWidgets(
                 child: GestureDetector(
                   onTap: () => setState(() {
                     habitTag = tagBox.getAt(i)!.tag;
+                    context.read<HabitProvider>().updateSomethingEdited();
                   }),
                   onLongPress: () {
                     String? tempHabitTag = tagBox.getAt(i)!.tag;
@@ -618,6 +625,9 @@ Widget editWidgets(
                         setState(() {
                           if (habitTag == tempHabitTag.toString()) {
                             habitTag = "No tag";
+                            context
+                                .read<HabitProvider>()
+                                .updateSomethingEdited();
                           } else {
                             habitTag = habitTag;
                           }
@@ -667,7 +677,10 @@ Widget editWidgets(
       padding:
           const EdgeInsets.only(left: 20.0, right: 20, top: 20, bottom: 15),
       child: TextFormField(
-        onSaved: (newValue) => editcontroller.text = newValue!,
+        onSaved: (newValue) {
+          editcontroller.text = newValue!;
+          context.read<HabitProvider>().updateSomethingEdited();
+        },
         inputFormatters: [
           LengthLimitingTextInputFormatter(35),
         ],
@@ -709,7 +722,10 @@ Widget editWidgets(
     Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
       child: TextFormField(
-        onSaved: (newValue) => desccontroller.text = newValue!,
+        onSaved: (newValue) {
+          desccontroller.text = newValue!;
+          context.read<HabitProvider>().updateSomethingEdited();
+        },
         controller: desccontroller,
         maxLines: 5,
         cursorColor: Colors.white,
@@ -758,10 +774,11 @@ Widget editWidgets(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 52),
-                    chooseTime(toggleExpansion, "Any time", isVisible),
-                    chooseTime(toggleExpansion, "Morning", isVisible),
-                    chooseTime(toggleExpansion, "Afternoon", isVisible),
-                    chooseTime(toggleExpansion, "Evening", isVisible),
+                    chooseTime(toggleExpansion, "Any time", isVisible, context),
+                    chooseTime(toggleExpansion, "Morning", isVisible, context),
+                    chooseTime(
+                        toggleExpansion, "Afternoon", isVisible, context),
+                    chooseTime(toggleExpansion, "Evening", isVisible, context),
                   ])),
         ),
         GestureDetector(
@@ -803,6 +820,7 @@ Widget editWidgets(
           ElevatedButton(
             onPressed: () {
               setState(() {
+                context.read<HabitProvider>().updateSomethingEdited();
                 if (habitGoalEdit == 1) {
                   habitGoalEdit = 0;
                   habitBox.getAt(index)!.amount = 1;
@@ -837,6 +855,7 @@ Widget editWidgets(
           ElevatedButton(
             onPressed: () {
               setState(() {
+                context.read<HabitProvider>().updateSomethingEdited();
                 if (habitGoalEdit == 2) {
                   habitGoalEdit = 0;
                   habitBox.getAt(index)!.duration = 0;
@@ -891,6 +910,7 @@ Widget editWidgets(
               max: 9999,
               value: amount.toDouble(),
               onChanged: (value) {
+                context.read<HabitProvider>().updateSomethingEdited();
                 Vibration.vibrate(duration: 10);
                 setState(() => amount = value.toInt());
               },
@@ -900,6 +920,7 @@ Widget editWidgets(
             ),
             TextFormField(
               onChanged: (newValue) => setState(() {
+                context.read<HabitProvider>().updateSomethingEdited();
                 amountNameControllerEdit.text = newValue;
               }),
               inputFormatters: [
@@ -950,6 +971,7 @@ Widget editWidgets(
               max: 23,
               value: durationHours.toDouble(),
               onChanged: (value) {
+                context.read<HabitProvider>().updateSomethingEdited();
                 Vibration.vibrate(duration: 10);
                 setState(() => durationHours = value.toInt());
               },
@@ -972,6 +994,7 @@ Widget editWidgets(
               max: 59,
               value: durationMinutes.toDouble(),
               onChanged: (value) {
+                context.read<HabitProvider>().updateSomethingEdited();
                 Vibration.vibrate(duration: 10);
                 setState(() => durationMinutes = value.toInt());
               },
@@ -1016,7 +1039,8 @@ Widget habitGoalNumber() {
   }
 }
 
-Widget chooseTime(Function toggleExpansion, String category, bool isVisible) {
+Widget chooseTime(Function toggleExpansion, String category, bool isVisible,
+    BuildContext context) {
   return AnimatedOpacity(
     opacity: isVisible ? 1.0 : 0.0,
     duration: const Duration(milliseconds: 200),
@@ -1027,6 +1051,7 @@ Widget chooseTime(Function toggleExpansion, String category, bool isVisible) {
           onTap: () {
             dropDownValue = category;
             dropDownChanged = true;
+            context.read<HabitProvider>().updateSomethingEdited();
             toggleExpansion();
           },
           child: Text(

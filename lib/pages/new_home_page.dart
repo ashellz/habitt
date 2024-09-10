@@ -723,7 +723,6 @@ void fillTagsList(BuildContext context) {
 }
 
 Future<void> playSound() async {
-  print("the functio nwas run");
   await player.play(AssetSource('sound/complete3.mp3'));
 }
 

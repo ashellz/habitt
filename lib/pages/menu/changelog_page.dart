@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/util/colors.dart';
 
-class ChangelogPage extends StatelessWidget {
+class ChangelogPage extends StatefulWidget {
   const ChangelogPage({super.key});
+
+  @override
+  State<ChangelogPage> createState() => _ChangelogPageState();
+}
+
+class _ChangelogPageState extends State<ChangelogPage> {
+  BannerAd? _banner;
+
+  @override
+  void initState() {
+    super.initState();
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _banner = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +35,13 @@ class ChangelogPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
       ),
+      bottomNavigationBar: _banner == null
+          ? Container()
+          : SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: AdWidget(ad: _banner!),
+            ),
       body: ListView(physics: const BouncingScrollPhysics(), children: [
         //TITLE
         Padding(
@@ -25,7 +56,7 @@ class ChangelogPage extends StatelessWidget {
         ),
 
         changelogContainer("09.09.2024",
-            "- Changed text from field border color in login and signup pages"),
+            "- Changed text from field border color in login and signup pages\n- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the changelog and habit notification pages\n- Save changes button, when editing a habit, only appears if something has been changed\n- Improved notification texts"),
         changelogContainer("08.09.2024",
             "- Improved text fields in add/edit habit page\n- Changed ad appearance\n- Possibly improved habit resetting at the end of the day so you don't have to restart the app\n- Fixed daily notification sometimes doesn't provide the hour\n- Changed app logo"),
         changelogContainer("07.09.2024",
