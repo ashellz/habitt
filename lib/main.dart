@@ -13,7 +13,6 @@ import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
-import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -90,19 +89,18 @@ Future<void> main() async {
 }
 
 @pragma('vm:entry-point')
-void callbackDispatcher(context) {
+void callbackDispatcher(BuildContext context) {
   Workmanager().executeTask((task, inputData) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
     if (task == "updateDateTask") {
-      updateLastOpenedDate();
+      context.read<HabitProvider>().updateLastOpenedDate();
     }
 
     saveHabitsForToday();
     checkForNotifications();
-    // updateLastOpenedDate();
     return Future.value(true);
   });
 }

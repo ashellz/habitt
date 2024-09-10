@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/pages/habit/edit_habit_page_new.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
@@ -54,11 +54,14 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
         Navigator.of(context)
             .push(MaterialPageRoute(
-                builder: (context) => EditHabitPage(
+                builder: (context) => NewEditHabitPage(
                       index: index,
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
+          if (context.mounted) {
+            context.read<HabitProvider>().resetSomethingEdited();
+          }
           bool changeTag = true;
           for (int i = 0; i < tagBox.length; i++) {
             if (tagBox.getAt(i)!.tag == habitBox.getAt(index)!.tag) {

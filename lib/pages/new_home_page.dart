@@ -12,7 +12,6 @@ import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/calculateHeight.dart';
 import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
-import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:habit_tracker/util/objects/habit/new_habit_tile.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +69,7 @@ class _NewHomePageState extends State<NewHomePage> {
   @override
   void initState() {
     super.initState();
-    updateLastOpenedDate();
+    context.read<HabitProvider>().updateLastOpenedDate();
 
     hasHabits();
   }

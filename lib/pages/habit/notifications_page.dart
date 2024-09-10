@@ -78,6 +78,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               onPressed: () {
                 setState(() {
                   editHabitNotifications.add([0, 0]);
+                  context.read<HabitProvider>().updateSomethingEdited();
                 });
               }),
         ],

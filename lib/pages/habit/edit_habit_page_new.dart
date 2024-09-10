@@ -32,8 +32,8 @@ TextEditingController amountControllerEdit = TextEditingController();
 
 final formKey = GlobalKey<FormState>();
 
-class EditHabitPage extends StatefulWidget {
-  const EditHabitPage({
+class NewEditHabitPage extends StatefulWidget {
+  const NewEditHabitPage({
     super.key,
     required this.index,
     required this.editcontroller,
@@ -43,15 +43,16 @@ class EditHabitPage extends StatefulWidget {
   final TextEditingController editcontroller;
 
   @override
-  State<EditHabitPage> createState() => _EditHabitPageState();
+  State<NewEditHabitPage> createState() => _NewEditHabitPageState();
 }
 
-class _EditHabitPageState extends State<EditHabitPage> {
+class _NewEditHabitPageState extends State<NewEditHabitPage> {
   bool _isExpanded = false;
   bool _isVisible = false;
   bool _isGestureEnabled = true;
   bool edit = false;
   bool stats = true;
+  int currentIndex = 0;
 
   void _toggleExpansion() {
     if (_isGestureEnabled) {
@@ -164,291 +165,172 @@ class _EditHabitPageState extends State<EditHabitPage> {
       ]),
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+            splashFactory: NoSplash.splashFactory,
+            highlightColor: Colors.transparent),
+        child: BottomNavigationBar(
+            enableFeedback: false,
+            backgroundColor: theDarkGrey,
+            unselectedItemColor: Colors.grey.shade700,
+            selectedItemColor: Colors.white,
+            currentIndex: currentIndex,
+            onTap: (int value) => setState(() {
+                  currentIndex = value;
+                  pageController.animateToPage(
+                    value,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                }),
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.percent_outlined),
+                label: 'Stats',
+                backgroundColor: Colors.black,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.edit,
+                ),
+                label: 'Edit',
+              ),
+            ]),
+      ),
       body: Form(
         key: formKey,
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
             ListView(
-                padding: const EdgeInsets.only(bottom: 60),
+                padding: const EdgeInsets.only(bottom: 60, left: 10, right: 10),
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 20.0,
-                          left: 25.0,
-                          bottom: 10.0,
-                        ),
-                        child: Text(
-                          "Habit Info",
-                          style: TextStyle(
-                            fontSize: 32.0,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10, top: 5),
-                        child: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          const NotificationsPage(),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        const begin = Offset(0.0, 1.0);
-                                        const end = Offset.zero;
-                                        const curve = Curves.ease;
-
-                                        var tween = Tween(
-                                                begin: begin, end: end)
-                                            .chain(CurveTween(curve: curve));
-
-                                        return SlideTransition(
-                                          position: animation.drive(tween),
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  ).whenComplete(() => checkForNotifications());
-                                },
-                                icon: const Icon(
-                                  Icons.notifications,
-                                  size: 30,
-                                  color: Colors.white,
-                                )),
-                            IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => confirmDeleteHabit(
-                                          widget.index, editcontroller)).then(
-                                      (value) {
-                                    if (deleted) {
-                                      Navigator.popUntil(
-                                          context, (route) => route.isFirst);
-                                    }
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.delete,
-                                  size: 30,
-                                  color: Colors.white,
-                                )),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // HABIT DISPLAY
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 10.0,
+                      top: 20.0,
                       bottom: 10.0,
                     ),
-                    child: Container(
-                      height: 170,
-                      decoration: BoxDecoration(
-                        color: theColor,
-                      ),
-                      child: Row(
-                        children: [
-                          // ICON
-                          Expanded(
-                            flex: 1,
-                            child: IconButton(
-                              iconSize: 80,
-                              onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(
-                                      builder: (context) => const IconsPage()))
-                                  .then((value) => setState(() {
-                                        context
-                                            .read<HabitProvider>()
-                                            .updateSomethingEdited();
-                                        updatedIcon = theIcon;
-                                      })),
-                              icon: updatedIcon,
-                              color: Colors.white,
-                            ),
-                          ),
-
-                          //TEXT
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  truncatedText(context, editcontroller),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  dropDownValue,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Expanded(
-                            flex: habitGoalEdit == 0 ? 0 : 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    habitGoalNumber(),
-                                    Visibility(
-                                      visible: habitGoalEdit == 1,
-                                      child: Text(
-                                        habitGoalText(),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // STATS OR EDIT
-
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, bottom: 5, top: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        //STATS
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              pageController.animateToPage(
-                                0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                              edit = false;
-                              stats = true;
-                            });
-                          },
-                          style: ButtonStyle(
-                            shape:
-                                WidgetStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
+                        Expanded(
+                          child: Icon(
+                            updatedIcon.icon,
+                            color: Colors.white,
+                            size: 60,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: SizedBox(
+                            child: Text(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              editcontroller.text,
+                              style: const TextStyle(
+                                fontSize: 28.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            fixedSize: WidgetStateProperty.all<Size>(Size(
-                                MediaQuery.of(context).size.width * 0.42, 45)),
-                            backgroundColor: WidgetStateProperty.all<Color>(
-                              stats
-                                  ? const Color.fromARGB(255, 107, 138, 122)
-                                  : theColor,
-                            ),
                           ),
-                          child: const Text("Stats",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white)),
                         ),
-
-                        const SizedBox(
-                          width: 15,
-                        ),
-
-                        // EDIT
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              pageController.animateToPage(
-                                1,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                              edit = true;
-                              stats = false;
-                            });
-                          },
-                          style: ButtonStyle(
-                            shape:
-                                WidgetStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                            ),
-                            fixedSize: WidgetStateProperty.all<Size>(Size(
-                                MediaQuery.of(context).size.width * 0.43, 45)),
-                            backgroundColor: WidgetStateProperty.all<Color>(
-                              edit
-                                  ? const Color.fromARGB(255, 107, 138, 122)
-                                  : theColor,
-                            ),
+                        /*Padding(
+                          padding: const EdgeInsets.only(right: 10, top: 5),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            const NotificationsPage(),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          const begin = Offset(0.0, 1.0);
+                                          const end = Offset.zero;
+                                          const curve = Curves.ease;
+                    
+                                          var tween = Tween(
+                                                  begin: begin, end: end)
+                                              .chain(CurveTween(curve: curve));
+                    
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    ).whenComplete(() => checkForNotifications());
+                                  },
+                                  icon: const Icon(
+                                    Icons.notifications,
+                                    size: 30,
+                                    color: Colors.white,
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => confirmDeleteHabit(
+                                            widget.index, editcontroller)).then(
+                                        (value) {
+                                      if (deleted) {
+                                        Navigator.popUntil(
+                                            context, (route) => route.isFirst);
+                                      }
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    size: 30,
+                                    color: Colors.white,
+                                  )),
+                            ],
                           ),
-                          child: const Text("Edit",
-                              style: TextStyle(color: Colors.white)),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
-
                   SizedBox(
                     height: edit
                         ? MediaQuery.of(context).size.height * 0.9
                         : MediaQuery.of(context).size.height * 0.9,
-                    child: PageView(
+                    child: PageView.builder(
                       onPageChanged: (value) {
                         if (value == 0) {
                           setState(() {
-                            edit = false;
-                            stats = true;
+                            currentIndex = 0;
                           });
                         } else {
                           setState(() {
-                            edit = true;
-                            stats = false;
+                            currentIndex = 1;
                           });
                         }
                       },
                       physics: const BouncingScrollPhysics(),
                       controller: pageController,
-                      children: [
-                        statsWidgets(context, widget.index),
-                        editWidgets(
-                            setState,
-                            context,
-                            editcontroller,
-                            desccontroller,
-                            _isExpanded,
-                            _toggleExpansion,
-                            _isVisible,
-                            _isGestureEnabled,
-                            widget.index),
-                      ],
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: index == 0
+                              ? statsWidgets(context, widget.index)
+                              : editWidgets(
+                                  setState,
+                                  context,
+                                  editcontroller,
+                                  desccontroller,
+                                  _isExpanded,
+                                  _toggleExpansion,
+                                  _isVisible,
+                                  _isGestureEnabled,
+                                  widget.index),
+                        );
+                      },
                     ),
                   ),
                 ]),
@@ -515,9 +397,8 @@ Widget statsWidgets(BuildContext context, int index) {
       width: MediaQuery.of(context).size.width * 0.5 - 30,
       height: MediaQuery.of(context).size.width * 0.5 - 30,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: Colors.grey.shade900,
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: theDarkGrey),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -543,7 +424,7 @@ Widget statsWidgets(BuildContext context, int index) {
   }
 
   return Padding(
-    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+    padding: const EdgeInsets.only(top: 10),
     child: Column(children: [
       Row(
         children: [
@@ -598,7 +479,7 @@ Widget editWidgets(
     //TAG
 
     Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: SizedBox(
         height: 30,
         child: ListView(
@@ -671,12 +552,12 @@ Widget editWidgets(
     //NAME
 
     Padding(
-      padding:
-          const EdgeInsets.only(left: 20.0, right: 20, top: 20, bottom: 15),
+      padding: const EdgeInsets.only(top: 20, bottom: 15),
       child: TextFormField(
+        onChanged: (value) =>
+            context.read<HabitProvider>().updateSomethingEdited(),
         onSaved: (newValue) {
           editcontroller.text = newValue!;
-          context.read<HabitProvider>().updateSomethingEdited();
         },
         inputFormatters: [
           LengthLimitingTextInputFormatter(35),
@@ -717,8 +598,10 @@ Widget editWidgets(
     //NOTES
 
     Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 15),
+      padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        onChanged: (value) =>
+            context.read<HabitProvider>().updateSomethingEdited(),
         onSaved: (newValue) {
           desccontroller.text = newValue!;
           context.read<HabitProvider>().updateSomethingEdited();
@@ -757,7 +640,7 @@ Widget editWidgets(
     Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+          padding: const EdgeInsets.only(top: 20),
           child: AnimatedContainer(
               decoration: BoxDecoration(
                 color: const Color.fromARGB(192, 62, 80, 71),
@@ -780,26 +663,23 @@ Widget editWidgets(
         ),
         GestureDetector(
           onTap: isGestureEnabled ? toggleExpansion : null,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: theColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              height: 55,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    dropDownValue,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  Icon(isExpanded ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.white),
-                ],
-              ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: theColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            height: 55,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  dropDownValue,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                Icon(isExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: Colors.white),
+              ],
             ),
           ),
         ),
@@ -810,7 +690,7 @@ Widget editWidgets(
 
     // HABIT GOAL
     Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
+      padding: const EdgeInsets.only(bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -886,7 +766,7 @@ Widget editWidgets(
     Visibility(
       visible: habitGoalEdit == 1,
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
             SpinBox(
@@ -948,7 +828,7 @@ Widget editWidgets(
     Visibility(
       visible: habitGoalEdit == 2,
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
             SpinBox(

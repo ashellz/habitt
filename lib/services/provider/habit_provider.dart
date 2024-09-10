@@ -35,7 +35,6 @@ class HabitProvider extends ChangeNotifier {
   List get habitNotifications => _habitNotifications;
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
-  String get _mainCategory => mainCategory;
   int get allHabitsCompletedStreak =>
       streakBox.get('allHabitsCompletedStreak')!;
 
@@ -45,6 +44,11 @@ class HabitProvider extends ChangeNotifier {
 
   void updateSomethingEdited() {
     somethingEdited = true;
+    notifyListeners();
+  }
+
+  void resetSomethingEdited() {
+    somethingEdited = false;
     notifyListeners();
   }
 

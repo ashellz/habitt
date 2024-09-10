@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:provider/provider.dart';
 
 Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
   String timeString = "";
@@ -214,6 +216,9 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                               timeBox[0] = convertedHour;
                               timeBox[1] = minute;
                             });
+                            context
+                                .read<HabitProvider>()
+                                .updateSomethingEdited();
                             checkForNotifications();
                             Navigator.of(context).pop();
                           },

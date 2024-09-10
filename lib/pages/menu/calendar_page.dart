@@ -132,7 +132,9 @@ class CalendarDay extends StatelessWidget {
 
           for (var habit in historicalBox.getAt(i)!.data) {
             if (habit.completed) {
-              habitsCompleted++;
+              if (!habit.skipped) {
+                habitsCompleted++;
+              }
             }
           }
 

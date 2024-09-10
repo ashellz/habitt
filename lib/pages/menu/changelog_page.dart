@@ -55,6 +55,8 @@ class _ChangelogPageState extends State<ChangelogPage> {
           ),
         ),
 
+        changelogContainer("10.09.2024",
+            "- Calendar day now doesn't count skipped habit as completed\n- Edit habit page redesign"),
         changelogContainer("09.09.2024",
             "- Changed text from field border color in login and signup pages\n- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the changelog and habit notification pages\n- Save changes button, when editing a habit, only appears if something has been changed\n- Improved notification texts"),
         changelogContainer("08.09.2024",
