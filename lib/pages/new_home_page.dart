@@ -65,13 +65,26 @@ class NewHomePage extends StatefulWidget {
   State<NewHomePage> createState() => _NewHomePageState();
 }
 
-class _NewHomePageState extends State<NewHomePage> {
+class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    context.read<HabitProvider>().updateLastOpenedDate();
+    WidgetsBinding.instance.addObserver(this);
 
     hasHabits();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<HabitProvider>().updateLastOpenedDate();
+    }
   }
 
   @override
@@ -119,7 +132,7 @@ class _NewHomePageState extends State<NewHomePage> {
             currentDurationValueMinutes = 0;
             currentDurationValueHours = 0;
             currentDurationValue = 0;
-            createcontroller.text = "Habit Name";
+            createcontroller.text = "New Habit";
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return AddHabitPage(
@@ -150,7 +163,7 @@ class _NewHomePageState extends State<NewHomePage> {
               currentDurationValueMinutes = 0;
               currentDurationValueHours = 0;
               currentDurationValue = 0;
-              createcontroller.text = "Habit Name";
+              createcontroller.text = "New Habit";
             });
           },
           backgroundColor: theLightColor,

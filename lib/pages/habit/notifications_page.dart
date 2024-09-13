@@ -107,6 +107,9 @@ Widget notificationTile(List<int> notification, BuildContext context) {
       if (notification[0] > 12) {
         time =
             "${notification[0] - 12 < 10 ? "0${notification[0] - 12}" : notification[0] - 12}:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
+      } else if (notification[0] == 0) {
+        time =
+            "12:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
       } else {
         time =
             "${notification[0] < 10 ? "0${notification[0]}" : notification[0]}:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
@@ -130,7 +133,8 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                   height: 100,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: theColor, borderRadius: BorderRadius.circular(20)),
+                      color: Colors.grey.shade900,
+                      borderRadius: BorderRadius.circular(20)),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,8 +159,8 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                             },
                             child: Text(
                               getTime(),
-                              style: const TextStyle(
-                                  color: Colors.white,
+                              style: TextStyle(
+                                  color: theLightColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold),
                             )),

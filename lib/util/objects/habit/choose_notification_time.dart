@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -195,10 +196,14 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                             mystate(() {
                               late int convertedHour;
 
+                              if (kDebugMode) {
+                                print(timeString);
+                              }
+
                               if (boolBox.get("12hourFormat")!) {
                                 if (timeString == "PM") {
                                   if (hour == 12) {
-                                    convertedHour = hour;
+                                    convertedHour = 24;
                                   } else {
                                     convertedHour = hour + 12;
                                   }
