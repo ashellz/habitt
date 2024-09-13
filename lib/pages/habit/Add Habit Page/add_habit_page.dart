@@ -2,8 +2,9 @@ import "dart:async";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
+import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_display.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
-import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
@@ -38,6 +39,8 @@ class AddHabitPage extends StatefulWidget {
 }
 
 class _AddHabitPageState extends State<AddHabitPage> {
+  ScrollController scrollController = ScrollController();
+  double scrollPosition = 0.0;
   bool _isExpanded = false;
   bool _isVisible = false;
   bool _isGestureEnabled = true;
@@ -70,6 +73,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      setState(() {
+        scrollPosition = scrollController.position.pixels;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     var createcontroller = widget.createcontroller;
@@ -85,154 +98,13 @@ class _AddHabitPageState extends State<AddHabitPage> {
             alignment: Alignment.bottomCenter,
             children: [
               CustomScrollView(
+                controller: scrollController,
                 physics: const BouncingScrollPhysics(),
                 slivers: [
-                  SliverPersistentHeader(
-                    delegate: CustomSliverPersistentHeaderDelegate(
-                      expandedHeight: 100.0,
-                    ),
-                    pinned: true,
-                  ),
+                  const ExpandableAppBar(),
                   SliverToBoxAdapter(
                     child: Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              top: 20.0,
-                              left: 25.0,
-                              bottom: 10.0,
-                            ),
-                            child: Text(
-                              "New Habit",
-                              style: TextStyle(
-                                fontSize: 32.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10, top: 5),
-                            child: IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          const NotificationsPage(),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        const begin = Offset(0.0, 1.0);
-                                        const end = Offset.zero;
-                                        const curve = Curves.ease;
-
-                                        var tween = Tween(
-                                                begin: begin, end: end)
-                                            .chain(CurveTween(curve: curve));
-
-                                        return SlideTransition(
-                                          position: animation.drive(tween),
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.notifications,
-                                  size: 30,
-                                  color: Colors.white,
-                                )),
-                          ),
-                        ],
-                      ),
-
-                      // ICON
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 10.0,
-                          bottom: 10.0,
-                        ),
-                        child: Container(
-                          height: 170,
-                          decoration: BoxDecoration(
-                            color: theColor,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: IconButton(
-                                  iconSize: 80,
-                                  onPressed: () => Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              const IconsPage()))
-                                      .then((value) => setState(() {
-                                            updatedIcon = theIcon;
-                                          })),
-                                  icon: updatedIcon,
-                                  color: Colors.white,
-                                ),
-                              ),
-
-                              //TEXT
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      truncatedText(context, createcontroller),
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      dropDownValue,
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Expanded(
-                                flex: habitGoal == 0 ? 0 : 1,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        habitGoalNumber(),
-                                        Visibility(
-                                          visible: habitGoal == 1,
-                                          child: Text(
-                                            habitGoalText(),
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
+                      HabitDisplay(controller: createcontroller),
                       //TAG
 
                       Padding(
@@ -659,6 +531,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 60),
                     ]),
                   ),
                 ],
@@ -694,61 +567,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
         ),
       ),
     );
-  }
-}
-
-class CustomSliverPersistentHeaderDelegate
-    extends SliverPersistentHeaderDelegate {
-  final double expandedHeight;
-
-  CustomSliverPersistentHeaderDelegate({required this.expandedHeight});
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        AppBar(
-          title: Text(
-            "New Habit",
-            style: TextStyle(
-              fontSize: 32.0,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: Colors.black,
-        ),
-        Opacity(
-          opacity: appear(shrinkOffset),
-          child: AppBar(
-            title: Text(
-              "New Habit",
-              style: TextStyle(
-                fontSize: 32.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            backgroundColor: theOtherColor,
-          ),
-        )
-      ],
-    );
-  }
-
-  double appear(double shrinkOffset) => shrinkOffset / expandedHeight;
-
-  @override
-  double get maxExtent => expandedHeight;
-
-  @override
-  double get minExtent => kToolbarHeight;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
   }
 }
 

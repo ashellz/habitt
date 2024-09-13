@@ -1,7 +1,6 @@
 import "dart:async";
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
-import "package:habit_tracker/data/historical_habit.dart";
 import "package:habit_tracker/main.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/storage_service.dart";
@@ -14,7 +13,6 @@ import "package:habit_tracker/util/functions/habit/saveHabits.dart";
 import "package:hive_flutter/hive_flutter.dart";
 import "package:restart_app/restart_app.dart";
 import 'package:vibration/vibration.dart';
-import 'package:collection/collection.dart';
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
@@ -29,7 +27,6 @@ class HabitProvider extends ChangeNotifier {
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
 
-  List get allHistoricalHabits => historicalBox.values.toList();
   List _habitNotifications = [];
 
   List get habitNotifications => _habitNotifications;
@@ -37,10 +34,9 @@ class HabitProvider extends ChangeNotifier {
   double get mainCategoryHeight => _mainCategoryHeight;
   int get allHabitsCompletedStreak =>
       streakBox.get('allHabitsCompletedStreak')!;
-
-  List<HistoricalHabitData> historicalHabits_ = [];
-
-  List get historicalHabits => historicalHabits_;
+  bool isGestureEnabled = true;
+  bool categoriesExpanded = false;
+  bool categoryIsVisible = false;
 
   void updateSomethingEdited() {
     somethingEdited = true;
@@ -52,19 +48,24 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHistoricalHabits(DateTime date) {
-    for (int i = 0; i < historicalBox.length; i++) {
-      List intDate = [
-        historicalBox.getAt(i)!.date.year,
-        historicalBox.getAt(i)!.date.month,
-        historicalBox.getAt(i)!.date.day
-      ];
-      if (const ListEquality()
-          .equals(intDate, [date.year, date.month, date.day])) {
-        historicalHabits_ = historicalBox.getAt(i)!.data;
-      }
-    }
+  void toggleExpansion() {
+    if (isGestureEnabled) {
+      isGestureEnabled = false;
 
+      categoriesExpanded = !categoriesExpanded;
+      if (categoriesExpanded) {
+        Timer(const Duration(milliseconds: 500), () {
+          categoryIsVisible = true;
+          notifyListeners();
+        });
+      } else {
+        categoryIsVisible = false;
+      }
+
+      Timer(const Duration(milliseconds: 500), () {
+        isGestureEnabled = true;
+      });
+    }
     notifyListeners();
   }
 
@@ -233,87 +234,8 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  void skipHistoricalHabit(int index, habit, DateTime time) async {
-    List<int> currentDate = [time.year, time.month, time.day];
-
-    HistoricalHabitData habitData = HistoricalHabitData(
-      name: habit.name,
-      completed: !habit.completed,
-      icon: habit.icon,
-      category: habit.category,
-      amount: habit.amount,
-      amountCompleted: habit.completed ? habit.amount : 0,
-      amountName: habit.amountName,
-      duration: habit.duration,
-      durationCompleted: habit.completed ? habit.duration : 0,
-      skipped: !habit.skipped,
-    );
-
-    applyCurentHabitData(currentDate, index, habitData, time);
-
-    calculateStreak();
-    notifyListeners();
-  }
-
-  void completeHistoricalHabit(int index, habit, DateTime time) async {
-    List<int> currentDate = [time.year, time.month, time.day];
-
-    HistoricalHabitData habitData = HistoricalHabitData(
-      name: habit.name,
-      completed: !habit.completed,
-      icon: habit.icon,
-      category: habit.category,
-      amount: habit.amount,
-      amountCompleted: !habit.completed ? habit.amount : 0,
-      amountName: habit.amountName,
-      duration: habit.duration,
-      durationCompleted: !habit.completed ? habit.duration : 0,
-      skipped: false,
-    );
-
-    bool hapticFeedback = boolBox.get('hapticFeedback')!;
-    /*if (allHabitsCompleted()) {
-      playSound();
-      if (hapticFeedback) {
-        Vibration.vibrate(duration: 500);
-      }
-    } else*/
-    if (!habit.completed) {
-      if (hapticFeedback) {
-        Vibration.vibrate(duration: 100);
-      }
-    }
-
-    applyCurentHabitData(currentDate, index, habitData, time);
-
-    calculateStreak();
-    notifyListeners();
-
-    // if this doesn't end up working, idea is to create a historicalHabitData
-    // with all data the same except the data that needs to be changed
-    // the do historicalBox("the right date").data[the right index] = new historicalHabitData
-  }
-
   HabitData getHabitAt(int index) {
     return habitBox.getAt(index)!;
-  }
-
-  HistoricalHabitData getHistoricalHabitAt(int index, DateTime today) {
-    List<int> date = [today.year, today.month, today.day];
-
-    for (int i = 0; i < historicalBox.length; i++) {
-      List<int> habitDate = [
-        historicalBox.getAt(i)!.date.year,
-        historicalBox.getAt(i)!.date.month,
-        historicalBox.getAt(i)!.date.day
-      ];
-
-      if (const ListEquality().equals(habitDate, date)) {
-        return historicalBox.getAt(i)!.data[index];
-      }
-    }
-
-    return historicalBox.getAt(0)!.data[index]; // default
   }
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
@@ -386,152 +308,6 @@ class HabitProvider extends ChangeNotifier {
         ));
     saveHabitsForToday();
     notifyListeners();
-  }
-
-  applyHistoricalAmountCompleted(
-      habit, theAmountValue, DateTime time, int index) {
-    List<int> currentDate = [time.year, time.month, time.day];
-
-    HistoricalHabitData habitData = HistoricalHabitData(
-        name: habit.name,
-        completed: habit.completed,
-        icon: habit.icon,
-        category: habit.category,
-        amount: habit.amount,
-        amountCompleted: theAmountValue,
-        amountName: habit.amountName,
-        duration: habit.duration,
-        durationCompleted: habit.durationCompleted,
-        skipped: habit.skipped);
-
-    applyCurentHabitData(currentDate, index, habitData, time);
-
-    notifyListeners();
-  }
-
-  applyHistoricalDurationCompleted(habit, int theDurationValueHours,
-      int theDurationValueMinutes, DateTime time, int index) {
-    List<int> currentDate = [time.year, time.month, time.day];
-
-    HistoricalHabitData habitData = HistoricalHabitData(
-        name: habit.name,
-        completed: habit.completed,
-        icon: habit.icon,
-        category: habit.category,
-        amount: habit.amount,
-        amountCompleted: habit.amountCompleted,
-        amountName: habit.amountName,
-        duration: habit.duration,
-        durationCompleted: theDurationValueHours * 60 + theDurationValueMinutes,
-        skipped: habit.skipped);
-
-    applyCurentHabitData(currentDate, index, habitData, time);
-
-    notifyListeners();
-  }
-
-  void calculateStreak() {
-    var historicalList = historicalBox.values.toList();
-
-    historicalList.sort((a, b) {
-      DateTime dateA = a.date;
-      DateTime dateB = b.date;
-      return dateA
-          .compareTo(dateB); // This will sort from oldest to most recent
-    });
-
-    for (int i = 0; i < habitBox.length; i++) {
-      int longestStreak = 0;
-      var habit = habitBox.getAt(i)!;
-
-      bool completed = false;
-      bool skipped = false;
-      int streak = 0;
-
-      for (int j = 0; j < historicalList.length - 1; j++) {
-        if (historicalList[j].data.length <= i) {
-          completed = false;
-        } else {
-          completed = historicalList[j].data[i].completed;
-          skipped = historicalList[j].data[i].skipped;
-        }
-
-        if (streak > longestStreak) {
-          longestStreak = streak;
-        }
-
-        if (completed) {
-          if (!skipped) {
-            streak++;
-          }
-        } else {
-          streak = 0;
-        }
-      }
-
-      habit.streak = streak;
-      if (longestStreak > habit.longestStreak) {
-        habit.longestStreak = longestStreak;
-      }
-
-      habit.save();
-    }
-
-    //ALL HABITS COMPLETED STREAK
-    int allHabitsCompletedStreak = 0;
-
-    for (int i = 0; i < historicalList.length - 1; i++) {
-      int numberOfHabits = 0;
-      int numberOfCompletedHabits = 0;
-      bool isSkipped = false;
-      // -1 is because the last one is the current day
-
-      for (var habit in historicalList[i].data) {
-        numberOfHabits++;
-        if (habit.completed) {
-          if (habit.skipped) {
-            isSkipped = true;
-          }
-          numberOfCompletedHabits++;
-        }
-      }
-
-      if (numberOfCompletedHabits == numberOfHabits) {
-        if (!isSkipped) {
-          allHabitsCompletedStreak++;
-        }
-      } else {
-        allHabitsCompletedStreak = 0;
-      }
-    }
-
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
-
-    notifyListeners();
-  }
-
-  void applyCurentHabitData(List currentDate, int index,
-      HistoricalHabitData habitData, DateTime time) {
-    for (int i = 0; i < historicalBox.length; i++) {
-      List<int> habitDate = [
-        historicalBox.getAt(i)!.date.year,
-        historicalBox.getAt(i)!.date.month,
-        historicalBox.getAt(i)!.date.day
-      ];
-      if (const ListEquality().equals(currentDate, habitDate)) {
-        List<HistoricalHabitData> currentHabitData =
-            List.from(historicalBox.getAt(i)!.data);
-
-        currentHabitData[index] = habitData;
-
-        historicalBox.putAt(
-            i,
-            HistoricalHabit(
-                date: historicalBox.getAt(i)!.date, data: currentHabitData));
-        updateHistoricalHabits(time);
-        break;
-      }
-    }
   }
 
   void updateLastOpenedDate() async {

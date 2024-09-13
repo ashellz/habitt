@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/historical_habit.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
-import "package:habit_tracker/services/provider/habit_provider.dart";
+import "package:habit_tracker/services/provider/historical_habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
 import "package:provider/provider.dart";
@@ -22,14 +22,14 @@ class _CalendarPageState extends State<CalendarPage> {
     setState(() {
       today = day;
     });
-    context.read<HabitProvider>().updateHistoricalHabits(today);
+    context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
   }
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().updateHistoricalHabits(today);
+      context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
     });
   }
 
@@ -298,9 +298,16 @@ Widget anyTime(
         const Text("Any time",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0;
-            i < context.watch<HabitProvider>().historicalHabits.length;
+            i <
+                context
+                    .watch<HistoricalHabitProvider>()
+                    .historicalHabits
+                    .length;
             i++)
-          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+          if (context
+                  .watch<HistoricalHabitProvider>()
+                  .historicalHabits[i]
+                  .category ==
               'Any time')
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -339,9 +346,16 @@ Widget morning(
         const Text("Morning",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0;
-            i < context.watch<HabitProvider>().historicalHabits.length;
+            i <
+                context
+                    .watch<HistoricalHabitProvider>()
+                    .historicalHabits
+                    .length;
             i++)
-          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+          if (context
+                  .watch<HistoricalHabitProvider>()
+                  .historicalHabits[i]
+                  .category ==
               'Morning')
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -381,9 +395,16 @@ Widget afternoon(
         const Text("Afternoon",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0;
-            i < context.watch<HabitProvider>().historicalHabits.length;
+            i <
+                context
+                    .watch<HistoricalHabitProvider>()
+                    .historicalHabits
+                    .length;
             i++)
-          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+          if (context
+                  .watch<HistoricalHabitProvider>()
+                  .historicalHabits[i]
+                  .category ==
               'Afternoon')
             Padding(
               padding: const EdgeInsets.only(top: 10),
@@ -423,9 +444,16 @@ Widget evening(
         const Text("Evening",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0;
-            i < context.watch<HabitProvider>().historicalHabits.length;
+            i <
+                context
+                    .watch<HistoricalHabitProvider>()
+                    .historicalHabits
+                    .length;
             i++)
-          if (context.watch<HabitProvider>().historicalHabits[i].category ==
+          if (context
+                  .watch<HistoricalHabitProvider>()
+                  .historicalHabits[i]
+                  .category ==
               'Evening')
             Padding(
               padding: const EdgeInsets.only(top: 10),

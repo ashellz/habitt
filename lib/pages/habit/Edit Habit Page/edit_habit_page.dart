@@ -1,17 +1,16 @@
-import "dart:async";
-
 import "package:auto_size_text/auto_size_text.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_spinbox/material.dart";
 import "package:habit_tracker/data/habit_tile.dart";
+import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/buildEditedValues.dart";
+import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_display.dart";
 import "package:habit_tracker/pages/habit/icons_page.dart";
 import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/functions/checkForNotifications.dart";
-import "package:habit_tracker/util/functions/habit/getIcon.dart";
 import "package:habit_tracker/util/functions/validate_text.dart";
 import "package:habit_tracker/util/objects/habit/add_tag.dart";
 import "package:habit_tracker/util/objects/habit/confirm_delete_habit.dart";
@@ -20,13 +19,13 @@ import "package:provider/provider.dart";
 import "package:vibration/vibration.dart";
 
 int habitGoalEdit = 0;
+
+bool updated = false;
+bool dropDownChanged = false;
 late int amount;
 late int duration;
 late int durationHours;
 late int durationMinutes;
-
-bool updated = false;
-bool dropDownChanged = false;
 
 TextEditingController amountNameControllerEdit = TextEditingController();
 TextEditingController amountControllerEdit = TextEditingController();
@@ -48,98 +47,16 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
-  bool _isExpanded = false;
-  bool _isVisible = false;
-  bool _isGestureEnabled = true;
   bool edit = false;
   bool stats = true;
   int currentIndex = 0;
-
-  void _toggleExpansion() {
-    if (_isGestureEnabled) {
-      setState(() {
-        _isGestureEnabled = false;
-      });
-
-      setState(() {
-        _isExpanded = !_isExpanded;
-        if (_isExpanded) {
-          Timer(const Duration(milliseconds: 500), () {
-            setState(() {
-              _isVisible = true;
-            });
-          });
-        } else {
-          _isVisible = false;
-        }
-      });
-
-      Timer(const Duration(milliseconds: 500), () {
-        setState(() {
-          _isGestureEnabled = true;
-        });
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final editcontroller = widget.editcontroller;
     final desccontroller = context.watch<HabitProvider>().notescontroller;
 
-    if (!changed) {
-      updatedIcon = Icon(getIcon(widget.index));
-    }
-
-    if (!updated) {
-      if (habitBox.getAt(widget.index)!.amount > 1) {
-        habitGoalEdit = 1;
-        amount = habitBox.getAt(widget.index)!.amount;
-        amountNameControllerEdit.text =
-            habitBox.getAt(widget.index)!.amountName;
-        duration = 0;
-        durationHours = 0;
-        durationMinutes = 0;
-      } else if (habitBox.getAt(widget.index)!.duration > 0) {
-        habitGoalEdit = 2;
-        duration = habitBox.getAt(widget.index)!.duration;
-        amount = 1;
-        durationHours = duration ~/ 60;
-        durationMinutes = duration % 60;
-      } else {
-        habitGoalEdit = 0;
-        amount = 1;
-        duration = 0;
-        durationHours = 0;
-        durationMinutes = 0;
-      }
-
-      if (editcontroller.text.isEmpty) {
-        editcontroller.text = habitBox.getAt(widget.index)!.name;
-      }
-
-      if (amountNameControllerEdit.text.isEmpty) {
-        amountNameControllerEdit.text = "times";
-      }
-
-      amountControllerEdit.text = amount.toString();
-
-      habitTag = habitBox.getAt(widget.index)!.tag;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HabitProvider>().changeNotification(
-            List.from(habitBox.getAt(widget.index)!.notifications));
-      });
-
-      context.watch<HabitProvider>().notescontroller.text =
-          habitBox.getAt(widget.index)!.notes;
-
-      updated = true;
-    }
-
-    if (!dropDownChanged) {
-      dropDownValue = habitBox.getAt(widget.index)!.category;
-    }
+    buildEditedValues(context, widget.index, editcontroller);
 
     bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
@@ -251,62 +168,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 padding: const EdgeInsets.only(bottom: 60, left: 10, right: 10),
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20.0,
-                      bottom: 10.0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: SizedBox(
-                            width: 70,
-                            height: 70,
-                            child: FittedBox(
-                              child: Icon(
-                                updatedIcon.icon,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: SizedBox(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  editcontroller.text,
-                                  style: const TextStyle(
-                                    fontSize: 26,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(dropDownValue,
-                                    style: TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.bold,
-                                        color: theLightColor)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  HabitDisplay(controller: editcontroller),
                   const SizedBox(
                     height: 20,
                   ),
                   SizedBox(
-                    height: edit
-                        ? MediaQuery.of(context).size.height * 0.9
-                        : MediaQuery.of(context).size.height * 0.9,
+                    height: MediaQuery.of(context).size.height * 0.9,
                     child: PageView.builder(
                       onPageChanged: (value) {
                         if (value == 0) {
@@ -332,11 +199,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                   context,
                                   editcontroller,
                                   desccontroller,
-                                  _isExpanded,
-                                  _toggleExpansion,
-                                  _isVisible,
-                                  _isGestureEnabled,
-                                  widget.index),
+                                  widget.index,
+                                  dropDownChanged),
                         );
                       },
                     ),
@@ -607,11 +471,8 @@ Widget editWidgets(
     BuildContext context,
     TextEditingController editcontroller,
     TextEditingController desccontroller,
-    bool isExpanded,
-    GestureTapCallback toggleExpansion,
-    bool isVisible,
-    bool isGestureEnabled,
-    int index) {
+    int index,
+    bool dropDownChanged) {
   return Column(children: [
     //TAG
 
@@ -818,21 +679,22 @@ Widget editWidgets(
               ),
               duration: const Duration(milliseconds: 600),
               curve: Curves.fastOutSlowIn,
-              height: isExpanded ? 230.0 : 0.0,
+              height: context.watch<HabitProvider>().categoriesExpanded
+                  ? 230.0
+                  : 0.0,
               width: double.infinity,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 52),
-                    chooseTime(toggleExpansion, "Any time", isVisible, context),
-                    chooseTime(toggleExpansion, "Morning", isVisible, context),
-                    chooseTime(
-                        toggleExpansion, "Afternoon", isVisible, context),
-                    chooseTime(toggleExpansion, "Evening", isVisible, context),
+                    chooseTime("Any time", context, setState, dropDownChanged),
+                    chooseTime("Morning", context, setState, dropDownChanged),
+                    chooseTime("Afternoon", context, setState, dropDownChanged),
+                    chooseTime("Evening", context, setState, dropDownChanged),
                   ])),
         ),
         GestureDetector(
-          onTap: isGestureEnabled ? toggleExpansion : null,
+          onTap: () => context.read<HabitProvider>().toggleExpansion(),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
@@ -847,7 +709,10 @@ Widget editWidgets(
                   dropDownValue,
                   style: const TextStyle(fontSize: 16),
                 ),
-                Icon(isExpanded ? Icons.expand_less : Icons.expand_more,
+                Icon(
+                    context.watch<HabitProvider>().categoriesExpanded
+                        ? Icons.expand_less
+                        : Icons.expand_more,
                     color: Colors.white),
               ],
             ),
@@ -1139,10 +1004,10 @@ Widget habitGoalNumber() {
   }
 }
 
-Widget chooseTime(Function toggleExpansion, String category, bool isVisible,
-    BuildContext context) {
+Widget chooseTime(String category, BuildContext context, StateSetter setState,
+    bool dropDownChanged) {
   return AnimatedOpacity(
-    opacity: isVisible ? 1.0 : 0.0,
+    opacity: context.watch<HabitProvider>().categoryIsVisible ? 1.0 : 0.0,
     duration: const Duration(milliseconds: 200),
     curve: Curves.fastOutSlowIn,
     child: Padding(
@@ -1152,7 +1017,7 @@ Widget chooseTime(Function toggleExpansion, String category, bool isVisible,
             dropDownValue = category;
             dropDownChanged = true;
             context.read<HabitProvider>().updateSomethingEdited();
-            toggleExpansion();
+            context.read<HabitProvider>().toggleExpansion();
           },
           child: Text(
             category,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/objects/habit/complete_historical_habit.dart';
@@ -53,7 +54,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
     }
 
     var habit = context
-        .watch<HabitProvider>()
+        .watch<HistoricalHabitProvider>()
         .allHistoricalHabits[widget.boxIndex]
         .data[index];
 
@@ -71,7 +72,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
           SlidableAction(
             onPressed: (context) {
               context
-                  .read<HabitProvider>()
+                  .read<HistoricalHabitProvider>()
                   .skipHistoricalHabit(index, habit, widget.time);
               if (isToday) {
                 context.read<HabitProvider>().skipHabitProvider(index);
@@ -386,9 +387,9 @@ void checkCompleteHabit(
         context.read<HabitProvider>().completeHabitProvider(index);
       } else {
         context
-            .read<HabitProvider>()
+            .read<HistoricalHabitProvider>()
             .completeHistoricalHabit(index, habit, time);
-        context.read<HabitProvider>().updateHistoricalHabits(time);
+        context.read<HistoricalHabitProvider>().updateHistoricalHabits(time);
       }
     } else {
       showDialog(
@@ -400,7 +401,9 @@ void checkCompleteHabit(
     if (isToday) {
       context.read<HabitProvider>().completeHabitProvider(index);
     } else {
-      context.read<HabitProvider>().completeHistoricalHabit(index, habit, time);
+      context
+          .read<HistoricalHabitProvider>()
+          .completeHistoricalHabit(index, habit, time);
     }
   }
 }

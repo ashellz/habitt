@@ -6,7 +6,7 @@ import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/habit/add_habit_page.dart';
+import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
@@ -132,7 +132,7 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
             currentDurationValueMinutes = 0;
             currentDurationValueHours = 0;
             currentDurationValue = 0;
-            createcontroller.text = "New Habit";
+            createcontroller.text = "Habit Name";
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return AddHabitPage(
@@ -163,7 +163,7 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
               currentDurationValueMinutes = 0;
               currentDurationValueHours = 0;
               currentDurationValue = 0;
-              createcontroller.text = "New Habit";
+              createcontroller.text = "Habit Name";
             });
           },
           backgroundColor: theLightColor,

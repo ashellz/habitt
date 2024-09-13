@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
@@ -9,7 +10,8 @@ Widget completeHistoricalHabitDialog(
     int index, BuildContext context, DateTime time, bool isToday) {
   bool amountCheck = false;
 
-  var habit = context.read<HabitProvider>().getHistoricalHabitAt(index, time);
+  var habit =
+      context.read<HistoricalHabitProvider>().getHistoricalHabitAt(index, time);
 
   if (habit.amount > 1) amountCheck = true;
 
@@ -156,7 +158,7 @@ Widget completeHistoricalHabitDialog(
                     context.read<HabitProvider>().completeHabitProvider(index);
                   } else {
                     context
-                        .read<HabitProvider>()
+                        .read<HistoricalHabitProvider>()
                         .completeHistoricalHabit(index, habit, time);
                   }
                   Navigator.pop(context);
@@ -185,7 +187,7 @@ Widget completeHistoricalHabitDialog(
                             .applyAmountCompleted(index, theAmountValue);
                       } else {
                         context
-                            .read<HabitProvider>()
+                            .read<HistoricalHabitProvider>()
                             .applyHistoricalAmountCompleted(
                                 habit, theAmountValue, time, index);
                       }
@@ -197,7 +199,7 @@ Widget completeHistoricalHabitDialog(
                             theDurationValueMinutes);
                       } else {
                         context
-                            .read<HabitProvider>()
+                            .read<HistoricalHabitProvider>()
                             .applyHistoricalDurationCompleted(
                                 habit,
                                 theDurationValueHours,

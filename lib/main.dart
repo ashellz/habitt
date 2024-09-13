@@ -8,6 +8,7 @@ import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
@@ -84,8 +85,15 @@ Future<void> main() async {
     frequency: const Duration(minutes: 15),
   );
 
-  runApp(ChangeNotifierProvider(
-      create: (context) => HabitProvider(), child: const MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => HabitProvider()),
+        ChangeNotifierProvider(create: (context) => HistoricalHabitProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 @pragma('vm:entry-point')
@@ -94,10 +102,6 @@ void callbackDispatcher(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
     });
-
-    if (task == "updateDateTask") {
-      context.read<HabitProvider>().updateLastOpenedDate();
-    }
 
     saveHabitsForToday();
     checkForNotifications();
@@ -118,18 +122,6 @@ hasHabits() {
       anytimeHasHabits = true;
     }
   }
-}
-
-void scheduleMidnightTask() {
-  final now = DateTime.now();
-  final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
-  final initialDelay = nextMidnight.difference(now);
-
-  Workmanager().registerOneOffTask(
-    "1",
-    "updateDateTask",
-    initialDelay: initialDelay,
-  );
 }
 
 class MyApp extends StatelessWidget {
@@ -183,8 +175,8 @@ class AuthCheck extends StatelessWidget {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
-            context.read<HabitProvider>().calculateStreak();
-            scheduleMidnightTask();
+            context.read<HistoricalHabitProvider>().calculateStreak();
+
             saveHabitsForToday();
           });
           return const NewHomePage();
