@@ -16,9 +16,11 @@ late String editedTo;
 
 void editHabit(int index, BuildContext context, editcontroller) {
   editedFrom = habitBox.getAt(index)!.category;
-  editedTo = dropDownValue;
+  editedTo = Provider.of<HabitProvider>(context, listen: false).dropDownValue;
 
-  duration = durationMinutes + (durationHours * 60);
+  int duration = Provider.of<HabitProvider>(context, listen: false)
+          .durationMinutes +
+      (Provider.of<HabitProvider>(context, listen: false).durationHours * 60);
 
   int categoryHabits = 0;
   String category = editedFrom;
@@ -45,11 +47,18 @@ void editHabit(int index, BuildContext context, editcontroller) {
       HabitData(
         name: editcontroller.text,
         completed: false,
-        icon: getIconString(updatedIcon.icon),
-        category: dropDownValue,
+        icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
+            .updatedIcon
+            .icon),
+        category:
+            Provider.of<HabitProvider>(context, listen: false).dropDownValue,
         streak: habitBox.getAt(index)?.streak ?? 0,
-        amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
-        amountName: amountNameControllerEdit.text,
+        amount: habitGoalEdit == 1
+            ? Provider.of<HabitProvider>(context, listen: false).amount
+            : habitBox.getAt(index)!.amount,
+        amountName: Provider.of<HabitProvider>(context, listen: false)
+            .habitGoalController
+            .text,
         amountCompleted: 0,
         duration: habitGoalEdit == 2
             ? duration
@@ -64,7 +73,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
         longestStreak: habitBox.getAt(index)!.longestStreak,
       ));
 
-  dropDownValue = 'Any time';
+  Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   }
@@ -74,11 +83,14 @@ void editHabit(int index, BuildContext context, editcontroller) {
     });
   }
 
-  openCategory("edited");
+  openCategory(context);
   // showPopup(context, "Habit edited!");
 }
 
-void openCategory(String key) {
+void openCategory(BuildContext context) {
+  var dropDownValue =
+      Provider.of<HabitProvider>(context, listen: false).dropDownValue;
+
   if (dropDownValue == "Morning") {
     if (morningHasHabits == false) {
       morningHasHabits = true;

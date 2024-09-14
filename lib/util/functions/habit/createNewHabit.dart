@@ -5,13 +5,15 @@ import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/add_habit_page.dart
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
+import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:provider/provider.dart';
 
 late HabitData myHabit;
 
 Future<void> createNewHabit(createcontroller, BuildContext context) async {
-  currentDurationValue =
-      currentDurationValueMinutes + (currentDurationValueHours * 60);
+  int currentDurationValue = Provider.of<HabitProvider>(context, listen: false)
+          .durationMinutes +
+      (Provider.of<HabitProvider>(context, listen: false).durationHours * 60);
 
   List habitNotifications =
       Provider.of<HabitProvider>(context, listen: false).habitNotifications;
@@ -19,13 +21,20 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   myHabit = HabitData(
     name: createcontroller.text,
     completed: false,
-    icon: getIconString(updatedIcon.icon),
-    category: dropDownValue,
+    icon: getIconString(
+        Provider.of<HabitProvider>(context, listen: false).updatedIcon.icon),
+    category: Provider.of<HabitProvider>(context, listen: false).dropDownValue,
     streak: 0,
-    amount: habitGoal == 1 ? currentAmountValue : 1,
+    amount:
+        Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
+            ? Provider.of<HabitProvider>(context, listen: false).amount
+            : 1,
     amountName: amountNameController.text,
     amountCompleted: 0,
-    duration: habitGoal == 2 ? currentDurationValue : 0,
+    duration:
+        Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
+            ? currentDurationValue
+            : 0,
     durationCompleted: 0,
     skipped: false,
     tag: habitTag,
@@ -36,11 +45,13 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   );
   await habitBox.add(myHabit);
   hasHabits();
-
+  saveHabitsForToday();
   // Updates the main category height if new habit category is same as the main category
-  if (dropDownValue == context.watch<HabitProvider>().mainCategory) {
-    if (context.mounted) {
-      context.read<HabitProvider>().updateMainCategoryHeight();
+  if (context.mounted) {
+    if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
+        context.watch<HabitProvider>().mainCategory) {
+      Provider.of<HabitProvider>(context, listen: false)
+          .updateMainCategoryHeight();
     }
   }
 

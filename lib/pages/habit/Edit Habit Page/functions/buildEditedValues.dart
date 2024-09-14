@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
@@ -8,14 +10,24 @@ import 'package:provider/provider.dart';
 void buildEditedValues(
     BuildContext context, int index, TextEditingController editcontroller) {
   if (!changed) {
-    updatedIcon = Icon(getIcon(index));
+    context.watch<HabitProvider>().updatedIcon = Icon(getIcon(index));
   }
 
   if (!updated) {
+    int amount = Provider.of<HabitProvider>(context, listen: false).amount;
+    int duration = Provider.of<HabitProvider>(context, listen: false).duration;
+    int durationHours =
+        Provider.of<HabitProvider>(context, listen: false).durationHours;
+    int durationMinutes =
+        Provider.of<HabitProvider>(context, listen: false).durationMinutes;
+
+    context.watch<HabitProvider>().categoriesExpanded = false;
     if (habitBox.getAt(index)!.amount > 1) {
       habitGoalEdit = 1;
       amount = habitBox.getAt(index)!.amount;
-      amountNameControllerEdit.text = habitBox.getAt(index)!.amountName;
+      Provider.of<HabitProvider>(context, listen: false)
+          .habitGoalController
+          .text = habitBox.getAt(index)!.amountName;
       duration = 0;
       durationHours = 0;
       durationMinutes = 0;
@@ -37,11 +49,14 @@ void buildEditedValues(
       editcontroller.text = habitBox.getAt(index)!.name;
     }
 
-    if (amountNameControllerEdit.text.isEmpty) {
-      amountNameControllerEdit.text = "times";
+    if (Provider.of<HabitProvider>(context, listen: false)
+        .habitGoalController
+        .text
+        .isEmpty) {
+      Provider.of<HabitProvider>(context, listen: false)
+          .habitGoalController
+          .text = "times";
     }
-
-    amountControllerEdit.text = amount.toString();
 
     habitTag = habitBox.getAt(index)!.tag;
 
@@ -54,10 +69,10 @@ void buildEditedValues(
     context.watch<HabitProvider>().notescontroller.text =
         habitBox.getAt(index)!.notes;
 
-    updated = true;
-  }
+    context
+        .read<HabitProvider>()
+        .updateDropDownValue(habitBox.getAt(index)!.category);
 
-  if (!dropDownChanged) {
-    dropDownValue = habitBox.getAt(index)!.category;
+    updated = true;
   }
 }

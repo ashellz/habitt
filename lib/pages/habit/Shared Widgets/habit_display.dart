@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
+import 'package:provider/provider.dart';
 
 class HabitDisplay extends StatelessWidget {
   const HabitDisplay({
@@ -29,7 +30,7 @@ class HabitDisplay extends StatelessWidget {
               height: 70,
               child: FittedBox(
                 child: Icon(
-                  updatedIcon.icon,
+                  context.watch<HabitProvider>().updatedIcon.icon,
                   color: Colors.white,
                 ),
               ),
@@ -51,7 +52,7 @@ class HabitDisplay extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(dropDownValue,
+                  Text(context.watch<HabitProvider>().dropDownValue,
                       style: TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,

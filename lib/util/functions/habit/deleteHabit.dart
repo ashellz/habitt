@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/checkCategory.dart';
+import 'package:provider/provider.dart';
 
 late String category;
 
@@ -32,35 +34,10 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
   deleted = true;
   editcontroller.text = "";
   Navigator.of(context).pop();
-  /*
-  
-  await Navigator.pushAndRemoveUntil(
-    context,
-    PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          const NewHomePage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    ),
-    (route) => false,
-  );
-  */
 
   habitGoalEdit = 0;
   updated = false;
-  dropDownChanged = false;
   editcontroller.clear();
   changed = false;
-  updatedIcon = startIcon;
+  Provider.of<HabitProvider>(context, listen: false).updatedIcon = startIcon;
 }

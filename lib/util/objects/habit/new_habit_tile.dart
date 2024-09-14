@@ -46,10 +46,10 @@ class _NewHabitTileState extends State<NewHabitTile> {
       onTap: () {
         habitGoalEdit = 0;
         updated = false;
-        dropDownChanged = false;
         editcontroller.text = "";
         changed = false;
-        updatedIcon = startIcon;
+        Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+            startIcon;
         deleted = false;
 
         Navigator.of(context)
@@ -73,9 +73,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
             habitBox.getAt(index)!.tag = habitTag;
             changeTag = true;
           }
-
-          context.read<HabitProvider>().changeNotification([]);
-
+          if (context.mounted) {
+            context.read<HabitProvider>().changeNotification([]);
+          }
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<HabitProvider>().setTagSelected("All");
           });
@@ -87,10 +87,12 @@ class _NewHabitTileState extends State<NewHabitTile> {
           habitGoalEdit = 0;
           deleted = false;
           updated = false;
-          dropDownChanged = false;
           editcontroller.clear();
           changed = false;
-          updatedIcon = startIcon;
+          if (context.mounted) {
+            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                startIcon;
+          }
         });
       },
       child: Slidable(

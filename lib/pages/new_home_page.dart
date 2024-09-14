@@ -17,7 +17,6 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 Icon startIcon = const Icon(Icons.book);
-Icon updatedIcon = startIcon;
 
 final habitBox = Hive.box<HabitData>('habits');
 final metadataBox = Hive.box<DateTime>('metadata');
@@ -30,7 +29,6 @@ final historicalBox = Hive.box<HistoricalHabit>('historicalHabits');
 final historicalHabitDataBox =
     Hive.box<HistoricalHabitData>('historicalHabitData');
 late HabitData myHabit;
-String dropDownValue = 'Any time';
 String habitTag = "";
 final player = AudioPlayer();
 
@@ -123,16 +121,23 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
                 .notescontroller
                 .clear();
             habitTag = "No tag";
-            updatedIcon = startIcon;
-            habitGoal = 0;
-            dropDownValue = 'Any time';
+            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                startIcon;
+            Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
+                0;
+            Provider.of<HabitProvider>(context, listen: false).dropDownValue =
+                'Any time';
             amountNameController.text = "times";
-            amountController.text = "2";
-            currentAmountValue = 2;
-            currentDurationValueMinutes = 0;
-            currentDurationValueHours = 0;
-            currentDurationValue = 0;
+            Provider.of<HabitProvider>(context, listen: false).amount = 2;
+            Provider.of<HabitProvider>(context, listen: false).durationMinutes =
+                0;
+            Provider.of<HabitProvider>(context, listen: false).durationHours =
+                0;
+            Provider.of<HabitProvider>(context, listen: false).duration = 0;
             createcontroller.text = "Habit Name";
+
+            Provider.of<HabitProvider>(context, listen: false)
+                .categoriesExpanded = false;
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return AddHabitPage(
@@ -152,17 +157,16 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
                 Provider.of<HabitProvider>(context, listen: false)
                     .notescontroller
                     .clear();
+
+                Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                    startIcon;
+
+                Provider.of<HabitProvider>(context, listen: false)
+                    .dropDownValue = 'Any time';
               }
               habitTag = "No tag";
-              updatedIcon = startIcon;
-              habitGoal = 0;
-              dropDownValue = 'Any time';
+
               amountNameController.text = "times";
-              amountController.text = "2";
-              currentAmountValue = 2;
-              currentDurationValueMinutes = 0;
-              currentDurationValueHours = 0;
-              currentDurationValue = 0;
               createcontroller.text = "Habit Name";
             });
           },

@@ -18,6 +18,16 @@ class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
   String mainCategory = "";
   bool somethingEdited = false;
+  Icon updatedIcon = startIcon;
+
+  String dropDownValue = 'Any time';
+
+  int habitGoalValue = 0;
+  int duration = 0;
+  int durationHours = 0;
+  int durationMinutes = 0;
+  int amount = 1;
+  TextEditingController habitGoalController = TextEditingController();
 
   TextEditingController notescontroller = TextEditingController();
 
@@ -37,6 +47,11 @@ class HabitProvider extends ChangeNotifier {
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
+
+  void updateDropDownValue(String value) {
+    dropDownValue = value;
+    notifyListeners();
+  }
 
   void updateSomethingEdited() {
     somethingEdited = true;
@@ -320,6 +335,7 @@ class HabitProvider extends ChangeNotifier {
 
     if (daysDifference > 0 || daysDifference < 0) {
       resetCompletionStatus();
+      saveHabitsForToday();
 
       if (userId != null) {
         await backupHiveBoxesToFirebase(userId);
