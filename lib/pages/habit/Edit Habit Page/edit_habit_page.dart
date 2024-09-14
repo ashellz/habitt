@@ -12,7 +12,6 @@ import "package:provider/provider.dart";
 int habitGoalEdit = 0;
 
 bool updated = false;
-bool dropDownChanged = false;
 
 final formKey = GlobalKey<FormState>();
 
@@ -124,13 +123,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                           margin: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: index == 0
                               ? statsPage(context, widget.index)
-                              : editPage(
-                                  setState,
-                                  context,
-                                  editcontroller,
-                                  desccontroller,
-                                  widget.index,
-                                  dropDownChanged),
+                              : editPage(setState, context, editcontroller,
+                                  desccontroller, widget.index),
                         );
                       },
                     ),
