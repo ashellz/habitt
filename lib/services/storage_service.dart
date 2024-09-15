@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/auth/loading_page.dart';
-import 'package:habit_tracker/pages/menu/settings_page.dart';
+import 'package:habit_tracker/pages/menu/profile_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -41,11 +42,17 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
         final storageRef =
             FirebaseStorage.instance.ref().child('$userId/$fileName');
         try {
-          print('Uploading file: ${file.path}');
+          if (kDebugMode) {
+            print('Uploading file: ${file.path}');
+          }
           await storageRef.putFile(file);
-          print('Successfully uploaded file: $fileName');
+          if (kDebugMode) {
+            print('Successfully uploaded file: $fileName');
+          }
         } catch (e) {
-          print('Failed to upload file: ${file.path}, error: $e');
+          if (kDebugMode) {
+            print('Failed to upload file: ${file.path}, error: $e');
+          }
         }
       }
     }
@@ -59,25 +66,33 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
       fontSize: 14.0,
     );
   } else {
-    print('Directory does not exist: $folderPath');
+    if (kDebugMode) {
+      print('Directory does not exist: $folderPath');
+    }
   }
 }
 
 Future<void> backupHiveBoxesToFirebase(String? userId) async {
   if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
-    print('User is not authenticated');
+    if (kDebugMode) {
+      print('User is not authenticated');
+    }
     return;
   }
 
   final hiveDirectory = await getHiveBoxesDirectory();
-  print('Hive directory: $hiveDirectory');
+  if (kDebugMode) {
+    print('Hive directory: $hiveDirectory');
+  }
   await ensureDirectoryExists(hiveDirectory);
   await uploadFolderToFirebase(hiveDirectory, userId);
 }
 
 Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
   if (userId == null) {
-    print('User is not authenticated');
+    if (kDebugMode) {
+      print('User is not authenticated');
+    }
     return;
   }
 
@@ -88,11 +103,17 @@ Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
   for (final item in listResult.items) {
     final file = File('$hiveDirectory/${item.name}');
     try {
-      print('Downloading file: ${item.name}');
+      if (kDebugMode) {
+        print('Downloading file: ${item.name}');
+      }
       await item.writeToFile(file);
-      print('Successfully downloaded file: ${item.name}');
+      if (kDebugMode) {
+        print('Successfully downloaded file: ${item.name}');
+      }
     } catch (e) {
-      print('Failed to download file: ${item.name}, error: $e');
+      if (kDebugMode) {
+        print('Failed to download file: ${item.name}, error: $e');
+      }
     }
   }
   dataDownloaded = true;
@@ -107,11 +128,17 @@ Future<void> newAccountDownloadData(BuildContext context) async {
   for (final item in listResult.items) {
     final file = File('$hiveDirectory/${item.name}');
     try {
-      print('Downloading file: ${item.name}');
+      if (kDebugMode) {
+        print('Downloading file: ${item.name}');
+      }
       await item.writeToFile(file);
-      print('Successfully downloaded file: ${item.name}');
+      if (kDebugMode) {
+        print('Successfully downloaded file: ${item.name}');
+      }
     } catch (e) {
-      print('Failed to download file: ${item.name}, error: $e');
+      if (kDebugMode) {
+        print('Failed to download file: ${item.name}, error: $e');
+      }
     }
   }
   dataDownloaded = true;
@@ -124,7 +151,9 @@ Future<void> deleteUserCloudStorage(context) async {
           const LoadingScreen(text: "Deleting account...")));
 
   if (userId == null) {
-    print('User is not authenticated');
+    if (kDebugMode) {
+      print('User is not authenticated');
+    }
     return;
   }
 
@@ -133,12 +162,18 @@ Future<void> deleteUserCloudStorage(context) async {
 
   for (final item in listResult.items) {
     try {
-      print('Deleting from cloud storage: ${item.name}');
+      if (kDebugMode) {
+        print('Deleting from cloud storage: ${item.name}');
+      }
       await item.delete();
-      print('Successfully deleted file from cloud storage: ${item.name}');
+      if (kDebugMode) {
+        print('Successfully deleted file from cloud storage: ${item.name}');
+      }
     } catch (e) {
-      print(
-          'Failed to delete file from cloud storage: ${item.name}, error: $e');
+      if (kDebugMode) {
+        print(
+            'Failed to delete file from cloud storage: ${item.name}, error: $e');
+      }
     }
   }
   await AuthService().deleteAccount();

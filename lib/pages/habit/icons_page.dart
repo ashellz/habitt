@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:icons_flutter/icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 Icon chosenIcon = const Icon(Icons.book);
 Icon theIcon = chosenIcon;
@@ -16,7 +18,7 @@ class IconsPage extends StatelessWidget {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         children: const [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(
               top: 20.0,
               left: 25.0,
@@ -96,9 +98,12 @@ class IconWidget extends StatelessWidget {
         height: 65,
         child: ElevatedButton(
           onPressed: () {
-            theIcon = icon;
+            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                icon;
             Navigator.pop(context);
             changed = true;
+            Provider.of<HabitProvider>(context, listen: false)
+                .updateSomethingEdited();
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),

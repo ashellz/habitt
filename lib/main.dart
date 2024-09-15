@@ -3,28 +3,33 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
+import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:habit_tracker/util/functions/hiveBoxes.dart';
-// import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -45,9 +50,13 @@ Future<void> main() async {
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
   Hive.registerAdapter(TagDataAdapter());
+  Hive.registerAdapter(HistoricalHabitAdapter());
+  Hive.registerAdapter(HistoricalHabitDataAdapter());
 
   await openHiveBoxes();
   await fillKeys();
+
+  saveHabitsForToday();
 
   checkForNotifications();
 
@@ -76,36 +85,28 @@ Future<void> main() async {
     frequency: const Duration(minutes: 15),
   );
 
-  runApp(ChangeNotifierProvider(
-      create: (context) => HabitProvider(), child: const MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => HabitProvider()),
+        ChangeNotifierProvider(create: (context) => HistoricalHabitProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 @pragma('vm:entry-point')
-void callbackDispatcher(context) {
+void callbackDispatcher(BuildContext context) {
   Workmanager().executeTask((task, inputData) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
     });
 
+    saveHabitsForToday();
     checkForNotifications();
-    // updateLastOpenedDate();
     return Future.value(true);
   });
-}
-
-void openCategory() {
-  if (morningHasHabits == true) {
-    morningVisible = true;
-  }
-  if (afternoonHasHabits == true) {
-    afternoonVisible = true;
-  }
-  if (eveningHasHabits == true) {
-    eveningVisible = true;
-  }
-  if (anytimeHasHabits == true) {
-    anyTimeVisible = true;
-  }
 }
 
 hasHabits() {
@@ -129,6 +130,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       title: 'Habit Tracker',
       theme: ThemeData(
@@ -151,7 +153,7 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Poppins',
             ),
       ),
-      home: AuthCheck(),
+      home: const AuthCheck(),
       routes: {
         "/home": (_) => const NewHomePage(),
       },
@@ -160,6 +162,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthCheck extends StatelessWidget {
+  const AuthCheck({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -172,6 +176,9 @@ class AuthCheck extends StatelessWidget {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
+            context.read<HistoricalHabitProvider>().calculateStreak();
+
+            saveHabitsForToday();
           });
           return const NewHomePage();
         } else {

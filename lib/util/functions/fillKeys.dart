@@ -6,6 +6,10 @@ Future<void> fillKeys() async {
     boolBox.put("firstTimeOpened", true);
   }
 
+  if (!boolBox.containsKey("12hourFormat")) {
+    boolBox.put("12hourFormat", false);
+  }
+
   if (!listBox.containsKey("morningNotificationTime")) {
     listBox.put("morningNotificationTime", [9, 0]);
   }

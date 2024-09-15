@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habit_tracker/pages/habit/notifications_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -16,9 +16,11 @@ late String editedTo;
 
 void editHabit(int index, BuildContext context, editcontroller) {
   editedFrom = habitBox.getAt(index)!.category;
-  editedTo = dropDownValue;
+  editedTo = Provider.of<HabitProvider>(context, listen: false).dropDownValue;
 
-  duration = durationMinutes + (durationHours * 60);
+  int duration = Provider.of<HabitProvider>(context, listen: false)
+          .durationMinutes +
+      (Provider.of<HabitProvider>(context, listen: false).durationHours * 60);
 
   int categoryHabits = 0;
   String category = editedFrom;
@@ -31,77 +33,79 @@ void editHabit(int index, BuildContext context, editcontroller) {
   if (categoryHabits < 2) {
     if (category == "Morning") {
       morningHasHabits = false;
-      morningVisible = false;
     } else if (category == "Afternoon") {
       afternoonHasHabits = false;
-      afternoonVisible = false;
     } else if (category == "Evening") {
       eveningHasHabits = false;
-      eveningVisible = false;
     } else if (category == "Any time") {
       anytimeHasHabits = false;
-      anyTimeVisible = false;
     }
   }
 
   habitBox.putAt(
       index,
       HabitData(
-          name: editcontroller.text,
-          completed: false,
-          icon: getIconString(updatedIcon.icon),
-          category: dropDownValue,
-          streak: habitBox.getAt(index)?.streak ?? 0,
-          amount: habitGoalEdit == 1 ? amount : habitBox.getAt(index)!.amount,
-          amountName: amountNameControllerEdit.text,
-          amountCompleted: 0,
-          duration: habitGoalEdit == 2
-              ? duration
-              : habitBox.getAt(index)?.duration ?? 0,
-          durationCompleted: 0,
-          skipped: false,
-          tag: habitTag,
-          notifications: editHabitNotifications));
+        name: editcontroller.text,
+        completed: false,
+        icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
+            .updatedIcon
+            .icon),
+        category:
+            Provider.of<HabitProvider>(context, listen: false).dropDownValue,
+        streak: habitBox.getAt(index)?.streak ?? 0,
+        amount: habitGoalEdit == 1
+            ? Provider.of<HabitProvider>(context, listen: false).amount
+            : habitBox.getAt(index)!.amount,
+        amountName: Provider.of<HabitProvider>(context, listen: false)
+            .habitGoalController
+            .text,
+        amountCompleted: 0,
+        duration: habitGoalEdit == 2
+            ? duration
+            : habitBox.getAt(index)?.duration ?? 0,
+        durationCompleted: 0,
+        skipped: false,
+        tag: habitTag,
+        notifications: editHabitNotifications,
+        notes: Provider.of<HabitProvider>(context, listen: false)
+            .notescontroller
+            .text,
+        longestStreak: habitBox.getAt(index)!.longestStreak,
+      ));
 
-  dropDownValue = 'Any time';
+  Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
+  if (context.mounted) {
+    Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
+  }
   if (editedFrom != editedTo) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().updateMainCategoryHeight();
     });
   }
 
-  openCategory("edited");
+  openCategory(context);
   // showPopup(context, "Habit edited!");
 }
 
-void openCategory(String key) {
+void openCategory(BuildContext context) {
+  var dropDownValue =
+      Provider.of<HabitProvider>(context, listen: false).dropDownValue;
+
   if (dropDownValue == "Morning") {
     if (morningHasHabits == false) {
       morningHasHabits = true;
-    }
-    if (morningVisible == false) {
-      morningVisible = true;
     }
   } else if (dropDownValue == "Afternoon") {
     if (afternoonHasHabits == false) {
       afternoonHasHabits = true;
     }
-    if (afternoonVisible == false) {
-      afternoonVisible = true;
-    }
   } else if (dropDownValue == "Evening") {
     if (eveningHasHabits == false) {
       eveningHasHabits = true;
     }
-    if (eveningVisible == false) {
-      eveningVisible = true;
-    }
   } else if (dropDownValue == "Any time") {
     if (anytimeHasHabits == false) {
       anytimeHasHabits = true;
-    }
-    if (anyTimeVisible == false) {
-      anyTimeVisible = true;
     }
   }
 }

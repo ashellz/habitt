@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
-import 'package:numberpicker/numberpicker.dart';
+import 'package:habit_tracker/util/objects/habit/choose_notification_time.dart';
 import 'package:provider/provider.dart';
 
 List editHabitNotifications = [];
@@ -14,6 +17,23 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  BannerAd? _banner;
+
+  @override
+  void initState() {
+    super.initState();
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _banner = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+  }
+
   @override
   Widget build(BuildContext context) {
     editHabitNotifications = context.watch<HabitProvider>().habitNotifications;
@@ -23,6 +43,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
       ),
+      bottomNavigationBar: _banner == null
+          ? Container()
+          : SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: AdWidget(ad: _banner!),
+            ),
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
@@ -51,6 +78,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               onPressed: () {
                 setState(() {
                   editHabitNotifications.add([0, 0]);
+                  context.read<HabitProvider>().updateSomethingEdited();
                 });
               }),
         ],
@@ -59,9 +87,42 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
 }
 
-Widget notificationTile(List<int> notification, context) {
-  int notificationHour = notification[0];
-  int notificationMinute = notification[1];
+Widget notificationTile(List<int> notification, BuildContext context) {
+  late String timeString;
+
+  void getTimeString() {
+    if (boolBox.get("12hourFormat")!) {
+      if (notification[0] > 12) {
+        timeString = "PM";
+      } else {
+        timeString = "AM";
+      }
+    }
+  }
+
+  String getTime() {
+    String time = "";
+
+    if (boolBox.get("12hourFormat")!) {
+      if (notification[0] > 12) {
+        time =
+            "${notification[0] - 12 < 10 ? "0${notification[0] - 12}" : notification[0] - 12}:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
+      } else if (notification[0] == 0) {
+        time =
+            "12:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
+      } else {
+        time =
+            "${notification[0] < 10 ? "0${notification[0]}" : notification[0]}:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
+      }
+    } else {
+      time =
+          "${notification[0] < 10 ? "0${notification[0]}" : notification[0]}:${notification[1] < 10 ? "0${notification[1]}" : notification[1]}";
+    }
+
+    return time;
+  }
+
+  getTimeString();
 
   return StatefulBuilder(
       builder: (BuildContext context, StateSetter mystate) => Stack(
@@ -69,12 +130,13 @@ Widget notificationTile(List<int> notification, context) {
             children: [
               Container(
                   padding: const EdgeInsets.all(20.0),
-                  height: 120,
+                  height: 100,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: theColor, borderRadius: BorderRadius.circular(20)),
+                      color: Colors.grey.shade900,
+                      borderRadius: BorderRadius.circular(20)),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Icon(
@@ -82,86 +144,37 @@ Widget notificationTile(List<int> notification, context) {
                           color: Colors.white,
                           size: 44,
                         ),
-                        const SizedBox(width: 20.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Hour",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold)),
-                                  NumberPicker(
-                                      zeroPad: true,
-                                      haptics: true,
-                                      infiniteLoop: true,
-                                      itemHeight: 40,
-                                      itemWidth: 40,
-                                      minValue: 0,
-                                      maxValue: 23,
-                                      value: notificationHour,
-                                      axis: Axis.horizontal,
-                                      selectedTextStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      onChanged: (value) {
-                                        mystate(() {
-                                          notificationHour = value;
-                                          notification[0] =
-                                              value; //this is updated right to habitBox
-                                        });
-                                      })
-                                ],
-                              ),
+                        TextButton(
+                            style: ButtonStyle(
+                              overlayColor: WidgetStatePropertyAll(theColor),
                             ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Minute",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold)),
-                                  NumberPicker(
-                                      zeroPad: true,
-                                      haptics: true,
-                                      infiniteLoop: true,
-                                      itemHeight: 40,
-                                      itemWidth: 40,
-                                      minValue: 0,
-                                      maxValue: 59,
-                                      value: notificationMinute,
-                                      axis: Axis.horizontal,
-                                      selectedTextStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      onChanged: (value) {
-                                        mystate(() {
-                                          notificationMinute = value;
-
-                                          notification[1] =
-                                              value; //this is updated right to habitBox
-                                        });
-                                      })
-                                ],
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => chooseNotificationTime(
+                                      notification, mystate, context)).then(
+                                  (mystate) {
+                                getTimeString();
+                              });
+                            },
+                            child: Text(
+                              getTime(),
+                              style: TextStyle(
+                                  color: theLightColor,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                        boolBox.get("12hourFormat")!
+                            ? Text(
+                                timeString,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : const SizedBox(
+                                width: 50,
                               ),
-                            ),
-                          ],
-                        ),
                       ])),
               IconButton(
                 onPressed: () {

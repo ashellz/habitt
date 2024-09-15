@@ -60,6 +60,10 @@ class SignupPage extends StatelessWidget {
                             color: Colors.grey,
                           ),
                         ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
                         prefixIcon: const Icon(Icons.person_outline_rounded,
                             color: Colors.white),
                         contentPadding: const EdgeInsets.symmetric(
@@ -101,6 +105,10 @@ class SignupPage extends StatelessWidget {
                           borderSide: const BorderSide(
                             color: Colors.grey,
                           ),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.black),
                         ),
                         prefixIcon: const Icon(Icons.mail_outline_rounded,
                             color: Colors.white),
@@ -157,6 +165,10 @@ class SignupPage extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                         labelText: "PASSWORD",
                         border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.black),
                         ),

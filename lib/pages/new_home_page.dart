@@ -1,21 +1,22 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/habit/add_habit_page.dart';
+import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/calculateHeight.dart';
 import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
-import 'package:habit_tracker/util/functions/updateLastOpenedDate.dart';
-import 'package:habit_tracker/util/objects/new_habit_tile.dart';
+import 'package:habit_tracker/util/objects/habit/new_habit_tile.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 Icon startIcon = const Icon(Icons.book);
-Icon updatedIcon = startIcon;
 
 final habitBox = Hive.box<HabitData>('habits');
 final metadataBox = Hive.box<DateTime>('metadata');
@@ -24,18 +25,14 @@ final boolBox = Hive.box<bool>('bool');
 final stringBox = Hive.box<String>('string');
 final listBox = Hive.box<List>('list');
 final tagBox = Hive.box<TagData>('tags');
+final historicalBox = Hive.box<HistoricalHabit>('historicalHabits');
+final historicalHabitDataBox =
+    Hive.box<HistoricalHabitData>('historicalHabitData');
 late HabitData myHabit;
-String dropDownValue = 'Any time';
 String habitTag = "";
 final player = AudioPlayer();
 
-bool eveningVisible = false,
-    anyTimeVisible = false,
-    afternoonVisible = false,
-    morningVisible = false,
-    changed = false,
-    keepData = false,
-    deleted = false;
+bool changed = false, keepData = false, deleted = false;
 
 List<String> categoriesList = ['All'];
 List<String> tagsList = [
@@ -46,6 +43,17 @@ List<String> tagsList = [
   'Workout',
 ];
 
+List<String> greetingTexts = [
+  "Hi there",
+  "Hey there",
+  "Hello there",
+  "Hello",
+  "Hi",
+  "Hey",
+  "What's up?",
+];
+String greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
+
 final pageController = PageController(initialPage: 0);
 
 class NewHomePage extends StatefulWidget {
@@ -55,13 +63,26 @@ class NewHomePage extends StatefulWidget {
   State<NewHomePage> createState() => _NewHomePageState();
 }
 
-class _NewHomePageState extends State<NewHomePage> {
+class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    updateLastOpenedDate();
+    WidgetsBinding.instance.addObserver(this);
+
     hasHabits();
-    openCategory();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<HabitProvider>().updateLastOpenedDate();
+    }
   }
 
   @override
@@ -96,16 +117,29 @@ class _NewHomePageState extends State<NewHomePage> {
             ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            updatedIcon = startIcon;
-            habitGoal = 0;
-            dropDownValue = 'Any time';
-            amountNameController.text = "times";
-            amountController.text = "2";
-            currentAmountValue = 2;
-            currentDurationValueHours = 0;
-            currentDurationValueMinutes = 0;
-            createcontroller.text = "Habit Name";
+            Provider.of<HabitProvider>(context, listen: false)
+                .notescontroller
+                .clear();
             habitTag = "No tag";
+            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                startIcon;
+            Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
+                0;
+            Provider.of<HabitProvider>(context, listen: false).dropDownValue =
+                'Any time';
+            Provider.of<HabitProvider>(context, listen: false)
+                .habitGoalController
+                .text = "times";
+            Provider.of<HabitProvider>(context, listen: false).amount = 2;
+            Provider.of<HabitProvider>(context, listen: false).durationMinutes =
+                0;
+            Provider.of<HabitProvider>(context, listen: false).durationHours =
+                0;
+            Provider.of<HabitProvider>(context, listen: false).duration = 0;
+            createcontroller.text = "Habit Name";
+
+            Provider.of<HabitProvider>(context, listen: false)
+                .categoriesExpanded = false;
 
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return AddHabitPage(
@@ -120,15 +154,21 @@ class _NewHomePageState extends State<NewHomePage> {
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut,
               );
+
+              if (context.mounted) {
+                Provider.of<HabitProvider>(context, listen: false)
+                    .notescontroller
+                    .clear();
+
+                Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                    startIcon;
+
+                Provider.of<HabitProvider>(context, listen: false)
+                    .dropDownValue = 'Any time';
+              }
               habitTag = "No tag";
-              updatedIcon = startIcon;
-              habitGoal = 0;
-              dropDownValue = 'Any time';
+
               amountNameController.text = "times";
-              amountController.text = "2";
-              currentAmountValue = 2;
-              currentDurationValueHours = 0;
-              currentDurationValueMinutes = 0;
               createcontroller.text = "Habit Name";
             });
           },
@@ -205,9 +245,9 @@ Widget header(username) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text(
-        "Hi there",
-        style: TextStyle(
+      Text(
+        greetingText,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 24,
           fontWeight: FontWeight.bold,
@@ -701,7 +741,6 @@ void fillTagsList(BuildContext context) {
 }
 
 Future<void> playSound() async {
-  print("the functio nwas run");
   await player.play(AssetSource('sound/complete3.mp3'));
 }
 

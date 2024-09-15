@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_tile.dart';
-import 'package:habit_tracker/pages/habit/edit_habit_page.dart';
+import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
-import 'package:habit_tracker/util/objects/complete_habit.dart';
+import 'package:habit_tracker/util/objects/habit/complete_habit.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -46,10 +46,10 @@ class _NewHabitTileState extends State<NewHabitTile> {
       onTap: () {
         habitGoalEdit = 0;
         updated = false;
-        dropDownChanged = false;
         editcontroller.text = "";
         changed = false;
-        updatedIcon = startIcon;
+        Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+            startIcon;
         deleted = false;
 
         Navigator.of(context)
@@ -59,6 +59,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
+          if (context.mounted) {
+            context.read<HabitProvider>().resetSomethingEdited();
+          }
           bool changeTag = true;
           for (int i = 0; i < tagBox.length; i++) {
             if (tagBox.getAt(i)!.tag == habitBox.getAt(index)!.tag) {
@@ -70,9 +73,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
             habitBox.getAt(index)!.tag = habitTag;
             changeTag = true;
           }
-
-          context.read<HabitProvider>().changeNotification([]);
-
+          if (context.mounted) {
+            context.read<HabitProvider>().changeNotification([]);
+          }
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<HabitProvider>().setTagSelected("All");
           });
@@ -84,10 +87,12 @@ class _NewHabitTileState extends State<NewHabitTile> {
           habitGoalEdit = 0;
           deleted = false;
           updated = false;
-          dropDownChanged = false;
           editcontroller.clear();
           changed = false;
-          updatedIcon = startIcon;
+          if (context.mounted) {
+            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+                startIcon;
+          }
         });
       },
       child: Slidable(
@@ -154,9 +159,14 @@ class HabitTile extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            truncatedText(context, habitBox.getAt(index)!.name),
-            style: textStyleCompletedCheck(),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.45,
+            child: Text(
+              habitBox.getAt(index)!.name,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: textStyleCompletedCheck(),
+            ),
           ),
           StreakDisplay(habitBox: habitBox, index: index),
         ],
@@ -491,37 +501,4 @@ void checkCompleteHabit(
   } else {
     context.read<HabitProvider>().completeHabitProvider(index);
   }
-}
-
-String truncatedText(BuildContext context, String text) {
-  double screenWidth = MediaQuery.of(context).size.width;
-  int maxLength;
-
-  if (screenWidth < 270) {
-    maxLength = 6; // very very small screen
-  } else if (screenWidth < 320) {
-    maxLength = 10; // very small screen
-  } else if (screenWidth < 370) {
-    maxLength = 12; // small screen
-  } else if (screenWidth < 400) {
-    maxLength = 14; // small screen
-  } else if (screenWidth < 450) {
-    maxLength = 16; // medium screen
-  } else if (screenWidth < 500) {
-    maxLength = 18; // larger medium screen
-  } else if (screenWidth < 550) {
-    maxLength = 20; // large screen
-  } else if (screenWidth < 600) {
-    maxLength = 24; // larger screen
-  } else if (screenWidth < 700) {
-    maxLength = 30; // very large screen
-  } else {
-    maxLength = 35; // very very large screen
-  }
-
-  String name = text;
-  if (name.length > maxLength) {
-    return '${name.substring(0, maxLength)}...';
-  }
-  return name;
 }

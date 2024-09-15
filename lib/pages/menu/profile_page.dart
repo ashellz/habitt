@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/confirm_delete_account.dart';
-import 'package:habit_tracker/util/objects/confirm_sign_out.dart';
-import 'package:habit_tracker/util/objects/change_username.dart';
+import 'package:habit_tracker/util/objects/profile/confirm_delete_account.dart';
+import 'package:habit_tracker/util/objects/profile/confirm_sign_out.dart';
+import 'package:habit_tracker/util/objects/profile/change_username.dart';
 
 bool uploadButtonEnabled = true;
 
@@ -18,6 +20,67 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  BannerAd? _banner;
+  RewardedAd? _rewardedAd;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (uploadButtonEnabled) {
+      setState(() {
+        uploadButtonEnabled = true;
+      });
+    }
+    _createBannerAd();
+    _createRewardedAd();
+  }
+
+  void _createRewardedAd() {
+    RewardedAd.load(
+      adUnitId: AdMobService.rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) => setState(() => _rewardedAd = ad),
+        onAdFailedToLoad: (error) => setState(() => _rewardedAd = null),
+      ),
+    );
+  }
+
+  void _createBannerAd() {
+    _banner = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+  }
+
+  void showRewardedAd() {
+    if (_rewardedAd != null) {
+      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          ad.dispose();
+          _createRewardedAd();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          ad.dispose();
+          _createRewardedAd();
+        },
+      );
+      _rewardedAd!.show(onUserEarnedReward: (ad, reward) {
+        uploadData();
+      });
+      _rewardedAd = null;
+    }
+  }
+
+  void uploadData() {
+    setState(() => uploadButtonEnabled = false);
+    backupHiveBoxesToFirebase(userId)
+        .then((value) => setState(() => uploadButtonEnabled = true));
+  }
+
   @override
   Widget build(BuildContext context) {
     void updateUsername(changeUsernameController) {
@@ -25,12 +88,6 @@ class _ProfilePageState extends State<ProfilePage> {
         stringBox.put('username', changeUsernameController);
       });
     }
-
-    /*
-    Future<void> updateEmail(changeEmailController, password) async {
-      await AuthService()
-          .updateEmail(userEmail, password, changeEmailController);
-    }*/
 
     if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
       return Scaffold(
@@ -57,6 +114,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           )),
         ),
+        bottomNavigationBar: _banner == null
+            ? Container()
+            : Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                height: 52,
+                child: AdWidget(ad: _banner!),
+              ),
       );
     } else {
       return Scaffold(
@@ -147,9 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: !uploadButtonEnabled
                         ? null
                         : () {
-                            setState(() => uploadButtonEnabled = false);
-                            backupHiveBoxesToFirebase(userId).whenComplete(() =>
-                                setState(() => uploadButtonEnabled = true));
+                            showRewardedAd();
                           },
                     child: Text(
                         textAlign: TextAlign.center,
@@ -207,6 +269,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 ]),
           ],
         ),
+        bottomNavigationBar: _banner == null
+            ? Container()
+            : SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                child: AdWidget(ad: _banner!),
+              ),
       );
     }
   }

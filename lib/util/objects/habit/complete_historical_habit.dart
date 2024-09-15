@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
-Widget completeHabitDialog(int index) {
+Widget completeHistoricalHabitDialog(
+    int index, BuildContext context, DateTime time, bool isToday) {
   bool amountCheck = false;
 
-  if (habitBox.getAt(index)!.amount > 1) amountCheck = true;
+  var habit =
+      context.read<HistoricalHabitProvider>().getHistoricalHabitAt(index, time);
 
-  int theAmountValue = habitBox.getAt(index)!.amountCompleted;
-  int theDurationValueHours = habitBox.getAt(index)!.durationCompleted ~/ 60;
-  int theDurationValueMinutes = habitBox.getAt(index)!.durationCompleted % 60;
+  if (habit.amount > 1) amountCheck = true;
+
+  int theAmountValue = habit.amountCompleted;
+  int theDurationValueHours = habit.durationCompleted ~/ 60;
+  int theDurationValueMinutes = habit.durationCompleted % 60;
 
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
@@ -49,7 +53,7 @@ Widget completeHabitDialog(int index) {
                         fillColor: Colors.grey.shade900,
                       ),
                       min: 0,
-                      max: habitBox.getAt(index)!.amount - 1,
+                      max: habit.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
                         Vibration.vibrate(duration: 10);
@@ -57,13 +61,13 @@ Widget completeHabitDialog(int index) {
                       }),
                     ),
                     const SizedBox(height: 5),
-                    Text(habitBox.getAt(index)!.amountName)
+                    Text(habit.amountName)
                   ],
                 ),
               if (!amountCheck)
                 Column(
                   children: [
-                    if (habitBox.getAt(index)!.duration > 60)
+                    if (habit.duration > 60)
                       SpinBox(
                         cursorColor: Colors.white,
                         iconColor: WidgetStateProperty.all<Color>(Colors.white),
@@ -87,17 +91,16 @@ Widget completeHabitDialog(int index) {
                           labelText: "HOURS",
                         ),
                         min: 0,
-                        max: (habitBox.getAt(index)!.duration ~/ 60).toDouble(),
+                        max: (habit.duration ~/ 60).toDouble(),
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
                           Vibration.vibrate(duration: 10);
                           theDurationValueHours = value.toInt();
-                          if (theDurationValueHours ==
-                              (habitBox.getAt(index)!.duration ~/ 60)) {
+                          if (theDurationValueHours == (habit.duration ~/ 60)) {
                             if (theDurationValueMinutes >
-                                (habitBox.getAt(index)!.duration % 60 - 1)) {
+                                (habit.duration % 60 - 1)) {
                               theDurationValueMinutes =
-                                  (habitBox.getAt(index)!.duration % 60 - 1);
+                                  (habit.duration % 60 - 1);
                             }
                           }
                         }),
@@ -126,9 +129,9 @@ Widget completeHabitDialog(int index) {
                       ),
                       min: 0,
                       max: theDurationValueHours.toDouble() <
-                              habitBox.getAt(index)!.duration ~/ 60
+                              habit.duration ~/ 60
                           ? 59
-                          : habitBox.getAt(index)!.duration % 60 - 1,
+                          : habit.duration % 60 - 1,
                       value: theDurationValueMinutes.toDouble(),
                       onChanged: (value) => mystate(() {
                         theDurationValueMinutes = value.toInt();
@@ -151,7 +154,13 @@ Widget completeHabitDialog(int index) {
                     ),
                     backgroundColor: WidgetStatePropertyAll(theLightColor)),
                 onPressed: () {
-                  context.read<HabitProvider>().completeHabitProvider(index);
+                  if (isToday) {
+                    context.read<HabitProvider>().completeHabitProvider(index);
+                  } else {
+                    context
+                        .read<HistoricalHabitProvider>()
+                        .completeHistoricalHabit(index, habit, time);
+                  }
                   Navigator.pop(context);
                 },
                 child: const Text(
@@ -172,14 +181,32 @@ Widget completeHabitDialog(int index) {
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {
-                      context
-                          .read<HabitProvider>()
-                          .applyAmountCompleted(index, theAmountValue);
+                      if (isToday) {
+                        context
+                            .read<HabitProvider>()
+                            .applyAmountCompleted(index, theAmountValue);
+                      } else {
+                        context
+                            .read<HistoricalHabitProvider>()
+                            .applyHistoricalAmountCompleted(
+                                habit, theAmountValue, time, index);
+                      }
                     } else {
-                      context.read<HabitProvider>().applyDurationCompleted(
-                          index,
-                          theDurationValueHours,
-                          theDurationValueMinutes);
+                      if (isToday) {
+                        context.read<HabitProvider>().applyDurationCompleted(
+                            index,
+                            theDurationValueHours,
+                            theDurationValueMinutes);
+                      } else {
+                        context
+                            .read<HistoricalHabitProvider>()
+                            .applyHistoricalDurationCompleted(
+                                habit,
+                                theDurationValueHours,
+                                theDurationValueMinutes,
+                                time,
+                                index);
+                      }
                     }
                     Navigator.pop(context);
                   });

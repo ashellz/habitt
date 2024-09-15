@@ -1,12 +1,39 @@
 import "package:flutter/material.dart";
+import "package:google_mobile_ads/google_mobile_ads.dart";
+import "package:habit_tracker/pages/menu/calendar_page.dart";
 import "package:habit_tracker/pages/menu/changelog_page.dart";
 import "package:habit_tracker/pages/menu/profile_page.dart";
 import "package:habit_tracker/pages/menu/settings_page.dart";
-import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/services/ad_mob_service.dart";
+import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
+import "package:provider/provider.dart";
 
-class MenuPage extends StatelessWidget {
+class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
+
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  BannerAd? _banner;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _banner = BannerAd(
+      size: AdSize.fullBanner,
+      adUnitId: AdMobService.bannerAdUnitId,
+      listener: AdMobService.bannerAdListener,
+      request: const AdRequest(),
+    )..load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +46,22 @@ class MenuPage extends StatelessWidget {
         children: [
           buildHeader(context),
           buildMenuItems(context),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-                "Signed in as: ${boolBox.get('isGuest')! ? 'Guest' : stringBox.get('username') ?? 'Guest'}",
-                style: const TextStyle(color: Colors.white, fontSize: 16)),
-          ),
+          Container(),
         ],
       ),
+      bottomNavigationBar: _banner == null
+          ? Container()
+          : SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: AdWidget(ad: _banner!),
+            ),
     );
   }
 }
 
 Widget buildHeader(BuildContext context) {
-  int streak = streakBox.get('allHabitsCompletedStreak') ?? 0;
+  int streak = context.watch<HabitProvider>().allHabitsCompletedStreak;
   return SizedBox(
     height: MediaQuery.of(context).size.height / 6,
     child: Padding(
@@ -67,6 +96,22 @@ Widget buildMenuItems(BuildContext context) => Center(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            ListTile(
+                leading: const Icon(
+                  Icons.calendar_month,
+                  color: Colors.white,
+                  size: 25,
+                ),
+                title: const Text(
+                  'Calendar',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CalendarPage(),
+                      ),
+                    )),
             ListTile(
                 leading: const Icon(
                   Icons.settings,

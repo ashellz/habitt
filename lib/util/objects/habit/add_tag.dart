@@ -136,8 +136,8 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
-                          tagBox.put(
-                              "tags", TagData(tag: tagNameController.text));
+
+                          tagBox.add(TagData(tag: tagNameController.text));
 
                           Navigator.pop(context);
                         },

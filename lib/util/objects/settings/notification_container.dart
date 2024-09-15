@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/checkForNotifications.dart';
-import 'package:habit_tracker/util/objects/choose_notification_time.dart';
+import 'package:habit_tracker/util/objects/habit/choose_notification_time.dart';
 
 Widget notificationContainer(String category) {
   late String box;
@@ -78,7 +78,8 @@ Widget notificationContainer(String category) {
                   showModalBottomSheet(
                       enableDrag: false,
                       context: context,
-                      builder: (context) => chooseNotificationTime(category));
+                      builder: (context) =>
+                          chooseNotificationTime(category, setState, context));
                 },
                 child: const Text("Choose time",
                     style: TextStyle(
