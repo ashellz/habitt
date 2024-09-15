@@ -306,9 +306,9 @@ class _HabitGoalState extends State<HabitGoal> {
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
                   Vibration.vibrate(duration: 10);
-                  setState(() => context
-                      .watch<HabitProvider>()
-                      .durationMinutes = value.toInt());
+                  setState(() =>
+                      Provider.of<HabitProvider>(context, listen: false)
+                          .durationMinutes = value.toInt());
                 },
               ),
             ],

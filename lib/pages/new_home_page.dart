@@ -127,7 +127,9 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
                 0;
             Provider.of<HabitProvider>(context, listen: false).dropDownValue =
                 'Any time';
-            amountNameController.text = "times";
+            Provider.of<HabitProvider>(context, listen: false)
+                .habitGoalController
+                .text = "times";
             Provider.of<HabitProvider>(context, listen: false).amount = 2;
             Provider.of<HabitProvider>(context, listen: false).durationMinutes =
                 0;

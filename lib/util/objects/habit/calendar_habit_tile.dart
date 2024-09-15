@@ -123,7 +123,8 @@ class HabitTile extends StatelessWidget {
         color: habit.completed ? Colors.grey.shade700 : Colors.white,
       ),
       title: Text(
-        truncatedText(context, habit.name),
+        habit.name,
+        overflow: TextOverflow.ellipsis,
         style: textStyleCompletedCheck(),
       ),
       trailing: CheckBox(
@@ -406,37 +407,4 @@ void checkCompleteHabit(
           .completeHistoricalHabit(index, habit, time);
     }
   }
-}
-
-String truncatedText(BuildContext context, String text) {
-  double screenWidth = MediaQuery.of(context).size.width;
-  int maxLength;
-
-  if (screenWidth < 270) {
-    maxLength = 6; // very very small screen
-  } else if (screenWidth < 320) {
-    maxLength = 10; // very small screen
-  } else if (screenWidth < 370) {
-    maxLength = 12; // small screen
-  } else if (screenWidth < 400) {
-    maxLength = 14; // small screen
-  } else if (screenWidth < 450) {
-    maxLength = 16; // medium screen
-  } else if (screenWidth < 500) {
-    maxLength = 18; // larger medium screen
-  } else if (screenWidth < 550) {
-    maxLength = 20; // large screen
-  } else if (screenWidth < 600) {
-    maxLength = 24; // larger screen
-  } else if (screenWidth < 700) {
-    maxLength = 30; // very large screen
-  } else {
-    maxLength = 35; // very very large screen
-  }
-
-  String name = text;
-  if (name.length > maxLength) {
-    return '${name.substring(0, maxLength)}...';
-  }
-  return name;
 }

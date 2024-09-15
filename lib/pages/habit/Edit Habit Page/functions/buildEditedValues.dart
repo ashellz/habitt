@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 void buildEditedValues(
     BuildContext context, int index, TextEditingController editcontroller) {
   if (!changed) {
-    context.watch<HabitProvider>().updatedIcon = Icon(getIcon(index));
+    Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+        Icon(getIcon(index));
   }
 
   if (!updated) {
@@ -21,7 +22,8 @@ void buildEditedValues(
     int durationMinutes =
         Provider.of<HabitProvider>(context, listen: false).durationMinutes;
 
-    context.watch<HabitProvider>().categoriesExpanded = false;
+    Provider.of<HabitProvider>(context, listen: false).categoriesExpanded =
+        false;
     if (habitBox.getAt(index)!.amount > 1) {
       habitGoalEdit = 1;
       amount = habitBox.getAt(index)!.amount;
@@ -64,14 +66,13 @@ void buildEditedValues(
       context
           .read<HabitProvider>()
           .changeNotification(List.from(habitBox.getAt(index)!.notifications));
+      context
+          .read<HabitProvider>()
+          .updateDropDownValue(habitBox.getAt(index)!.category);
     });
 
-    context.watch<HabitProvider>().notescontroller.text =
+    Provider.of<HabitProvider>(context, listen: false).notescontroller.text =
         habitBox.getAt(index)!.notes;
-
-    context
-        .read<HabitProvider>()
-        .updateDropDownValue(habitBox.getAt(index)!.category);
 
     updated = true;
   }

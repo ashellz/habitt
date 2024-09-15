@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/functions/buildEditedValues.dart";
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/pages/edit_page.dart";
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/widgets/popup_button.dart";
@@ -44,13 +45,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
     bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     PageController pageController = PageController();
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black, actions: [
-        PopUpButton(widget: widget, editcontroller: editcontroller),
-      ]),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
             splashFactory: NoSplash.splashFactory,
@@ -88,48 +85,60 @@ class _EditHabitPageState extends State<EditHabitPage> {
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            ListView(
-                padding: const EdgeInsets.only(bottom: 60, left: 10, right: 10),
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  HabitDisplay(
-                    controller: editcontroller,
-                    topPadding: 20,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  //PAGE VIEW
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.9,
-                    child: PageView.builder(
-                      onPageChanged: (value) {
-                        if (value == 0) {
-                          setState(() {
-                            currentIndex = 0;
-                          });
-                        } else {
-                          setState(() {
-                            currentIndex = 1;
-                          });
-                        }
-                      },
-                      physics: const BouncingScrollPhysics(),
-                      controller: pageController,
-                      itemCount: 2,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: index == 0
-                              ? statsPage(context, widget.index)
-                              : editPage(setState, context, editcontroller,
-                                  desccontroller, widget.index),
-                        );
-                      },
-                    ),
-                  ),
-                ]),
+            CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
+              ExpandableAppBar(
+                actionsWidget:
+                    PopUpButton(widget: widget, editcontroller: editcontroller),
+                title: "Habit Info",
+              ),
+              SliverToBoxAdapter(
+                  child: Column(children: [
+                HabitDisplay(
+                  controller: editcontroller,
+                  topPadding: 20,
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      children: [
+                        //PAGE VIEW
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.9,
+                          child: PageView.builder(
+                            onPageChanged: (value) {
+                              if (value == 0) {
+                                setState(() {
+                                  currentIndex = 0;
+                                });
+                              } else {
+                                setState(() {
+                                  currentIndex = 1;
+                                });
+                              }
+                            },
+                            physics: const BouncingScrollPhysics(),
+                            controller: pageController,
+                            itemCount: 2,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: index == 0
+                                    ? statsPage(context, widget.index)
+                                    : editPage(
+                                        setState,
+                                        context,
+                                        editcontroller,
+                                        desccontroller,
+                                        widget.index),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ))
+              ])),
+            ]),
 
             // SAVE BUTTON
             SaveButton(
@@ -139,6 +148,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
           ],
         ),
       ),
-    ));
+    );
   }
 }

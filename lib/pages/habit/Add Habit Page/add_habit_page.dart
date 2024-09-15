@@ -7,6 +7,7 @@ import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_display.dart";
 import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_goal.dart";
 import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_name_textfield.dart";
 import "package:habit_tracker/pages/habit/Shared%20Widgets/notes_text_field.dart";
+import "package:habit_tracker/pages/habit/notifications_page.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:provider/provider.dart";
@@ -59,7 +60,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
               controller: scrollController,
               physics: const BouncingScrollPhysics(),
               slivers: [
-                const ExpandableAppBar(),
+                ExpandableAppBar(
+                  actionsWidget: notificationBell(context),
+                  title: "New Habit",
+                ),
                 SliverToBoxAdapter(
                   child: Column(children: [
                     HabitDisplay(
@@ -130,4 +134,36 @@ class _AddHabitPageState extends State<AddHabitPage> {
       ),
     );
   }
+}
+
+Widget notificationBell(BuildContext context) {
+  return IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const NotificationsPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              const curve = Curves.ease;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
+      icon: const Icon(
+        Icons.notifications,
+        size: 30,
+        color: Colors.white,
+      ));
 }
