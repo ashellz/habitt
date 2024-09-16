@@ -194,8 +194,23 @@ class LoginPage extends StatelessWidget {
                         icon: Bootstrap.google,
                         signInFunction: AuthService().signInWithGoogle),
                     SignInMethod(
-                        icon: Bootstrap.github,
-                        signInFunction: AuthService().signInWithGitHub),
+                        icon: Bootstrap.facebook,
+                        signInFunction: AuthService().signInWithFacebook),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: IconButton(
+                            onPressed: () async {
+                              return await AuthService().signInWithGitHub();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey.shade900,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15.0)),
+                              ),
+                            ),
+                            icon: const Icon(Bootstrap.github,
+                                color: Colors.white38, size: 25)))
                   ]),
                 ],
               ),

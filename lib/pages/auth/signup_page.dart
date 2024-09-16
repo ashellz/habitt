@@ -261,6 +261,9 @@ class SignupPage extends StatelessWidget {
                       SignInMethod(
                           icon: Bootstrap.github,
                           signInFunction: AuthService().signInWithGitHub),
+                      SignInMethod(
+                          icon: Bootstrap.facebook,
+                          signInFunction: AuthService().signInWithFacebook)
                     ],
                   ),
                 ],

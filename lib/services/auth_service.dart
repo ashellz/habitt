@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habit_tracker/pages/auth/loading_page.dart';
@@ -211,9 +212,17 @@ class AuthService {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithGitHub() async {
+  signInWithGitHub() async {
     GithubAuthProvider githubProvider = GithubAuthProvider();
     return await FirebaseAuth.instance.signInWithProvider(githubProvider);
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    final LoginResult result = await FacebookAuth.instance.login();
+    final credential =
+        FacebookAuthProvider.credential(result.accessToken!.token);
+
+    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<void> signInAnonimusly() async {
