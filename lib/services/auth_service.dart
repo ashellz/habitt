@@ -184,8 +184,11 @@ class AuthService {
           ),
         ),
       );
+
       stringBox.put("username", "Guest");
-      addInitialData();
+      deleteGuestHabits().then((value) {
+        Restart.restartApp();
+      });
     }
   }
 

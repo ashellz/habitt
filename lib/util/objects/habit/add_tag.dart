@@ -8,7 +8,9 @@ import 'package:habit_tracker/util/functions/validate_text.dart';
 GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 class AddTagWidget extends StatefulWidget {
-  const AddTagWidget({super.key});
+  const AddTagWidget({super.key, required this.mystate});
+
+  final StateSetter mystate;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -92,7 +94,7 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                       flex: 4,
                       child: SizedBox(
                         child: TextFormField(
-                          validator: validateText,
+                          validator: validateTag,
                           focusNode: _focusNode,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(25)
@@ -136,8 +138,9 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                           if (!formKey.currentState!.validate()) {
                             return;
                           }
-
-                          tagBox.add(TagData(tag: tagNameController.text));
+                          widget.mystate(() {
+                            tagBox.add(TagData(tag: tagNameController.text));
+                          });
 
                           Navigator.pop(context);
                         },

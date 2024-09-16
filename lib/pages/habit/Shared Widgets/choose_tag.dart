@@ -55,7 +55,7 @@ class _ChooseTagState extends State<ChooseTag> {
                   isScrollControlled: true,
                   context: context,
                   enableDrag: true,
-                  builder: (context) => const AddTagWidget(),
+                  builder: (context) => AddTagWidget(mystate: setState),
                 ),
                 child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

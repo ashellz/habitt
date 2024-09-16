@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:habit_tracker/data/historical_habit.dart";
+import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/provider/historical_habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
@@ -37,69 +38,68 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black),
-      body: ListView(
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Text("Calendar",
-                style: TextStyle(
-                    fontSize: 42,
-                    color: theLightColor,
-                    fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            decoration: BoxDecoration(
-                color: theDarkGrey, borderRadius: BorderRadius.circular(20)),
-            child: TableCalendar(
-              availableGestures: AvailableGestures.horizontalSwipe,
-              calendarBuilders: CalendarBuilders(
-                selectedBuilder: (context, date, events) =>
-                    CalendarDay(date: date, selected: true),
-                defaultBuilder: (context, date, events) =>
-                    CalendarDay(date: date, selected: false),
-                todayBuilder: (context, day, events) =>
-                    CalendarDay(date: day, selected: false),
-              ),
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible: false,
-                weekendTextStyle: const TextStyle(color: Colors.white),
-                selectedDecoration: BoxDecoration(
-                  color: theOtherColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+        slivers: [
+          ExpandableAppBar(actionsWidget: Container(), title: "Calendar"),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: theDarkGrey,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TableCalendar(
+                    availableGestures: AvailableGestures.horizontalSwipe,
+                    calendarBuilders: CalendarBuilders(
+                      selectedBuilder: (context, date, events) =>
+                          CalendarDay(date: date, selected: true),
+                      defaultBuilder: (context, date, events) =>
+                          CalendarDay(date: date, selected: false),
+                      todayBuilder: (context, day, events) =>
+                          CalendarDay(date: day, selected: false),
+                    ),
+                    calendarStyle: CalendarStyle(
+                      outsideDaysVisible: false,
+                      weekendTextStyle: const TextStyle(color: Colors.white),
+                      selectedDecoration: BoxDecoration(
+                        color: theOtherColor,
+                        shape: BoxShape.rectangle,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                      ),
+                    ),
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                        weekendStyle: TextStyle(
+                            color: theLightColor, fontWeight: FontWeight.bold),
+                        weekdayStyle: TextStyle(
+                            color: theLightColor, fontWeight: FontWeight.bold)),
+                    headerStyle: const HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                      leftChevronIcon: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                      ),
+                      rightChevronIcon: Icon(
+                        Icons.chevron_right,
+                        color: Colors.white,
+                      ),
+                    ),
+                    firstDay: DateTime.utc(2024, 1, 1),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: today,
+                    selectedDayPredicate: (day) => isSameDay(day, today),
+                    onDaySelected: onDaySelected,
+                  ),
                 ),
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              daysOfWeekStyle: DaysOfWeekStyle(
-                  weekendStyle: TextStyle(
-                      color: theLightColor, fontWeight: FontWeight.bold),
-                  weekdayStyle: TextStyle(
-                      color: theLightColor, fontWeight: FontWeight.bold)),
-              headerStyle: const HeaderStyle(
-                titleCentered: true,
-                formatButtonVisible: false,
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: Colors.white,
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                ),
-              ),
-              firstDay: DateTime.utc(2024, 1, 1),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: today,
-              selectedDayPredicate: (day) => isSameDay(day, today),
-              onDaySelected: onDaySelected,
+                const SizedBox(height: 30),
+                otherCategoriesList(context, today),
+              ]),
             ),
           ),
-          const SizedBox(height: 30),
-          otherCategoriesList(context, today),
         ],
       ),
     );

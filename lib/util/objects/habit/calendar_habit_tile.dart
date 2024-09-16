@@ -386,6 +386,9 @@ void checkCompleteHabit(
     if (habit.completed) {
       if (isToday) {
         context.read<HabitProvider>().completeHabitProvider(index);
+        context
+            .read<HistoricalHabitProvider>()
+            .completeHistoricalHabit(index, habit, time);
       } else {
         context
             .read<HistoricalHabitProvider>()
@@ -401,10 +404,9 @@ void checkCompleteHabit(
   } else {
     if (isToday) {
       context.read<HabitProvider>().completeHabitProvider(index);
-    } else {
-      context
-          .read<HistoricalHabitProvider>()
-          .completeHistoricalHabit(index, habit, time);
     }
+    context
+        .read<HistoricalHabitProvider>()
+        .completeHistoricalHabit(index, habit, time);
   }
 }

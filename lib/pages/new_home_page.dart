@@ -117,60 +117,7 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
             ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Provider.of<HabitProvider>(context, listen: false)
-                .notescontroller
-                .clear();
-            habitTag = "No tag";
-            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-                startIcon;
-            Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
-                0;
-            Provider.of<HabitProvider>(context, listen: false).dropDownValue =
-                'Any time';
-            Provider.of<HabitProvider>(context, listen: false)
-                .habitGoalController
-                .text = "times";
-            Provider.of<HabitProvider>(context, listen: false).amount = 2;
-            Provider.of<HabitProvider>(context, listen: false).durationMinutes =
-                0;
-            Provider.of<HabitProvider>(context, listen: false).durationHours =
-                0;
-            Provider.of<HabitProvider>(context, listen: false).duration = 0;
-            createcontroller.text = "Habit Name";
-
-            Provider.of<HabitProvider>(context, listen: false)
-                .categoriesExpanded = false;
-
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return AddHabitPage(
-                createcontroller: createcontroller,
-              );
-            })).whenComplete(() {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.read<HabitProvider>().setTagSelected("All");
-              });
-              pageController.animateToPage(
-                0,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
-
-              if (context.mounted) {
-                Provider.of<HabitProvider>(context, listen: false)
-                    .notescontroller
-                    .clear();
-
-                Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-                    startIcon;
-
-                Provider.of<HabitProvider>(context, listen: false)
-                    .dropDownValue = 'Any time';
-              }
-              habitTag = "No tag";
-
-              amountNameController.text = "times";
-              createcontroller.text = "Habit Name";
-            });
+            openAddHabitPage(context, createcontroller);
           },
           backgroundColor: theLightColor,
           child: const Icon(
@@ -635,7 +582,6 @@ Widget tagsWidgets(String? tagSelected) {
                               color: categoryCompleted(category)
                                   ? Colors.grey.shade700
                                   : Colors.white,
-                              decorationColor: Colors.grey.shade700,
                               decorationThickness: 3.0)),
                     ))),
           ),
@@ -643,28 +589,6 @@ Widget tagsWidgets(String? tagSelected) {
     ],
   );
 }
-
-/*
-void chooseSelectedWidget(tagSelected, editcontroller, context) {
-    if (tagSelected == 'All') {
-      _selectedWidget = defaultWidget(editcontroller, context);
-    } else if (tagSelected == 'Any time') {
-      _selectedWidget = anyTime(habitListLength, editcontroller, mainCategory,
-          anytimeHasHabits, true);
-    } else if (tagSelected == 'Morning') {
-      _selectedWidget = morning(habitListLength, mainCategory, editcontroller,
-          anytimeHasHabits, true);
-    } else if (tagSelected == 'Afternoon') {
-      _selectedWidget = afternoon(habitListLength, mainCategory, editcontroller,
-          anytimeHasHabits, true);
-    } else if (tagSelected == 'Evening') {
-      _selectedWidget = evening(habitListLength, mainCategory, editcontroller,
-          anytimeHasHabits, true);
-    } else {
-      _selectedWidget = defaultWidget(editcontroller, context);
-    }
-    notifyListeners();
-  }*/
 
 void fillTagsList(BuildContext context) {
   categoriesList = ["All"];
@@ -742,6 +666,55 @@ void fillTagsList(BuildContext context) {
 
 Future<void> playSound() async {
   await player.play(AssetSource('sound/complete3.mp3'));
+}
+
+void openAddHabitPage(
+    BuildContext context, TextEditingController createcontroller) {
+  Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
+  habitTag = "No tag";
+  Provider.of<HabitProvider>(context, listen: false).updatedIcon = startIcon;
+  Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
+  Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
+  Provider.of<HabitProvider>(context, listen: false).habitGoalController.text =
+      "times";
+  Provider.of<HabitProvider>(context, listen: false).amount = 2;
+  Provider.of<HabitProvider>(context, listen: false).durationMinutes = 0;
+  Provider.of<HabitProvider>(context, listen: false).durationHours = 0;
+  Provider.of<HabitProvider>(context, listen: false).duration = 0;
+  createcontroller.text = "Habit Name";
+
+  Provider.of<HabitProvider>(context, listen: false).categoriesExpanded = false;
+
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    return AddHabitPage(
+      createcontroller: createcontroller,
+    );
+  })).whenComplete(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().setTagSelected("All");
+    });
+    pageController.animateToPage(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+
+    if (context.mounted) {
+      Provider.of<HabitProvider>(context, listen: false)
+          .notescontroller
+          .clear();
+
+      Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+          startIcon;
+
+      Provider.of<HabitProvider>(context, listen: false).dropDownValue =
+          'Any time';
+    }
+    habitTag = "No tag";
+
+    amountNameController.text = "times";
+    createcontroller.text = "Habit Name";
+  });
 }
 
 List<DropdownMenuItem<String>> get dropdownItems {

@@ -1,6 +1,11 @@
 import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 
 Future<void> fillKeys() async {
+  if (habitBox.isEmpty) {
+    addInitialData();
+  }
+
   if (!boolBox.containsKey("firstTimeOpened")) {
     boolBox.put("firstTimeOpened", true);
   }

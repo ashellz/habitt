@@ -6,6 +6,7 @@ import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:restart_app/restart_app.dart';
 
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});
@@ -17,6 +18,7 @@ class SignupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -190,83 +192,11 @@ class SignupPage extends StatelessWidget {
                                   if (boolBox.get("isGuest")!) {
                                     showDialog(
                                         context: context,
-                                        builder: (context) => AlertDialog(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(15.0)),
-                                                side: BorderSide(
-                                                    color: theLightColor,
-                                                    width: 3.0),
-                                              ),
-                                              backgroundColor: Colors.black,
-                                              title: const Center(
-                                                child: Text(
-                                                  "Keep guest data?",
-                                                  style:
-                                                      TextStyle(fontSize: 22),
-                                                ),
-                                              ),
-                                              actions: [
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      ElevatedButton(
-                                                          onPressed: () async {
-                                                            signUpNewUser(
-                                                                context,
-                                                                _emailController,
-                                                                _passwordController,
-                                                                _usernameController);
-                                                          },
-                                                          style: ButtonStyle(
-                                                            backgroundColor:
-                                                                WidgetStateProperty
-                                                                    .all<Color>(
-                                                                        theRedColor),
-                                                          ),
-                                                          child: const Text(
-                                                              "Delete",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      14))),
-                                                      ElevatedButton(
-                                                          onPressed: () async {
-                                                            keepData = true;
-                                                            await AuthService().signUp(
-                                                                context:
-                                                                    context,
-                                                                email:
-                                                                    _emailController
-                                                                        .text,
-                                                                password:
-                                                                    _passwordController
-                                                                        .text);
-                                                            stringBox.put(
-                                                                'username',
-                                                                _usernameController
-                                                                    .text);
-                                                          },
-                                                          style: ButtonStyle(
-                                                            backgroundColor:
-                                                                WidgetStateProperty
-                                                                    .all<Color>(
-                                                                        theLightColor),
-                                                          ),
-                                                          child: const Text(
-                                                            "Keep",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 14),
-                                                          )),
-                                                    ]),
-                                              ],
-                                            ));
+                                        builder: (context) => keepDataDialog(
+                                            context,
+                                            _emailController,
+                                            _passwordController,
+                                            _usernameController));
                                   } else {
                                     signUpNewUser(
                                         context,
@@ -324,15 +254,19 @@ class SignupPage extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: GestureDetector(
-                onTap: () async {
-                  await AuthService().signInAsGuest(context);
-                },
-                child: const Text(
-                  "CONTINUE AS A GUEST",
-                  style: TextStyle(color: Colors.white38, fontSize: 18),
+            child: Transform.translate(
+              offset: Offset(0,
+                  keyboardOpen ? MediaQuery.of(context).viewInsets.bottom : 0),
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    await AuthService().signInAsGuest(context);
+                  },
+                  child: const Text(
+                    "CONTINUE AS A GUEST",
+                    style: TextStyle(color: Colors.white38, fontSize: 18),
+                  ),
                 ),
               ),
             ),
@@ -341,6 +275,56 @@ class SignupPage extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget keepDataDialog(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController usernameController) {
+  return AlertDialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+      side: BorderSide(color: theLightColor, width: 3.0),
+    ),
+    backgroundColor: Colors.black,
+    title: const Center(
+      child: Text(
+        "Keep guest data?",
+        style: TextStyle(fontSize: 22),
+      ),
+    ),
+    actions: [
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        ElevatedButton(
+            onPressed: () async {
+              signUpNewUser(context, emailController, passwordController,
+                  usernameController);
+            },
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all<Color>(theRedColor),
+            ),
+            child: const Text("Delete",
+                style: TextStyle(color: Colors.white, fontSize: 14))),
+        ElevatedButton(
+            onPressed: () async {
+              keepData = true;
+              await AuthService().signUp(
+                  context: context,
+                  email: emailController.text,
+                  password: passwordController.text);
+              stringBox.put('username', usernameController.text);
+            },
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all<Color>(theLightColor),
+            ),
+            child: const Text(
+              "Keep",
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            )),
+      ]),
+    ],
+  );
 }
 
 void signUpNewUser(
@@ -355,4 +339,5 @@ void signUpNewUser(
       email: emailController.text,
       password: passwordController.text);
   stringBox.put('username', usernameController.text);
+  Restart.restartApp();
 }

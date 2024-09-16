@@ -185,7 +185,7 @@ Future<void> deleteUserCloudStorage(context) async {
   });
 }
 
-void deleteGuestHabits() async {
+Future<void> deleteGuestHabits() async {
   final hiveDirectory = await getHiveBoxesDirectory();
   await ensureDirectoryExists(hiveDirectory);
 
@@ -204,8 +204,6 @@ void deleteGuestHabits() async {
       }
     }
   }
-
-  addInitialData();
 
   dataDownloaded = true;
 }

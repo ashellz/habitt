@@ -12,6 +12,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -190,15 +191,19 @@ class LoginPage extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: GestureDetector(
-                onTap: () async {
-                  await AuthService().signInAsGuest(context);
-                },
-                child: const Text(
-                  "CONTINUE AS A GUEST",
-                  style: TextStyle(color: Colors.white38, fontSize: 18),
+            child: Transform.translate(
+              offset: Offset(0,
+                  keyboardOpen ? MediaQuery.of(context).viewInsets.bottom : 0),
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    await AuthService().signInAsGuest(context);
+                  },
+                  child: const Text(
+                    "CONTINUE AS A GUEST",
+                    style: TextStyle(color: Colors.white38, fontSize: 18),
+                  ),
                 ),
               ),
             ),
