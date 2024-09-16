@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
+import 'package:habit_tracker/pages/auth/signup_page.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
@@ -34,16 +36,14 @@ class AuthService {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => const LoadingScreen(
-              text: "Signing up...",
-            ),
+            builder: (BuildContext context) => const NewHomePage(),
           ),
         );
       }
 
       isLoggedIn = true;
     } on FirebaseException catch (e) {
-      errorMessage = 'An unexpected error occurred';
+      errorMessage = 'An unexpected error occurred.';
 
       if (e.code == 'weak-password') {
         errorMessage = 'The password provided is too weak.';
@@ -61,17 +61,24 @@ class AuthService {
       );
 
       if (errorMessage == 'An unexpected error occurred') {
-        await FirebaseAuth.instance.signOut();
-        Restart.restartApp();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => SignupPage(),
+          ),
+        );
       }
     }
   }
+
+  int signInCounter = 0;
 
   Future<void> signIn({
     required String email,
     required String password,
     required BuildContext context,
   }) async {
+    signInCounter++;
     try {
       // Sign in the user
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -96,17 +103,10 @@ class AuthService {
       }
 
       // Restore Hive boxes from Firebase
-      print("Restoring Hive boxes from Firebase...");
+      if (kDebugMode) {
+        print("Restoring Hive boxes from Firebase...");
+      }
       await restoreHiveBoxesFromFirebase(userId);
-      Fluttertoast.showToast(
-        msg: 'Downloading data... Please wait',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
-
       // Wait for data restoration to complete
       while (!dataDownloaded) {
         await Future.delayed(const Duration(seconds: 1));
@@ -116,6 +116,7 @@ class AuthService {
       dataDownloaded = false;
       isLoggedIn = true;
 
+      signInCounter = 0;
       await Restart.restartApp();
 
       // Navigate to HomePage
@@ -150,12 +151,17 @@ class AuthService {
         fontSize: 14.0,
       );
 
-      if (errorMessage == 'An unexpected error occurred') {
-        await FirebaseAuth.instance.signOut().then(
-              (value) => Restart.restartApp(),
-            );
+      await FirebaseAuth.instance.signOut().then(
+        (value) {
+          if (signInCounter < 3) {
+            signIn(email: email, password: password, context: context);
+          }
+        },
+      );
+
+      if (kDebugMode) {
+        print(e.toString());
       }
-      print(e.toString());
     }
   }
 
@@ -179,7 +185,7 @@ class AuthService {
         ),
       );
       stringBox.put("username", "Guest");
-      newAccountDownloadData(context);
+      addInitialData();
     }
   }
 
@@ -208,7 +214,9 @@ class AuthService {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await user.delete();
-      print("Account deleted successfully");
+      if (kDebugMode) {
+        print("Account deleted successfully");
+      }
     }
   }
 
@@ -236,9 +244,13 @@ class AuthService {
       try {
         await user.reauthenticateWithCredential(credential);
         passwordIncorrect = false;
-        print("User re-authenticated");
+        if (kDebugMode) {
+          print("User re-authenticated");
+        }
       } catch (e) {
-        print("Failed to re-authenticate user: $e");
+        if (kDebugMode) {
+          print("Failed to re-authenticate user: $e");
+        }
         passwordIncorrect = true;
         Fluttertoast.showToast(
           msg: 'Password incorrect',

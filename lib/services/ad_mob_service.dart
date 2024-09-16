@@ -14,7 +14,7 @@ class AdMobService {
   static final BannerAdListener bannerAdListener = BannerAdListener(
     // Called when an ad is successfully received.
     onAdLoaded: (ad) {
-      if (!kReleaseMode) {
+      if (kDebugMode) {
         print('Ad loaded.');
       }
     },
@@ -23,21 +23,21 @@ class AdMobService {
     onAdFailedToLoad: (ad, error) {
       // Dispose the ad here to free resources.
       ad.dispose();
-      if (!kReleaseMode) {
+      if (kDebugMode) {
         print('Ad failed to load: $error');
       }
     },
 
     // Called when an ad opens an overlay that covers the screen.
     onAdOpened: (ad) {
-      if (!kReleaseMode) {
+      if (kDebugMode) {
         print('Ad opened.');
       }
     },
 
     // Called when an ad removes an overlay that covers the screen.
     onAdClosed: (ad) {
-      if (!kReleaseMode) {
+      if (kDebugMode) {
         print('Ad closed.');
       }
     },

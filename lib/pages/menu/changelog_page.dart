@@ -57,7 +57,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
         ),
 
         changelogContainer("v1.0.2",
-            "- Changed text from field border color in login and signup pages\n- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the changelog and habit notification pages\n- Save changes button, when editing a habit, only appears if something has been changed\n- Improved notification texts\n- Calendar day now doesn't count skipped habit as completed\n- Edit and Add habit pages redesign\n- Fixed longest streak increasing if habit is completed\n- Habit notification tile redesign\n- Changed how changelog page works\n- Fixed habits not resetting until app is restarted\n- Fixed responsiveness for text in habit tiles"),
+            "- Changed text from field border color in login and signup pages\n- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the changelog and habit notification pages\n- Save changes button, when editing a habit, only appears if something has been changed\n- Improved notification texts\n- Calendar day now doesn't count skipped habit as completed\n- Edit and Add habit pages redesign\n- Fixed longest streak increasing if habit is completed\n- Habit notification tile redesign\n- Changed how changelog page works\n- Fixed habits not resetting until app is restarted\n- Fixed responsiveness for text in habit tiles\n- Improved authentication"),
 
         const SizedBox(
           height: 20,

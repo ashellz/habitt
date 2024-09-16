@@ -1,4 +1,3 @@
-import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/new_home_page.dart';
 
 Future<void> fillKeys() async {
@@ -24,12 +23,6 @@ Future<void> fillKeys() async {
 
   if (!listBox.containsKey("dailyNotificationTime")) {
     listBox.put("dailyNotificationTime", [19, 0]);
-  }
-
-  if (tagBox.isEmpty) {
-    for (int i = 0; i < tagsList.length; i++) {
-      tagBox.add(TagData(tag: tagsList[i]));
-    }
   }
 
   if (!boolBox.containsKey("hapticFeedback")) {

@@ -79,9 +79,7 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
                 MaterialPageRoute(
                   builder: (context) => const IconsPage(),
                 ),
-              ).then((value) => setState(() {
-                    context.watch<HabitProvider>().updatedIcon = theIcon;
-                  }));
+              );
             },
             icon: context.watch<HabitProvider>().updatedIcon,
             color: Colors.white,

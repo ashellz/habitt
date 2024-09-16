@@ -177,9 +177,8 @@ class AuthCheck extends StatelessWidget {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
             context.read<HistoricalHabitProvider>().calculateStreak();
-
-            saveHabitsForToday();
           });
+          saveHabitsForToday();
           return const NewHomePage();
         } else {
           return LoginPage();

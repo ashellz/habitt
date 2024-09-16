@@ -72,6 +72,8 @@ class _ProfilePageState extends State<ProfilePage> {
         uploadData();
       });
       _rewardedAd = null;
+    } else {
+      uploadData();
     }
   }
 
