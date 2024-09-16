@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/auth/signup_page.dart';
@@ -190,6 +191,24 @@ class AuthService {
         Restart.restartApp();
       });
     }
+  }
+
+  signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    if (googleUser == null) {
+      return;
+    }
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<void> signInAnonimusly() async {
