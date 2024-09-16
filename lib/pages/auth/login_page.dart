@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/auth/signup_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -157,6 +158,7 @@ class LoginPage extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               )))),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Row(
@@ -185,6 +187,16 @@ class LoginPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const Text("or continue with",
+                      style: TextStyle(color: Colors.grey)),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SignInMethod(
+                        icon: Bootstrap.google,
+                        signInFunction: AuthService().signInWithGoogle),
+                    SignInMethod(
+                        icon: Bootstrap.github,
+                        signInFunction: AuthService().signInWithGitHub),
+                  ]),
                 ],
               ),
             ),
@@ -202,7 +214,7 @@ class LoginPage extends StatelessWidget {
                   },
                   child: const Text(
                     "CONTINUE AS A GUEST",
-                    style: TextStyle(color: Colors.white38, fontSize: 18),
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
                   ),
                 ),
               ),

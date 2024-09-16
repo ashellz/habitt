@@ -30,6 +30,7 @@ bool anytimeHasHabits = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);

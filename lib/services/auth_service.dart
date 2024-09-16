@@ -211,6 +211,11 @@ class AuthService {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  Future<UserCredential> signInWithGitHub() async {
+    GithubAuthProvider githubProvider = GithubAuthProvider();
+    return await FirebaseAuth.instance.signInWithProvider(githubProvider);
+  }
+
   Future<void> signInAnonimusly() async {
     await FirebaseAuth.instance.signInAnonymously();
     isLoggedIn = true;

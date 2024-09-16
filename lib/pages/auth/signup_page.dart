@@ -6,6 +6,7 @@ import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:restart_app/restart_app.dart';
 
 class SignupPage extends StatelessWidget {
@@ -247,7 +248,21 @@ class SignupPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
+
+                  const Text("or continue with",
+                      style: TextStyle(color: Colors.grey)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SignInMethod(
+                          icon: Bootstrap.google,
+                          signInFunction: AuthService().signInWithGoogle),
+                      SignInMethod(
+                          icon: Bootstrap.github,
+                          signInFunction: AuthService().signInWithGitHub),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -265,7 +280,7 @@ class SignupPage extends StatelessWidget {
                   },
                   child: const Text(
                     "CONTINUE AS A GUEST",
-                    style: TextStyle(color: Colors.white38, fontSize: 18),
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
                   ),
                 ),
               ),
@@ -274,6 +289,34 @@ class SignupPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SignInMethod extends StatelessWidget {
+  const SignInMethod({
+    super.key,
+    required this.icon,
+    required this.signInFunction,
+  });
+
+  final IconData icon;
+  final Function signInFunction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: IconButton(
+            onPressed: () async {
+              await signInFunction();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey.shade900,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+            ),
+            icon: Icon(icon, color: Colors.white38, size: 25)));
   }
 }
 
