@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:vibration/vibration.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
@@ -30,6 +32,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
   }
 
   void updateHistoricalHabits(DateTime date) {
+    if (kDebugMode) {
+      print("updating historical habits");
+    }
     for (int i = 0; i < historicalBox.length; i++) {
       List intDate = [
         historicalBox.getAt(i)!.date.year,
@@ -47,6 +52,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
   void applyCurentHabitData(List currentDate, int index,
       HistoricalHabitData habitData, DateTime time) {
+    if (kDebugMode) {
+      print("applying current habit data");
+    }
     for (int i = 0; i < historicalBox.length; i++) {
       List<int> habitDate = [
         historicalBox.getAt(i)!.date.year,
@@ -70,7 +78,44 @@ class HistoricalHabitProvider extends ChangeNotifier {
   }
 
   void skipHistoricalHabit(int index, habit, DateTime time) async {
-    List<int> currentDate = [time.year, time.month, time.day];
+    if (kDebugMode) {
+      print("skipping historical habit");
+    }
+    List<int> chosenHabitDate = [time.year, time.month, time.day];
+
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA
+          .compareTo(dateB); // This will sort from oldest to most recent
+    });
+
+    for (int i = 0; i < historicalList.length; i++) {
+      List habitDate = [
+        historicalList[i].date.year,
+        historicalList[i].date.month,
+        historicalList[i].date.day
+      ];
+
+      if (const ListEquality().equals(habitDate, chosenHabitDate)) {
+        if (i - 1 >= 0) {
+          if (historicalList[i - 1].data[index].skipped) {
+            Fluttertoast.showToast(
+                msg: "You can't skip a habit two days in a row.");
+            return;
+          }
+        }
+        if (i + 1 < historicalList.length) {
+          if (historicalList[i + 1].data[index].skipped) {
+            Fluttertoast.showToast(
+                msg: "You can't skip a habit two days in a row.");
+            return;
+          }
+        }
+      }
+    }
 
     HistoricalHabitData habitData = HistoricalHabitData(
       name: habit.name,
@@ -85,7 +130,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
       skipped: !habit.skipped,
     );
 
-    applyCurentHabitData(currentDate, index, habitData, time);
+    applyCurentHabitData(chosenHabitDate, index, habitData, time);
 
     calculateStreak();
     notifyListeners();

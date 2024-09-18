@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_data.dart';
@@ -10,6 +9,7 @@ import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/add_habit_page.dart
 import 'package:habit_tracker/pages/menu/menu_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
+import 'package:habit_tracker/util/functions/fillKeys.dart';
 import 'package:habit_tracker/util/functions/habit/calculateHeight.dart';
 import 'package:habit_tracker/util/functions/habit/habitsCompleted.dart';
 import 'package:habit_tracker/util/objects/habit/habit_tile.dart';
@@ -52,7 +52,6 @@ List<String> greetingTexts = [
   "Hey",
   "What's up?",
 ];
-String greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
 
 final pageController = PageController(initialPage: 0);
 
@@ -67,6 +66,7 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    checkForDayJoined();
     WidgetsBinding.instance.addObserver(this);
 
     hasHabits();
@@ -85,6 +85,8 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
     }
   }
 
+  String greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
+
   @override
   Widget build(BuildContext context) {
     fillTagsList(context);
@@ -99,96 +101,94 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
     TextEditingController createcontroller = TextEditingController();
     TextEditingController editcontroller = TextEditingController();
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.black,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return const MenuPage();
-                  }));
-                },
-              ),
-            ]),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            openAddHabitPage(context, createcontroller);
-          },
-          backgroundColor: theLightColor,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Colors.black,
-        body: ListView(
-          physics: const BouncingScrollPhysics(),
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 30),
-                  header(username),
-                  const SizedBox(height: 20),
-                  SizedBox(height: 30, child: tagsWidgets(tagSelected)),
-                  const SizedBox(height: 20),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.black,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return const MenuPage();
+                }));
+              },
             ),
-            SizedBox(
-              height: calculateHabitsHeight(tagSelected, context),
-              child: PageView(
-                controller: pageController,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                onPageChanged: (value) => context
-                    .read<HabitProvider>()
-                    .setTagSelected(visibleListTags()[value]),
-                children: [
-                  for (String tag in visibleListTags())
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, bottom: 40),
-                      child: ListView(
-                        physics: const BouncingScrollPhysics(),
-                        children: [
-                          const SizedBox(height: 20),
-                          if (tag == 'All')
-                            Column(children: [
-                              mainCategoryList(
-                                  habitListLength,
-                                  mainCategoryHeight,
-                                  mainCategory,
-                                  editcontroller,
-                                  context),
-                              const SizedBox(height: 20),
-                              otherCategoriesList(habitListLength, mainCategory,
-                                  editcontroller, anytimeHasHabits)
-                            ]),
-                          if (tag != 'All')
-                            tagSelectedWidget(tag, editcontroller),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            )
-          ],
+          ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          openAddHabitPage(context, createcontroller);
+        },
+        backgroundColor: theLightColor,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
+      ),
+      backgroundColor: Colors.black,
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 30),
+                header(username, greetingText),
+                const SizedBox(height: 20),
+                SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: calculateHabitsHeight(tagSelected, context),
+            child: PageView(
+              controller: pageController,
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              onPageChanged: (value) => context
+                  .read<HabitProvider>()
+                  .setTagSelected(visibleListTags()[value]),
+              children: [
+                for (String tag in visibleListTags())
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        const SizedBox(height: 20),
+                        if (tag == 'All')
+                          Column(children: [
+                            mainCategoryList(
+                                habitListLength,
+                                mainCategoryHeight,
+                                mainCategory,
+                                editcontroller,
+                                context),
+                            const SizedBox(height: 20),
+                            otherCategoriesList(habitListLength, mainCategory,
+                                editcontroller, anytimeHasHabits)
+                          ]),
+                        if (tag != 'All')
+                          tagSelectedWidget(tag, editcontroller),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
-Widget header(username) {
+Widget header(username, String greetingText) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -200,15 +200,13 @@ Widget header(username) {
           fontWeight: FontWeight.bold,
         ),
       ),
-      Transform.translate(
-        offset: const Offset(0, -10),
-        child: Text(
-          username,
-          style: TextStyle(
-            color: theLightColor,
-            fontSize: 42,
-            fontWeight: FontWeight.bold,
-          ),
+      Text(
+        username,
+        style: TextStyle(
+          height: 1,
+          color: theLightColor,
+          fontSize: 42,
+          fontWeight: FontWeight.bold,
         ),
       ),
     ],

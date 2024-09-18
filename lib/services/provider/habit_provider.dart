@@ -1,8 +1,10 @@
 import "dart:async";
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
+import "package:fluttertoast/fluttertoast.dart";
 import "package:habit_tracker/data/habit_data.dart";
 import "package:habit_tracker/main.dart";
-import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/pages/home_page.dart";
 import "package:habit_tracker/services/storage_service.dart";
 import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
@@ -19,6 +21,8 @@ class HabitProvider extends ChangeNotifier {
   String mainCategory = "";
   bool somethingEdited = false;
   Icon updatedIcon = startIcon;
+
+  String timeBasedText = "";
 
   String dropDownValue = 'Any time';
 
@@ -96,6 +100,24 @@ class HabitProvider extends ChangeNotifier {
 
   void setTagSelected(String? tag) {
     _tagSelected = tag;
+    notifyListeners();
+  }
+
+  void chooseTimeBasedText() {
+    int hour = DateTime.now().hour;
+
+    if (hour >= 4 && hour < 12) {
+      timeBasedText = "Good morning";
+    } else if (hour >= 12 && hour < 19) {
+      timeBasedText = "Good afternoon";
+    } else {
+      timeBasedText = "Good evening";
+    }
+
+    if (!greetingTexts.contains(timeBasedText)) {
+      greetingTexts.add(timeBasedText);
+    }
+
     notifyListeners();
   }
 
@@ -221,7 +243,34 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void skipHabitProvider(int index) async {
+    DateTime now = DateTime.now();
+    List currentDate = [now.year, now.month, now.day];
     final existingHabit = habitBox.getAt(index);
+
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA
+          .compareTo(dateB); // This will sort from oldest to most recent
+    });
+
+    for (int i = 0; i < historicalList.length; i++) {
+      List habitDate = [
+        historicalList[i].date.year,
+        historicalList[i].date.month,
+        historicalList[i].date.day
+      ];
+
+      if (const ListEquality().equals(habitDate, currentDate)) {
+        if (historicalList[i - 1].data[index].skipped) {
+          Fluttertoast.showToast(
+              msg: "You can't skip a habit two days in a row.");
+          return;
+        }
+      }
+    }
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(

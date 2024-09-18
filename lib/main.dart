@@ -6,7 +6,7 @@ import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
@@ -102,6 +102,7 @@ void callbackDispatcher(BuildContext context) {
   Workmanager().executeTask((task, inputData) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
+      context.read<HabitProvider>().chooseTimeBasedText();
     });
 
     saveHabitsForToday();
@@ -178,6 +179,7 @@ class AuthCheck extends StatelessWidget {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
             context.read<HistoricalHabitProvider>().calculateStreak();
+            context.read<HabitProvider>().chooseTimeBasedText();
           });
           saveHabitsForToday();
           return const NewHomePage();

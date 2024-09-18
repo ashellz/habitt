@@ -1,5 +1,5 @@
 import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:collection/collection.dart';
 
 void saveHabitsForToday() async {

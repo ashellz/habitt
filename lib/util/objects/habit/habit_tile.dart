@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
@@ -97,7 +97,6 @@ class _NewHabitTileState extends State<NewHabitTile> {
       },
       child: Slidable(
         enabled: !habitBox.getAt(index)!.completed,
-        closeOnScroll: true,
         startActionPane: ActionPane(
           dragDismissible: true,
           extentRatio: 0.35,
