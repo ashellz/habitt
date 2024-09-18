@@ -199,11 +199,11 @@ class CalendarDay extends StatelessWidget {
   }
 }
 
-otherCategoriesList(BuildContext context, today) {
+otherCategoriesList(BuildContext context, chosenDay) {
   late int habitListLength = 0;
   late List habitsOnDate = [];
   late int boxIndex = 0;
-  List<int> todayDate = [today.year, today.month, today.day];
+  List<int> todayDate = [chosenDay.year, chosenDay.month, chosenDay.day];
   bool todayExists = false;
 
   for (int i = 0; i < historicalBox.length; i++) {
@@ -243,7 +243,7 @@ otherCategoriesList(BuildContext context, today) {
       todayHabitsList.add(newHistoricalHabit);
     }
 
-    historicalBox.add(HistoricalHabit(date: today, data: todayHabitsList));
+    historicalBox.add(HistoricalHabit(date: chosenDay, data: todayHabitsList));
     int index = historicalBox.length - 1;
     boxIndex = index;
     habitListLength = historicalBox.getAt(index)!.data.length;
@@ -251,41 +251,45 @@ otherCategoriesList(BuildContext context, today) {
   }
 
   if (habitListLength == 0 || !todayExists) {
-    if (today.year <= DateTime.now().year) {
-      // if the year is equal or less than the current year
-      if (today.year == DateTime.now().year) {
-        // if the year is equal to the current year
+    DateTime dayJoined = metadataBox.get('dayJoined')!;
 
-        if (today.month <= DateTime.now().month) {
-          // if the month is equal or less than the current month in the current year
+    if (dayJoined.isBefore(chosenDay)) {
+      if (chosenDay.year <= DateTime.now().year) {
+        // if the year is equal or less than the current year
+        if (chosenDay.year == DateTime.now().year) {
+          // if the year is equal to the current year
 
-          if (today.month < DateTime.now().month) {
-            // if the month is less than the current month in the current year
-            saveTodayHabits();
-          }
+          if (chosenDay.month <= DateTime.now().month) {
+            // if the month is equal or less than the current month in the current year
 
-          if (today.month == DateTime.now().month) {
-            // if the month is equal to the current month in the current year
-
-            if (today.day < DateTime.now().day) {
-              // if the day is equal or less than the current day in the current month in the current year
+            if (chosenDay.month < DateTime.now().month) {
+              // if the month is less than the current month in the current year
               saveTodayHabits();
+            }
+
+            if (chosenDay.month == DateTime.now().month) {
+              // if the month is equal to the current month in the current year
+
+              if (chosenDay.day < DateTime.now().day) {
+                // if the day is equal or less than the current day in the current month in the current year
+                saveTodayHabits();
+              }
             }
           }
         }
-      }
 
-      if (today.year < DateTime.now().year) {
-        saveTodayHabits();
+        if (chosenDay.year < DateTime.now().year) {
+          saveTodayHabits();
+        }
       }
     }
   }
 
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(context, habitListLength, habitsOnDate, today, boxIndex),
-    morning(context, habitListLength, habitsOnDate, today, boxIndex),
-    afternoon(context, habitListLength, habitsOnDate, today, boxIndex),
-    evening(context, habitListLength, habitsOnDate, today, boxIndex),
+    anyTime(context, habitListLength, habitsOnDate, chosenDay, boxIndex),
+    morning(context, habitListLength, habitsOnDate, chosenDay, boxIndex),
+    afternoon(context, habitListLength, habitsOnDate, chosenDay, boxIndex),
+    evening(context, habitListLength, habitsOnDate, chosenDay, boxIndex),
   ]);
 }
 

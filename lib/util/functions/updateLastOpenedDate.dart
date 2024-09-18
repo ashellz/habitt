@@ -1,4 +1,4 @@
-import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

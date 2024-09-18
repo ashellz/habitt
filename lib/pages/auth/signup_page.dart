@@ -258,6 +258,9 @@ class SignupPage extends StatelessWidget {
                       SignInMethod(
                           icon: Bootstrap.google,
                           signInFunction: AuthService().signInWithGoogle),
+                      SignInMethod(
+                          icon: Bootstrap.github,
+                          signInFunction: AuthService().signInWithGitHub),
                     ],
                   ),
                 ],
@@ -297,7 +300,7 @@ class SignInMethod extends StatelessWidget {
   });
 
   final IconData icon;
-  final Function signInFunction;
+  final Future<void> Function(BuildContext context) signInFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -305,7 +308,7 @@ class SignInMethod extends StatelessWidget {
         padding: const EdgeInsets.only(top: 5),
         child: IconButton(
             onPressed: () async {
-              await signInFunction();
+              await signInFunction(context);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.grey.shade900,

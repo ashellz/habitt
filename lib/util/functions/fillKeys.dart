@@ -6,6 +6,19 @@ Future<void> fillKeys() async {
     addInitialData();
   }
 
+  if (!metadataBox.containsKey("dayJoined")) {
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA
+          .compareTo(dateB); // This will sort from oldest to most recent
+    });
+
+    metadataBox.put("dayJoined", historicalList[0].date);
+  }
+
   if (!boolBox.containsKey("firstTimeOpened")) {
     boolBox.put("firstTimeOpened", true);
   }

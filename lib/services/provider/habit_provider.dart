@@ -1,6 +1,6 @@
 import "dart:async";
 import "package:flutter/material.dart";
-import "package:habit_tracker/data/habit_tile.dart";
+import "package:habit_tracker/data/habit_data.dart";
 import "package:habit_tracker/main.dart";
 import "package:habit_tracker/pages/new_home_page.dart";
 import "package:habit_tracker/services/storage_service.dart";
