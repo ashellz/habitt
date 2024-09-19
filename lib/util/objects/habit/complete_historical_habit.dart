@@ -156,11 +156,11 @@ Widget completeHistoricalHabitDialog(
                 onPressed: () {
                   if (isToday) {
                     context.read<HabitProvider>().completeHabitProvider(index);
-                  } else {
-                    context
-                        .read<HistoricalHabitProvider>()
-                        .completeHistoricalHabit(index, habit, time);
                   }
+                  context
+                      .read<HistoricalHabitProvider>()
+                      .completeHistoricalHabit(index, habit, time);
+
                   Navigator.pop(context);
                 },
                 child: const Text(

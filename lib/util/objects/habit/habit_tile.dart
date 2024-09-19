@@ -44,7 +44,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
     return GestureDetector(
       onTap: () {
-        habitGoalEdit = 0;
+        Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
         updated = false;
         editcontroller.text = "";
         changed = false;
@@ -84,7 +84,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );
-          habitGoalEdit = 0;
+          Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
           deleted = false;
           updated = false;
           editcontroller.clear();
@@ -159,7 +159,7 @@ class HabitTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
+            width: MediaQuery.of(context).size.width * 0.40,
             child: Text(
               habitBox.getAt(index)!.name,
               overflow: TextOverflow.ellipsis,

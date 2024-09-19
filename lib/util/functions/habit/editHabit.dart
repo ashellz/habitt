@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habit_tracker/pages/habit/notifications_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
@@ -53,16 +52,20 @@ void editHabit(int index, BuildContext context, editcontroller) {
         category:
             Provider.of<HabitProvider>(context, listen: false).dropDownValue,
         streak: habitBox.getAt(index)?.streak ?? 0,
-        amount: habitGoalEdit == 1
-            ? Provider.of<HabitProvider>(context, listen: false).amount
-            : habitBox.getAt(index)!.amount,
+        amount:
+            Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
+                    1
+                ? Provider.of<HabitProvider>(context, listen: false).amount
+                : habitBox.getAt(index)!.amount,
         amountName: Provider.of<HabitProvider>(context, listen: false)
             .habitGoalController
             .text,
         amountCompleted: 0,
-        duration: habitGoalEdit == 2
-            ? duration
-            : habitBox.getAt(index)?.duration ?? 0,
+        duration:
+            Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
+                    2
+                ? duration
+                : habitBox.getAt(index)?.duration ?? 0,
         durationCompleted: 0,
         skipped: false,
         tag: habitTag,

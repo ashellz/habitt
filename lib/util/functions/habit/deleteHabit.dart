@@ -35,7 +35,7 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
   editcontroller.text = "";
   Navigator.of(context).pop();
 
-  habitGoalEdit = 0;
+  Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
   updated = false;
   editcontroller.clear();
   changed = false;

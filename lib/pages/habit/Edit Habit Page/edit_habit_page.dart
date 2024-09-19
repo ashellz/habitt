@@ -10,8 +10,6 @@ import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:provider/provider.dart";
 
-int habitGoalEdit = 0;
-
 bool updated = false;
 
 final formKey = GlobalKey<FormState>();
