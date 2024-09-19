@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart';
-import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/util/colors.dart';
 
 class ChangelogPage extends StatefulWidget {
@@ -12,55 +10,24 @@ class ChangelogPage extends StatefulWidget {
 }
 
 class _ChangelogPageState extends State<ChangelogPage> {
-  BannerAd? _banner;
   bool showOlder = false;
 
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
-  }
-
-  void _createBannerAd() {
-    _banner = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdMobService.bannerAdUnitId,
-      listener: AdMobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      bottomNavigationBar: _banner == null
-          ? Container()
-          : SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 60,
-              child: AdWidget(ad: _banner!),
-            ),
       body: CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
         ExpandableAppBar(actionsWidget: Container(), title: "Changelog"),
         SliverToBoxAdapter(
           child: Column(
             children: [
-              //TITLE
-              /* Padding(
-                padding: const EdgeInsets.only(top: 30, left: 20, bottom: 10),
-                child: Text(
-                  "Changelog",
-                  style: TextStyle(
-                      fontSize: 42,
-                      color: theLightColor,
-                      fontWeight: FontWeight.bold),
-                ),
-              ), */
-
               changelogContainer("v1.0.2",
                   "- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the changelog and habit notification pages\n- Added ability to log in using Google and GitHub\n- Added more greeting texts\n- Added unobsecure text option to password fields\n- Added text in profile page telling you when you first joined habitt\n- Improved authentication\n- Improved notification texts\n- Improved responsiveness for text in habit tiles\n- Improved app bars\n- Habit notification tile redesign\n- Edit and Add habit pages redesign\n- Save changes button, when editing a habit, only appears if something has been changed\n- Changed text field border color in login and signup pages\n- Changed how the changelog page looks\n- You now can't skip the same habit two days in a row\n- Calendar day now doesn't count skipped habit as completed\n- Calendar won't add habits to the days past the time you joined the app\n- Fixed possibility to add two identical tags\n- Fixed habits not resetting until the app is restarted\n- Fixed longest streak increasing if a habit is completed\n- Fixed 'CONTINUE AS GUEST' overlapping other widgets when the keyboard appears"),
-
               const SizedBox(
                 height: 20,
               ),
@@ -81,7 +48,6 @@ class _ChangelogPageState extends State<ChangelogPage> {
                   ),
                 ),
               ),
-
               Visibility(
                   visible: showOlder,
                   child: Column(

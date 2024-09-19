@@ -243,6 +243,9 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void skipHabitProvider(int index) async {
+    // Check if the user is skipping more than 3 habits a day
+
+    // Check if the user is skipping two days in a row
     DateTime now = DateTime.now();
     List currentDate = [now.year, now.month, now.day];
     final existingHabit = habitBox.getAt(index);
@@ -252,8 +255,7 @@ class HabitProvider extends ChangeNotifier {
     historicalList.sort((a, b) {
       DateTime dateA = a.date;
       DateTime dateB = b.date;
-      return dateA
-          .compareTo(dateB); // This will sort from oldest to most recent
+      return dateA.compareTo(dateB);
     });
 
     for (int i = 0; i < historicalList.length; i++) {
@@ -271,6 +273,8 @@ class HabitProvider extends ChangeNotifier {
         }
       }
     }
+
+    // Skip the habit
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(

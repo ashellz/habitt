@@ -78,9 +78,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
   }
 
   void skipHistoricalHabit(int index, habit, DateTime time) async {
-    if (kDebugMode) {
-      print("skipping historical habit");
-    }
+    int habitsSkipped = 0;
+
+    // Check if the user skipped a habit two days in a row or skipped 3 habits a day already
     List<int> chosenHabitDate = [time.year, time.month, time.day];
 
     var historicalList = historicalBox.values.toList();
@@ -100,6 +100,18 @@ class HistoricalHabitProvider extends ChangeNotifier {
       ];
 
       if (const ListEquality().equals(habitDate, chosenHabitDate)) {
+        for (int j = 0; j < historicalList[i].data.length; j++) {
+          if (historicalList[i].data[j].skipped) {
+            habitsSkipped += 1;
+          }
+        }
+
+        if (habitsSkipped >= 3) {
+          Fluttertoast.showToast(
+              msg: "You can't skip more than 3 habits a day.");
+          return;
+        }
+
         if (i - 1 >= 0) {
           if (historicalList[i - 1].data[index].skipped) {
             Fluttertoast.showToast(
