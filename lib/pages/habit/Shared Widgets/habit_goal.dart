@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';

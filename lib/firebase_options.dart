@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDArWvksa_cBebWkn4H7VF1C7-sgEgPtq0',
-    appId: '1:752709751941:android:099c2d89941a3ccc0005ec',
+    appId: '1:752709751941:android:d45e25110a0f29100005ec',
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
+    androidClientId: '752709751941-rp25a50jrijcslhc9fl2qv9c2dthla3n.apps.googleusercontent.com',
+    iosClientId: '752709751941-8ejpmuhbq5d05kc7d538hji7fe2pm3o8.apps.googleusercontent.com',
     iosBundleId: 'com.example.habitTracker',
   );
 
@@ -73,6 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
+    androidClientId: '752709751941-rp25a50jrijcslhc9fl2qv9c2dthla3n.apps.googleusercontent.com',
+    iosClientId: '752709751941-8ejpmuhbq5d05kc7d538hji7fe2pm3o8.apps.googleusercontent.com',
     iosBundleId: 'com.example.habitTracker',
   );
 
@@ -85,4 +89,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'habit-tracker-df84b.appspot.com',
     measurementId: 'G-PT4GLRDPL8',
   );
+
 }

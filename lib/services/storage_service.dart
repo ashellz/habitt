@@ -5,8 +5,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit_tracker/data/habit_data.dart';
+import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/menu/profile_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -180,4 +183,78 @@ Future<void> deleteUserCloudStorage(context) async {
   Timer(const Duration(milliseconds: 500), () {
     Restart.restartApp();
   });
+}
+
+Future<void> deleteGuestHabits() async {
+  final hiveDirectory = await getHiveBoxesDirectory();
+  await ensureDirectoryExists(hiveDirectory);
+
+  final directory = Directory(hiveDirectory);
+
+  List<String> keywords = ['habits.', 'habitdata.', 'tag'];
+
+  if (await directory.exists()) {
+    final files = directory.listSync();
+
+    for (final file in files) {
+      if (file is File) {
+        if (keywords.any((keyword) => file.path.contains(keyword))) {
+          file.deleteSync();
+        }
+      }
+    }
+  }
+
+  dataDownloaded = true;
+}
+
+void addInitialData() {
+  List initialHabits = [
+    HabitData(
+      name: 'Open the app',
+      notes: 'Open the app for the first time',
+      category: 'Any time',
+      streak: 0,
+      completed: true,
+      icon: "Icons.door_front_door_rounded",
+      amount: 1,
+      amountName: "times",
+      amountCompleted: 1,
+      duration: 0,
+      durationCompleted: 0,
+      skipped: false,
+      tag: "No tag",
+      notifications: List.empty(),
+      longestStreak: 0,
+    ),
+    HabitData(
+      name: 'Add a new habit',
+      notes: '',
+      category: 'Any time',
+      streak: 0,
+      completed: false,
+      icon: "Icons.add",
+      amount: 1,
+      amountName: "times",
+      amountCompleted: 0,
+      duration: 0,
+      durationCompleted: 0,
+      skipped: false,
+      tag: "No tag",
+      notifications: List.empty(),
+      longestStreak: 0,
+    )
+  ];
+
+  if (tagBox.isEmpty) {
+    for (int i = 0; i < tagsList.length; i++) {
+      tagBox.add(TagData(tag: tagsList[i]));
+    }
+  }
+
+  if (habitBox.isEmpty) {
+    for (int i = 0; i < initialHabits.length; i++) {
+      habitBox.add(initialHabits[i]);
+    }
+  }
 }

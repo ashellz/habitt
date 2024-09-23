@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'habit_tile.g.dart';
+part 'habit_data.g.dart';
 
 @HiveType(typeId: 1)
 class HabitData extends HiveObject {

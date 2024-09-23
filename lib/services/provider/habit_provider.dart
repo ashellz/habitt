@@ -1,8 +1,10 @@
 import "dart:async";
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
-import "package:habit_tracker/data/habit_tile.dart";
+import "package:fluttertoast/fluttertoast.dart";
+import "package:habit_tracker/data/habit_data.dart";
 import "package:habit_tracker/main.dart";
-import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/pages/home_page.dart";
 import "package:habit_tracker/services/storage_service.dart";
 import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
 import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
@@ -20,6 +22,8 @@ class HabitProvider extends ChangeNotifier {
   bool somethingEdited = false;
   Icon updatedIcon = startIcon;
 
+  String timeBasedText = "";
+
   String dropDownValue = 'Any time';
 
   int habitGoalValue = 0;
@@ -36,14 +40,14 @@ class HabitProvider extends ChangeNotifier {
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
+  int allHabitsCompletedStreakP = streakBox.get('allHabitsCompletedStreak')!;
 
   List _habitNotifications = [];
 
   List get habitNotifications => _habitNotifications;
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
-  int get allHabitsCompletedStreak =>
-      streakBox.get('allHabitsCompletedStreak')!;
+  int get allHabitsCompletedStreak => allHabitsCompletedStreakP;
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
@@ -96,6 +100,24 @@ class HabitProvider extends ChangeNotifier {
 
   void setTagSelected(String? tag) {
     _tagSelected = tag;
+    notifyListeners();
+  }
+
+  void chooseTimeBasedText() {
+    int hour = DateTime.now().hour;
+
+    if (hour >= 4 && hour < 12) {
+      timeBasedText = "Good morning";
+    } else if (hour >= 12 && hour < 19) {
+      timeBasedText = "Good afternoon";
+    } else {
+      timeBasedText = "Good evening";
+    }
+
+    if (!greetingTexts.contains(timeBasedText)) {
+      greetingTexts.add(timeBasedText);
+    }
+
     notifyListeners();
   }
 
@@ -178,7 +200,7 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void completeHabitProvider(int index) async {
+  void completeHabitProvider(int index, bool isAdLoaded, interstitialAd) async {
     final existingHabit = habitBox.getAt(index);
 
     if (existingHabit != null) {
@@ -190,10 +212,17 @@ class HabitProvider extends ChangeNotifier {
         streak: existingHabit.streak,
         amount: existingHabit.amount,
         amountName: existingHabit.amountName,
-        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+        amountCompleted: !existingHabit.completed
+            ? existingHabit.amount
+            : !existingHabit.skipped
+                ? 0
+                : existingHabit.amountCompleted,
         duration: existingHabit.duration,
-        durationCompleted:
-            !existingHabit.completed ? existingHabit.duration : 0,
+        durationCompleted: !existingHabit.completed
+            ? existingHabit.duration
+            : !existingHabit.skipped
+                ? 0
+                : existingHabit.durationCompleted,
         skipped: false,
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,
@@ -205,6 +234,9 @@ class HabitProvider extends ChangeNotifier {
 
       bool hapticFeedback = boolBox.get('hapticFeedback')!;
       if (allHabitsCompleted()) {
+        if (isAdLoaded) {
+          interstitialAd.show();
+        }
         playSound();
         if (hapticFeedback) {
           Vibration.vibrate(duration: 500);
@@ -221,7 +253,51 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void skipHabitProvider(int index) async {
+    // Check if the user is skipping more than 3 habits a day
+
+    int habitsSkipped = 0;
+
+    for (var habit in habitBox.values) {
+      if (habit.skipped) {
+        habitsSkipped++;
+      }
+    }
+
+    if (habitsSkipped >= 3) {
+      Fluttertoast.showToast(msg: "You can't skip more than 3 habits a day.");
+      return;
+    }
+
+    // Check if the user is skipping two days in a row
+    DateTime now = DateTime.now();
+    List currentDate = [now.year, now.month, now.day];
     final existingHabit = habitBox.getAt(index);
+
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA.compareTo(dateB);
+    });
+
+    for (int i = 0; i < historicalList.length; i++) {
+      List habitDate = [
+        historicalList[i].date.year,
+        historicalList[i].date.month,
+        historicalList[i].date.day
+      ];
+
+      if (const ListEquality().equals(habitDate, currentDate)) {
+        if (historicalList[i - 1].data[index].skipped) {
+          Fluttertoast.showToast(
+              msg: "You can't skip a habit two days in a row.");
+          return;
+        }
+      }
+    }
+
+    // Skip the habit
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(
@@ -232,10 +308,9 @@ class HabitProvider extends ChangeNotifier {
         streak: existingHabit.streak,
         amount: existingHabit.amount,
         amountName: existingHabit.amountName,
-        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+        amountCompleted: existingHabit.amountCompleted,
         duration: existingHabit.duration,
-        durationCompleted:
-            !existingHabit.completed ? existingHabit.duration : 0,
+        durationCompleted: existingHabit.durationCompleted,
         skipped: !existingHabit.skipped,
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,

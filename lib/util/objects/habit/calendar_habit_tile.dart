@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
@@ -10,16 +11,22 @@ import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
 class CalendarHabitTile extends StatefulWidget {
-  const CalendarHabitTile(
-      {super.key,
-      required this.index,
-      required this.habits,
-      required this.time,
-      required this.boxIndex});
+  const CalendarHabitTile({
+    super.key,
+    required this.index,
+    required this.habits,
+    required this.time,
+    required this.boxIndex,
+    required this.isAdLoaded,
+    required this.interstitialAd,
+  });
   final int index;
   final List<HistoricalHabitData> habits;
   final DateTime time;
   final int boxIndex;
+
+  final bool isAdLoaded;
+  final InterstitialAd? interstitialAd;
 
   @override
   State<CalendarHabitTile> createState() => _CalendarHabitTileState();
@@ -59,7 +66,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
         .data[index];
 
     return Slidable(
-      enabled: !habit.completed,
+      enabled: habit.completed ? habit.skipped : true,
       closeOnScroll: true,
       startActionPane: ActionPane(
         dragDismissible: true,
@@ -73,7 +80,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
             onPressed: (context) {
               context
                   .read<HistoricalHabitProvider>()
-                  .skipHistoricalHabit(index, habit, widget.time);
+                  .skipHistoricalHabit(index, habit, widget.time, context);
               if (isToday) {
                 context.read<HabitProvider>().skipHabitProvider(index);
               }
@@ -86,12 +93,15 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
         ],
       ),
       child: HabitTile(
-          index: index,
-          widget: widget,
-          amountCheck: amountCheck,
-          durationCheck: durationCheck,
-          habit: habit,
-          isToday: isToday),
+        index: index,
+        widget: widget,
+        amountCheck: amountCheck,
+        durationCheck: durationCheck,
+        habit: habit,
+        isToday: isToday,
+        interstitialAd: widget.interstitialAd,
+        isAdLoaded: widget.isAdLoaded,
+      ),
     );
   }
 }
@@ -105,6 +115,8 @@ class HabitTile extends StatelessWidget {
     required this.durationCheck,
     required this.habit,
     required this.isToday,
+    required this.isAdLoaded,
+    required this.interstitialAd,
   });
 
   final int index;
@@ -113,6 +125,9 @@ class HabitTile extends StatelessWidget {
   final bool durationCheck;
   final HistoricalHabitData habit;
   final bool isToday;
+
+  final bool isAdLoaded;
+  final InterstitialAd? interstitialAd;
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +149,8 @@ class HabitTile extends StatelessWidget {
         habit: habit,
         time: time,
         isToday: isToday,
+        interstitialAd: interstitialAd,
+        isAdLoaded: isAdLoaded,
       ),
     );
   }
@@ -156,6 +173,8 @@ class CheckBox extends StatefulWidget {
     required this.habit,
     required this.time,
     required this.isToday,
+    required this.isAdLoaded,
+    required this.interstitialAd,
   });
 
   final bool amountCheck;
@@ -164,6 +183,8 @@ class CheckBox extends StatefulWidget {
   final HistoricalHabitData habit;
   final DateTime time;
   final bool isToday;
+  final bool isAdLoaded;
+  final InterstitialAd? interstitialAd;
 
   @override
   State<CheckBox> createState() => _CheckBoxState();
@@ -176,8 +197,16 @@ class _CheckBoxState extends State<CheckBox> {
     DateTime time = widget.time;
     return GestureDetector(
       onTap: () {
-        checkCompleteHabit(widget.amountCheck, widget.durationCheck,
-            widget.index, context, habit, time, widget.isToday);
+        checkCompleteHabit(
+            widget.amountCheck,
+            widget.durationCheck,
+            widget.index,
+            context,
+            habit,
+            time,
+            widget.isToday,
+            widget.isAdLoaded,
+            widget.interstitialAd);
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
@@ -188,7 +217,7 @@ class _CheckBoxState extends State<CheckBox> {
                 widget.habit.completed ? theOtherColor : Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: habit.completed
+          child: habit.completed && !habit.skipped
               ? Stack(
                   children: [
                     Positioned.fill(
@@ -204,9 +233,7 @@ class _CheckBoxState extends State<CheckBox> {
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color: habit.skipped
-                                    ? Colors.grey.shade800
-                                    : theOtherColor,
+                                color: theOtherColor,
                                 backgroundColor: Colors.grey.shade900,
                               );
                             }),
@@ -293,7 +320,9 @@ class _CheckBoxState extends State<CheckBox> {
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
                                         value: value,
-                                        color: theOtherColor,
+                                        color: habit.skipped
+                                            ? Colors.grey.shade800
+                                            : theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),
@@ -312,12 +341,17 @@ class _CheckBoxState extends State<CheckBox> {
                                           : habit.durationCompleted % 60 == 0
                                               ? "${habit.durationCompleted ~/ 60}h"
                                               : "${habit.durationCompleted ~/ 60}h${habit.durationCompleted % 60}m",
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 10),
+                                      style: TextStyle(
+                                          color: habit.skipped
+                                              ? Colors.grey
+                                              : Colors.white,
+                                          fontSize: 10),
                                     ),
                                   ),
-                                  const Divider(
-                                    color: Colors.white,
+                                  Divider(
+                                    color: habit.skipped
+                                        ? Colors.grey
+                                        : Colors.white,
                                     thickness: 1,
                                     indent: 15,
                                     endIndent: 15,
@@ -330,8 +364,11 @@ class _CheckBoxState extends State<CheckBox> {
                                           : habit.duration % 60 == 0
                                               ? "${habit.duration ~/ 60}h"
                                               : "${habit.duration ~/ 60}h${habit.duration % 60}m",
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 10),
+                                      style: TextStyle(
+                                          color: habit.skipped
+                                              ? Colors.grey
+                                              : Colors.white,
+                                          fontSize: 10),
                                     ),
                                   ),
                                 ],
@@ -355,7 +392,9 @@ class _CheckBoxState extends State<CheckBox> {
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
                                         value: value,
-                                        color: theOtherColor,
+                                        color: habit.skipped
+                                            ? Colors.grey.shade800
+                                            : theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),
@@ -381,16 +420,22 @@ void checkCompleteHabit(
     BuildContext context,
     HistoricalHabitData habit,
     DateTime time,
-    bool isToday) {
+    bool isToday,
+    bool isAdLoaded,
+    interstitialAd) {
   if (amountCheck == true || durationCheck == true) {
     if (habit.completed) {
       if (isToday) {
-        context.read<HabitProvider>().completeHabitProvider(index);
+        context
+            .read<HabitProvider>()
+            .completeHabitProvider(index, isAdLoaded, interstitialAd);
+        context
+            .read<HistoricalHabitProvider>()
+            .completeHistoricalHabit(index, habit, time, context);
       } else {
         context
             .read<HistoricalHabitProvider>()
-            .completeHistoricalHabit(index, habit, time);
-        context.read<HistoricalHabitProvider>().updateHistoricalHabits(time);
+            .completeHistoricalHabit(index, habit, time, context);
       }
     } else {
       showDialog(
@@ -400,11 +445,12 @@ void checkCompleteHabit(
     }
   } else {
     if (isToday) {
-      context.read<HabitProvider>().completeHabitProvider(index);
-    } else {
       context
-          .read<HistoricalHabitProvider>()
-          .completeHistoricalHabit(index, habit, time);
+          .read<HabitProvider>()
+          .completeHabitProvider(index, isAdLoaded, interstitialAd);
     }
+    context
+        .read<HistoricalHabitProvider>()
+        .completeHistoricalHabit(index, habit, time, context);
   }
 }

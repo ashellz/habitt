@@ -2,11 +2,12 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/onboarding/onboarding_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
@@ -30,6 +31,7 @@ bool anytimeHasHabits = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -101,7 +103,12 @@ void callbackDispatcher(BuildContext context) {
   Workmanager().executeTask((task, inputData) async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();
+      context.read<HabitProvider>().chooseTimeBasedText();
     });
+
+    if (task == "updateDateTask") {
+      context.read<HabitProvider>().updateLastOpenedDate();
+    }
 
     saveHabitsForToday();
     checkForNotifications();
@@ -122,6 +129,18 @@ hasHabits() {
       anytimeHasHabits = true;
     }
   }
+}
+
+void scheduleMidnightTask() {
+  final now = DateTime.now();
+  final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
+  final initialDelay = nextMidnight.difference(now);
+
+  Workmanager().registerOneOffTask(
+    "1",
+    "updateDateTask",
+    initialDelay: initialDelay,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -155,7 +174,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const AuthCheck(),
       routes: {
-        "/home": (_) => const NewHomePage(),
+        "/home": (_) => const HomePage(),
       },
     );
   }
@@ -176,11 +195,23 @@ class AuthCheck extends StatelessWidget {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
-            context.read<HistoricalHabitProvider>().calculateStreak();
-
-            saveHabitsForToday();
+            context.read<HistoricalHabitProvider>().calculateStreak(context);
+            context.read<HabitProvider>().chooseTimeBasedText();
+            context.read<HabitProvider>().updateLastOpenedDate();
           });
-          return const NewHomePage();
+          saveHabitsForToday();
+          scheduleMidnightTask();
+
+          if (boolBox.containsKey("firstTimeOpened")) {
+            if (boolBox.get("firstTimeOpened")!) {
+              boolBox.put("firstTimeOpened", false);
+              return const OnboardingPage();
+            } else {
+              return const HomePage();
+            }
+          } else {
+            return const HomePage();
+          }
         } else {
           return LoginPage();
         }

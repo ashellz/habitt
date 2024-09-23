@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:habit_tracker/util/colors.dart';
@@ -72,6 +72,8 @@ class _ProfilePageState extends State<ProfilePage> {
         uploadData();
       });
       _rewardedAd = null;
+    } else {
+      uploadData();
     }
   }
 
@@ -127,6 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(backgroundColor: Colors.black),
         backgroundColor: Colors.black,
         body: ListView(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(left: 20, top: 30, right: 20),
           children: [
             Padding(
@@ -142,21 +145,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Transform.translate(
-                    offset: const Offset(0, -10),
-                    child: Text(
-                      stringBox.get("username") ?? 'Guest',
-                      style: TextStyle(
-                        color: theLightColor,
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    stringBox.get("username") ?? 'Guest',
+                    style: TextStyle(
+                      height: 1,
+                      color: theLightColor,
+                      fontSize: 42,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Transform.translate(
-                      offset: const Offset(0, -15),
-                      child: Text(userEmail,
-                          style: const TextStyle(fontSize: 18))),
+                  Text(userEmail, style: const TextStyle(fontSize: 18)),
                   const SizedBox(
                     height: 50,
                   ),
@@ -267,6 +265,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         )),
                   ),
                 ]),
+            const SizedBox(height: 50),
+            RichText(
+              text: TextSpan(
+                  style: const TextStyle(fontFamily: "Poppins"),
+                  children: <TextSpan>[
+                    const TextSpan(
+                        text: "Joined", style: TextStyle(fontSize: 18)),
+                    TextSpan(
+                        text: " habitt ",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: theLightColor)),
+                    const TextSpan(
+                        text: "on: ", style: TextStyle(fontSize: 18)),
+                    TextSpan(
+                        text:
+                            "${metadataBox.get("dayJoined")!.day}.${metadataBox.get("dayJoined")!.month}.${metadataBox.get("dayJoined")!.year} ",
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))
+                  ]),
+            ),
           ],
         ),
         bottomNavigationBar: _banner == null

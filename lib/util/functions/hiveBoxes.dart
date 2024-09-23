@@ -1,4 +1,4 @@
-import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:hive/hive.dart';

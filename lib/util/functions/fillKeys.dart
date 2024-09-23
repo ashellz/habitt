@@ -1,9 +1,9 @@
-import 'package:habit_tracker/data/tags.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/services/storage_service.dart';
 
-Future<void> fillKeys() async {
-  if (!boolBox.containsKey("firstTimeOpened")) {
-    boolBox.put("firstTimeOpened", true);
+fillKeys() {
+  if (habitBox.isEmpty) {
+    addInitialData();
   }
 
   if (!boolBox.containsKey("12hourFormat")) {
@@ -24,12 +24,6 @@ Future<void> fillKeys() async {
 
   if (!listBox.containsKey("dailyNotificationTime")) {
     listBox.put("dailyNotificationTime", [19, 0]);
-  }
-
-  if (tagBox.isEmpty) {
-    for (int i = 0; i < tagsList.length; i++) {
-      tagBox.add(TagData(tag: tagsList[i]));
-    }
   }
 
   if (!boolBox.containsKey("hapticFeedback")) {
@@ -84,5 +78,20 @@ Future<void> fillKeys() async {
 
   if (boolBox.get("isLoggenIn") == null) {
     boolBox.put("isLoggenIn", false);
+  }
+}
+
+checkForDayJoined() {
+  if (!metadataBox.containsKey("dayJoined")) {
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA
+          .compareTo(dateB); // This will sort from oldest to most recent
+    });
+
+    metadataBox.put("dayJoined", historicalList[0].date);
   }
 }

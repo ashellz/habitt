@@ -1,7 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
@@ -30,6 +34,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
   }
 
   void updateHistoricalHabits(DateTime date) {
+    if (kDebugMode) {
+      print("updating historical habits");
+    }
     for (int i = 0; i < historicalBox.length; i++) {
       List intDate = [
         historicalBox.getAt(i)!.date.year,
@@ -47,6 +54,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
   void applyCurentHabitData(List currentDate, int index,
       HistoricalHabitData habitData, DateTime time) {
+    if (kDebugMode) {
+      print("applying current habit data");
+    }
     for (int i = 0; i < historicalBox.length; i++) {
       List<int> habitDate = [
         historicalBox.getAt(i)!.date.year,
@@ -69,8 +79,58 @@ class HistoricalHabitProvider extends ChangeNotifier {
     }
   }
 
-  void skipHistoricalHabit(int index, habit, DateTime time) async {
-    List<int> currentDate = [time.year, time.month, time.day];
+  void skipHistoricalHabit(
+      int index, habit, DateTime time, BuildContext context) async {
+    int habitsSkipped = 0;
+
+    // Check if the user skipped a habit two days in a row or skipped 3 habits a day already
+    List<int> chosenHabitDate = [time.year, time.month, time.day];
+
+    var historicalList = historicalBox.values.toList();
+
+    historicalList.sort((a, b) {
+      DateTime dateA = a.date;
+      DateTime dateB = b.date;
+      return dateA
+          .compareTo(dateB); // This will sort from oldest to most recent
+    });
+
+    for (int i = 0; i < historicalList.length; i++) {
+      List habitDate = [
+        historicalList[i].date.year,
+        historicalList[i].date.month,
+        historicalList[i].date.day
+      ];
+
+      if (const ListEquality().equals(habitDate, chosenHabitDate)) {
+        for (int j = 0; j < historicalList[i].data.length; j++) {
+          if (historicalList[i].data[j].skipped) {
+            habitsSkipped += 1;
+          }
+        }
+
+        if (habitsSkipped >= 3) {
+          Fluttertoast.showToast(
+              msg: "You can't skip more than 3 habits a day.");
+          return;
+        }
+
+        if (i - 1 >= 0) {
+          if (historicalList[i - 1].data[index].skipped) {
+            Fluttertoast.showToast(
+                msg: "You can't skip a habit two days in a row.");
+            return;
+          }
+        }
+        if (i + 1 < historicalList.length) {
+          if (historicalList[i + 1].data[index].skipped) {
+            Fluttertoast.showToast(
+                msg: "You can't skip a habit two days in a row.");
+            return;
+          }
+        }
+      }
+    }
 
     HistoricalHabitData habitData = HistoricalHabitData(
       name: habit.name,
@@ -78,20 +138,21 @@ class HistoricalHabitProvider extends ChangeNotifier {
       icon: habit.icon,
       category: habit.category,
       amount: habit.amount,
-      amountCompleted: habit.completed ? habit.amount : 0,
       amountName: habit.amountName,
+      amountCompleted: habit.amountCompleted,
       duration: habit.duration,
-      durationCompleted: habit.completed ? habit.duration : 0,
+      durationCompleted: habit.durationCompleted,
       skipped: !habit.skipped,
     );
 
-    applyCurentHabitData(currentDate, index, habitData, time);
+    applyCurentHabitData(chosenHabitDate, index, habitData, time);
 
-    calculateStreak();
+    calculateStreak(context);
     notifyListeners();
   }
 
-  void completeHistoricalHabit(int index, habit, DateTime time) async {
+  void completeHistoricalHabit(
+      int index, habit, DateTime time, BuildContext context) async {
     List<int> currentDate = [time.year, time.month, time.day];
 
     HistoricalHabitData habitData = HistoricalHabitData(
@@ -100,10 +161,18 @@ class HistoricalHabitProvider extends ChangeNotifier {
       icon: habit.icon,
       category: habit.category,
       amount: habit.amount,
-      amountCompleted: !habit.completed ? habit.amount : 0,
       amountName: habit.amountName,
+      amountCompleted: !habit.completed
+          ? habit.amount
+          : !habit.skipped
+              ? 0
+              : habit.amountCompleted,
       duration: habit.duration,
-      durationCompleted: !habit.completed ? habit.duration : 0,
+      durationCompleted: !habit.completed
+          ? habit.duration
+          : !habit.skipped
+              ? 0
+              : habit.durationCompleted,
       skipped: false,
     );
 
@@ -122,7 +191,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
-    calculateStreak();
+    calculateStreak(context);
     notifyListeners();
   }
 
@@ -168,7 +237,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void calculateStreak() {
+  void calculateStreak(BuildContext context) {
     var historicalList = historicalBox.values.toList();
 
     historicalList.sort((a, b) {
@@ -244,6 +313,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
     }
 
     streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
+    Provider.of<HabitProvider>(context, listen: false)
+        .allHabitsCompletedStreakP = allHabitsCompletedStreak;
 
     notifyListeners();
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/objects/habit/add_tag.dart';
@@ -55,7 +55,7 @@ class _ChooseTagState extends State<ChooseTag> {
                   isScrollControlled: true,
                   context: context,
                   enableDrag: true,
-                  builder: (context) => const AddTagWidget(),
+                  builder: (context) => AddTagWidget(mystate: setState),
                 ),
                 child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

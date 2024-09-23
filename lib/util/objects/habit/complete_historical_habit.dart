@@ -155,12 +155,14 @@ Widget completeHistoricalHabitDialog(
                     backgroundColor: WidgetStatePropertyAll(theLightColor)),
                 onPressed: () {
                   if (isToday) {
-                    context.read<HabitProvider>().completeHabitProvider(index);
-                  } else {
                     context
-                        .read<HistoricalHabitProvider>()
-                        .completeHistoricalHabit(index, habit, time);
+                        .read<HabitProvider>()
+                        .completeHabitProvider(index, false, false);
                   }
+                  context
+                      .read<HistoricalHabitProvider>()
+                      .completeHistoricalHabit(index, habit, time, context);
+
                   Navigator.pop(context);
                 },
                 child: const Text(

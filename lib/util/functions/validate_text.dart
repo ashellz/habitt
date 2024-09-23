@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 
 String? validateUsername(String? value) {
   if (value?.isEmpty ?? true) {
@@ -64,6 +65,25 @@ String? validateText(String? value) {
     return 'Please enter some text';
   } else if (value == null || value.trim().isEmpty) {
     return 'Input cannot be just spaces';
+  }
+  return null;
+}
+
+String? validateTag(String? value) {
+  bool tagAlreadyExists = false;
+
+  for (int i = 0; i < tagBox.length; i++) {
+    if (value == tagBox.getAt(i)?.tag) {
+      tagAlreadyExists = true;
+    }
+  }
+
+  if (value?.isEmpty ?? true) {
+    return 'Please enter some text';
+  } else if (value == null || value.trim().isEmpty) {
+    return 'Input cannot be just spaces';
+  } else if (tagAlreadyExists) {
+    return 'A tag with that name already exists';
   }
   return null;
 }

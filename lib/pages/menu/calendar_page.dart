@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
+import "package:google_mobile_ads/google_mobile_ads.dart";
 import "package:habit_tracker/data/historical_habit.dart";
-import "package:habit_tracker/pages/new_home_page.dart";
+import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
+import "package:habit_tracker/pages/home_page.dart";
+import "package:habit_tracker/services/ad_mob_service.dart";
 import "package:habit_tracker/services/provider/historical_habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
@@ -28,78 +31,93 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
-    });
+    initInterstitialAd();
+
+    context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
+  }
+
+  InterstitialAd? interstitialAd;
+  bool isAdLoaded = false;
+
+  initInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: AdMobService.interstitialAd,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) => setState(() {
+            interstitialAd = ad;
+            isAdLoaded = true;
+          }),
+          onAdFailedToLoad: (error) => setState(() => interstitialAd = null),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black),
-      body: ListView(
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Text("Calendar",
-                style: TextStyle(
-                    fontSize: 42,
-                    color: theLightColor,
-                    fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            decoration: BoxDecoration(
-                color: theDarkGrey, borderRadius: BorderRadius.circular(20)),
-            child: TableCalendar(
-              availableGestures: AvailableGestures.horizontalSwipe,
-              calendarBuilders: CalendarBuilders(
-                selectedBuilder: (context, date, events) =>
-                    CalendarDay(date: date, selected: true),
-                defaultBuilder: (context, date, events) =>
-                    CalendarDay(date: date, selected: false),
-                todayBuilder: (context, day, events) =>
-                    CalendarDay(date: day, selected: false),
-              ),
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible: false,
-                weekendTextStyle: const TextStyle(color: Colors.white),
-                selectedDecoration: BoxDecoration(
-                  color: theOtherColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+        slivers: [
+          ExpandableAppBar(actionsWidget: Container(), title: "Calendar"),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: theDarkGrey,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TableCalendar(
+                    availableGestures: AvailableGestures.horizontalSwipe,
+                    calendarBuilders: CalendarBuilders(
+                      selectedBuilder: (context, date, events) =>
+                          CalendarDay(date: date, selected: true),
+                      defaultBuilder: (context, date, events) =>
+                          CalendarDay(date: date, selected: false),
+                      todayBuilder: (context, day, events) =>
+                          CalendarDay(date: day, selected: false),
+                    ),
+                    calendarStyle: CalendarStyle(
+                      outsideDaysVisible: false,
+                      weekendTextStyle: const TextStyle(color: Colors.white),
+                      selectedDecoration: BoxDecoration(
+                        color: theOtherColor,
+                        shape: BoxShape.rectangle,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                      ),
+                    ),
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                        weekendStyle: TextStyle(
+                            color: theLightColor, fontWeight: FontWeight.bold),
+                        weekdayStyle: TextStyle(
+                            color: theLightColor, fontWeight: FontWeight.bold)),
+                    headerStyle: const HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                      leftChevronIcon: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                      ),
+                      rightChevronIcon: Icon(
+                        Icons.chevron_right,
+                        color: Colors.white,
+                      ),
+                    ),
+                    firstDay: DateTime.utc(2024, 1, 1),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: today,
+                    selectedDayPredicate: (day) => isSameDay(day, today),
+                    onDaySelected: onDaySelected,
+                  ),
                 ),
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              daysOfWeekStyle: DaysOfWeekStyle(
-                  weekendStyle: TextStyle(
-                      color: theLightColor, fontWeight: FontWeight.bold),
-                  weekdayStyle: TextStyle(
-                      color: theLightColor, fontWeight: FontWeight.bold)),
-              headerStyle: const HeaderStyle(
-                titleCentered: true,
-                formatButtonVisible: false,
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: Colors.white,
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                ),
-              ),
-              firstDay: DateTime.utc(2024, 1, 1),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: today,
-              selectedDayPredicate: (day) => isSameDay(day, today),
-              onDaySelected: onDaySelected,
+                const SizedBox(height: 30),
+                otherCategoriesList(context, today, isAdLoaded, interstitialAd),
+              ]),
             ),
           ),
-          const SizedBox(height: 30),
-          otherCategoriesList(context, today),
         ],
       ),
     );
@@ -199,11 +217,12 @@ class CalendarDay extends StatelessWidget {
   }
 }
 
-otherCategoriesList(BuildContext context, today) {
+otherCategoriesList(
+    BuildContext context, chosenDay, bool isAdLoaded, interstitialAd) {
   late int habitListLength = 0;
   late List habitsOnDate = [];
   late int boxIndex = 0;
-  List<int> todayDate = [today.year, today.month, today.day];
+  List<int> todayDate = [chosenDay.year, chosenDay.month, chosenDay.day];
   bool todayExists = false;
 
   for (int i = 0; i < historicalBox.length; i++) {
@@ -243,7 +262,7 @@ otherCategoriesList(BuildContext context, today) {
       todayHabitsList.add(newHistoricalHabit);
     }
 
-    historicalBox.add(HistoricalHabit(date: today, data: todayHabitsList));
+    historicalBox.add(HistoricalHabit(date: chosenDay, data: todayHabitsList));
     int index = historicalBox.length - 1;
     boxIndex = index;
     habitListLength = historicalBox.getAt(index)!.data.length;
@@ -251,46 +270,54 @@ otherCategoriesList(BuildContext context, today) {
   }
 
   if (habitListLength == 0 || !todayExists) {
-    if (today.year <= DateTime.now().year) {
-      // if the year is equal or less than the current year
-      if (today.year == DateTime.now().year) {
-        // if the year is equal to the current year
+    DateTime dayJoined = metadataBox.get('dayJoined')!;
 
-        if (today.month <= DateTime.now().month) {
-          // if the month is equal or less than the current month in the current year
+    if (dayJoined.isBefore(chosenDay)) {
+      if (chosenDay.year <= DateTime.now().year) {
+        // if the year is equal or less than the current year
+        if (chosenDay.year == DateTime.now().year) {
+          // if the year is equal to the current year
 
-          if (today.month < DateTime.now().month) {
-            // if the month is less than the current month in the current year
-            saveTodayHabits();
-          }
+          if (chosenDay.month <= DateTime.now().month) {
+            // if the month is equal or less than the current month in the current year
 
-          if (today.month == DateTime.now().month) {
-            // if the month is equal to the current month in the current year
-
-            if (today.day < DateTime.now().day) {
-              // if the day is equal or less than the current day in the current month in the current year
+            if (chosenDay.month < DateTime.now().month) {
+              // if the month is less than the current month in the current year
               saveTodayHabits();
+            }
+
+            if (chosenDay.month == DateTime.now().month) {
+              // if the month is equal to the current month in the current year
+
+              if (chosenDay.day < DateTime.now().day) {
+                // if the day is equal or less than the current day in the current month in the current year
+                saveTodayHabits();
+              }
             }
           }
         }
-      }
 
-      if (today.year < DateTime.now().year) {
-        saveTodayHabits();
+        if (chosenDay.year < DateTime.now().year) {
+          saveTodayHabits();
+        }
       }
     }
   }
 
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(context, habitListLength, habitsOnDate, today, boxIndex),
-    morning(context, habitListLength, habitsOnDate, today, boxIndex),
-    afternoon(context, habitListLength, habitsOnDate, today, boxIndex),
-    evening(context, habitListLength, habitsOnDate, today, boxIndex),
+    anyTime(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
+        isAdLoaded, interstitialAd),
+    morning(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
+        isAdLoaded, interstitialAd),
+    afternoon(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
+        isAdLoaded, interstitialAd),
+    evening(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
+        isAdLoaded, interstitialAd),
   ]);
 }
 
-Widget anyTime(
-    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
+Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
+    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Any time", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,10 +339,13 @@ Widget anyTime(
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                  index: i,
-                  habits: habitsOnDate,
-                  time: today,
-                  boxIndex: boxIndex),
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+                boxIndex: boxIndex,
+                isAdLoaded: isAdLoaded,
+                interstitialAd: interstitialAd,
+              ),
             ),
         const SizedBox(height: 20),
       ],
@@ -337,8 +367,8 @@ Widget anyTime(
   return const SizedBox(height: 0);
 }
 
-Widget morning(
-    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
+Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
+    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Morning", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,10 +390,13 @@ Widget morning(
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                  index: i,
-                  habits: habitsOnDate,
-                  time: today,
-                  boxIndex: boxIndex),
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+                boxIndex: boxIndex,
+                isAdLoaded: isAdLoaded,
+                interstitialAd: interstitialAd,
+              ),
             ),
         const SizedBox(height: 20),
       ],
@@ -386,8 +419,8 @@ Widget morning(
   return const SizedBox(height: 0);
 }
 
-Widget afternoon(
-    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
+Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
+    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Afternoon", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,10 +442,13 @@ Widget afternoon(
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                  index: i,
-                  habits: habitsOnDate,
-                  time: today,
-                  boxIndex: boxIndex),
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+                boxIndex: boxIndex,
+                isAdLoaded: isAdLoaded,
+                interstitialAd: interstitialAd,
+              ),
             ),
         const SizedBox(height: 20),
       ],
@@ -435,8 +471,8 @@ Widget afternoon(
   return const SizedBox(height: 0);
 }
 
-Widget evening(
-    BuildContext context, habitListLength, habitsOnDate, today, boxIndex) {
+Widget evening(BuildContext context, habitListLength, habitsOnDate, today,
+    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Evening", habitsOnDate, habitListLength)) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,10 +494,13 @@ Widget evening(
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
-                  index: i,
-                  habits: habitsOnDate,
-                  time: today,
-                  boxIndex: boxIndex),
+                index: i,
+                habits: habitsOnDate,
+                time: today,
+                boxIndex: boxIndex,
+                isAdLoaded: isAdLoaded,
+                interstitialAd: interstitialAd,
+              ),
             ),
         const SizedBox(height: 20),
       ],

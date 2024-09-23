@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/auth_service.dart';
 import 'package:habit_tracker/services/storage_service.dart';
-import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:restart_app/restart_app.dart';
 
+// ignore: must_be_immutable
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});
 
@@ -15,8 +17,13 @@ class SignupPage extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool hidePass = true;
+  IconData hidePassIcon = Icons.visibility_off_rounded;
+  Color hidePassColor = Colors.grey.shade800;
+
   @override
   Widget build(BuildContext context) {
+    bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -134,48 +141,75 @@ class SignupPage extends StatelessWidget {
                   // PASSWORD
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
-                    child: TextFormField(
-                      validator: validatePassword,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
-                      cursorColor: Colors.white,
-                      cursorWidth: 2.0,
-                      cursorHeight: 22.0,
-                      cursorRadius: const Radius.circular(10.0),
-                      cursorOpacityAnimates: true,
-                      enableInteractiveSelection: true,
-                      controller: _passwordController,
-                      obscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
+                    child: StatefulBuilder(
+                        builder: (context, StateSetter setState) {
+                      return TextFormField(
+                        validator: validatePassword,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).nextFocus(),
+                        cursorColor: Colors.white,
+                        cursorWidth: 2.0,
+                        cursorHeight: 22.0,
+                        cursorRadius: const Radius.circular(10.0),
+                        cursorOpacityAnimates: true,
+                        enableInteractiveSelection: true,
+                        controller: _passwordController,
+                        obscureText: hidePass,
+                        keyboardType: TextInputType.visiblePassword,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
+                            ),
                           ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (hidePass) {
+                                      hidePass = false;
+                                      hidePassIcon = Icons.visibility_rounded;
+                                      hidePassColor = Colors.white;
+                                    } else {
+                                      hidePass = true;
+                                      hidePassIcon =
+                                          Icons.visibility_off_rounded;
+                                      hidePassColor = Colors.grey.shade800;
+                                    }
+                                  });
+                                },
+                                icon: Icon(
+                                  hidePassIcon,
+                                  color: hidePassColor,
+                                )),
+                          ),
+                          prefixIcon: const Icon(Icons.lock_open_outlined,
+                              color: Colors.white),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 25, horizontal: 20),
+                          labelStyle: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white38,
+                              fontWeight: FontWeight.bold),
+                          labelText: "PASSWORD",
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade900,
                         ),
-                        prefixIcon: const Icon(Icons.lock_open_outlined,
-                            color: Colors.white),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 25, horizontal: 20),
-                        labelStyle: const TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.white38,
-                            fontWeight: FontWeight.bold),
-                        labelText: "PASSWORD",
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey.shade900,
-                      ),
-                    ),
+                      );
+                    }),
                   ),
 
                   // SIGN UP BUTTON
@@ -187,92 +221,21 @@ class SignupPage extends StatelessWidget {
                           child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(15.0)),
-                                              side: BorderSide(
-                                                  color: theLightColor,
-                                                  width: 3.0),
-                                            ),
-                                            backgroundColor: Colors.black,
-                                            title: const Center(
-                                              child: Text(
-                                                "Keep guest data?",
-                                                style: TextStyle(fontSize: 22),
-                                              ),
-                                            ),
-                                            actions: [
-                                              Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    ElevatedButton(
-                                                        onPressed: () async {
-                                                          keepData = false;
-                                                          newAccountDownloadData(
-                                                              context);
-                                                          await AuthService().signUp(
-                                                              context: context,
-                                                              email:
-                                                                  _emailController
-                                                                      .text,
-                                                              password:
-                                                                  _passwordController
-                                                                      .text);
-                                                          stringBox.put(
-                                                              'username',
-                                                              _usernameController
-                                                                  .text);
-                                                        },
-                                                        style: ButtonStyle(
-                                                          backgroundColor:
-                                                              WidgetStateProperty
-                                                                  .all<Color>(
-                                                                      theRedColor),
-                                                        ),
-                                                        child: const Text(
-                                                            "Delete",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 14))),
-                                                    ElevatedButton(
-                                                        onPressed: () async {
-                                                          keepData = true;
-                                                          await AuthService().signUp(
-                                                              context: context,
-                                                              email:
-                                                                  _emailController
-                                                                      .text,
-                                                              password:
-                                                                  _passwordController
-                                                                      .text);
-                                                          stringBox.put(
-                                                              'username',
-                                                              _usernameController
-                                                                  .text);
-                                                        },
-                                                        style: ButtonStyle(
-                                                          backgroundColor:
-                                                              WidgetStateProperty
-                                                                  .all<Color>(
-                                                                      theLightColor),
-                                                        ),
-                                                        child: const Text(
-                                                          "Keep",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 14),
-                                                        )),
-                                                  ]),
-                                            ],
-                                          ));
+                                  if (boolBox.get("isGuest")!) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => keepDataDialog(
+                                            context,
+                                            _emailController,
+                                            _passwordController,
+                                            _usernameController));
+                                  } else {
+                                    signUpNewUser(
+                                        context,
+                                        _emailController,
+                                        _passwordController,
+                                        _usernameController);
+                                  }
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -316,22 +279,40 @@ class SignupPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
+
+                  const Text("or continue with",
+                      style: TextStyle(color: Colors.grey)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SignInMethod(
+                          icon: Bootstrap.google,
+                          signInFunction: AuthService().signInWithGoogle),
+                      SignInMethod(
+                          icon: Bootstrap.github,
+                          signInFunction: AuthService().signInWithGitHub),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: GestureDetector(
-                onTap: () async {
-                  await AuthService().signInAsGuest(context);
-                },
-                child: const Text(
-                  "CONTINUE AS A GUEST",
-                  style: TextStyle(color: Colors.white38, fontSize: 18),
+            child: Transform.translate(
+              offset: Offset(0,
+                  keyboardOpen ? MediaQuery.of(context).viewInsets.bottom : 0),
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    await AuthService().signInAsGuest(context);
+                  },
+                  child: const Text(
+                    "CONTINUE AS A GUEST",
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  ),
                 ),
               ),
             ),
@@ -340,4 +321,104 @@ class SignupPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class SignInMethod extends StatelessWidget {
+  const SignInMethod({
+    super.key,
+    required this.icon,
+    required this.signInFunction,
+  });
+
+  final IconData icon;
+  final Future<void> Function(BuildContext context) signInFunction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: IconButton(
+            onPressed: () async {
+              await signInFunction(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey.shade900,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+              ),
+            ),
+            icon: Icon(icon, color: Colors.white38, size: 25)));
+  }
+}
+
+Widget keepDataDialog(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController usernameController) {
+  return AlertDialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+      side: BorderSide(color: Colors.grey.shade900, width: 3.0),
+    ),
+    backgroundColor: Colors.black,
+    title: const Center(
+      child: Text(
+        "Keep guest data?",
+        style: TextStyle(fontSize: 22),
+      ),
+    ),
+    actions: [
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        SizedBox(
+          width: 100,
+          child: OutlinedButton(
+              onPressed: () async {
+                signUpNewUser(context, emailController, passwordController,
+                    usernameController);
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(width: 2.0, color: Colors.grey.shade800),
+              ),
+              child: const Text("Delete",
+                  style: TextStyle(color: Colors.white, fontSize: 14))),
+        ),
+        SizedBox(
+          width: 100,
+          child: ElevatedButton(
+              onPressed: () async {
+                keepData = true;
+                await AuthService().signUp(
+                    context: context,
+                    email: emailController.text,
+                    password: passwordController.text);
+                stringBox.put('username', usernameController.text);
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    WidgetStateProperty.all<Color>(Colors.grey.shade800),
+              ),
+              child: const Text(
+                "Keep",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              )),
+        ),
+      ]),
+    ],
+  );
+}
+
+void signUpNewUser(
+    BuildContext context,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    TextEditingController usernameController) async {
+  keepData = false;
+  deleteGuestHabits();
+  await AuthService().signUp(
+      context: context,
+      email: emailController.text,
+      password: passwordController.text);
+  stringBox.put('username', usernameController.text);
+  Restart.restartApp();
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/checkCategory.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +35,7 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
   editcontroller.text = "";
   Navigator.of(context).pop();
 
-  habitGoalEdit = 0;
+  Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
   updated = false;
   editcontroller.clear();
   changed = false;

@@ -1,4 +1,4 @@
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 
 bool categoryCompleted(String category) {
   int habits = 0;

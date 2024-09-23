@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:google_mobile_ads/google_mobile_ads.dart";
 import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/functions/buildEditedValues.dart";
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/pages/edit_page.dart";
@@ -6,11 +7,10 @@ import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/widgets/popup_butt
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/widgets/save_button.dart";
 import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/pages/stats_page.dart";
 import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_display.dart";
+import "package:habit_tracker/services/ad_mob_service.dart";
 import "package:habit_tracker/services/provider/habit_provider.dart";
 import "package:habit_tracker/util/colors.dart";
 import "package:provider/provider.dart";
-
-int habitGoalEdit = 0;
 
 bool updated = false;
 
@@ -31,9 +31,31 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
+  InterstitialAd? interstitialAd;
+  bool isAdLoaded = false;
+
+  initInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: AdMobService.interstitialAd,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) => setState(() {
+            interstitialAd = ad;
+            isAdLoaded = true;
+          }),
+          onAdFailedToLoad: (error) => setState(() => interstitialAd = null),
+        ));
+  }
+
   bool edit = false;
   bool stats = true;
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    initInterstitialAd();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +146,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: index == 0
-                                    ? statsPage(context, widget.index)
+                                    ? statsPage(context, widget.index,
+                                        isAdLoaded, interstitialAd)
                                     : editPage(
                                         setState,
                                         context,

@@ -2,62 +2,54 @@
 
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:provider/provider.dart';
 
 void buildEditedValues(
     BuildContext context, int index, TextEditingController editcontroller) {
+  var habitProvider = Provider.of<HabitProvider>(context, listen: false);
+
   if (!changed) {
-    Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-        Icon(getIcon(index));
+    habitProvider.updatedIcon = Icon(getIcon(index));
   }
 
   if (!updated) {
-    int amount = Provider.of<HabitProvider>(context, listen: false).amount;
-    int duration = Provider.of<HabitProvider>(context, listen: false).duration;
-    int durationHours =
-        Provider.of<HabitProvider>(context, listen: false).durationHours;
-    int durationMinutes =
-        Provider.of<HabitProvider>(context, listen: false).durationMinutes;
+    int amount = habitProvider.amount;
+    int duration = habitProvider.duration;
+    int durationHours = habitProvider.durationHours;
+    int durationMinutes = habitProvider.durationMinutes;
 
-    Provider.of<HabitProvider>(context, listen: false).categoriesExpanded =
-        false;
+    habitProvider.categoriesExpanded = false;
     if (habitBox.getAt(index)!.amount > 1) {
-      habitGoalEdit = 1;
-      amount = habitBox.getAt(index)!.amount;
-      Provider.of<HabitProvider>(context, listen: false)
-          .habitGoalController
-          .text = habitBox.getAt(index)!.amountName;
-      duration = 0;
-      durationHours = 0;
-      durationMinutes = 0;
+      habitProvider.habitGoalValue = 1;
+      habitProvider.amount = habitBox.getAt(index)!.amount;
+      habitProvider.habitGoalController.text =
+          habitBox.getAt(index)!.amountName;
+      habitProvider.duration = 0;
+      habitProvider.durationHours = 0;
+      habitProvider.durationMinutes = 0;
     } else if (habitBox.getAt(index)!.duration > 0) {
-      habitGoalEdit = 2;
-      duration = habitBox.getAt(index)!.duration;
-      amount = 1;
-      durationHours = duration ~/ 60;
-      durationMinutes = duration % 60;
+      habitProvider.habitGoalValue = 2;
+      habitProvider.duration = habitBox.getAt(index)!.duration;
+      habitProvider.amount = 1;
+      habitProvider.durationHours = duration ~/ 60;
+      habitProvider.durationMinutes = duration % 60;
     } else {
-      habitGoalEdit = 0;
-      amount = 1;
-      duration = 0;
-      durationHours = 0;
-      durationMinutes = 0;
+      habitProvider.habitGoalValue = 0;
+      habitProvider.amount = 1;
+      habitProvider.duration = 0;
+      habitProvider.durationHours = 0;
+      habitProvider.durationMinutes = 0;
     }
 
     if (editcontroller.text.isEmpty) {
       editcontroller.text = habitBox.getAt(index)!.name;
     }
 
-    if (Provider.of<HabitProvider>(context, listen: false)
-        .habitGoalController
-        .text
-        .isEmpty) {
-      Provider.of<HabitProvider>(context, listen: false)
-          .habitGoalController
-          .text = "times";
+    if (habitProvider.habitGoalController.text.isEmpty) {
+      habitProvider.habitGoalController.text = "times";
     }
 
     habitTag = habitBox.getAt(index)!.tag;
@@ -71,8 +63,7 @@ void buildEditedValues(
           .updateDropDownValue(habitBox.getAt(index)!.category);
     });
 
-    Provider.of<HabitProvider>(context, listen: false).notescontroller.text =
-        habitBox.getAt(index)!.notes;
+    habitProvider.notescontroller.text = habitBox.getAt(index)!.notes;
 
     updated = true;
   }

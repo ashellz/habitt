@@ -28,6 +28,11 @@ class ExpandableAppBar extends StatelessWidget {
             end: theAppBarColor,
           ).lerp(percent)!;
 
+          Color textColor = ColorTween(
+            begin: theLightColor,
+            end: Colors.white,
+          ).lerp(percent * 3)!;
+
           return Container(
             color: backgroundColor,
             child: FlexibleSpaceBar(
@@ -40,9 +45,9 @@ class ExpandableAppBar extends StatelessWidget {
                     offset: Offset(percent * 60, percent),
                     child: Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 24.0,
-                        color: Colors.white,
+                        color: textColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

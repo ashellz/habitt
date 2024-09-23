@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
@@ -16,9 +17,13 @@ class NewHabitTile extends StatefulWidget {
     super.key,
     required this.index,
     required this.editcontroller,
+    required this.isAdLoaded,
+    required this.interstitialAd,
   });
   final int index;
   final TextEditingController editcontroller;
+  final bool isAdLoaded;
+  final InterstitialAd? interstitialAd;
 
   @override
   State<NewHabitTile> createState() => _NewHabitTileState();
@@ -44,7 +49,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
     return GestureDetector(
       onTap: () {
-        habitGoalEdit = 0;
+        Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
         updated = false;
         editcontroller.text = "";
         changed = false;
@@ -84,7 +89,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );
-          habitGoalEdit = 0;
+
           deleted = false;
           updated = false;
           editcontroller.clear();
@@ -92,12 +97,13 @@ class _NewHabitTileState extends State<NewHabitTile> {
           if (context.mounted) {
             Provider.of<HabitProvider>(context, listen: false).updatedIcon =
                 startIcon;
+            Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
+                0;
           }
         });
       },
       child: Slidable(
-        enabled: !habitBox.getAt(index)!.completed,
-        closeOnScroll: true,
+        enabled: habit.completed ? habit.skipped : true,
         startActionPane: ActionPane(
           dragDismissible: true,
           extentRatio: 0.35,
@@ -112,33 +118,37 @@ class _NewHabitTileState extends State<NewHabitTile> {
               },
               backgroundColor: Colors.grey.shade900,
               foregroundColor: Colors.white,
-              label: habitBox.getAt(index)!.skipped ? 'Undo' : 'Skip',
+              label: habit.skipped ? 'Undo' : 'Skip',
               borderRadius: BorderRadius.circular(15),
             ),
           ],
         ),
         child: HabitTile(
-            index: index,
-            habitBox: habitBox,
-            widget: widget,
-            amountCheck: amountCheck,
-            durationCheck: durationCheck,
-            habit: habit),
+          index: index,
+          habitBox: habitBox,
+          widget: widget,
+          amountCheck: amountCheck,
+          durationCheck: durationCheck,
+          habit: habit,
+          interstitialAd: widget.interstitialAd,
+          isAdLoaded: widget.isAdLoaded,
+        ),
       ),
     );
   }
 }
 
 class HabitTile extends StatelessWidget {
-  const HabitTile({
-    super.key,
-    required this.index,
-    required this.habitBox,
-    required this.widget,
-    required this.amountCheck,
-    required this.durationCheck,
-    required this.habit,
-  });
+  const HabitTile(
+      {super.key,
+      required this.index,
+      required this.habitBox,
+      required this.widget,
+      required this.amountCheck,
+      required this.durationCheck,
+      required this.habit,
+      required this.isAdLoaded,
+      required this.interstitialAd});
 
   final int index;
   final Box<HabitData> habitBox;
@@ -146,45 +156,49 @@ class HabitTile extends StatelessWidget {
   final bool amountCheck;
   final bool durationCheck;
   final HabitData habit;
+  final bool isAdLoaded;
+  final InterstitialAd? interstitialAd;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
         getIcon(index),
-        color: habitBox.getAt(index)!.completed
-            ? Colors.grey.shade700
-            : Colors.white,
+        color: habit.completed ? Colors.grey.shade700 : Colors.white,
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
+          Flexible(
             child: Text(
-              habitBox.getAt(index)!.name,
+              habit.name,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: textStyleCompletedCheck(),
             ),
           ),
-          StreakDisplay(habitBox: habitBox, index: index),
+          const SizedBox(
+            width: 10,
+          ),
+          IntrinsicWidth(
+              child: StreakDisplay(habitBox: habitBox, index: index)),
         ],
       ),
       trailing: CheckBox(
-          amountCheck: amountCheck,
-          durationCheck: durationCheck,
-          habitBox: habitBox,
-          index: index,
-          habit: habit),
+        amountCheck: amountCheck,
+        durationCheck: durationCheck,
+        habitBox: habitBox,
+        index: index,
+        habit: habit,
+        isAdLoaded: isAdLoaded,
+        interstitialAd: interstitialAd,
+      ),
     );
   }
 
   TextStyle textStyleCompletedCheck() {
     return TextStyle(
-        color: habitBox.getAt(index)!.completed
-            ? Colors.grey.shade700
-            : Colors.white,
+        color: habit.completed ? Colors.grey.shade700 : Colors.white,
         decoration: habitBox.getAt(widget.index)!.completed
             ? TextDecoration.lineThrough
             : null,
@@ -226,20 +240,23 @@ class StreakDisplay extends StatelessWidget {
 }
 
 class CheckBox extends StatefulWidget {
-  const CheckBox({
-    super.key,
-    required this.amountCheck,
-    required this.durationCheck,
-    required this.habitBox,
-    required this.index,
-    required this.habit,
-  });
+  const CheckBox(
+      {super.key,
+      required this.amountCheck,
+      required this.durationCheck,
+      required this.habitBox,
+      required this.index,
+      required this.habit,
+      required this.interstitialAd,
+      required this.isAdLoaded});
 
   final bool amountCheck;
   final bool durationCheck;
   final Box<HabitData> habitBox;
   final int index;
   final HabitData habit;
+  final bool isAdLoaded;
+  final InterstitialAd? interstitialAd;
 
   @override
   State<CheckBox> createState() => _CheckBoxState();
@@ -250,8 +267,8 @@ class _CheckBoxState extends State<CheckBox> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        checkCompleteHabit(
-            widget.amountCheck, widget.durationCheck, widget.index, context);
+        checkCompleteHabit(widget.amountCheck, widget.durationCheck,
+            widget.index, context, widget.isAdLoaded, widget.interstitialAd);
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
@@ -262,7 +279,8 @@ class _CheckBoxState extends State<CheckBox> {
                 widget.habit.completed ? theOtherColor : Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: widget.habitBox.getAt(widget.index)!.completed
+          child: widget.habitBox.getAt(widget.index)!.completed &&
+                  !widget.habitBox.getAt(widget.index)!.skipped
               ? Stack(
                   children: [
                     Positioned.fill(
@@ -281,10 +299,7 @@ class _CheckBoxState extends State<CheckBox> {
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color:
-                                    widget.habitBox.getAt(widget.index)!.skipped
-                                        ? Colors.grey.shade800
-                                        : theOtherColor,
+                                color: theOtherColor,
                                 backgroundColor: Colors.grey.shade900,
                               );
                             }),
@@ -388,7 +403,11 @@ class _CheckBoxState extends State<CheckBox> {
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
                                         value: value,
-                                        color: theOtherColor,
+                                        color: widget.habitBox
+                                                .getAt(widget.index)!
+                                                .skipped
+                                            ? Colors.grey.shade800
+                                            : theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),
@@ -415,12 +434,21 @@ class _CheckBoxState extends State<CheckBox> {
                                                   0
                                               ? "${widget.habitBox.getAt(widget.index)!.durationCompleted ~/ 60}h"
                                               : "${widget.habitBox.getAt(widget.index)!.durationCompleted ~/ 60}h${widget.habitBox.getAt(widget.index)!.durationCompleted % 60}m",
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 10),
+                                      style: TextStyle(
+                                          color: widget.habitBox
+                                                  .getAt(widget.index)!
+                                                  .skipped
+                                              ? Colors.grey
+                                              : Colors.white,
+                                          fontSize: 10),
                                     ),
                                   ),
-                                  const Divider(
-                                    color: Colors.white,
+                                  Divider(
+                                    color: widget.habitBox
+                                            .getAt(widget.index)!
+                                            .skipped
+                                        ? Colors.grey
+                                        : Colors.white,
                                     thickness: 1,
                                     indent: 15,
                                     endIndent: 15,
@@ -441,8 +469,13 @@ class _CheckBoxState extends State<CheckBox> {
                                                   0
                                               ? "${widget.habitBox.getAt(widget.index)!.duration ~/ 60}h"
                                               : "${widget.habitBox.getAt(widget.index)!.duration ~/ 60}h${widget.habitBox.getAt(widget.index)!.duration % 60}m",
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 10),
+                                      style: TextStyle(
+                                          color: widget.habitBox
+                                                  .getAt(widget.index)!
+                                                  .skipped
+                                              ? Colors.grey
+                                              : Colors.white,
+                                          fontSize: 10),
                                     ),
                                   ),
                                 ],
@@ -470,7 +503,11 @@ class _CheckBoxState extends State<CheckBox> {
                                     builder: (context, value, _) {
                                       return LinearProgressIndicator(
                                         value: value,
-                                        color: theOtherColor,
+                                        color: widget.habitBox
+                                                .getAt(widget.index)!
+                                                .skipped
+                                            ? Colors.grey.shade800
+                                            : theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),
@@ -489,16 +526,22 @@ class _CheckBoxState extends State<CheckBox> {
   }
 }
 
-void checkCompleteHabit(
-    amountCheck, durationCheck, int index, BuildContext context) {
+void checkCompleteHabit(amountCheck, durationCheck, int index,
+    BuildContext context, bool isAdLoaded, interstitialAd) {
   if (amountCheck == true || durationCheck == true) {
     if (habitBox.getAt(index)!.completed) {
-      context.read<HabitProvider>().completeHabitProvider(index);
+      context
+          .read<HabitProvider>()
+          .completeHabitProvider(index, isAdLoaded, interstitialAd);
     } else {
       showDialog(
-          context: context, builder: (context) => completeHabitDialog(index));
+          context: context,
+          builder: (context) =>
+              completeHabitDialog(index, isAdLoaded, interstitialAd));
     }
   } else {
-    context.read<HabitProvider>().completeHabitProvider(index);
+    context
+        .read<HabitProvider>()
+        .completeHabitProvider(index, isAdLoaded, interstitialAd);
   }
 }

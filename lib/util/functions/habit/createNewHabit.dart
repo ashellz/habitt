@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/data/habit_tile.dart';
+import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/add_habit_page.dart';
-import 'package:habit_tracker/pages/new_home_page.dart';
+import 'package:habit_tracker/pages/home_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/functions/habit/getIcon.dart';
 import 'package:habit_tracker/util/functions/habit/saveHabits.dart';

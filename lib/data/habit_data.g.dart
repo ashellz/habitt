@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'habit_tile.dart';
+part of 'habit_data.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
