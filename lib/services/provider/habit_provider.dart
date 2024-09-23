@@ -40,14 +40,14 @@ class HabitProvider extends ChangeNotifier {
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
+  int allHabitsCompletedStreakP = streakBox.get('allHabitsCompletedStreak')!;
 
   List _habitNotifications = [];
 
   List get habitNotifications => _habitNotifications;
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
-  int get allHabitsCompletedStreak =>
-      streakBox.get('allHabitsCompletedStreak')!;
+  int get allHabitsCompletedStreak => allHabitsCompletedStreakP;
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
@@ -200,7 +200,7 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void completeHabitProvider(int index) async {
+  void completeHabitProvider(int index, bool isAdLoaded, interstitialAd) async {
     final existingHabit = habitBox.getAt(index);
 
     if (existingHabit != null) {
@@ -212,10 +212,17 @@ class HabitProvider extends ChangeNotifier {
         streak: existingHabit.streak,
         amount: existingHabit.amount,
         amountName: existingHabit.amountName,
-        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+        amountCompleted: !existingHabit.completed
+            ? existingHabit.amount
+            : !existingHabit.skipped
+                ? 0
+                : existingHabit.amountCompleted,
         duration: existingHabit.duration,
-        durationCompleted:
-            !existingHabit.completed ? existingHabit.duration : 0,
+        durationCompleted: !existingHabit.completed
+            ? existingHabit.duration
+            : !existingHabit.skipped
+                ? 0
+                : existingHabit.durationCompleted,
         skipped: false,
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,
@@ -227,6 +234,9 @@ class HabitProvider extends ChangeNotifier {
 
       bool hapticFeedback = boolBox.get('hapticFeedback')!;
       if (allHabitsCompleted()) {
+        if (isAdLoaded) {
+          interstitialAd.show();
+        }
         playSound();
         if (hapticFeedback) {
           Vibration.vibrate(duration: 500);
@@ -244,6 +254,19 @@ class HabitProvider extends ChangeNotifier {
 
   void skipHabitProvider(int index) async {
     // Check if the user is skipping more than 3 habits a day
+
+    int habitsSkipped = 0;
+
+    for (var habit in habitBox.values) {
+      if (habit.skipped) {
+        habitsSkipped++;
+      }
+    }
+
+    if (habitsSkipped >= 3) {
+      Fluttertoast.showToast(msg: "You can't skip more than 3 habits a day.");
+      return;
+    }
 
     // Check if the user is skipping two days in a row
     DateTime now = DateTime.now();
@@ -285,10 +308,9 @@ class HabitProvider extends ChangeNotifier {
         streak: existingHabit.streak,
         amount: existingHabit.amount,
         amountName: existingHabit.amountName,
-        amountCompleted: !existingHabit.completed ? existingHabit.amount : 0,
+        amountCompleted: existingHabit.amountCompleted,
         duration: existingHabit.duration,
-        durationCompleted:
-            !existingHabit.completed ? existingHabit.duration : 0,
+        durationCompleted: existingHabit.durationCompleted,
         skipped: !existingHabit.skipped,
         tag: existingHabit.tag,
         notifications: existingHabit.notifications,

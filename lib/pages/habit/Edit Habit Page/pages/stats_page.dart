@@ -6,7 +6,8 @@ import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:provider/provider.dart';
 
-Widget statsPage(BuildContext context, int index) {
+Widget statsPage(
+    BuildContext context, int index, bool isAdLoaded, interstitialAd) {
   var habit = habitBox.getAt(index)!;
   int timesCompleted = 0;
   int timesMissed = 0;
@@ -102,7 +103,7 @@ Widget statsPage(BuildContext context, int index) {
           ),
           onPressed: () {
             Provider.of<HabitProvider>(context, listen: false)
-                .completeHabitProvider(index);
+                .completeHabitProvider(index, isAdLoaded, interstitialAd);
           },
           child: Text(
             habitCompleted(),

@@ -6,10 +6,6 @@ fillKeys() {
     addInitialData();
   }
 
-  if (!boolBox.containsKey("firstTimeOpened")) {
-    boolBox.put("firstTimeOpened", true);
-  }
-
   if (!boolBox.containsKey("12hourFormat")) {
     boolBox.put("12hourFormat", false);
   }

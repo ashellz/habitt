@@ -4,12 +4,14 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class AdMobService {
   // Test banner id: ca-app-pub-3940256099942544/6300978111
   // Real banner id: ca-app-pub-7884775253411884/5895461218
-  static String get bannerAdUnitId => "ca-app-pub-3940256099942544/6300978111";
+  static String get bannerAdUnitId => "ca-app-pub-7884775253411884/5895461218";
 
   // Test rewarded id: ca-app-pub-3940256099942544/5224354917
   // Real rewarded id: ca-app-pub-7884775253411884/9490850042
   static String get rewardedAdUnitId =>
-      "ca-app-pub-3940256099942544/5224354917";
+      "ca-app-pub-7884775253411884/9490850042";
+
+  static String get interstitialAd => "ca-app-pub-7884775253411884/4085703448";
 
   static final BannerAdListener bannerAdListener = BannerAdListener(
     // Called when an ad is successfully received.

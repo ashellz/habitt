@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
@@ -77,7 +79,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
     }
   }
 
-  void skipHistoricalHabit(int index, habit, DateTime time) async {
+  void skipHistoricalHabit(
+      int index, habit, DateTime time, BuildContext context) async {
     int habitsSkipped = 0;
 
     // Check if the user skipped a habit two days in a row or skipped 3 habits a day already
@@ -135,20 +138,21 @@ class HistoricalHabitProvider extends ChangeNotifier {
       icon: habit.icon,
       category: habit.category,
       amount: habit.amount,
-      amountCompleted: habit.completed ? habit.amount : 0,
       amountName: habit.amountName,
+      amountCompleted: habit.amountCompleted,
       duration: habit.duration,
-      durationCompleted: habit.completed ? habit.duration : 0,
+      durationCompleted: habit.durationCompleted,
       skipped: !habit.skipped,
     );
 
     applyCurentHabitData(chosenHabitDate, index, habitData, time);
 
-    calculateStreak();
+    calculateStreak(context);
     notifyListeners();
   }
 
-  void completeHistoricalHabit(int index, habit, DateTime time) async {
+  void completeHistoricalHabit(
+      int index, habit, DateTime time, BuildContext context) async {
     List<int> currentDate = [time.year, time.month, time.day];
 
     HistoricalHabitData habitData = HistoricalHabitData(
@@ -157,10 +161,18 @@ class HistoricalHabitProvider extends ChangeNotifier {
       icon: habit.icon,
       category: habit.category,
       amount: habit.amount,
-      amountCompleted: !habit.completed ? habit.amount : 0,
       amountName: habit.amountName,
+      amountCompleted: !habit.completed
+          ? habit.amount
+          : !habit.skipped
+              ? 0
+              : habit.amountCompleted,
       duration: habit.duration,
-      durationCompleted: !habit.completed ? habit.duration : 0,
+      durationCompleted: !habit.completed
+          ? habit.duration
+          : !habit.skipped
+              ? 0
+              : habit.durationCompleted,
       skipped: false,
     );
 
@@ -179,7 +191,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
-    calculateStreak();
+    calculateStreak(context);
     notifyListeners();
   }
 
@@ -225,7 +237,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void calculateStreak() {
+  void calculateStreak(BuildContext context) {
     var historicalList = historicalBox.values.toList();
 
     historicalList.sort((a, b) {
@@ -301,6 +313,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
     }
 
     streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
+    Provider.of<HabitProvider>(context, listen: false)
+        .allHabitsCompletedStreakP = allHabitsCompletedStreak;
 
     notifyListeners();
   }

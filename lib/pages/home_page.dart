@@ -1,12 +1,14 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/main.dart';
 import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/add_habit_page.dart';
 import 'package:habit_tracker/pages/menu/menu_page.dart';
+import 'package:habit_tracker/services/ad_mob_service.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
 import 'package:habit_tracker/util/functions/fillKeys.dart';
@@ -55,18 +57,36 @@ List<String> greetingTexts = [
 
 final pageController = PageController(initialPage: 0);
 
-class NewHomePage extends StatefulWidget {
-  const NewHomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<NewHomePage> createState() => _NewHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  InterstitialAd? interstitialAd;
+  bool isAdLoaded = false;
+
+  initInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: AdMobService.interstitialAd,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) => setState(() {
+            interstitialAd = ad;
+            isAdLoaded = true;
+          }),
+          onAdFailedToLoad: (error) => setState(() => interstitialAd = null),
+        ));
+  }
+
   @override
   void initState() {
     super.initState();
     checkForDayJoined();
+    initInterstitialAd();
+
     WidgetsBinding.instance.addObserver(this);
 
     hasHabits();
@@ -102,20 +122,6 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
     TextEditingController editcontroller = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.black,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return const MenuPage();
-                }));
-              },
-            ),
-          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           openAddHabitPage(context, createcontroller);
@@ -127,61 +133,87 @@ class _NewHomePageState extends State<NewHomePage> with WidgetsBindingObserver {
         ),
       ),
       backgroundColor: Colors.black,
-      body: ListView(
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+        slivers: [
+          SliverAppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.black,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return const MenuPage();
+                    }));
+                  },
+                ),
+              ]),
+          SliverToBoxAdapter(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 30),
-                header(username, greetingText),
-                const SizedBox(height: 20),
-                SizedBox(height: 30, child: tagsWidgets(tagSelected)),
-                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 30),
+                      header(username, greetingText),
+                      const SizedBox(height: 20),
+                      SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: calculateHabitsHeight(tagSelected, context),
+                  child: PageView(
+                    controller: pageController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    onPageChanged: (value) => context
+                        .read<HabitProvider>()
+                        .setTagSelected(visibleListTags()[value]),
+                    children: [
+                      for (String tag in visibleListTags())
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 40),
+                          child: ListView(
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                              if (tag == 'All')
+                                Column(children: [
+                                  mainCategoryList(
+                                      habitListLength,
+                                      mainCategoryHeight,
+                                      mainCategory,
+                                      editcontroller,
+                                      context,
+                                      isAdLoaded,
+                                      interstitialAd),
+                                  const SizedBox(height: 20),
+                                  otherCategoriesList(
+                                      habitListLength,
+                                      mainCategory,
+                                      editcontroller,
+                                      anytimeHasHabits,
+                                      isAdLoaded,
+                                      interstitialAd)
+                                ]),
+                              if (tag != 'All')
+                                tagSelectedWidget(tag, editcontroller,
+                                    isAdLoaded, interstitialAd),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
-          SizedBox(
-            height: calculateHabitsHeight(tagSelected, context),
-            child: PageView(
-              controller: pageController,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              onPageChanged: (value) => context
-                  .read<HabitProvider>()
-                  .setTagSelected(visibleListTags()[value]),
-              children: [
-                for (String tag in visibleListTags())
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 40),
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      children: [
-                        const SizedBox(height: 20),
-                        if (tag == 'All')
-                          Column(children: [
-                            mainCategoryList(
-                                habitListLength,
-                                mainCategoryHeight,
-                                mainCategory,
-                                editcontroller,
-                                context),
-                            const SizedBox(height: 20),
-                            otherCategoriesList(habitListLength, mainCategory,
-                                editcontroller, anytimeHasHabits)
-                          ]),
-                        if (tag != 'All')
-                          tagSelectedWidget(tag, editcontroller),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          )
         ],
       ),
     );
@@ -213,8 +245,14 @@ Widget header(username, String greetingText) {
   );
 }
 
-Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
-    editcontroller, BuildContext context) {
+Widget mainCategoryList(
+    habitListLength,
+    mainCategoryHeight,
+    mainCategory,
+    editcontroller,
+    BuildContext context,
+    bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   return Stack(
     children: [
       Container(
@@ -236,12 +274,14 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                             child: NewHabitTile(
                               index: i,
                               editcontroller: editcontroller,
+                              isAdLoaded: isAdLoaded,
+                              interstitialAd: interstitialAd,
                             ),
                           ),
                     ],
                   )
-                : anyTimeMainCategory(
-                    habitListLength, editcontroller, anytimeHasHabits, context)
+                : anyTimeMainCategory(habitListLength, editcontroller,
+                    anytimeHasHabits, context, isAdLoaded, interstitialAd)
             : mainCategory == "Afternoon"
                 ? afternoonHasHabits
                     ? Column(
@@ -255,12 +295,14 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                                 child: NewHabitTile(
                                   index: i,
                                   editcontroller: editcontroller,
+                                  isAdLoaded: isAdLoaded,
+                                  interstitialAd: interstitialAd,
                                 ),
                               ),
                         ],
                       )
                     : anyTimeMainCategory(habitListLength, editcontroller,
-                        anytimeHasHabits, context)
+                        anytimeHasHabits, context, isAdLoaded, interstitialAd)
                 : mainCategory == "Evening"
                     ? eveningHasHabits
                         ? Column(
@@ -274,14 +316,21 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
                                     child: NewHabitTile(
                                       index: i,
                                       editcontroller: editcontroller,
+                                      isAdLoaded: isAdLoaded,
+                                      interstitialAd: interstitialAd,
                                     ),
                                   ),
                             ],
                           )
-                        : anyTimeMainCategory(habitListLength, editcontroller,
-                            anytimeHasHabits, context)
+                        : anyTimeMainCategory(
+                            habitListLength,
+                            editcontroller,
+                            anytimeHasHabits,
+                            context,
+                            isAdLoaded,
+                            interstitialAd)
                     : anyTimeMainCategory(habitListLength, editcontroller,
-                        anytimeHasHabits, context),
+                        anytimeHasHabits, context, isAdLoaded, interstitialAd),
       ),
       Container(
         alignment: Alignment.centerLeft,
@@ -303,17 +352,22 @@ Widget mainCategoryList(habitListLength, mainCategoryHeight, mainCategory,
   );
 }
 
-otherCategoriesList(
-    habitListLength, mainCategory, editcontroller, mainCategoryListVisible) {
+otherCategoriesList(habitListLength, mainCategory, editcontroller,
+    mainCategoryListVisible, bool isAdLoaded, InterstitialAd? interstitialAd) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(habitListLength, editcontroller, mainCategory, false),
-    morning(habitListLength, mainCategory, editcontroller, false),
-    afternoon(habitListLength, mainCategory, editcontroller, false),
-    evening(habitListLength, mainCategory, editcontroller, false),
+    anyTime(habitListLength, editcontroller, mainCategory, false, isAdLoaded,
+        interstitialAd),
+    morning(habitListLength, mainCategory, editcontroller, false, isAdLoaded,
+        interstitialAd),
+    afternoon(habitListLength, mainCategory, editcontroller, false, isAdLoaded,
+        interstitialAd),
+    evening(habitListLength, mainCategory, editcontroller, false, isAdLoaded,
+        interstitialAd),
   ]);
 }
 
-Widget tagSelectedWidget(tagSelected, editcontroller) {
+Widget tagSelectedWidget(tagSelected, editcontroller, bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -327,6 +381,8 @@ Widget tagSelectedWidget(tagSelected, editcontroller) {
             child: NewHabitTile(
               index: i,
               editcontroller: editcontroller,
+              isAdLoaded: isAdLoaded,
+              interstitialAd: interstitialAd,
             ),
           ),
       const SizedBox(height: 20),
@@ -334,7 +390,8 @@ Widget tagSelectedWidget(tagSelected, editcontroller) {
   );
 }
 
-Widget anyTime(habitListLength, editcontroller, mainCategory, bool tag) {
+Widget anyTime(habitListLength, editcontroller, mainCategory, bool tag,
+    bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (mainCategory != 'Any time' || tag) {
     if (anytimeHasHabits) {
       return Column(
@@ -349,6 +406,8 @@ Widget anyTime(habitListLength, editcontroller, mainCategory, bool tag) {
                 child: NewHabitTile(
                   index: i,
                   editcontroller: editcontroller,
+                  isAdLoaded: isAdLoaded,
+                  interstitialAd: interstitialAd,
                 ),
               ),
           const SizedBox(height: 20),
@@ -371,7 +430,8 @@ Widget anyTime(habitListLength, editcontroller, mainCategory, bool tag) {
   return Container();
 }
 
-Widget morning(habitListLength, mainCategory, editcontroller, bool tag) {
+Widget morning(habitListLength, mainCategory, editcontroller, bool tag,
+    bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (mainCategory != 'Morning' || tag) {
     if (morningHasHabits) {
       return Column(
@@ -386,6 +446,8 @@ Widget morning(habitListLength, mainCategory, editcontroller, bool tag) {
                 child: NewHabitTile(
                   index: i,
                   editcontroller: editcontroller,
+                  isAdLoaded: isAdLoaded,
+                  interstitialAd: interstitialAd,
                 ),
               ),
           const SizedBox(height: 20),
@@ -409,7 +471,8 @@ Widget morning(habitListLength, mainCategory, editcontroller, bool tag) {
   return Container();
 }
 
-Widget afternoon(habitListLength, mainCategory, editcontroller, bool tag) {
+Widget afternoon(habitListLength, mainCategory, editcontroller, bool tag,
+    bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (mainCategory != 'Afternoon' || tag) {
     if (afternoonHasHabits) {
       return Column(
@@ -424,6 +487,8 @@ Widget afternoon(habitListLength, mainCategory, editcontroller, bool tag) {
                 child: NewHabitTile(
                   index: i,
                   editcontroller: editcontroller,
+                  isAdLoaded: isAdLoaded,
+                  interstitialAd: interstitialAd,
                 ),
               ),
           const SizedBox(height: 20),
@@ -446,7 +511,8 @@ Widget afternoon(habitListLength, mainCategory, editcontroller, bool tag) {
   return Container();
 }
 
-Widget evening(habitListLength, mainCategory, editcontroller, bool tag) {
+Widget evening(habitListLength, mainCategory, editcontroller, bool tag,
+    bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (mainCategory != 'Evening' || tag) {
     if (eveningHasHabits) {
       return Column(
@@ -461,6 +527,8 @@ Widget evening(habitListLength, mainCategory, editcontroller, bool tag) {
                 child: NewHabitTile(
                   index: i,
                   editcontroller: editcontroller,
+                  isAdLoaded: isAdLoaded,
+                  interstitialAd: interstitialAd,
                 ),
               ),
           const SizedBox(height: 20),
@@ -483,8 +551,13 @@ Widget evening(habitListLength, mainCategory, editcontroller, bool tag) {
   return Container();
 }
 
-Widget anyTimeMainCategory(int habitListLength, editcontroller,
-    anyTimeHasHabits, BuildContext context) {
+Widget anyTimeMainCategory(
+    int habitListLength,
+    editcontroller,
+    anyTimeHasHabits,
+    BuildContext context,
+    bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   if (anyTimeHasHabits) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -497,6 +570,8 @@ Widget anyTimeMainCategory(int habitListLength, editcontroller,
               child: NewHabitTile(
                 index: i,
                 editcontroller: editcontroller,
+                isAdLoaded: isAdLoaded,
+                interstitialAd: interstitialAd,
               ),
             ),
       ],

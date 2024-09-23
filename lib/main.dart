@@ -7,6 +7,7 @@ import 'package:habit_tracker/data/historical_habit.dart';
 import 'package:habit_tracker/data/tags.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/onboarding/onboarding_page.dart';
 import 'package:habit_tracker/services/provider/habit_provider.dart';
 import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
 import 'package:habit_tracker/util/colors.dart';
@@ -105,6 +106,10 @@ void callbackDispatcher(BuildContext context) {
       context.read<HabitProvider>().chooseTimeBasedText();
     });
 
+    if (task == "updateDateTask") {
+      context.read<HabitProvider>().updateLastOpenedDate();
+    }
+
     saveHabitsForToday();
     checkForNotifications();
     return Future.value(true);
@@ -124,6 +129,18 @@ hasHabits() {
       anytimeHasHabits = true;
     }
   }
+}
+
+void scheduleMidnightTask() {
+  final now = DateTime.now();
+  final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
+  final initialDelay = nextMidnight.difference(now);
+
+  Workmanager().registerOneOffTask(
+    "1",
+    "updateDateTask",
+    initialDelay: initialDelay,
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -157,7 +174,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const AuthCheck(),
       routes: {
-        "/home": (_) => const NewHomePage(),
+        "/home": (_) => const HomePage(),
       },
     );
   }
@@ -178,11 +195,23 @@ class AuthCheck extends StatelessWidget {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<HabitProvider>().chooseMainCategory();
             context.read<HabitProvider>().updateMainCategoryHeight();
-            context.read<HistoricalHabitProvider>().calculateStreak();
+            context.read<HistoricalHabitProvider>().calculateStreak(context);
             context.read<HabitProvider>().chooseTimeBasedText();
+            context.read<HabitProvider>().updateLastOpenedDate();
           });
           saveHabitsForToday();
-          return const NewHomePage();
+          scheduleMidnightTask();
+
+          if (boolBox.containsKey("firstTimeOpened")) {
+            if (boolBox.get("firstTimeOpened")!) {
+              boolBox.put("firstTimeOpened", false);
+              return const OnboardingPage();
+            } else {
+              return const HomePage();
+            }
+          } else {
+            return const HomePage();
+          }
         } else {
           return LoginPage();
         }

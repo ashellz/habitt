@@ -7,7 +7,7 @@ import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
-Widget completeHabitDialog(int index) {
+Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
   bool amountCheck = false;
 
   if (habitBox.getAt(index)!.amount > 1) amountCheck = true;
@@ -53,7 +53,9 @@ Widget completeHabitDialog(int index) {
                       max: habitBox.getAt(index)!.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
-                        Vibration.vibrate(duration: 10);
+                        if (boolBox.get('hapticFeedback')!) {
+                          Vibration.vibrate(duration: 10);
+                        }
                         theAmountValue = value.toInt();
                       }),
                     ),
@@ -88,10 +90,13 @@ Widget completeHabitDialog(int index) {
                           labelText: "HOURS",
                         ),
                         min: 0,
-                        max: (habitBox.getAt(index)!.duration ~/ 60).toDouble(),
+                        max: (habitBox.getAt(index)!.duration ~/ 60) - 1,
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
-                          Vibration.vibrate(duration: 10);
+                          if (boolBox.get('hapticFeedback')!) {
+                            Vibration.vibrate(duration: 10);
+                          }
+
                           theDurationValueHours = value.toInt();
                           if (theDurationValueHours ==
                               (habitBox.getAt(index)!.duration ~/ 60)) {
@@ -132,6 +137,9 @@ Widget completeHabitDialog(int index) {
                           : habitBox.getAt(index)!.duration % 60 - 1,
                       value: theDurationValueMinutes.toDouble(),
                       onChanged: (value) => mystate(() {
+                        if (boolBox.get('hapticFeedback')!) {
+                          Vibration.vibrate(duration: 10);
+                        }
                         theDurationValueMinutes = value.toInt();
                       }),
                     ),
@@ -152,7 +160,9 @@ Widget completeHabitDialog(int index) {
                     ),
                     backgroundColor: WidgetStatePropertyAll(theLightColor)),
                 onPressed: () {
-                  context.read<HabitProvider>().completeHabitProvider(index);
+                  context
+                      .read<HabitProvider>()
+                      .completeHabitProvider(index, isAdLoaded, interstitialAd);
                   Navigator.pop(context);
                 },
                 child: const Text(

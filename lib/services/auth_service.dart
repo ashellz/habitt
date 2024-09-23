@@ -8,6 +8,7 @@ import 'package:habit_tracker/pages/auth/loading_page.dart';
 import 'package:habit_tracker/pages/auth/login_page.dart';
 import 'package:habit_tracker/pages/auth/signup_page.dart';
 import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habit_tracker/pages/onboarding/onboarding_page.dart';
 import 'package:habit_tracker/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -34,7 +35,7 @@ class AuthService {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => const NewHomePage(),
+              builder: (BuildContext context) => const HomePage(),
             ),
           );
         }
@@ -45,7 +46,7 @@ class AuthService {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const NewHomePage(),
+                  builder: (BuildContext context) => const OnboardingPage(),
                 ),
               );
             }
@@ -100,48 +101,8 @@ class AuthService {
         password: password,
       );
       if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) =>
-                const LoadingScreen(text: "Signing in..."),
-          ),
-        );
+        getIntoTheApp(context);
       }
-      // Ensure user is authenticated before accessing userId
-      userId = FirebaseAuth.instance.currentUser?.uid;
-
-      if (userId == null) {
-        throw FirebaseAuthException(
-          code: 'user-not-authenticated',
-          message: 'User is not authenticated',
-        );
-      }
-
-      // Restore Hive boxes from Firebase
-      if (kDebugMode) {
-        print("Restoring Hive boxes from Firebase...");
-      }
-      await restoreHiveBoxesFromFirebase(userId);
-      // Wait for data restoration to complete
-      while (!dataDownloaded) {
-        await Future.delayed(const Duration(seconds: 1));
-      }
-
-      // Reset the flag
-      dataDownloaded = false;
-      isLoggedIn = true;
-
-      signInCounter = 0;
-      await Restart.restartApp();
-
-      // Navigate to HomePage
-      /*Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const HomePage(),
-        ),
-      );*/
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'The email or password is incorrect';
       if (e.code == 'user-not-found') {
@@ -190,7 +151,7 @@ class AuthService {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => const NewHomePage(),
+            builder: (BuildContext context) => const HomePage(),
           ),
         );
       }
@@ -208,6 +169,7 @@ class AuthService {
       }
       metadataBox.put("dayJoined", DateTime.now());
       stringBox.put("username", "Guest");
+      boolBox.put("firstTimeOpened", true);
       deleteGuestHabits().then((value) {
         Restart.restartApp();
       });
@@ -244,6 +206,7 @@ class AuthService {
       if (userCredential.additionalUserInfo?.isNewUser ?? false) {
         // The user is new
         metadataBox.put("dayJoined", DateTime.now());
+        boolBox.put("firstTimeOpened", true);
       }
 
       if (context.mounted) {
@@ -281,6 +244,7 @@ class AuthService {
       if (userCredential.additionalUserInfo?.isNewUser ?? false) {
         // The user is new
         metadataBox.put("dayJoined", DateTime.now());
+        boolBox.put("firstTimeOpened", true);
       }
 
       if (context.mounted) {
@@ -420,19 +384,9 @@ class AuthService {
     if (kDebugMode) {
       print("Restoring Hive boxes from Firebase...");
     }
-    await restoreHiveBoxesFromFirebase(userId);
-    // Wait for data restoration to complete
-    while (!dataDownloaded) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
-
-    boolBox.put('isGuest', false);
-
-    // Reset the flag
-    dataDownloaded = false;
-    isLoggedIn = true;
-
-    await Restart.restartApp();
+    await restoreHiveBoxesFromFirebase(userId).then((_) async {
+      await Restart.restartApp();
+    });
   }
 }
 
