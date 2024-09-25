@@ -50,6 +50,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
   bool edit = false;
   bool stats = true;
   int currentIndex = 0;
+  double? lowestCompletionRate;
+  List<double> completionRates = [];
+  double? highestCompletionRate;
 
   @override
   void initState() {
@@ -62,7 +65,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final editcontroller = widget.editcontroller;
     final desccontroller = context.watch<HabitProvider>().notescontroller;
 
-    buildEditedValues(context, widget.index, editcontroller);
+    buildEditedValues(context, widget.index, editcontroller,
+        lowestCompletionRate, completionRates, highestCompletionRate);
 
     bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
@@ -146,8 +150,14 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: index == 0
-                                    ? statsPage(context, widget.index,
-                                        isAdLoaded, interstitialAd)
+                                    ? statsPage(
+                                        context,
+                                        widget.index,
+                                        isAdLoaded,
+                                        interstitialAd,
+                                        lowestCompletionRate,
+                                        completionRates,
+                                        highestCompletionRate)
                                     : editPage(
                                         setState,
                                         context,

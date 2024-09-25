@@ -200,6 +200,7 @@ class AuthCheck extends StatelessWidget {
             context.read<HabitProvider>().updateLastOpenedDate();
           });
           saveHabitsForToday();
+          checkForNotifications();
           scheduleMidnightTask();
 
           if (boolBox.containsKey("firstTimeOpened")) {

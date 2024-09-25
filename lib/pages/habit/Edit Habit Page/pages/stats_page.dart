@@ -9,7 +9,13 @@ import 'package:habit_tracker/util/colors.dart';
 import 'package:provider/provider.dart';
 
 Widget statsPage(
-    BuildContext context, int index, bool isAdLoaded, interstitialAd) {
+    BuildContext context,
+    int index,
+    bool isAdLoaded,
+    interstitialAd,
+    double? lowestCompletionRate,
+    List<double> completionRates,
+    double? highestCompletionRate) {
   var habit = habitBox.getAt(index)!;
   int timesCompleted = 0;
   int timesMissed = 0;
@@ -151,14 +157,92 @@ Widget statsPage(
       const SizedBox(
         height: 20,
       ),
-      SizedBox(
-        height: 300,
-        width: 500,
-        child: LineChart(LineChartData(
-          minY: 60,
-          maxY: 80,
-        )),
-      )
+      Container(
+          padding: const EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.width * 0.5 - 30,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            color: Colors.grey.shade900,
+          ),
+          child: LineChart(
+            duration: const Duration(milliseconds: 800),
+            LineChartData(
+                minY: lowestCompletionRate,
+                maxY: highestCompletionRate,
+                minX: 1,
+                maxX: completionRates.length.toDouble() + 1,
+                borderData: FlBorderData(show: false),
+                lineBarsData: [
+                  LineChartBarData(
+                      spots: [
+                        for (int i = 0; i < completionRates.length; i++)
+                          FlSpot(
+                              i + 1,
+                              completionRates.reversed
+                                  .toList()[i]
+                                  .round()
+                                  .toDouble())
+                      ],
+                      dotData: const FlDotData(
+                        show: false,
+                      ),
+                      color: theOtherColor,
+                      barWidth: 4,
+                      isCurved: true,
+                      belowBarData: BarAreaData(
+                        show: true,
+                        color: theOtherColor.withOpacity(0.5),
+                        gradient: LinearGradient(
+                          colors: [
+                            theOtherColor.withOpacity(0.5),
+                            Colors.transparent
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      )),
+                ],
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: true,
+                  horizontalInterval: 20,
+                  verticalInterval: 30,
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
+                      color: theAppBarColor,
+                      strokeWidth: 0.5,
+                      dashArray: [5, 5],
+                    );
+                  },
+                  getDrawingVerticalLine: (value) {
+                    return FlLine(
+                      color: theAppBarColor,
+                      strokeWidth: 0.5,
+                      dashArray: [5, 5],
+                    );
+                  },
+                ),
+                titlesData: FlTitlesData(
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: const AxisTitles(),
+                    leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      interval: 20,
+                      getTitlesWidget: (value, meta) => Text(
+                          "${value.toInt()}%",
+                          maxLines: 1,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10)),
+                    )))),
+          ))
     ]),
   );
 }
