@@ -1,4 +1,6 @@
+import 'package:animated_digit/animated_digit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/data/habit_data.dart';
 import 'package:habit_tracker/pages/home_page.dart';
@@ -57,12 +59,27 @@ Widget statsPage(
             const SizedBox(
               height: 5,
             ),
-            Text(
-              perc ? "${value.toString()}%" : value.toString(),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 36,
-                  color: theLightColor),
+            Row(
+              children: [
+                AnimatedDigitWidget(
+                  duration: const Duration(milliseconds: 800),
+                  value: value,
+                  textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 36,
+                      color: theLightColor),
+                ),
+                if (perc)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text("%",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 36,
+                          color: theLightColor,
+                        )),
+                  )
+              ],
             ),
           ],
         ),
@@ -134,12 +151,14 @@ Widget statsPage(
       const SizedBox(
         height: 20,
       ),
-      Row(
-        children: [
-          box("Completion rate", (timesCompleted / total * 100).toInt(), true),
-          const Spacer(),
-        ],
-      ),
+      SizedBox(
+        height: 300,
+        width: 500,
+        child: LineChart(LineChartData(
+          minY: 60,
+          maxY: 80,
+        )),
+      )
     ]),
   );
 }
@@ -162,17 +181,17 @@ class StreakStats extends StatelessWidget {
     return color;
   }
 
-  String displayBestStreak() {
-    late String bestStreak;
+  int displayBestStreak() {
+    late int bestStreak;
 
     if (habit.streak == habit.longestStreak) {
       if (habit.completed) {
-        bestStreak = (habit.streak + 1).toString();
+        bestStreak = (habit.streak + 1);
       } else {
-        bestStreak = habit.streak.toString();
+        bestStreak = habit.streak;
       }
     } else {
-      bestStreak = habit.longestStreak.toString();
+      bestStreak = habit.longestStreak;
     }
 
     return bestStreak;
@@ -195,9 +214,14 @@ class StreakStats extends StatelessWidget {
                   maxLines: 1,
                   minFontSize: 12,
                 ),
-                Text(
-                  "${habit.skipped ? habit.streak : habit.completed ? habit.streak + 1 : habit.streak}",
-                  style: TextStyle(
+                AnimatedDigitWidget(
+                  duration: const Duration(milliseconds: 800),
+                  value: habit.skipped
+                      ? habit.streak
+                      : habit.completed
+                          ? habit.streak + 1
+                          : habit.streak,
+                  textStyle: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: habit.skipped
@@ -217,8 +241,10 @@ class StreakStats extends StatelessWidget {
                   "Best streak",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                Text(displayBestStreak(),
-                    style: TextStyle(
+                AnimatedDigitWidget(
+                    duration: const Duration(milliseconds: 800),
+                    value: displayBestStreak(),
+                    textStyle: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: bestStreakColor())),
