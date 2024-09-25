@@ -25,7 +25,9 @@ class _ChangelogPageState extends State<ChangelogPage> {
         ExpandableAppBar(actionsWidget: Container(), title: "Changelog"),
         SliverToBoxAdapter(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              changelogContainer("v1.0.3", ""),
               changelogContainer("v1.0.2",
                   "- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the habit notification page\n- Added ability to log in using Google and GitHub\n- Added more greeting texts\n- Added unobsecure text option to password fields\n- Added text in profile page telling you when you first joined habitt\n- Added welcome screen as an intro to the app\n- Improved authentication\n- Improved notification texts\n- Improved responsiveness for text in habit tiles\n- Improved app bars\n- Improved habit skipping\n- Habit notification tile redesign\n- Edit and Add habit pages redesign\n- Save changes button, when editing a habit, only appears if something has been changed\n- Changed text field border color in login and signup pages\n- Changed how the changelog page looks\n- You now can't skip the same habit two days in a row or more than three habits a day\n- Calendar day now doesn't count skipped habit as completed\n- Calendar won't add habits to the days past the time you joined the app\n- Fixed possibility to add two identical tags\n- Fixed habits not resetting until the app is restarted\n- Fixed longest streak increasing if a habit is completed\n- Fixed 'CONTINUE AS GUEST' overlapping other widgets when the keyboard appears"),
               const SizedBox(

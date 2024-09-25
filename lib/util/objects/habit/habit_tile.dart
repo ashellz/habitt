@@ -11,6 +11,7 @@ import 'package:habit_tracker/util/objects/habit/complete_habit.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:animated_digit/animated_digit.dart';
 
 class NewHabitTile extends StatefulWidget {
   const NewHabitTile({
@@ -226,10 +227,15 @@ class StreakDisplay extends StatelessWidget {
         size: 21,
       ),
       Transform.translate(
-        offset: const Offset(0, 1),
-        child: Text(
-          "${habitBox.getAt(index)!.skipped ? habitBox.getAt(index)!.streak : habitBox.getAt(index)!.completed ? habitBox.getAt(index)!.streak + 1 : habitBox.getAt(index)!.streak}",
-          style: TextStyle(
+        offset: const Offset(0, -1),
+        child: AnimatedDigitWidget(
+          duration: const Duration(milliseconds: 800),
+          value: habitBox.getAt(index)!.skipped
+              ? habitBox.getAt(index)!.streak
+              : habitBox.getAt(index)!.completed
+                  ? habitBox.getAt(index)!.streak + 1
+                  : habitBox.getAt(index)!.streak,
+          textStyle: TextStyle(
               color:
                   habitBox.getAt(index)!.completed ? Colors.white : Colors.grey,
               fontSize: 14),

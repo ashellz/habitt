@@ -263,10 +263,6 @@ class HistoricalHabitProvider extends ChangeNotifier {
           skipped = historicalList[j].data[i].skipped;
         }
 
-        if (streak > longestStreak) {
-          longestStreak = streak;
-        }
-
         if (completed) {
           if (!skipped) {
             streak++;
@@ -274,12 +270,14 @@ class HistoricalHabitProvider extends ChangeNotifier {
         } else {
           streak = 0;
         }
+
+        if (streak > longestStreak) {
+          longestStreak = streak;
+        }
       }
 
       habit.streak = streak;
-      if (longestStreak > habit.longestStreak) {
-        habit.longestStreak = longestStreak;
-      }
+      habit.longestStreak = longestStreak;
 
       habit.save();
     }

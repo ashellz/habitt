@@ -102,6 +102,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<HabitProvider>().updateLastOpenedDate();
+      context.read<HabitProvider>().chooseMainCategory();
+      context.read<HabitProvider>().chooseTimeBasedText();
     }
   }
 
