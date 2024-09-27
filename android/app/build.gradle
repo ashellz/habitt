@@ -47,8 +47,8 @@ android {
         applicationId "com.shellz.habitt"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 23
-        targetSdkVersion 34
+        minSdkVersion 28
+        targetSdkVersion 35
         versionCode 4
         versionName "1.0.3"
     }
@@ -57,7 +57,7 @@ android {
         release {
             keyAlias 'habitt-key-alias'  // Your key alias
             keyPassword '2005JimsH'     // Your key password
-            storeFile file("C:/Flutter SDK/flutterapps/habit_tracker/habitt-release-key.keystore")  // Path to your keystore
+            storeFile file("habitt-release-key.keystore")  // Path to your keystore
             storePassword '2005JimsH'  // Your keystore password
         }
     }
