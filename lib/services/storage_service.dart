@@ -5,12 +5,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit_tracker/data/habit_data.dart';
-import 'package:habit_tracker/data/tags.dart';
-import 'package:habit_tracker/pages/auth/loading_page.dart';
-import 'package:habit_tracker/pages/menu/profile_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/auth_service.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/data/tags.dart';
+import 'package:habitt/pages/auth/loading_page.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/menu/profile_page.dart';
+import 'package:habitt/services/auth_service.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -35,7 +36,8 @@ Future<void> ensureDirectoryExists(String path) async {
   }
 }
 
-Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
+Future<void> uploadFolderToFirebase(
+    String folderPath, String? userId, bool isDaily) async {
   final directory = Directory(folderPath);
   if (await directory.exists()) {
     final files = directory.listSync();
@@ -48,7 +50,13 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
           if (kDebugMode) {
             print('Uploading file: ${file.path}');
           }
-          await storageRef.putFile(file);
+          if (isDaily) {
+            await storageRef.putFile(file);
+          } else if (fileName.contains('habit') ||
+              fileName.contains('tag') ||
+              fileName.contains('streak')) {
+            await storageRef.putFile(file);
+          }
           if (kDebugMode) {
             print('Successfully uploaded file: $fileName');
           }
@@ -75,7 +83,7 @@ Future<void> uploadFolderToFirebase(String folderPath, String? userId) async {
   }
 }
 
-Future<void> backupHiveBoxesToFirebase(String? userId) async {
+Future<void> backupHiveBoxesToFirebase(String? userId, bool isDaily) async {
   if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
     if (kDebugMode) {
       print('User is not authenticated');
@@ -88,7 +96,7 @@ Future<void> backupHiveBoxesToFirebase(String? userId) async {
     print('Hive directory: $hiveDirectory');
   }
   await ensureDirectoryExists(hiveDirectory);
-  await uploadFolderToFirebase(hiveDirectory, userId);
+  await uploadFolderToFirebase(hiveDirectory, userId, isDaily);
 }
 
 Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
@@ -145,7 +153,7 @@ Future<void> newAccountDownloadData(BuildContext context) async {
     }
   }
   dataDownloaded = true;
-  await Restart.restartApp();
+  Restart.restartApp();
 }
 
 Future<void> deleteUserCloudStorage(context) async {
@@ -226,6 +234,7 @@ void addInitialData() {
       tag: "No tag",
       notifications: List.empty(),
       longestStreak: 0,
+      id: 0,
     ),
     HabitData(
       name: 'Add a new habit',
@@ -243,6 +252,7 @@ void addInitialData() {
       tag: "No tag",
       notifications: List.empty(),
       longestStreak: 0,
+      id: 1,
     )
   ];
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/pages/habit/icons_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:habitt/pages/habit/icons_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/validate_text.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -30,6 +30,8 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
         onChanged: (value) {
           if (widget.isEdit) {
             context.read<HabitProvider>().updateSomethingEdited();
+            Provider.of<HabitProvider>(context, listen: false)
+                .updateAppearenceEdited();
           }
         },
         onSaved: (newValue) {

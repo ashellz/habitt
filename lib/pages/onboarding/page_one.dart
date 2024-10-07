@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:lottie/lottie.dart';
 
 class PageOne extends StatelessWidget {

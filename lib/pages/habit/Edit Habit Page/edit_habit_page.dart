@@ -1,15 +1,15 @@
 import "package:flutter/material.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
-import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
-import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/functions/buildEditedValues.dart";
-import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/pages/edit_page.dart";
-import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/widgets/popup_button.dart";
-import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/widgets/save_button.dart";
-import "package:habit_tracker/pages/habit/Edit%20Habit%20Page/pages/stats_page.dart";
-import "package:habit_tracker/pages/habit/Shared%20Widgets/habit_display.dart";
-import "package:habit_tracker/services/ad_mob_service.dart";
-import "package:habit_tracker/services/provider/habit_provider.dart";
-import "package:habit_tracker/util/colors.dart";
+import "package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildEditedValues.dart";
+import "package:habitt/pages/habit/Edit%20Habit%20Page/pages/edit_page.dart";
+import "package:habitt/pages/habit/Edit%20Habit%20Page/pages/stats_page.dart";
+import "package:habitt/pages/habit/Edit%20Habit%20Page/widgets/popup_button.dart";
+import "package:habitt/pages/habit/Edit%20Habit%20Page/widgets/save_button.dart";
+import "package:habitt/pages/habit/shared%20widgets/habit_display.dart";
+import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
+import "package:habitt/services/ad_mob_service.dart";
+import "package:habitt/services/provider/habit_provider.dart";
+import "package:habitt/util/colors.dart";
 import "package:provider/provider.dart";
 
 bool updated = false;
@@ -33,18 +33,27 @@ class EditHabitPage extends StatefulWidget {
 class _EditHabitPageState extends State<EditHabitPage> {
   InterstitialAd? interstitialAd;
   bool isAdLoaded = false;
+  int adTries = 10;
 
   initInterstitialAd() {
     InterstitialAd.load(
-        adUnitId: AdMobService.interstitialAd,
+        adUnitId: AdMobService.interstitialAdUnitId,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) => setState(() {
-            interstitialAd = ad;
-            isAdLoaded = true;
-          }),
-          onAdFailedToLoad: (error) => setState(() => interstitialAd = null),
-        ));
+            onAdLoaded: (ad) => setState(() {
+                  interstitialAd = ad;
+                  isAdLoaded = true;
+                }),
+            onAdFailedToLoad: (error) {
+              if (adTries > 0) {
+                initInterstitialAd();
+                adTries--;
+              } else {
+                setState(() {
+                  interstitialAd = null;
+                });
+              }
+            }));
   }
 
   bool edit = false;
@@ -53,6 +62,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
   double? lowestCompletionRate;
   List<double> completionRates = [];
   double? highestCompletionRate;
+  List<int> everyFifthDay = [];
+  List<int> everyFifthMonth = [];
 
   @override
   void initState() {
@@ -65,8 +76,15 @@ class _EditHabitPageState extends State<EditHabitPage> {
     final editcontroller = widget.editcontroller;
     final desccontroller = context.watch<HabitProvider>().notescontroller;
 
-    buildEditedValues(context, widget.index, editcontroller,
-        lowestCompletionRate, completionRates, highestCompletionRate);
+    buildEditedValues(
+        context,
+        widget.index,
+        editcontroller,
+        lowestCompletionRate,
+        completionRates,
+        highestCompletionRate,
+        everyFifthDay,
+        everyFifthMonth);
 
     bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
@@ -88,7 +106,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                   currentIndex = value;
                   pageController.animateToPage(
                     value,
-                    duration: const Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                   );
                 }),
@@ -142,7 +160,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                 });
                               }
                             },
-                            physics: const BouncingScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             controller: pageController,
                             itemCount: 2,
                             itemBuilder: (context, index) {
@@ -157,7 +175,9 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                         interstitialAd,
                                         lowestCompletionRate,
                                         completionRates,
-                                        highestCompletionRate)
+                                        highestCompletionRate,
+                                        everyFifthDay,
+                                        everyFifthMonth)
                                     : editPage(
                                         setState,
                                         context,

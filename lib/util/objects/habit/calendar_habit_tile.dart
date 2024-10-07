@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/habit/getIcon.dart';
-import 'package:habit_tracker/util/objects/habit/complete_historical_habit.dart';
+import 'package:habitt/data/historical_habit.dart';
+import 'package:habitt/pages/home/functions/getIcon.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/objects/habit/complete_historical_habit.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
@@ -279,12 +279,16 @@ class _CheckBoxState extends State<CheckBox> {
                                 offset: const Offset(0, 3),
                                 child: Text(
                                   habit.amountCompleted.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 10),
+                                  style: TextStyle(
+                                      color: habit.skipped
+                                          ? Colors.grey
+                                          : Colors.white,
+                                      fontSize: 10),
                                 ),
                               ),
-                              const Divider(
-                                color: Colors.white,
+                              Divider(
+                                color:
+                                    habit.skipped ? Colors.grey : Colors.white,
                                 thickness: 1,
                                 indent: 15,
                                 endIndent: 15,
@@ -293,8 +297,11 @@ class _CheckBoxState extends State<CheckBox> {
                                 offset: const Offset(0, -3),
                                 child: Text(
                                   habit.amount.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 10),
+                                  style: TextStyle(
+                                      color: habit.skipped
+                                          ? Colors.grey
+                                          : Colors.white,
+                                      fontSize: 10),
                                 ),
                               ),
                             ],

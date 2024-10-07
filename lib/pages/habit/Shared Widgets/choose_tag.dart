@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/habit/add_tag.dart';
-import 'package:habit_tracker/util/objects/habit/delete_tag.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/objects/add_tag.dart';
+import 'package:habitt/util/objects/delete_tag.dart';
 import 'package:provider/provider.dart';
 
 class ChooseTag extends StatefulWidget {
@@ -32,7 +32,10 @@ class _ChooseTagState extends State<ChooseTag> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
-                  onTap: () => selectTag(i, context, widget.isEdit, setState),
+                  onTap: () {
+                    selectTag(i, context, widget.isEdit, setState);
+                    context.read<HabitProvider>().updateSomethingEdited();
+                  },
                   onLongPress: () {
                     deleteTag(i, context, widget.isEdit, setState);
                   },

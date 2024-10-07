@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 class HabitDisplay extends StatelessWidget {
@@ -16,10 +16,7 @@ class HabitDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: topPadding,
-        bottom: 10.0,
-      ),
+      padding: EdgeInsets.only(top: topPadding, bottom: 10.0, right: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 

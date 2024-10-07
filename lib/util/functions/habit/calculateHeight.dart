@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habitt/main.dart';
+import 'package:habitt/pages/home/home_page.dart';
 
 double calculateHabitsHeight(String? tagSelected, BuildContext context) {
   double deviceHeight = MediaQuery.of(context).size.height * 0.7;
@@ -41,11 +41,11 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
     }
 
     for (int i = 0; i < hasHabits.length; i++) {
-      height += 30;
+      height += 32;
     }
 
     for (int i = 0; i < habitBox.length; i++) {
-      height += 67;
+      height += 72;
     }
 
     if (boolBox.get('displayEmptyCategories')!) {
@@ -63,7 +63,7 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     for (int i = 0; i < habitBox.length; i++) {
       if (habitBox.getAt(i)?.tag == tagSelected) {
-        height += 67;
+        height += 72;
       }
     }
     if (height < deviceHeight) {
@@ -75,7 +75,7 @@ double calculateHabitsHeight(String? tagSelected, BuildContext context) {
 
     for (int i = 0; i < habitBox.length; i++) {
       if (habitBox.getAt(i)?.category == tagSelected) {
-        height += 67;
+        height += 72;
       }
     }
     if (height < deviceHeight) {

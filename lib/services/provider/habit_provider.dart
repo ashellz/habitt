@@ -1,26 +1,29 @@
 import "dart:async";
+import "package:awesome_notifications/awesome_notifications.dart";
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:fluttertoast/fluttertoast.dart";
-import "package:habit_tracker/data/habit_data.dart";
-import "package:habit_tracker/main.dart";
-import "package:habit_tracker/pages/home_page.dart";
-import "package:habit_tracker/services/storage_service.dart";
-import "package:habit_tracker/util/functions/habit/checkIfEmpty.dart";
-import "package:habit_tracker/util/functions/habit/createNewHabit.dart";
-import "package:habit_tracker/util/functions/habit/deleteHabit.dart";
-import "package:habit_tracker/util/functions/habit/editHabit.dart";
-import "package:habit_tracker/util/functions/habit/habitsCompleted.dart";
-import "package:habit_tracker/util/functions/habit/saveHabits.dart";
-import "package:hive_flutter/hive_flutter.dart";
+import "package:habitt/data/habit_data.dart";
+import "package:habitt/main.dart";
+import "package:habitt/pages/home/functions/createNewHabit.dart";
+import "package:habitt/pages/home/home_page.dart";
+import "package:habitt/services/storage_service.dart";
+import "package:habitt/util/functions/habit/checkIfEmpty.dart";
+import "package:habitt/util/functions/habit/deleteHabit.dart";
+import "package:habitt/util/functions/habit/editHabit.dart";
+import "package:habitt/util/functions/habit/habitsCompleted.dart";
+import "package:habitt/util/functions/habit/saveHabitsForToday.dart";
+import "package:hive/hive.dart";
 import "package:restart_app/restart_app.dart";
-import 'package:vibration/vibration.dart';
+import "package:vibration/vibration.dart";
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
   String mainCategory = "";
   bool somethingEdited = false;
+  bool appearenceEdited = false;
   Icon updatedIcon = startIcon;
+  List habitsList = [];
 
   String timeBasedText = "";
 
@@ -52,8 +55,23 @@ class HabitProvider extends ChangeNotifier {
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
 
+  void updateHabits() {
+    habitsList = habitBox.values.toList();
+    notifyListeners();
+  }
+
   void updateDropDownValue(String value) {
     dropDownValue = value;
+    notifyListeners();
+  }
+
+  void updateAppearenceEdited() {
+    appearenceEdited = true;
+    notifyListeners();
+  }
+
+  void resetAppearenceEdited() {
+    appearenceEdited = false;
     notifyListeners();
   }
 
@@ -191,6 +209,11 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateEditHistoricalHabits(bool value) {
+    boolBox.put("editHistoricalHabits", value);
+    notifyListeners();
+  }
+
   Future<void> createNewHabitProvider(
       createcontroller, BuildContext context) async {
     await createNewHabit(createcontroller, context);
@@ -200,11 +223,14 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void completeHabitProvider(int index, bool isAdLoaded, interstitialAd) async {
+  Future<void> completeHabitProvider(
+      int index, bool isAdLoaded, interstitialAd) async {
     final existingHabit = habitBox.getAt(index);
 
-    if (existingHabit != null) {
-      final updatedHabit = HabitData(
+    if (existingHabit == null) {
+      return;
+    }
+    final updatedHabit = HabitData(
         name: existingHabit.name,
         completed: !existingHabit.completed,
         icon: existingHabit.icon,
@@ -228,28 +254,35 @@ class HabitProvider extends ChangeNotifier {
         notifications: existingHabit.notifications,
         notes: existingHabit.notes,
         longestStreak: existingHabit.longestStreak,
-      );
+        id: existingHabit.id);
 
-      await habitBox.putAt(index, updatedHabit);
+    await habitBox.putAt(index, updatedHabit);
 
-      bool hapticFeedback = boolBox.get('hapticFeedback')!;
-      if (allHabitsCompleted()) {
-        if (isAdLoaded) {
-          interstitialAd.show();
-        }
-        playSound();
-        if (hapticFeedback) {
-          Vibration.vibrate(duration: 500);
-        }
-      } else if (!existingHabit.completed) {
-        if (hapticFeedback) {
-          Vibration.vibrate(duration: 100);
-        }
+    // apply haptic feedback or sound
+    bool hapticFeedback = boolBox.get('hapticFeedback')!;
+    if (allHabitsCompleted()) {
+      if (isAdLoaded) {
+        interstitialAd.show();
       }
-
-      saveHabitsForToday();
-      notifyListeners();
+      playSound();
+      if (hapticFeedback) {
+        Vibration.vibrate(duration: 500);
+      }
+    } else if (!existingHabit.completed) {
+      if (hapticFeedback) {
+        Vibration.vibrate(duration: 100);
+      }
     }
+
+    if (existingHabit.completed) {
+      for (int j = 0; j < habitBox.getAt(index)!.notifications.length; j++) {
+        await AwesomeNotifications().cancel(index * 100 + j);
+      }
+    }
+
+    updateHabits();
+    saveHabitsForToday();
+    notifyListeners();
   }
 
   void skipHabitProvider(int index) async {
@@ -316,6 +349,7 @@ class HabitProvider extends ChangeNotifier {
         notifications: existingHabit.notifications,
         notes: existingHabit.notes,
         longestStreak: existingHabit.longestStreak,
+        id: existingHabit.id,
       );
 
       await habitBox.putAt(index, updatedHabit);
@@ -355,23 +389,23 @@ class HabitProvider extends ChangeNotifier {
     habitBox.putAt(
         index,
         HabitData(
-          name: habitBox.getAt(index)!.name,
-          completed: habitBox.getAt(index)!.completed,
-          icon: habitBox.getAt(index)!.icon,
-          category: habitBox.getAt(index)!.category,
-          streak: habitBox.getAt(index)!.streak,
-          amount: habitBox.getAt(index)!.amount,
-          amountName: habitBox.getAt(index)!.amountName,
-          amountCompleted: habitBox.getAt(index)!.amountCompleted,
-          duration: habitBox.getAt(index)!.duration,
-          durationCompleted:
-              theDurationValueHours * 60 + theDurationValueMinutes,
-          skipped: habitBox.getAt(index)!.skipped,
-          tag: habitBox.getAt(index)!.tag,
-          notifications: habitBox.getAt(index)!.notifications,
-          notes: habitBox.getAt(index)!.notes,
-          longestStreak: habitBox.getAt(index)!.longestStreak,
-        ));
+            name: habitBox.getAt(index)!.name,
+            completed: habitBox.getAt(index)!.completed,
+            icon: habitBox.getAt(index)!.icon,
+            category: habitBox.getAt(index)!.category,
+            streak: habitBox.getAt(index)!.streak,
+            amount: habitBox.getAt(index)!.amount,
+            amountName: habitBox.getAt(index)!.amountName,
+            amountCompleted: habitBox.getAt(index)!.amountCompleted,
+            duration: habitBox.getAt(index)!.duration,
+            durationCompleted:
+                theDurationValueHours * 60 + theDurationValueMinutes,
+            skipped: habitBox.getAt(index)!.skipped,
+            tag: habitBox.getAt(index)!.tag,
+            notifications: habitBox.getAt(index)!.notifications,
+            notes: habitBox.getAt(index)!.notes,
+            longestStreak: habitBox.getAt(index)!.longestStreak,
+            id: habitBox.getAt(index)!.id));
     saveHabitsForToday();
     notifyListeners();
   }
@@ -395,6 +429,7 @@ class HabitProvider extends ChangeNotifier {
           notifications: habitBox.getAt(index)!.notifications,
           notes: habitBox.getAt(index)!.notes,
           longestStreak: habitBox.getAt(index)!.longestStreak,
+          id: habitBox.getAt(index)!.id,
         ));
     saveHabitsForToday();
     notifyListeners();
@@ -413,7 +448,7 @@ class HabitProvider extends ChangeNotifier {
       saveHabitsForToday();
 
       if (userId != null) {
-        await backupHiveBoxesToFirebase(userId);
+        await backupHiveBoxesToFirebase(userId, true);
       }
     }
   }

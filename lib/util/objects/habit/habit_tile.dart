@@ -1,17 +1,17 @@
+import 'package:animated_digit/animated_digit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habit_tracker/data/habit_data.dart';
-import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/habit/getIcon.dart';
-import 'package:habit_tracker/util/objects/habit/complete_habit.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
+import 'package:habitt/pages/home/functions/getIcon.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/objects/habit/complete_habit_dialog.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:animated_digit/animated_digit.dart';
 
 class NewHabitTile extends StatefulWidget {
   const NewHabitTile({
@@ -50,6 +50,8 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
     return GestureDetector(
       onTap: () {
+        context.read<HabitProvider>().resetSomethingEdited();
+        context.read<HabitProvider>().resetAppearenceEdited();
         Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
         updated = false;
         editcontroller.text = "";
@@ -65,9 +67,6 @@ class _NewHabitTileState extends State<NewHabitTile> {
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
-          if (context.mounted) {
-            context.read<HabitProvider>().resetSomethingEdited();
-          }
           bool changeTag = true;
           for (int i = 0; i < tagBox.length; i++) {
             if (tagBox.getAt(i)!.tag == habitBox.getAt(index)!.tag) {
@@ -182,6 +181,7 @@ class HabitTile extends StatelessWidget {
             width: 10,
           ),
           IntrinsicWidth(
+              stepWidth: 10,
               child: StreakDisplay(habitBox: habitBox, index: index)),
         ],
       ),
@@ -227,18 +227,26 @@ class StreakDisplay extends StatelessWidget {
         size: 21,
       ),
       Transform.translate(
-        offset: const Offset(0, -1),
+        offset: const Offset(0, 2),
         child: AnimatedDigitWidget(
+          loop: false,
           duration: const Duration(milliseconds: 800),
           value: habitBox.getAt(index)!.skipped
               ? habitBox.getAt(index)!.streak
               : habitBox.getAt(index)!.completed
                   ? habitBox.getAt(index)!.streak + 1
                   : habitBox.getAt(index)!.streak,
-          textStyle: TextStyle(
-              color:
-                  habitBox.getAt(index)!.completed ? Colors.white : Colors.grey,
-              fontSize: 14),
+          textStyle: const TextStyle(fontFamily: "Poppins", fontSize: 14),
+          valueColors: [
+            ValueColor(
+              condition: () => habitBox.getAt(index)!.completed,
+              color: Colors.white,
+            ),
+            ValueColor(
+              condition: () => !habitBox.getAt(index)!.completed,
+              color: Colors.grey,
+            ),
+          ],
         ),
       )
     ]);
@@ -361,12 +369,20 @@ class _CheckBoxState extends State<CheckBox> {
                                       .getAt(widget.index)!
                                       .amountCompleted
                                       .toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 10),
+                                  style: TextStyle(
+                                      color: widget.habitBox
+                                              .getAt(widget.index)!
+                                              .skipped
+                                          ? Colors.grey
+                                          : Colors.white,
+                                      fontSize: 10),
                                 ),
                               ),
-                              const Divider(
-                                color: Colors.white,
+                              Divider(
+                                color:
+                                    widget.habitBox.getAt(widget.index)!.skipped
+                                        ? Colors.grey
+                                        : Colors.white,
                                 thickness: 1,
                                 indent: 15,
                                 endIndent: 15,
@@ -378,8 +394,13 @@ class _CheckBoxState extends State<CheckBox> {
                                       .getAt(widget.index)!
                                       .amount
                                       .toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 10),
+                                  style: TextStyle(
+                                      color: widget.habitBox
+                                              .getAt(widget.index)!
+                                              .skipped
+                                          ? Colors.grey
+                                          : Colors.white,
+                                      fontSize: 10),
                                 ),
                               ),
                             ],

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/onboarding/page_five.dart';
-import 'package:habit_tracker/pages/onboarding/page_four.dart';
-import 'package:habit_tracker/pages/onboarding/page_one.dart';
-import 'package:habit_tracker/pages/onboarding/page_three.dart';
-import 'package:habit_tracker/pages/onboarding/page_two.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/onboarding/page_five.dart';
+import 'package:habitt/pages/onboarding/page_four.dart';
+import 'package:habitt/pages/onboarding/page_one.dart';
+import 'package:habitt/pages/onboarding/page_three.dart';
+import 'package:habitt/pages/onboarding/page_two.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingPage extends StatefulWidget {

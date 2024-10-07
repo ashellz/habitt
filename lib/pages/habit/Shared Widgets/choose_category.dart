@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 Widget chooseCategory(String category, BuildContext context, bool isEdit) {
@@ -15,6 +15,9 @@ Widget chooseCategory(String category, BuildContext context, bool isEdit) {
             context.read<HabitProvider>().toggleExpansion();
             if (isEdit) {
               context.read<HabitProvider>().updateSomethingEdited();
+
+              Provider.of<HabitProvider>(context, listen: false)
+                  .updateAppearenceEdited();
             }
           },
           child: Text(

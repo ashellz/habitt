@@ -5,11 +5,9 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   awesome_notifications
-  awesome_notifications_core
   firebase_auth
   firebase_core
   firebase_storage
-  flutter_secure_storage_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

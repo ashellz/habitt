@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/checkForNotifications.dart';
-import 'package:habit_tracker/util/objects/habit/choose_notification_time.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/checkForNotifications.dart';
+import 'package:habitt/util/objects/choose_notification_time.dart';
 
 Widget notificationContainer(String category) {
   late String box;

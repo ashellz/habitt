@@ -1,15 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:habit_tracker/pages/auth/loading_page.dart';
-import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/auth/signup_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/onboarding/onboarding_page.dart';
-import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habitt/pages/auth/loading_page.dart';
+import 'package:habitt/pages/auth/login_page.dart';
+import 'package:habitt/pages/auth/signup_page.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/onboarding/onboarding_page.dart';
+import 'package:habitt/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 
 bool passwordIncorrect = false;
@@ -265,27 +264,6 @@ class AuthService {
     }
   }
 
-  Future<void> signInWithFacebook(BuildContext context) async {
-    final LoginResult result = await FacebookAuth.instance.login();
-    final credential =
-        FacebookAuthProvider.credential(result.accessToken!.token);
-
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-
-    user = userCredential.user;
-
-    String username = stringBox.get('username') ?? "Guest";
-
-    if (username == "Guest") {
-      stringBox.put('username', user!.displayName!);
-    }
-
-    if (context.mounted) {
-      getIntoTheApp(context);
-    }
-  }
-
   Future<void> signInAnonimusly() async {
     await FirebaseAuth.instance.signInAnonymously();
     isLoggedIn = true;
@@ -298,7 +276,7 @@ class AuthService {
                 text: "Signing out...",
               )),
     );
-    await backupHiveBoxesToFirebase(userId);
+    await backupHiveBoxesToFirebase(userId, false);
     await FirebaseAuth.instance.signOut();
     isLoggedIn = false;
 
@@ -385,7 +363,7 @@ class AuthService {
       print("Restoring Hive boxes from Firebase...");
     }
     await restoreHiveBoxesFromFirebase(userId).then((_) async {
-      await Restart.restartApp();
+      Restart.restartApp();
     });
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/habit/Shared%20Widgets/choose_tag.dart';
-import 'package:habit_tracker/pages/habit/Shared%20Widgets/dropdown_menu.dart';
-import 'package:habit_tracker/pages/habit/Shared%20Widgets/habit_goal.dart';
-import 'package:habit_tracker/pages/habit/Shared%20Widgets/habit_name_textfield.dart';
-import 'package:habit_tracker/pages/habit/Shared%20Widgets/notes_text_field.dart';
+import 'package:habitt/pages/habit/shared%20widgets/choose_tag.dart';
+import 'package:habitt/pages/habit/shared%20widgets/dropdown_menu.dart';
+import 'package:habitt/pages/habit/shared%20widgets/habit_goal.dart';
+import 'package:habitt/pages/habit/shared%20widgets/habit_name_textfield.dart';
+import 'package:habitt/pages/habit/shared%20widgets/notes_text_field.dart';
 
 Widget editPage(
     StateSetter setState,

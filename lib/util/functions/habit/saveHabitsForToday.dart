@@ -1,6 +1,6 @@
-import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/pages/home_page.dart';
 import 'package:collection/collection.dart';
+import 'package:habitt/data/historical_habit.dart';
+import 'package:habitt/pages/home/home_page.dart';
 
 void saveHabitsForToday() async {
   DateTime today = DateTime.now();
@@ -24,6 +24,7 @@ void saveHabitsForToday() async {
         duration: habit.duration,
         durationCompleted: habit.durationCompleted,
         skipped: habit.skipped,
+        id: habit.id,
       );
 
       // Add the habit data to the list for today

@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
-import "package:habit_tracker/pages/menu/calendar_page.dart";
-import "package:habit_tracker/pages/menu/changelog_page.dart";
-import "package:habit_tracker/pages/menu/profile_page.dart";
-import "package:habit_tracker/pages/menu/settings_page.dart";
-import "package:habit_tracker/services/ad_mob_service.dart";
-import "package:habit_tracker/services/provider/habit_provider.dart";
-import "package:habit_tracker/util/colors.dart";
+import "package:habitt/pages/menu/calendar_page.dart";
+import "package:habitt/pages/menu/changelog_page.dart";
+import "package:habitt/pages/menu/profile_page.dart";
+import "package:habitt/pages/menu/settings_page.dart";
+import "package:habitt/services/ad_mob_service.dart";
+import "package:habitt/services/provider/habit_provider.dart";
+import "package:habitt/util/colors.dart";
 import "package:provider/provider.dart";
 
 class MenuPage extends StatefulWidget {

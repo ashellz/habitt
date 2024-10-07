@@ -54,23 +54,23 @@ class HistoricalHabitDataAdapter extends TypeAdapter<HistoricalHabitData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HistoricalHabitData(
-      name: fields[0] as String,
-      completed: fields[1] as bool,
-      icon: fields[2] as String,
-      category: fields[3] as String,
-      amount: fields[4] as int,
-      amountCompleted: fields[5] as int,
-      amountName: fields[6] as String,
-      duration: fields[7] as int,
-      durationCompleted: fields[8] as int,
-      skipped: fields[9] as bool,
-    );
+        name: fields[0] as String,
+        completed: fields[1] as bool,
+        icon: fields[2] as String,
+        category: fields[3] as String,
+        amount: fields[4] as int,
+        amountCompleted: fields[5] as int,
+        amountName: fields[6] as String,
+        duration: fields[7] as int,
+        durationCompleted: fields[8] as int,
+        skipped: fields[9] as bool,
+        id: fields[10] == null ? 12345 : fields[10] as int);
   }
 
   @override
   void write(BinaryWriter writer, HistoricalHabitData obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -90,7 +90,9 @@ class HistoricalHabitDataAdapter extends TypeAdapter<HistoricalHabitData> {
       ..writeByte(8)
       ..write(obj.durationCompleted)
       ..writeByte(9)
-      ..write(obj.skipped);
+      ..write(obj.skipped)
+      ..writeByte(10)
+      ..write(obj.id);
   }
 
   @override

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/ad_mob_service.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/habit/choose_notification_time.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/ad_mob_service.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/objects/choose_notification_time.dart';
 import 'package:provider/provider.dart';
 
 List editHabitNotifications = [];

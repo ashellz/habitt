@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -103,11 +103,13 @@ class IconWidget extends StatelessWidget {
             Navigator.pop(context);
             changed = true;
             Provider.of<HabitProvider>(context, listen: false)
+                .updateAppearenceEdited();
+            Provider.of<HabitProvider>(context, listen: false)
                 .updateSomethingEdited();
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),
-            backgroundColor: theColor,
+            backgroundColor: Colors.grey.shade900,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),

@@ -7,50 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:752709751941:android:099c2d89941a3ccc0005ec",
-        "android_client_info": {
-          "package_name": "com.example.habit_tracker"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "752709751941-rp25a50jrijcslhc9fl2qv9c2dthla3n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.habit_tracker",
-            "certificate_hash": "bacb70d3ea025f3b2667800793c9c45148150453"
-          }
-        },
-        {
-          "client_id": "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDArWvksa_cBebWkn4H7VF1C7-sgEgPtq0"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "752709751941-vt92fpp7ge9gs8cs4rrnlvrkk84aekmc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "752709751941-8ejpmuhbq5d05kc7d538hji7fe2pm3o8.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.habitTracker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:752709751941:android:d45e25110a0f29100005ec",
         "android_client_info": {
           "package_name": "com.shellz.habitt"
@@ -58,11 +14,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com",
+          "client_id": "752709751941-7ms9ooshea3o385ep8dvu1b9aa7cfk6i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.shellz.habitt",
-            "certificate_hash": "bacb70d3ea025f3b2667800793c9c45148150453"
+            "certificate_hash": "e80511dfbc859b398dbf65c7f073d56688e01e04"
+          }
+        },
+        {
+          "client_id": "752709751941-dp4uhq62aam1kgtg255cvjilhskc316s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shellz.habitt",
+            "certificate_hash": "f19c6b6fe5097ecadfcc90b846461781021fa1f3"
+          }
+        },
+        {
+          "client_id": "752709751941-sh2ngj8q1nd0sp0csihgv8ber9udcl22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shellz.habitt",
+            "certificate_hash": "d5671d9d34d718f961f303b694aec2dae3608b7d"
           }
         },
         {

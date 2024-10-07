@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/data/tags.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:habitt/data/tags.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/validate_text.dart';
 
 GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

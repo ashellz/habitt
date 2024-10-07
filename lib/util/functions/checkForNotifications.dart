@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:habit_tracker/data/habit_data.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/pages/home/home_page.dart';
 
 void checkForNotifications() async {
   checkForCustomNotifications();

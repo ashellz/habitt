@@ -1,27 +1,27 @@
-import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'dart:async';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/data/habit_data.dart';
-import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/data/tags.dart';
-import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/pages/onboarding/onboarding_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/functions/checkForNotifications.dart';
-import 'package:habit_tracker/util/functions/fillKeys.dart';
-import 'package:habit_tracker/util/functions/habit/saveHabits.dart';
-import 'package:habit_tracker/util/functions/hiveBoxes.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/data/historical_habit.dart';
+import 'package:habitt/data/tags.dart';
+import 'package:habitt/firebase_options.dart';
+import 'package:habitt/pages/auth/login_page.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/onboarding/onboarding_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/checkForNotifications.dart';
+import 'package:habitt/util/functions/fillKeys.dart';
+import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
+import 'package:habitt/util/functions/openHiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:workmanager/workmanager.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 bool morningHasHabits = false;
 bool afternoonHasHabits = false;
@@ -55,13 +55,6 @@ Future<void> main() async {
   Hive.registerAdapter(HistoricalHabitAdapter());
   Hive.registerAdapter(HistoricalHabitDataAdapter());
 
-  await openHiveBoxes();
-  await fillKeys();
-
-  saveHabitsForToday();
-
-  checkForNotifications();
-
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
     if (!isAllowed) {
@@ -70,22 +63,6 @@ Future<void> main() async {
       boolBox.put('hasNotificationAccess', true);
     }
   });
-
-  // checking for battery optimization
-  bool? isBatteryOptimizationDisabled =
-      await DisableBatteryOptimization.isBatteryOptimizationDisabled;
-  if (isBatteryOptimizationDisabled == false) {
-    await boolBox.put('disabledBatteryOptimization', false);
-  } else {
-    await boolBox.put('disabledBatteryOptimization', true);
-  }
-
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-  Workmanager().registerPeriodicTask(
-    "1",
-    "simplePeriodicTask",
-    frequency: const Duration(minutes: 15),
-  );
 
   runApp(
     MultiProvider(
@@ -96,24 +73,6 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
-}
-
-@pragma('vm:entry-point')
-void callbackDispatcher(BuildContext context) {
-  Workmanager().executeTask((task, inputData) async {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().chooseMainCategory();
-      context.read<HabitProvider>().chooseTimeBasedText();
-    });
-
-    if (task == "updateDateTask") {
-      context.read<HabitProvider>().updateLastOpenedDate();
-    }
-
-    saveHabitsForToday();
-    checkForNotifications();
-    return Future.value(true);
-  });
 }
 
 hasHabits() {
@@ -131,18 +90,6 @@ hasHabits() {
   }
 }
 
-void scheduleMidnightTask() {
-  final now = DateTime.now();
-  final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
-  final initialDelay = nextMidnight.difference(now);
-
-  Workmanager().registerOneOffTask(
-    "1",
-    "updateDateTask",
-    initialDelay: initialDelay,
-  );
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -151,7 +98,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
-      title: 'Habit Tracker',
+      title: 'habitt',
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -192,31 +139,50 @@ class AuthCheck extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasData) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.read<HabitProvider>().chooseMainCategory();
-            context.read<HabitProvider>().updateMainCategoryHeight();
-            context.read<HistoricalHabitProvider>().calculateStreak(context);
-            context.read<HabitProvider>().chooseTimeBasedText();
-            context.read<HabitProvider>().updateLastOpenedDate();
-          });
-          saveHabitsForToday();
-          checkForNotifications();
-          scheduleMidnightTask();
+          // Create a FutureBuilder to wait for openHiveBoxes to complete
+          return FutureBuilder<void>(
+            future: openHiveAndPerformTasks(context),
+            builder: (context, futureSnapshot) {
+              if (futureSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          if (boolBox.containsKey("firstTimeOpened")) {
-            if (boolBox.get("firstTimeOpened")!) {
-              boolBox.put("firstTimeOpened", false);
-              return const OnboardingPage();
-            } else {
-              return const HomePage();
-            }
-          } else {
-            return const HomePage();
-          }
+              // After the Future is complete, check for onboarding or homepage
+              if (boolBox.containsKey("firstTimeOpened")) {
+                if (boolBox.get("firstTimeOpened")!) {
+                  boolBox.put("firstTimeOpened", false);
+                  return const OnboardingPage();
+                } else {
+                  return const HomePage();
+                }
+              } else {
+                return const HomePage();
+              }
+            },
+          );
         } else {
           return LoginPage();
         }
       },
     );
+  }
+
+  // Create a function that wraps all necessary tasks
+  Future<void> openHiveAndPerformTasks(BuildContext context) async {
+    await openHiveBoxes();
+    fillKeys();
+
+    // Post-frame callback to update providers and perform actions
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().chooseMainCategory();
+      context.read<HabitProvider>().updateMainCategoryHeight();
+      context.read<HistoricalHabitProvider>().calculateStreak(context);
+      context.read<HabitProvider>().chooseTimeBasedText();
+      context.read<HabitProvider>().updateLastOpenedDate();
+      context.read<HabitProvider>().updateHabits();
+    });
+
+    saveHabitsForToday();
+    checkForNotifications();
   }
 }

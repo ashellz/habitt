@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/util/colors.dart';
 
 class ChangelogPage extends StatefulWidget {
   const ChangelogPage({super.key});
@@ -27,7 +27,8 @@ class _ChangelogPageState extends State<ChangelogPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              changelogContainer("v1.0.3", ""),
+              changelogContainer("v1.0.3",
+                  "- Increased sign out speed\n- Added completion rate graph for last 30 days\n- Added option that editing a habit edits the habit in the past too\n- Fixed padding on the right side of the habit name in add and edit habit pages\n- Habit completion status now doesn't reset every time you save a habit unless you changed the amount or duration\n- Fixed main category height not increasing after it has been changed in the background\n- Fixed “Save Changes” button not appearing after tag is changed\n- Added more animations"),
               changelogContainer("v1.0.2",
                   "- Added 12-Hour format support\n- Added a rewarded ad when uploading data\n- Added banner ad in the habit notification page\n- Added ability to log in using Google and GitHub\n- Added more greeting texts\n- Added unobsecure text option to password fields\n- Added text in profile page telling you when you first joined habitt\n- Added welcome screen as an intro to the app\n- Improved authentication\n- Improved notification texts\n- Improved responsiveness for text in habit tiles\n- Improved app bars\n- Improved habit skipping\n- Habit notification tile redesign\n- Edit and Add habit pages redesign\n- Save changes button, when editing a habit, only appears if something has been changed\n- Changed text field border color in login and signup pages\n- Changed how the changelog page looks\n- You now can't skip the same habit two days in a row or more than three habits a day\n- Calendar day now doesn't count skipped habit as completed\n- Calendar won't add habits to the days past the time you joined the app\n- Fixed possibility to add two identical tags\n- Fixed habits not resetting until the app is restarted\n- Fixed longest streak increasing if a habit is completed\n- Fixed 'CONTINUE AS GUEST' overlapping other widgets when the keyboard appears"),
               const SizedBox(

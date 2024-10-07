@@ -1,9 +1,42 @@
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/storage_service.dart';
+import 'package:flutter/foundation.dart';
+// import 'package:habit_tracker/services/storage_service.dart';
+import 'package:habitt/pages/home/home_page.dart';
 
 fillKeys() {
   if (habitBox.isEmpty) {
-    addInitialData();
+    // addInitialData(); TODO: connect with database
+  }
+
+  for (int i = 0; i < historicalBox.length; i++) {
+    for (int j = 0; j < historicalBox.getAt(i)!.data.length; j++) {
+      if (historicalBox.getAt(i)!.data[j].id == 12345) {
+        historicalBox.getAt(i)!.data[j].id = j;
+      }
+    }
+  }
+
+  for (int i = 0; i < habitBox.length; i++) {
+    if (habitBox.getAt(i)!.id == 12345) {
+      habitBox.getAt(i)!.id = i;
+    }
+
+    int id = habitBox.getAt(i)!.id;
+
+    if (kDebugMode) {
+      print("id at index $i is $id");
+    }
+  }
+
+  if (!streakBox.containsKey('highestId')) {
+    streakBox.put('highestId', habitBox.length - 1);
+  }
+
+  if (!boolBox.containsKey("editHistoricalHabits")) {
+    boolBox.put("editHistoricalHabits", true);
+  }
+
+  if (!boolBox.containsKey("firstTimeEditAppearence")) {
+    boolBox.put("firstTimeEditAppearence", true);
   }
 
   if (!boolBox.containsKey("12hourFormat")) {

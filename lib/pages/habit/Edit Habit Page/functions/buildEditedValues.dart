@@ -1,11 +1,11 @@
 // ignore_for_file: unused_local_variable
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/functions/habit/getIcon.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletionRateGraph.dart';
+import 'package:habitt/pages/home/functions/getIcon.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 void buildEditedValues(
@@ -14,7 +14,9 @@ void buildEditedValues(
     TextEditingController editcontroller,
     double? lowestCompletionRate,
     List<double> completionRates,
-    double? highestCompletionRate) {
+    double? highestCompletionRate,
+    List<int> everyFifthDay,
+    List<int> everyFifthMonth) {
   var habitProvider = Provider.of<HabitProvider>(context, listen: false);
 
   if (!changed) {
@@ -71,92 +73,8 @@ void buildEditedValues(
 
     habitProvider.notescontroller.text = habitBox.getAt(index)!.notes;
 
-    var historicalList = historicalBox.values.toList();
-
-    historicalList.sort((b, a) {
-      DateTime dateA = a.date;
-      DateTime dateB = b.date;
-      return dateA.compareTo(dateB);
-    });
-
-    completionRates.clear();
-    highestCompletionRate = 0;
-    lowestCompletionRate = 100;
-
-    for (int i = 0; i < historicalList.length; i++) {
-      int habitsCompleted = 0;
-      int totalHabits = 0;
-
-      if (kDebugMode) {
-        print("HISTORICAL LIST: ${historicalList[i].date}");
-      }
-      for (int j = 0; j < historicalList.length; j++) {
-        if (j + i < historicalList.length) {
-          if (kDebugMode) {
-            print("HISTORICAL LIST MINUS: ${historicalList[j + i].date}");
-          }
-
-          if (historicalList[j + i].data[index].completed) {
-            if (!historicalList[j + i].data[index].skipped) {
-              habitsCompleted++;
-            }
-          }
-          totalHabits++;
-        }
-      }
-      double completionRate = (habitsCompleted / totalHabits) * 100;
-
-      if (completionRate > highestCompletionRate!) {
-        highestCompletionRate = completionRate;
-      }
-      if (completionRate < lowestCompletionRate!) {
-        lowestCompletionRate = completionRate;
-      }
-
-      completionRates.add(completionRate);
-    }
-
-    /*
-    for (int i = 0; i < historicalList.length; i++) {
-      if (historicalList.length - 1 - i < 0) {
-        break;
-      }
-
-      int habitsCompleted = 0;
-      int totalHabits = 0;
-
-      for (int j = 0; j < 30; j++) {
-        if (historicalList.length - 1 - i - j < 0) {
-          break;
-        }
-        if (historicalList[historicalList.length - 1 - i - j].data.length <=
-            index) {
-          break;
-        }
-
-        // goes back 30 days from the original habit to calculate completion rate
-        if (historicalList[historicalList.length - 1 - i - j]
-            .data[index]
-            .completed) {
-          if (!historicalList[historicalList.length - 1 - i - j]
-              .data[index]
-              .skipped) {
-            habitsCompleted++;
-          }
-        }
-        totalHabits++;
-      }
-      double completionRate = (habitsCompleted / totalHabits) * 100;
-
-      if (completionRate > highestCompletionRate!) {
-        highestCompletionRate = completionRate;
-      }
-      if (completionRate < lowestCompletionRate!) {
-        lowestCompletionRate = completionRate;
-      }
-
-      completionRates.add(completionRate);
-    }*/
+    buildCompletionRateGraph(index, completionRates, highestCompletionRate,
+        lowestCompletionRate, everyFifthDay, everyFifthMonth);
 
     updated = true;
   }

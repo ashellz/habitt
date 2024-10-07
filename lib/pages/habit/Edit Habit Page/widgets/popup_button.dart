@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
-import 'package:habit_tracker/pages/habit/notifications_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/functions/checkForNotifications.dart';
-import 'package:habit_tracker/util/objects/habit/confirm_delete_habit.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
+import 'package:habitt/pages/habit/notifications_page.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/util/functions/checkForNotifications.dart';
+import 'package:habitt/util/objects/habit/confirm_delete_habit.dart';
 
 class PopUpButton extends StatelessWidget {
   const PopUpButton({

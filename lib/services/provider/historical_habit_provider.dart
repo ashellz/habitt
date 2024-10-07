@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit_tracker/data/historical_habit.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
+import 'package:habitt/data/historical_habit.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
@@ -143,6 +143,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
       duration: habit.duration,
       durationCompleted: habit.durationCompleted,
       skipped: !habit.skipped,
+      id: habit.id,
     );
 
     applyCurentHabitData(chosenHabitDate, index, habitData, time);
@@ -174,6 +175,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
               ? 0
               : habit.durationCompleted,
       skipped: false,
+      id: habit.id,
     );
 
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
@@ -209,7 +211,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
         amountName: habit.amountName,
         duration: habit.duration,
         durationCompleted: habit.durationCompleted,
-        skipped: habit.skipped);
+        skipped: habit.skipped,
+        id: habit.id);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -230,7 +233,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
         amountName: habit.amountName,
         duration: habit.duration,
         durationCompleted: theDurationValueHours * 60 + theDurationValueMinutes,
-        skipped: habit.skipped);
+        skipped: habit.skipped,
+        id: habit.id);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -313,6 +317,23 @@ class HistoricalHabitProvider extends ChangeNotifier {
     streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
     Provider.of<HabitProvider>(context, listen: false)
         .allHabitsCompletedStreakP = allHabitsCompletedStreak;
+
+    notifyListeners();
+  }
+
+  editHistoricalHabit(index) {
+    int id = habitBox.getAt(index)!.id;
+
+    for (int i = 0; i < historicalBox.length; i++) {
+      for (int j = 0; j < historicalBox.getAt(i)!.data.length; j++) {
+        if (historicalBox.getAt(i)!.data[j].id == id) {
+          historicalBox.getAt(i)!.data[j].name = habitBox.getAt(index)!.name;
+          historicalBox.getAt(i)!.data[j].icon = habitBox.getAt(index)!.icon;
+          historicalBox.getAt(i)!.data[j].category =
+              habitBox.getAt(index)!.category;
+        }
+      }
+    }
 
     notifyListeners();
   }

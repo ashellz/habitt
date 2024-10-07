@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/auth/signup_page.dart';
-import 'package:habit_tracker/services/auth_service.dart';
-import 'package:habit_tracker/util/functions/validate_text.dart';
+import 'package:habitt/pages/auth/signup_page.dart';
+import 'package:habitt/services/auth_service.dart';
+import 'package:habitt/util/functions/validate_text.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 // ignore: must_be_immutable

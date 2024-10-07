@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:habit_tracker/pages/home_page.dart';
+import 'package:habitt/pages/home/home_page.dart';
 
 String? validateUsername(String? value) {
   if (value?.isEmpty ?? true) {

@@ -60,34 +60,33 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBAnBWaRfW_fxzNKLqHO3x_gXe0bBIPcmU',
-    appId: '1:752709751941:ios:c690bfa1f3872c530005ec',
+    appId: '1:752709751941:ios:5f7ffb67a57b5b600005ec',
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
-    androidClientId: '752709751941-rp25a50jrijcslhc9fl2qv9c2dthla3n.apps.googleusercontent.com',
-    iosClientId: '752709751941-8ejpmuhbq5d05kc7d538hji7fe2pm3o8.apps.googleusercontent.com',
-    iosBundleId: 'com.example.habitTracker',
+    androidClientId: '752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com',
+    iosClientId: '752709751941-dc5huio9hurcah7ipb2hrmmf72h93rht.apps.googleusercontent.com',
+    iosBundleId: 'com.shellz.habitt',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBAnBWaRfW_fxzNKLqHO3x_gXe0bBIPcmU',
-    appId: '1:752709751941:ios:c690bfa1f3872c530005ec',
+    appId: '1:752709751941:ios:5f7ffb67a57b5b600005ec',
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     storageBucket: 'habit-tracker-df84b.appspot.com',
-    androidClientId: '752709751941-rp25a50jrijcslhc9fl2qv9c2dthla3n.apps.googleusercontent.com',
-    iosClientId: '752709751941-8ejpmuhbq5d05kc7d538hji7fe2pm3o8.apps.googleusercontent.com',
-    iosBundleId: 'com.example.habitTracker',
+    androidClientId: '752709751941-0ofrgtpaiednmh1j64bedt06jikkk18e.apps.googleusercontent.com',
+    iosClientId: '752709751941-dc5huio9hurcah7ipb2hrmmf72h93rht.apps.googleusercontent.com',
+    iosBundleId: 'com.shellz.habitt',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyBhYKhcU9-RtFY5jatuO5v4Sg2_eyHibDQ',
-    appId: '1:752709751941:web:cc3483c1c2f033320005ec',
+    appId: '1:752709751941:web:ef141f4eab123db60005ec',
     messagingSenderId: '752709751941',
     projectId: 'habit-tracker-df84b',
     authDomain: 'habit-tracker-df84b.firebaseapp.com',
     storageBucket: 'habit-tracker-df84b.appspot.com',
-    measurementId: 'G-PT4GLRDPL8',
+    measurementId: 'G-2GMMYP4JFJ',
   );
-
 }

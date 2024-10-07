@@ -1,0 +1,333 @@
+import 'dart:math';
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/data/historical_habit.dart';
+import 'package:habitt/data/tags.dart';
+import 'package:habitt/main.dart';
+import 'package:habitt/pages/habit/add_habit_page.dart';
+import 'package:habitt/pages/home/functions/fillTagsList.dart';
+import 'package:habitt/pages/home/widgets/header.dart';
+import 'package:habitt/pages/home/widgets/main_category.dart';
+import 'package:habitt/pages/home/widgets/other_categories.dart';
+import 'package:habitt/pages/home/widgets/selected_tag.dart';
+import 'package:habitt/pages/home/widgets/tags_widgets.dart';
+import 'package:habitt/pages/menu/menu_page.dart';
+import 'package:habitt/services/ad_mob_service.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/fillKeys.dart';
+import 'package:habitt/util/functions/habit/calculateHeight.dart';
+import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
+
+Icon startIcon = const Icon(Icons.book);
+
+final habitBox = Hive.box<HabitData>('habits');
+final metadataBox = Hive.box<DateTime>('metadata');
+final streakBox = Hive.box<int>('streak');
+final boolBox = Hive.box<bool>('bool');
+final stringBox = Hive.box<String>('string');
+final listBox = Hive.box<List>('list');
+final tagBox = Hive.box<TagData>('tags');
+final historicalBox = Hive.box<HistoricalHabit>('historicalHabits');
+final historicalHabitDataBox =
+    Hive.box<HistoricalHabitData>('historicalHabitData');
+late HabitData myHabit;
+String habitTag = "";
+final player = AudioPlayer();
+
+bool changed = false, keepData = false, deleted = false;
+
+List<String> categoriesList = ['All'];
+List<String> tagsList = [
+  'No tag',
+  'Healthy Lifestyle',
+  'Better Sleep',
+  'Morning Routine',
+  'Workout',
+];
+
+List<String> greetingTexts = [
+  "Hi there",
+  "Hey there",
+  "Hello there",
+  "Hello",
+  "Hi",
+  "Hey",
+  "What's up?",
+];
+
+final pageController = PageController(initialPage: 0);
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  InterstitialAd? interstitialAd;
+  bool isAdLoaded = false;
+  int adTries = 10;
+
+  initInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: AdMobService.interstitialAdUnitId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) => setState(() {
+                  interstitialAd = ad;
+                  isAdLoaded = true;
+                }),
+            onAdFailedToLoad: (error) {
+              if (adTries > 0) {
+                initInterstitialAd();
+                adTries--;
+              } else {
+                setState(() {
+                  interstitialAd = null;
+                });
+              }
+            }));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkForDayJoined();
+    initInterstitialAd();
+
+    WidgetsBinding.instance.addObserver(this);
+
+    hasHabits();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<HabitProvider>().updateLastOpenedDate();
+      context.read<HabitProvider>().chooseMainCategory();
+      context.read<HabitProvider>().updateMainCategoryHeight();
+      context.read<HabitProvider>().chooseTimeBasedText();
+      if (interstitialAd == null) {
+        adTries = 10;
+        initInterstitialAd();
+      }
+    }
+  }
+
+  String greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
+
+  @override
+  Widget build(BuildContext context) {
+    fillTagsList(context);
+    String? tagSelected = context.watch<HabitProvider>().tagSelected;
+
+    String mainCategory = context.watch<HabitProvider>().mainCategory;
+    int habitListLength = context.watch<HabitProvider>().habitListLength;
+    double mainCategoryHeight =
+        context.watch<HabitProvider>().mainCategoryHeight;
+    String username = stringBox.get('username') ?? 'Guest';
+
+    TextEditingController createcontroller = TextEditingController();
+    TextEditingController editcontroller = TextEditingController();
+
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          openAddHabitPage(context, createcontroller);
+        },
+        backgroundColor: theLightColor,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.black,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.black,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return const MenuPage();
+                    }));
+                  },
+                ),
+              ]),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 30),
+                      header(username, greetingText),
+                      const SizedBox(height: 20),
+                      SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: calculateHabitsHeight(tagSelected, context),
+                  child: PageView(
+                    controller: pageController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    onPageChanged: (value) => context
+                        .read<HabitProvider>()
+                        .setTagSelected(visibleListTags()[value]),
+                    children: [
+                      for (String tag in visibleListTags())
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 40),
+                          child: ListView(
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                              if (tag == 'All')
+                                Column(children: [
+                                  mainCategoryList(
+                                      habitListLength,
+                                      mainCategoryHeight,
+                                      mainCategory,
+                                      editcontroller,
+                                      context,
+                                      isAdLoaded,
+                                      interstitialAd),
+                                  const SizedBox(height: 20),
+                                  otherCategoriesList(
+                                      context,
+                                      mainCategory,
+                                      editcontroller,
+                                      anytimeHasHabits,
+                                      isAdLoaded,
+                                      interstitialAd)
+                                ]),
+                              if (tag != 'All')
+                                tagSelectedWidget(tag, editcontroller,
+                                    isAdLoaded, interstitialAd),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+List<String> visibleListTags() {
+  List<String> visibleList = ["All"];
+
+  for (int i = 0; i < habitBox.length; i++) {
+    final category = habitBox.getAt(i)?.category;
+
+    if (!visibleList.contains(category)) {
+      visibleList.add(category!);
+    }
+  }
+
+  visibleList.sort((a, b) {
+    const order = ["All", "Any time", "Morning", "Afternoon", "Evening"];
+    return order.indexOf(a).compareTo(order.indexOf(b));
+  });
+
+  for (int i = 0; i < habitBox.length; i++) {
+    final tag = habitBox.getAt(i)?.tag;
+    if (!visibleList.contains(tag)) {
+      if (tag != "No tag") {
+        visibleList.add(tag!);
+      }
+    }
+  }
+
+  return visibleList;
+}
+
+Future<void> playSound() async {
+  await player.play(AssetSource('sound/complete3.mp3'));
+}
+
+void openAddHabitPage(
+    BuildContext context, TextEditingController createcontroller) {
+  Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
+  habitTag = "No tag";
+  Provider.of<HabitProvider>(context, listen: false).updatedIcon = startIcon;
+  Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
+  Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
+  Provider.of<HabitProvider>(context, listen: false).habitGoalController.text =
+      "times";
+  Provider.of<HabitProvider>(context, listen: false).amount = 2;
+  Provider.of<HabitProvider>(context, listen: false).durationMinutes = 0;
+  Provider.of<HabitProvider>(context, listen: false).durationHours = 0;
+  Provider.of<HabitProvider>(context, listen: false).duration = 0;
+  createcontroller.text = "Habit Name";
+
+  Provider.of<HabitProvider>(context, listen: false).categoriesExpanded = false;
+
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+    return AddHabitPage(
+      createcontroller: createcontroller,
+    );
+  })).whenComplete(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().setTagSelected("All");
+    });
+    pageController.animateToPage(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+
+    if (context.mounted) {
+      Provider.of<HabitProvider>(context, listen: false)
+          .notescontroller
+          .clear();
+
+      Provider.of<HabitProvider>(context, listen: false).updatedIcon =
+          startIcon;
+
+      Provider.of<HabitProvider>(context, listen: false).dropDownValue =
+          'Any time';
+    }
+    habitTag = "No tag";
+
+    amountNameController.text = "times";
+    createcontroller.text = "Habit Name";
+  });
+}
+
+List<DropdownMenuItem<String>> get dropdownItems {
+  List<DropdownMenuItem<String>> menuItems = [
+    const DropdownMenuItem(value: "Morning", child: Text("Morning")),
+    const DropdownMenuItem(value: "Afternoon", child: Text("Afternoon")),
+    const DropdownMenuItem(value: "Evening", child: Text("Evening")),
+    const DropdownMenuItem(value: "Any time", child: Text("Any Time")),
+  ];
+  return menuItems;
+}

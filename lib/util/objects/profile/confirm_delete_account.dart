@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/services/auth_service.dart';
-import 'package:habit_tracker/services/storage_service.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/services/auth_service.dart';
+import 'package:habitt/services/storage_service.dart';
+import 'package:habitt/util/colors.dart';
 
 bool confirmAgain = false;
 TextEditingController emailControllerConfirm = TextEditingController();

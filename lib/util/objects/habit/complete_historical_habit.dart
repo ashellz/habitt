@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/services/provider/historical_habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
@@ -187,28 +187,26 @@ Widget completeHistoricalHabitDialog(
                         context
                             .read<HabitProvider>()
                             .applyAmountCompleted(index, theAmountValue);
-                      } else {
-                        context
-                            .read<HistoricalHabitProvider>()
-                            .applyHistoricalAmountCompleted(
-                                habit, theAmountValue, time, index);
                       }
+                      context
+                          .read<HistoricalHabitProvider>()
+                          .applyHistoricalAmountCompleted(
+                              habit, theAmountValue, time, index);
                     } else {
                       if (isToday) {
                         context.read<HabitProvider>().applyDurationCompleted(
                             index,
                             theDurationValueHours,
                             theDurationValueMinutes);
-                      } else {
-                        context
-                            .read<HistoricalHabitProvider>()
-                            .applyHistoricalDurationCompleted(
-                                habit,
-                                theDurationValueHours,
-                                theDurationValueMinutes,
-                                time,
-                                index);
                       }
+                      context
+                          .read<HistoricalHabitProvider>()
+                          .applyHistoricalDurationCompleted(
+                              habit,
+                              theDurationValueHours,
+                              theDurationValueMinutes,
+                              time,
+                              index);
                     }
                     Navigator.pop(context);
                   });

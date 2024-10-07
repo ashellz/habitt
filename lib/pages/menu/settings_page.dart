@@ -1,12 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/settings/notification_container.dart';
-import 'package:habit_tracker/util/objects/settings/text_and_switch_container.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/objects/settings/notification_container.dart';
+import 'package:habitt/util/objects/settings/text_and_switch_container.dart';
 import 'package:provider/provider.dart';
 
 int notifValue = streakBox.get('notifValue') ?? 0;
@@ -104,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }),
                 ),
                 textAndSwitchContainer(
-                  "12-Hour Format",
+                  "12-hour format",
                   Switch(
                       activeColor: theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -112,6 +111,19 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: boolBox.get("12hourFormat")!,
                       onChanged: (value) {
                         context.read<HabitProvider>().updateHourFormat(value);
+                      }),
+                ),
+                textAndSwitchContainer(
+                  "Edit habit in the past",
+                  Switch(
+                      activeColor: theLightColor,
+                      inactiveTrackColor: Colors.grey.shade800,
+                      thumbColor: WidgetStateProperty.all(Colors.white),
+                      value: boolBox.get("editHistoricalHabits")!,
+                      onChanged: (value) {
+                        context
+                            .read<HabitProvider>()
+                            .updateEditHistoricalHabits(value);
                       }),
                 ),
                 const Padding(
@@ -198,15 +210,15 @@ void requestNotificationAccess(bool start, StateSetter setState) {
 }
 
 void disableBatteryOptimization(bool start, StateSetter setState) async {
-  bool? isBatteryOptimizationDisabled =
-      await DisableBatteryOptimization.isBatteryOptimizationDisabled;
-  if (isBatteryOptimizationDisabled == false) {
-    if (!start) {
-      await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
-    }
-  } else {
-    setState(() async {
-      await boolBox.put('disabledBatteryOptimization', true);
-    });
-  }
+  // bool? isBatteryOptimizationDisabled =
+  //     await DisableBatteryOptimization.isBatteryOptimizationDisabled;
+  // if (isBatteryOptimizationDisabled == false) {
+  //   if (!start) {
+  //     await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+  //   }
+  // } else {
+  //   setState(() async {
+  //     await boolBox.put('disabledBatteryOptimization', true);
+  //   });
+  // }
 }

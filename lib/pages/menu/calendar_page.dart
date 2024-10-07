@@ -1,15 +1,15 @@
 import "package:flutter/material.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
-import "package:habit_tracker/data/historical_habit.dart";
-import "package:habit_tracker/pages/habit/Add%20Habit%20Page/expandable_app_bar.dart";
-import "package:habit_tracker/pages/home_page.dart";
-import "package:habit_tracker/services/ad_mob_service.dart";
-import "package:habit_tracker/services/provider/historical_habit_provider.dart";
-import "package:habit_tracker/util/colors.dart";
-import "package:habit_tracker/util/objects/habit/calendar_habit_tile.dart";
+import "package:habitt/data/historical_habit.dart";
+import "package:habitt/pages/home/home_page.dart";
+import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
+import "package:habitt/services/ad_mob_service.dart";
+import "package:habitt/services/provider/historical_habit_provider.dart";
+import "package:habitt/util/colors.dart";
+import "package:habitt/util/objects/habit/calendar_habit_tile.dart";
 import "package:provider/provider.dart";
-import "package:table_calendar/table_calendar.dart";
 import 'package:collection/collection.dart';
+import "package:table_calendar/table_calendar.dart";
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -20,6 +20,7 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   DateTime today = DateTime.now();
+  int adTries = 10;
 
   void onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
@@ -33,7 +34,9 @@ class _CalendarPageState extends State<CalendarPage> {
     super.initState();
     initInterstitialAd();
 
-    context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
+    });
   }
 
   InterstitialAd? interstitialAd;
@@ -41,15 +44,23 @@ class _CalendarPageState extends State<CalendarPage> {
 
   initInterstitialAd() {
     InterstitialAd.load(
-        adUnitId: AdMobService.interstitialAd,
+        adUnitId: AdMobService.interstitialAdUnitId,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (ad) => setState(() {
-            interstitialAd = ad;
-            isAdLoaded = true;
-          }),
-          onAdFailedToLoad: (error) => setState(() => interstitialAd = null),
-        ));
+            onAdLoaded: (ad) => setState(() {
+                  interstitialAd = ad;
+                  isAdLoaded = true;
+                }),
+            onAdFailedToLoad: (error) {
+              if (adTries > 0) {
+                initInterstitialAd();
+                adTries--;
+              } else {
+                setState(() {
+                  interstitialAd = null;
+                });
+              }
+            }));
   }
 
   @override
@@ -257,6 +268,7 @@ otherCategoriesList(
         duration: habit.duration,
         durationCompleted: 0,
         skipped: false,
+        id: habit.id,
       );
 
       todayHabitsList.add(newHistoricalHabit);

@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habit_tracker/pages/auth/login_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/ad_mob_service.dart';
-import 'package:habit_tracker/services/storage_service.dart';
-import 'package:habit_tracker/util/colors.dart';
-import 'package:habit_tracker/util/objects/profile/confirm_delete_account.dart';
-import 'package:habit_tracker/util/objects/profile/confirm_sign_out.dart';
-import 'package:habit_tracker/util/objects/profile/change_username.dart';
+import 'package:habitt/pages/auth/login_page.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/ad_mob_service.dart';
+import 'package:habitt/services/storage_service.dart';
+import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/objects/profile/change_username.dart';
+import 'package:habitt/util/objects/profile/confirm_delete_account.dart';
+import 'package:habitt/util/objects/profile/confirm_sign_out.dart';
 
 bool uploadButtonEnabled = true;
 
@@ -79,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void uploadData() {
     setState(() => uploadButtonEnabled = false);
-    backupHiveBoxesToFirebase(userId)
+    backupHiveBoxesToFirebase(userId, true)
         .then((value) => setState(() => uploadButtonEnabled = true));
   }
 

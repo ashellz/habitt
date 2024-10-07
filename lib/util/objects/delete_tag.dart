@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/util/colors.dart';
 
 Widget deleteTagWidget(int tag, context) {
   return AlertDialog(

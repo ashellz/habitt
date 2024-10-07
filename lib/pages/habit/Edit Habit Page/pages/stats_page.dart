@@ -2,10 +2,13 @@ import 'package:animated_digit/animated_digit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/data/habit_data.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/colors.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletionRateGraph.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/box.dart';
+import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/get_completion_rate_days.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 Widget statsPage(
@@ -15,11 +18,14 @@ Widget statsPage(
     interstitialAd,
     double? lowestCompletionRate,
     List<double> completionRates,
-    double? highestCompletionRate) {
+    double? highestCompletionRate,
+    List<int> everyFifthDay,
+    List<int> everyFifthMonth) {
   var habit = habitBox.getAt(index)!;
   int timesCompleted = 0;
   int timesMissed = 0;
   int timesSkipped = 0;
+  int total = timesCompleted + timesMissed + timesSkipped;
 
   for (int i = 0; i < historicalBox.length; i++) {
     int dataLength = historicalBox.getAt(i)!.data.length;
@@ -36,63 +42,6 @@ Widget statsPage(
     }
   }
 
-  int total = timesCompleted + timesMissed + timesSkipped;
-
-  Widget box(String text, var value, bool perc) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10.0),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        width: MediaQuery.of(context).size.width * 0.5 - 30,
-        height: MediaQuery.of(context).size.width * 0.5 - 30,
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            color: Colors.grey.shade900),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AutoSizeText(
-              minFontSize: 12,
-              text.split(" ")[0],
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            AutoSizeText(
-              minFontSize: 12,
-              text.split(" ")[1],
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                AnimatedDigitWidget(
-                  duration: const Duration(milliseconds: 800),
-                  value: value,
-                  textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 36,
-                      color: theLightColor),
-                ),
-                if (perc)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text("%",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 36,
-                          color: theLightColor,
-                        )),
-                  )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   String habitCompleted() {
     if (habit.completed) {
       if (habit.skipped) {
@@ -105,6 +54,7 @@ Widget statsPage(
     }
   }
 
+  // Widgets start here
   return Padding(
     padding: const EdgeInsets.only(top: 10),
     child: Column(children: [
@@ -126,7 +76,16 @@ Widget statsPage(
           ),
           onPressed: () {
             Provider.of<HabitProvider>(context, listen: false)
-                .completeHabitProvider(index, isAdLoaded, interstitialAd);
+                .completeHabitProvider(index, isAdLoaded, interstitialAd)
+                .then((value) {
+              buildCompletionRateGraph(
+                  index,
+                  completionRates,
+                  highestCompletionRate,
+                  lowestCompletionRate,
+                  everyFifthDay,
+                  everyFifthMonth);
+            });
           },
           child: Text(
             habitCompleted(),
@@ -135,113 +94,146 @@ Widget statsPage(
           ),
         ),
       ),
+
+      // streak
       StreakStats(habit: habit),
+
+      //listveiw
       SizedBox(
         height: MediaQuery.of(context).size.width * 0.5 - 30,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            box("Times completed", timesCompleted, false),
-            box("Times skipped", timesSkipped, false),
+            box(text: "Times completed", value: timesCompleted, perc: false),
+            const SizedBox(width: 10),
+            box(text: "Times skipped", value: timesSkipped, perc: false),
+            const SizedBox(width: 10),
             box(
-                "Times missed",
-                timesMissed == 1
+                text: "Times missed",
+                value: timesMissed == 1
                     ? total == 1
                         ? 0
                         : 1
                     : timesMissed,
-                false)
+                perc: false)
           ],
         ),
       ),
       const SizedBox(
-        height: 20,
+        height: 10,
       ),
+
       Container(
           padding: const EdgeInsets.all(20),
-          height: MediaQuery.of(context).size.width * 0.5 - 30,
+          height: 210,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
             color: Colors.grey.shade900,
           ),
-          child: LineChart(
-            duration: const Duration(milliseconds: 800),
-            LineChartData(
-                minY: lowestCompletionRate,
-                maxY: highestCompletionRate,
-                minX: 1,
-                maxX: completionRates.length.toDouble() + 1,
-                borderData: FlBorderData(show: false),
-                lineBarsData: [
-                  LineChartBarData(
-                      spots: [
-                        for (int i = 0; i < completionRates.length; i++)
-                          FlSpot(
-                              i + 1,
-                              completionRates.reversed
-                                  .toList()[i]
-                                  .round()
-                                  .toDouble())
-                      ],
-                      dotData: const FlDotData(
-                        show: false,
-                      ),
-                      color: theOtherColor,
-                      barWidth: 4,
-                      isCurved: true,
-                      belowBarData: BarAreaData(
-                        show: true,
-                        color: theOtherColor.withOpacity(0.5),
-                        gradient: LinearGradient(
-                          colors: [
-                            theOtherColor.withOpacity(0.5),
-                            Colors.transparent
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                      )),
-                ],
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: true,
-                  horizontalInterval: 20,
-                  verticalInterval: 30,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: theAppBarColor,
-                      strokeWidth: 0.5,
-                      dashArray: [5, 5],
-                    );
-                  },
-                  getDrawingVerticalLine: (value) {
-                    return FlLine(
-                      color: theAppBarColor,
-                      strokeWidth: 0.5,
-                      dashArray: [5, 5],
-                    );
-                  },
+          child: Column(
+            children: [
+              const SizedBox(
+                width: double.infinity,
+                child: Text(
+                  "Completion rate",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  textAlign: TextAlign.start,
                 ),
-                titlesData: FlTitlesData(
-                    topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: const AxisTitles(),
-                    leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 30,
-                      interval: 20,
-                      getTitlesWidget: (value, meta) => Text(
-                          "${value.toInt()}%",
-                          maxLines: 1,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10)),
-                    )))),
+              ),
+              const Spacer(),
+              SizedBox(
+                height: 120,
+                child: LineChart(
+                  duration: const Duration(milliseconds: 800),
+                  LineChartData(
+                      minY: 0,
+                      maxY: 100,
+                      minX: 1,
+                      maxX: completionRates.length.toDouble() + 1,
+                      borderData: FlBorderData(show: false),
+                      lineBarsData: [
+                        LineChartBarData(
+                            spots: [
+                              for (int i = 0; i < completionRates.length; i++)
+                                FlSpot(
+                                    i + 1,
+                                    completionRates.reversed
+                                        .toList()[i]
+                                        .round()
+                                        .toDouble())
+                            ],
+                            dotData: const FlDotData(
+                              show: false,
+                            ),
+                            color: theOtherColor,
+                            barWidth: 4,
+                            isCurved: true,
+                            belowBarData: BarAreaData(
+                              show: true,
+                              color: theOtherColor.withOpacity(0.5),
+                              gradient: LinearGradient(
+                                colors: [
+                                  theOtherColor.withOpacity(0.5),
+                                  Colors.transparent
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            )),
+                      ],
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: true,
+                        horizontalInterval: 20,
+                        verticalInterval: 5,
+                        getDrawingHorizontalLine: (value) {
+                          return FlLine(
+                            color: theAppBarColor,
+                            strokeWidth: 0.5,
+                            dashArray: [5, 5],
+                          );
+                        },
+                        getDrawingVerticalLine: (value) {
+                          return FlLine(
+                            color: theAppBarColor,
+                            strokeWidth: 0.5,
+                            dashArray: [5, 5],
+                          );
+                        },
+                      ),
+                      titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 20,
+                            interval: 5,
+                            getTitlesWidget: (value, meta) =>
+                                GetCompletionRateDays(
+                                    everyFifthDay: everyFifthDay,
+                                    everyFifthMonth: everyFifthMonth,
+                                    value: value),
+                          )),
+                          leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 30,
+                            interval: 20,
+                            getTitlesWidget: (value, meta) => Text(
+                                "${value.toInt()}%",
+                                maxLines: 1,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10)),
+                          )))),
+                ),
+              ),
+            ],
           ))
     ]),
   );
@@ -299,6 +291,7 @@ class StreakStats extends StatelessWidget {
                   minFontSize: 12,
                 ),
                 AnimatedDigitWidget(
+                  loop: false,
                   duration: const Duration(milliseconds: 800),
                   value: habit.skipped
                       ? habit.streak

@@ -15,18 +15,18 @@ class HistoricalHabit extends HiveObject {
 
 @HiveType(typeId: 4)
 class HistoricalHabitData extends HiveObject {
-  HistoricalHabitData({
-    required this.name,
-    required this.completed,
-    required this.icon,
-    required this.category,
-    required this.amount,
-    required this.amountCompleted,
-    required this.amountName,
-    required this.duration,
-    required this.durationCompleted,
-    required this.skipped,
-  });
+  HistoricalHabitData(
+      {required this.name,
+      required this.completed,
+      required this.icon,
+      required this.category,
+      required this.amount,
+      required this.amountCompleted,
+      required this.amountName,
+      required this.duration,
+      required this.durationCompleted,
+      required this.skipped,
+      required this.id});
 
   @HiveField(0)
   String name;
@@ -57,4 +57,7 @@ class HistoricalHabitData extends HiveObject {
 
   @HiveField(9)
   bool skipped;
+
+  @HiveField(10)
+  int id;
 }

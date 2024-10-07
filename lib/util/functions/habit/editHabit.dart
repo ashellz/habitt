@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/data/habit_data.dart';
-import 'package:habit_tracker/main.dart';
-import 'package:habit_tracker/pages/habit/notifications_page.dart';
-import 'package:habit_tracker/pages/home_page.dart';
-import 'package:habit_tracker/services/provider/habit_provider.dart';
-import 'package:habit_tracker/util/functions/habit/getIcon.dart';
+import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/main.dart';
+import 'package:habitt/pages/home/functions/getIcon.dart';
+import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -41,11 +40,21 @@ void editHabit(int index, BuildContext context, editcontroller) {
     }
   }
 
+  bool resetCompleted = false;
+
+  if (habitBox.getAt(index)!.amount !=
+      Provider.of<HabitProvider>(context, listen: false).amount) {
+    resetCompleted = true;
+  } else if (habitBox.getAt(index)!.duration != duration) {
+    resetCompleted = true;
+  }
+
+  var editHabitNotifications;
   habitBox.putAt(
       index,
       HabitData(
         name: editcontroller.text,
-        completed: false,
+        completed: resetCompleted ? false : habitBox.getAt(index)!.completed,
         icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
             .updatedIcon
             .icon),
@@ -60,20 +69,23 @@ void editHabit(int index, BuildContext context, editcontroller) {
         amountName: Provider.of<HabitProvider>(context, listen: false)
             .habitGoalController
             .text,
-        amountCompleted: 0,
+        amountCompleted:
+            resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
         duration:
             Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
                     2
                 ? duration
                 : habitBox.getAt(index)?.duration ?? 0,
-        durationCompleted: 0,
-        skipped: false,
+        durationCompleted:
+            resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
+        skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
         tag: habitTag,
         notifications: editHabitNotifications,
         notes: Provider.of<HabitProvider>(context, listen: false)
             .notescontroller
             .text,
         longestStreak: habitBox.getAt(index)!.longestStreak,
+        id: habitBox.getAt(index)!.id,
       ));
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
