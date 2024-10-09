@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -9,6 +8,7 @@ import 'package:habitt/data/tags.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
 import 'package:habitt/pages/home/functions/fillTagsList.dart';
+import 'package:habitt/pages/home/widgets/adaptable_page_view.dart';
 import 'package:habitt/pages/home/widgets/header.dart';
 import 'package:habitt/pages/home/widgets/main_category.dart';
 import 'package:habitt/pages/home/widgets/other_categories.dart';
@@ -19,7 +19,6 @@ import 'package:habitt/services/ad_mob_service.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
-import 'package:habitt/util/functions/habit/calculateHeight.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -70,9 +69,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  double? height;
   InterstitialAd? interstitialAd;
   bool isAdLoaded = false;
   int adTries = 10;
+  GlobalKey sizeKey = GlobalKey();
 
   initInterstitialAd() {
     InterstitialAd.load(
@@ -93,6 +94,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 });
               }
             }));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final boxHeight = sizeKey.currentContext?.size?.height;
+
+      setState(() {
+        height = boxHeight;
+      });
+      print(height);
+    });
   }
 
   @override
@@ -187,23 +202,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: calculateHabitsHeight(tagSelected, context),
-                  child: PageView(
+                Column(children: [
+                  PageViewHeightAdaptable(
+                    key: sizeKey,
                     controller: pageController,
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    onPageChanged: (value) => context
-                        .read<HabitProvider>()
-                        .setTagSelected(visibleListTags()[value]),
                     children: [
                       for (String tag in visibleListTags())
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, bottom: 40),
-                          child: ListView(
-                            physics: const BouncingScrollPhysics(),
+                          child: Column(
                             children: [
+                              const SizedBox(height: 40),
                               if (tag == 'All')
                                 Column(children: [
                                   mainCategoryList(
@@ -226,12 +236,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               if (tag != 'All')
                                 tagSelectedWidget(tag, editcontroller,
                                     isAdLoaded, interstitialAd),
+                              SizedBox(
+                                height: height == null
+                                    ? 0
+                                    : height! >
+                                            MediaQuery.of(context).size.height
+                                        ? 0
+                                        : MediaQuery.of(context).size.height -
+                                            height!,
+                              )
                             ],
                           ),
                         ),
                     ],
                   ),
-                )
+                ])
               ],
             ),
           ),
