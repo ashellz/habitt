@@ -20,7 +20,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theBlackColor,
       body: CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
         ExpandableAppBar(actionsWidget: Container(), title: "Changelog"),
         SliverToBoxAdapter(
@@ -28,7 +28,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               changelogContainer("v1.0.4",
-                  "- Added iOS support\n- Improved home screen under the hood"),
+                  "- Added iOS support\n- Improved home screen under the hood\n- Added additional tasks feature\n- Various bugs fixed\n- Increased the amount of ads that appear"),
               changelogContainer("v1.0.3",
                   "- Increased sign out speed\n- Added completion rate graph for last 30 days\n- Added option that editing a habit edits the habit in the past too\n- Fixed padding on the right side of the habit name in add and edit habit pages\n- Habit completion status now doesn't reset every time you save a habit unless you changed the amount or duration\n- Fixed main category height not increasing after it has been changed in the background\n- Fixed “Save Changes” button not appearing after tag is changed\n- Added more animations"),
               changelogContainer("v1.0.2",

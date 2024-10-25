@@ -39,9 +39,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     editHabitNotifications = context.watch<HabitProvider>().habitNotifications;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theBlackColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: theBlackColor,
       ),
       bottomNavigationBar: _banner == null
           ? Container()
@@ -181,6 +181,7 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                   context
                       .read<HabitProvider>()
                       .removeNotification(notification);
+                  context.read<HabitProvider>().updateSomethingEdited();
                 },
                 highlightColor: theDarkColor,
                 icon: const Icon(Icons.close),

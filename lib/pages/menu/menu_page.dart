@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
-import "package:habitt/pages/menu/calendar_page.dart";
+import "package:habitt/pages/menu/Calendar%20Page/calendar_page.dart";
 import "package:habitt/pages/menu/changelog_page.dart";
 import "package:habitt/pages/menu/profile_page.dart";
 import "package:habitt/pages/menu/settings_page.dart";
@@ -38,8 +38,8 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.black),
-      backgroundColor: Colors.black,
+      appBar: AppBar(backgroundColor: theBlackColor),
+      backgroundColor: theBlackColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

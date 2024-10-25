@@ -276,7 +276,6 @@ class AuthService {
                 text: "Signing out...",
               )),
     );
-    await backupHiveBoxesToFirebase(userId, false);
     await FirebaseAuth.instance.signOut();
     isLoggedIn = false;
 

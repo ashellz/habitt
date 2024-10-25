@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 Widget completeHistoricalHabitDialog(
     int index, BuildContext context, DateTime time, bool isToday) {
@@ -56,7 +56,7 @@ Widget completeHistoricalHabitDialog(
                       max: habit.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
-                        Vibration.vibrate(duration: 10);
+                        HapticFeedback.lightImpact();
                         theAmountValue = value.toInt();
                       }),
                     ),
@@ -94,7 +94,7 @@ Widget completeHistoricalHabitDialog(
                         max: (habit.duration ~/ 60).toDouble(),
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
-                          Vibration.vibrate(duration: 10);
+                          HapticFeedback.lightImpact();
                           theDurationValueHours = value.toInt();
                           if (theDurationValueHours == (habit.duration ~/ 60)) {
                             if (theDurationValueMinutes >

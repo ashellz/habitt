@@ -20,6 +20,9 @@ class _NotesTextFieldState extends State<NotesTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        keyboardAppearance: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
         onChanged: (value) =>
             context.read<HabitProvider>().updateSomethingEdited(),
         onSaved: (newValue) {

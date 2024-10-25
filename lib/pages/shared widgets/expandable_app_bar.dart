@@ -18,15 +18,18 @@ class ExpandableAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
+          print(kToolbarHeight);
+          print(constraints.maxHeight);
           // Calculate the percentage of the scroll completed
-          var percent = (constraints.maxHeight - kToolbarHeight) / 100.0;
+          var percent =
+              (constraints.maxHeight - kToolbarHeight) / (kToolbarHeight * 2);
           // Make sure percent is within range
           percent = (1.0 - percent).clamp(0.0, 1.0);
 
           Color backgroundColor = ColorTween(
-            begin: Colors.black,
-            end: theAppBarColor,
-          ).lerp(percent)!;
+            begin: theBlackColor,
+            end: theOtherColor,
+          ).lerp(percent * 1.5)!;
 
           Color textColor = ColorTween(
             begin: theLightColor,

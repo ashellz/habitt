@@ -6,7 +6,6 @@ import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/validate_text.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 // ignore: must_be_immutable
 class HabitGoal extends StatefulWidget {
@@ -166,7 +165,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     .toDouble(),
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
-                  Vibration.vibrate(duration: 10);
+                  HapticFeedback.lightImpact();
                   setState(() =>
                       Provider.of<HabitProvider>(context, listen: false)
                           .amount = value.toInt());
@@ -176,6 +175,10 @@ class _HabitGoalState extends State<HabitGoal> {
                 height: 15,
               ),
               TextFormField(
+                keyboardAppearance:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Brightness.dark
+                        : Brightness.light,
                 onChanged: (newValue) {
                   context.read<HabitProvider>().updateSomethingEdited();
                   Provider.of<HabitProvider>(context, listen: false)
@@ -265,7 +268,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     .toDouble(),
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
-                  Vibration.vibrate(duration: 10);
+                  HapticFeedback.lightImpact();
                   setState(() =>
                       Provider.of<HabitProvider>(context, listen: false)
                           .durationHours = value.toInt());
@@ -305,7 +308,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     .toDouble(),
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
-                  Vibration.vibrate(duration: 10);
+                  HapticFeedback.lightImpact();
                   setState(() =>
                       Provider.of<HabitProvider>(context, listen: false)
                           .durationMinutes = value.toInt());

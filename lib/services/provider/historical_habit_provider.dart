@@ -1,19 +1,23 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
   List get allHistoricalHabits => historicalBox.values.toList();
 
-  List<HistoricalHabitData> historicalHabits_ = [];
+  DateTime calendarDay = DateTime.now();
 
-  List get historicalHabits => historicalHabits_;
+  List<HistoricalHabitData> historicalHabits = [];
+
+  changeCalendarDay(DateTime day) {
+    calendarDay = day;
+  }
 
   HistoricalHabitData getHistoricalHabitAt(int index, DateTime today) {
     List<int> date = [today.year, today.month, today.day];
@@ -45,11 +49,14 @@ class HistoricalHabitProvider extends ChangeNotifier {
       ];
       if (const ListEquality()
           .equals(intDate, [date.year, date.month, date.day])) {
-        historicalHabits_ = historicalBox.getAt(i)!.data;
+        historicalHabits = historicalBox.getAt(i)!.data;
+        notifyListeners();
+        break;
+      } else {
+        historicalHabits = [];
+        notifyListeners();
       }
     }
-
-    notifyListeners();
   }
 
   void applyCurentHabitData(List currentDate, int index,
@@ -144,6 +151,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
       durationCompleted: habit.durationCompleted,
       skipped: !habit.skipped,
       id: habit.id,
+      task: habit.task,
     );
 
     applyCurentHabitData(chosenHabitDate, index, habitData, time);
@@ -176,18 +184,19 @@ class HistoricalHabitProvider extends ChangeNotifier {
               : habit.durationCompleted,
       skipped: false,
       id: habit.id,
+      task: habit.task,
     );
 
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
     /*if (allHabitsCompleted()) {
       playSound();
       if (hapticFeedback) {
-        Vibration.vibrate(duration: 500);
+        HapticFeedback.heavyImpact();
       }
     } else*/
     if (!habit.completed) {
       if (hapticFeedback) {
-        Vibration.vibrate(duration: 100);
+        HapticFeedback.mediumImpact();
       }
     }
 
@@ -212,7 +221,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
         duration: habit.duration,
         durationCompleted: habit.durationCompleted,
         skipped: habit.skipped,
-        id: habit.id);
+        id: habit.id,
+        task: habit.task);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -234,7 +244,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
         duration: habit.duration,
         durationCompleted: theDurationValueHours * 60 + theDurationValueMinutes,
         skipped: habit.skipped,
-        id: habit.id);
+        id: habit.id,
+        task: habit.task);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -296,21 +307,25 @@ class HistoricalHabitProvider extends ChangeNotifier {
       // -1 is because the last one is the current day
 
       for (var habit in historicalList[i].data) {
-        numberOfHabits++;
-        if (habit.completed) {
-          if (habit.skipped) {
-            isSkipped = true;
+        if (!habit.task) {
+          numberOfHabits++;
+          if (habit.completed) {
+            if (habit.skipped) {
+              isSkipped = true;
+            }
+            numberOfCompletedHabits++;
           }
-          numberOfCompletedHabits++;
         }
       }
 
-      if (numberOfCompletedHabits == numberOfHabits) {
-        if (!isSkipped) {
-          allHabitsCompletedStreak++;
+      if (numberOfHabits != 0) {
+        if (numberOfCompletedHabits == numberOfHabits) {
+          if (!isSkipped) {
+            allHabitsCompletedStreak++;
+          }
+        } else {
+          allHabitsCompletedStreak = 0;
         }
-      } else {
-        allHabitsCompletedStreak = 0;
       }
     }
 

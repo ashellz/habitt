@@ -30,13 +30,12 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
 
     requestNotificationAccess(true, setState);
-    disableBatteryOptimization(true, setState);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theBlackColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -56,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Display empty categories on home page",
-                  Switch(
+                  Switch.adaptive(
                       activeColor: theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
@@ -80,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Haptic feedback (vibration)",
-                  Switch(
+                  Switch.adaptive(
                       activeColor: theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
@@ -93,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Sound",
-                  Switch(
+                  Switch.adaptive(
                       activeColor: theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
@@ -104,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "12-hour format",
-                  Switch(
+                  Switch.adaptive(
                       activeColor: theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
@@ -115,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Edit habit in the past",
-                  Switch(
+                  Switch.adaptive(
                       activeColor: theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
@@ -139,11 +138,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   visible: boolBox.get('hasNotificationAccess')!,
                   text: "Request Notification Access",
                   func: () => requestNotificationAccess(false, setState),
-                ),
-                VisibilityButton(
-                  visible: boolBox.get('disabledBatteryOptimization')!,
-                  text: "Disable Battery Optimization",
-                  func: () => disableBatteryOptimization(false, setState),
                 ),
               ],
             ),
@@ -207,18 +201,4 @@ void requestNotificationAccess(bool start, StateSetter setState) {
       });
     }
   });
-}
-
-void disableBatteryOptimization(bool start, StateSetter setState) async {
-  // bool? isBatteryOptimizationDisabled =
-  //     await DisableBatteryOptimization.isBatteryOptimizationDisabled;
-  // if (isBatteryOptimizationDisabled == false) {
-  //   if (!start) {
-  //     await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
-  //   }
-  // } else {
-  //   setState(() async {
-  //     await boolBox.put('disabledBatteryOptimization', true);
-  //   });
-  // }
 }

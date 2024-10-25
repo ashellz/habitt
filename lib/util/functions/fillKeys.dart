@@ -34,6 +34,9 @@ fillKeys() {
   if (!boolBox.containsKey("editHistoricalHabits")) {
     boolBox.put("editHistoricalHabits", true);
   }
+  if (!boolBox.containsKey("realBlack")) {
+    boolBox.put("realBlack", false);
+  }
 
   if (!boolBox.containsKey("firstTimeEditAppearence")) {
     boolBox.put("firstTimeEditAppearence", true);

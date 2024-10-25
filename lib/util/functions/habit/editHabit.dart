@@ -49,7 +49,21 @@ void editHabit(int index, BuildContext context, editcontroller) {
     resetCompleted = true;
   }
 
-  var editHabitNotifications;
+  if (editedFrom != editedTo) {
+    String mainCategory =
+        Provider.of<HabitProvider>(context, listen: false).mainCategory;
+
+    if (editedFrom == mainCategory || editedTo == mainCategory) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<HabitProvider>().chooseMainCategory();
+        context.read<HabitProvider>().updateMainCategoryHeight();
+      });
+    }
+  }
+
+  var editHabitNotifications =
+      Provider.of<HabitProvider>(context, listen: false).habitNotifications;
+
   habitBox.putAt(
       index,
       HabitData(
@@ -86,19 +100,16 @@ void editHabit(int index, BuildContext context, editcontroller) {
             .text,
         longestStreak: habitBox.getAt(index)!.longestStreak,
         id: habitBox.getAt(index)!.id,
+        task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
       ));
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   }
-  if (editedFrom != editedTo) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().updateMainCategoryHeight();
-    });
-  }
 
   openCategory(context);
+
   // showPopup(context, "Habit edited!");
 }
 

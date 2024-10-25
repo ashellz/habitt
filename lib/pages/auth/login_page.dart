@@ -43,6 +43,10 @@ class LoginPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: TextFormField(
+                      keyboardAppearance:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Brightness.dark
+                              : Brightness.light,
                       validator: validateEmail,
                       onEditingComplete: () =>
                           FocusScope.of(context).nextFocus(),
@@ -92,6 +96,10 @@ class LoginPage extends StatelessWidget {
                     child: StatefulBuilder(
                         builder: (context, StateSetter setState) {
                       return TextFormField(
+                        keyboardAppearance:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Brightness.dark
+                                : Brightness.light,
                         validator: validatePassword,
                         onEditingComplete: () =>
                             FocusScope.of(context).nextFocus(),

@@ -48,6 +48,10 @@ class SignupPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: TextFormField(
+                      keyboardAppearance:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Brightness.dark
+                              : Brightness.light,
                       validator: validateUsername,
                       inputFormatters: [LengthLimitingTextInputFormatter(20)],
                       onEditingComplete: () =>
@@ -94,6 +98,10 @@ class SignupPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: TextFormField(
+                      keyboardAppearance:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Brightness.dark
+                              : Brightness.light,
                       validator: validateEmail,
                       onEditingComplete: () =>
                           FocusScope.of(context).nextFocus(),
@@ -145,6 +153,10 @@ class SignupPage extends StatelessWidget {
                         builder: (context, StateSetter setState) {
                       return TextFormField(
                         validator: validatePassword,
+                        keyboardAppearance:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Brightness.dark
+                                : Brightness.light,
                         onEditingComplete: () =>
                             FocusScope.of(context).nextFocus(),
                         cursorColor: Colors.white,

@@ -9,6 +9,7 @@ import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
 import 'package:habitt/pages/home/functions/fillTagsList.dart';
 import 'package:habitt/pages/home/widgets/adaptable_page_view.dart';
+import 'package:habitt/pages/home/widgets/additional_tasks.dart';
 import 'package:habitt/pages/home/widgets/header.dart';
 import 'package:habitt/pages/home/widgets/main_category.dart';
 import 'package:habitt/pages/home/widgets/other_categories.dart';
@@ -72,41 +73,43 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   double? height;
   InterstitialAd? interstitialAd;
   bool isAdLoaded = false;
-  int adTries = 10;
+
   GlobalKey sizeKey = GlobalKey();
 
   initInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: AdMobService.interstitialAdUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) => setState(() {
-                  interstitialAd = ad;
-                  isAdLoaded = true;
-                }),
-            onAdFailedToLoad: (error) {
-              if (adTries > 0) {
+    if (!isAdLoaded) {
+      InterstitialAd.load(
+          adUnitId: AdMobService.interstitialAdUnitId,
+          request: const AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(
+              onAdLoaded: (ad) => setState(() {
+                    interstitialAd = ad;
+                    isAdLoaded = true;
+                  }),
+              onAdFailedToLoad: (error) {
+                isAdLoaded = false;
                 initInterstitialAd();
-                adTries--;
-              } else {
-                setState(() {
-                  interstitialAd = null;
-                });
-              }
-            }));
+              }));
+    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (interstitialAd == null) {
+      initInterstitialAd();
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("instance");
+      if (interstitialAd == null) {
+        initInterstitialAd();
+      }
       final boxHeight = sizeKey.currentContext?.size?.height;
 
       setState(() {
         height = boxHeight;
       });
-      print(height);
     });
   }
 
@@ -114,7 +117,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     checkForDayJoined();
-    initInterstitialAd();
+    if (interstitialAd == null) {
+      initInterstitialAd();
+    }
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -135,7 +140,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       context.read<HabitProvider>().updateMainCategoryHeight();
       context.read<HabitProvider>().chooseTimeBasedText();
       if (interstitialAd == null) {
-        adTries = 10;
         initInterstitialAd();
       }
     }
@@ -168,13 +172,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           color: Colors.white,
         ),
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: theBlackColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.black,
+              backgroundColor: theBlackColor,
               actions: [
                 IconButton(
                   icon: const Icon(Icons.menu),
@@ -231,7 +235,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       editcontroller,
                                       anytimeHasHabits,
                                       isAdLoaded,
-                                      interstitialAd)
+                                      interstitialAd),
+                                  AdditionalTasks(
+                                      editcontroller: editcontroller,
+                                      isAdLoaded: isAdLoaded,
+                                      interstitialAd: interstitialAd),
                                 ]),
                               if (tag != 'All')
                                 tagSelectedWidget(tag, editcontroller,
@@ -294,6 +302,7 @@ Future<void> playSound() async {
 
 void openAddHabitPage(
     BuildContext context, TextEditingController createcontroller) {
+  Provider.of<HabitProvider>(context, listen: false).additionalTask = false;
   Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   habitTag = "No tag";
   Provider.of<HabitProvider>(context, listen: false).updatedIcon = startIcon;

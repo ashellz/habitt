@@ -33,27 +33,25 @@ class EditHabitPage extends StatefulWidget {
 class _EditHabitPageState extends State<EditHabitPage> {
   InterstitialAd? interstitialAd;
   bool isAdLoaded = false;
-  int adTries = 10;
+  bool firstPage = true;
 
   initInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: AdMobService.interstitialAdUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) => setState(() {
-                  interstitialAd = ad;
-                  isAdLoaded = true;
-                }),
-            onAdFailedToLoad: (error) {
-              if (adTries > 0) {
-                initInterstitialAd();
-                adTries--;
-              } else {
+    if (interstitialAd == null) {
+      InterstitialAd.load(
+          adUnitId: AdMobService.interstitialAdUnitId,
+          request: const AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(
+              onAdLoaded: (ad) => setState(() {
+                    interstitialAd = ad;
+                    isAdLoaded = true;
+                  }),
+              onAdFailedToLoad: (error) {
                 setState(() {
                   interstitialAd = null;
                 });
-              }
-            }));
+                initInterstitialAd();
+              }));
+    }
   }
 
   bool edit = false;
@@ -69,6 +67,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
   void initState() {
     super.initState();
     initInterstitialAd();
+    context.read<HabitProvider>().getPageHeight(firstPage);
   }
 
   @override
@@ -91,7 +90,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
     PageController pageController = PageController();
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.black,
+      backgroundColor: theBlackColor,
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
             splashFactory: NoSplash.splashFactory,
@@ -125,10 +124,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
             ]),
       ),
       body: Form(
-        key: formKey,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
+          key: formKey,
+          child: Stack(alignment: Alignment.bottomCenter, children: [
             CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
               ExpandableAppBar(
                 actionsWidget:
@@ -143,52 +140,46 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 ),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Column(
-                      children: [
-                        //PAGE VIEW
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.9,
-                          child: PageView.builder(
-                            onPageChanged: (value) {
-                              if (value == 0) {
-                                setState(() {
-                                  currentIndex = 0;
-                                });
-                              } else {
-                                setState(() {
-                                  currentIndex = 1;
-                                });
-                              }
-                            },
-                            physics: const NeverScrollableScrollPhysics(),
-                            controller: pageController,
-                            itemCount: 2,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: index == 0
-                                    ? statsPage(
-                                        context,
-                                        widget.index,
-                                        isAdLoaded,
-                                        interstitialAd,
-                                        lowestCompletionRate,
-                                        completionRates,
-                                        highestCompletionRate,
-                                        everyFifthDay,
-                                        everyFifthMonth)
-                                    : editPage(
-                                        setState,
-                                        context,
-                                        editcontroller,
-                                        desccontroller,
-                                        widget.index),
-                              );
-                            },
-                          ),
-                        )
-                      ],
+                    child: SizedBox(
+                      height: Provider.of<HabitProvider>(context, listen: false).editHabitPageHeight,
+                      child: PageView.builder(
+                        onPageChanged: (value) {
+                          if (value == 0) {
+                            setState(() {
+                              currentIndex = 0;
+                              firstPage = true;
+                              context.read<HabitProvider>().getPageHeight(firstPage);
+                            });
+                          } else {
+                            setState(() {
+                              currentIndex = 1;
+                              firstPage = false;
+                              context.read<HabitProvider>().getPageHeight(firstPage);
+                            });
+                          }
+                        },
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: pageController,
+                        itemCount: 2,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: index == 0
+                                ? statsPage(
+                                    context,
+                                    widget.index,
+                                    isAdLoaded,
+                                    interstitialAd,
+                                    lowestCompletionRate,
+                                    completionRates,
+                                    highestCompletionRate,
+                                    everyFifthDay,
+                                    everyFifthMonth)
+                                : editPage(setState, context, editcontroller,
+                                    desccontroller, widget.index),
+                          );
+                        },
+                      ),
                     ))
               ])),
             ]),
@@ -198,9 +189,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 keyboardOpen: keyboardOpen,
                 widget: widget,
                 editcontroller: editcontroller),
-          ],
-        ),
-      ),
+          ])),
     );
   }
 }

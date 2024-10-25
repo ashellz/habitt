@@ -1,7 +1,7 @@
 import 'package:habitt/pages/home/home_page.dart';
 
 void buildCompletionRateGraph(
-    int index,
+    int id,
     List completionRates,
     double? highestCompletionRate,
     double? lowestCompletionRate,
@@ -21,7 +21,7 @@ void buildCompletionRateGraph(
   highestCompletionRate = 0;
   lowestCompletionRate = 100;
 
-  int habitId = habitBox.getAt(index)!.id;
+  int habitId = id;
   int day = 30;
 
   for (int i = 0; i < historicalList.length; i++) {
@@ -29,12 +29,12 @@ void buildCompletionRateGraph(
       break;
     }
 
-    print("number i: $i");
+    //print("number i: $i");
 
     int habitsCompleted = 0;
     int totalHabits = 0;
     if (day % 5 == 0) {
-      print("every fifth day: true");
+      //print("every fifth day: true");
       everyFifthDay.add(historicalList[i].date.day);
       everyFifthMonth.add(historicalList[i].date.month);
     }
@@ -44,11 +44,11 @@ void buildCompletionRateGraph(
         break;
       }
 
-      print("number j: $j");
+      //print("number j: $j");
 
       if (j + i < historicalList.length) {
-        print(
-            "number j + i: ${j + i} and histoprical length:  ${historicalList.length}");
+        // print(
+        //    "number j + i: ${j + i} and histoprical length:  ${historicalList.length}");
         for (var historicalHabit in historicalList[j + i].data) {
           if (historicalHabit.id == habitId) {
             if (historicalHabit.completed && !historicalHabit.skipped) {
@@ -74,7 +74,7 @@ void buildCompletionRateGraph(
 
     completionRates.add(completionRate);
 
-    print(completionRates);
+    // print(completionRates);
     day--;
   }
 

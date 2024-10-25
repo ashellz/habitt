@@ -29,11 +29,12 @@ Widget mainCategoryList(
                     children: [
                       const SizedBox(height: 95),
                       for (int i = 0; i < habitListLength; i++)
-                        if (habitBox.getAt(i)?.category == mainCategory)
+                        if (habitBox.getAt(i)?.category == mainCategory &&
+                            !habitBox.getAt(i)!.task)
                           Padding(
                             padding: const EdgeInsets.only(top: 15),
                             child: NewHabitTile(
-                              index: i,
+                              id: habitBox.getAt(i)!.id,
                               editcontroller: editcontroller,
                               isAdLoaded: isAdLoaded,
                               interstitialAd: interstitialAd,
@@ -50,11 +51,12 @@ Widget mainCategoryList(
                         children: [
                           const SizedBox(height: 95),
                           for (int i = 0; i < habitListLength; i++)
-                            if (habitBox.getAt(i)?.category == mainCategory)
+                            if (habitBox.getAt(i)?.category == mainCategory &&
+                                !habitBox.getAt(i)!.task)
                               Padding(
                                 padding: const EdgeInsets.only(top: 15),
                                 child: NewHabitTile(
-                                  index: i,
+                                  id: habitBox.getAt(i)!.id,
                                   editcontroller: editcontroller,
                                   isAdLoaded: isAdLoaded,
                                   interstitialAd: interstitialAd,
@@ -71,11 +73,13 @@ Widget mainCategoryList(
                             children: [
                               const SizedBox(height: 95),
                               for (int i = 0; i < habitListLength; i++)
-                                if (habitBox.getAt(i)?.category == mainCategory)
+                                if (habitBox.getAt(i)?.category ==
+                                        mainCategory &&
+                                    !habitBox.getAt(i)!.task)
                                   Padding(
                                     padding: const EdgeInsets.only(top: 15),
                                     child: NewHabitTile(
-                                      index: i,
+                                      id: habitBox.getAt(i)!.id,
                                       editcontroller: editcontroller,
                                       isAdLoaded: isAdLoaded,
                                       interstitialAd: interstitialAd,

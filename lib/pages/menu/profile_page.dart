@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => setState(() => _rewardedAd = ad),
-        onAdFailedToLoad: (error) => setState(() => _rewardedAd = null),
+        onAdFailedToLoad: (error) => _createRewardedAd(),
       ),
     );
   }
@@ -93,8 +93,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
       return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black),
-        backgroundColor: Colors.black,
+        appBar: AppBar(backgroundColor: theBlackColor),
+        backgroundColor: theBlackColor,
         body: Padding(
           padding: const EdgeInsets.only(bottom: 50),
           child: Center(
@@ -126,8 +126,8 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     } else {
       return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black),
-        backgroundColor: Colors.black,
+        appBar: AppBar(backgroundColor: theBlackColor),
+        backgroundColor: theBlackColor,
         body: ListView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(left: 20, top: 30, right: 20),

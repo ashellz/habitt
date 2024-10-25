@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
+bool realBlack = false;
+
 Color selectedDarkColor = theDarkGreen;
 Color selectedColor = theGreen;
 Color selectedOtherColor = theOtherGreen;
 Color selectedLightColor = theLightGreen;
 Color selectedAppBarColor = theLightestGreen;
+Color selectedBlackColor = const Color.fromARGB(255, 0, 15, 0);
 
-Color theDarkGrey = const Color.fromARGB(255, 17, 17, 17);
+Color theBlackColor = selectedBlackColor;
+Color theDarkGrey = realBlack
+    ? const Color.fromARGB(255, 17, 17, 17)
+    : const Color.fromARGB(255, 17, 23, 17);
 Color theDarkColor = selectedDarkColor;
 Color theColor = selectedColor;
 Color theOtherColor = selectedOtherColor;

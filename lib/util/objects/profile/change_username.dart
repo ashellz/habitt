@@ -30,6 +30,10 @@ Widget changeUsernameDialog(context, title, updateFunction) {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
+                  keyboardAppearance:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Brightness.dark
+                          : Brightness.light,
                   validator: validateUsername,
                   inputFormatters: [LengthLimitingTextInputFormatter(20)],
                   cursorColor: Colors.white,

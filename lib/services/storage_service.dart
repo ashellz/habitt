@@ -41,31 +41,36 @@ Future<void> uploadFolderToFirebase(
   final directory = Directory(folderPath);
   if (await directory.exists()) {
     final files = directory.listSync();
-    for (var file in files) {
-      if (file is File) {
-        final fileName = file.path.split('/').last;
-        final storageRef =
-            FirebaseStorage.instance.ref().child('$userId/$fileName');
-        try {
-          if (kDebugMode) {
-            print('Uploading file: ${file.path}');
-          }
-          if (isDaily) {
-            await storageRef.putFile(file);
-          } else if (fileName.contains('habit') ||
-              fileName.contains('tag') ||
-              fileName.contains('streak')) {
-            await storageRef.putFile(file);
-          }
-          if (kDebugMode) {
-            print('Successfully uploaded file: $fileName');
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            print('Failed to upload file: ${file.path}, error: $e');
+
+    try {
+      for (var file in files) {
+        if (file is File) {
+          final fileName = file.path.split('/').last;
+          final storageRef =
+              FirebaseStorage.instance.ref().child('$userId/$fileName');
+          try {
+            if (kDebugMode) {
+              print('Uploading file: ${file.path}');
+            }
+            if (isDaily) {
+              await storageRef.putFile(file);
+            } else if (fileName.contains('habit') ||
+                fileName.contains('tag') ||
+                fileName.contains('streak')) {
+              await storageRef.putFile(file);
+            }
+            if (kDebugMode) {
+              print('Successfully uploaded file: $fileName');
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              print('Failed to upload file: ${file.path}, error: $e');
+            }
           }
         }
       }
+    } catch (e) {
+      print(e);
     }
     uploadButtonEnabled = true;
     Fluttertoast.showToast(
@@ -219,41 +224,41 @@ Future<void> deleteGuestHabits() async {
 void addInitialData() {
   List initialHabits = [
     HabitData(
-      name: 'Open the app',
-      notes: 'Open the app for the first time',
-      category: 'Any time',
-      streak: 0,
-      completed: true,
-      icon: "Icons.door_front_door_rounded",
-      amount: 1,
-      amountName: "times",
-      amountCompleted: 1,
-      duration: 0,
-      durationCompleted: 0,
-      skipped: false,
-      tag: "No tag",
-      notifications: List.empty(),
-      longestStreak: 0,
-      id: 0,
-    ),
+        name: 'Open the app',
+        notes: 'Open the app for the first time',
+        category: 'Any time',
+        streak: 0,
+        completed: true,
+        icon: "Icons.door_front_door_rounded",
+        amount: 1,
+        amountName: "times",
+        amountCompleted: 1,
+        duration: 0,
+        durationCompleted: 0,
+        skipped: false,
+        tag: "No tag",
+        notifications: List.empty(),
+        longestStreak: 0,
+        id: 0,
+        task: false),
     HabitData(
-      name: 'Add a new habit',
-      notes: '',
-      category: 'Any time',
-      streak: 0,
-      completed: false,
-      icon: "Icons.add",
-      amount: 1,
-      amountName: "times",
-      amountCompleted: 0,
-      duration: 0,
-      durationCompleted: 0,
-      skipped: false,
-      tag: "No tag",
-      notifications: List.empty(),
-      longestStreak: 0,
-      id: 1,
-    )
+        name: 'Add a new habit',
+        notes: '',
+        category: 'Any time',
+        streak: 0,
+        completed: false,
+        icon: "Icons.add",
+        amount: 1,
+        amountName: "times",
+        amountCompleted: 0,
+        duration: 0,
+        durationCompleted: 0,
+        skipped: false,
+        tag: "No tag",
+        notifications: List.empty(),
+        longestStreak: 0,
+        id: 1,
+        task: false)
   ];
 
   if (tagBox.isEmpty) {

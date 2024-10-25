@@ -27,6 +27,9 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 15),
       child: TextFormField(
+        keyboardAppearance: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
         onChanged: (value) {
           if (widget.isEdit) {
             context.read<HabitProvider>().updateSomethingEdited();

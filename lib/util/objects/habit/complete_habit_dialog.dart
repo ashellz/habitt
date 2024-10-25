@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
   bool amountCheck = false;
@@ -54,7 +54,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
                         if (boolBox.get('hapticFeedback')!) {
-                          Vibration.vibrate(duration: 10);
+                          HapticFeedback.lightImpact();
                         }
                         theAmountValue = value.toInt();
                       }),
@@ -94,7 +94,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
                           if (boolBox.get('hapticFeedback')!) {
-                            Vibration.vibrate(duration: 10);
+                            HapticFeedback.lightImpact();
                           }
 
                           theDurationValueHours = value.toInt();
@@ -138,7 +138,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                       value: theDurationValueMinutes.toDouble(),
                       onChanged: (value) => mystate(() {
                         if (boolBox.get('hapticFeedback')!) {
-                          Vibration.vibrate(duration: 10);
+                          HapticFeedback.lightImpact();
                         }
                         theDurationValueMinutes = value.toInt();
                       }),

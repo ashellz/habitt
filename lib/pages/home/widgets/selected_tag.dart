@@ -11,12 +11,13 @@ Widget tagSelectedWidget(tagSelected, editcontroller, bool isAdLoaded,
       Text(tagSelected,
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
-        if (habitBox.getAt(i)?.category == tagSelected ||
-            habitBox.getAt(i)?.tag == tagSelected)
+        if (habitBox.getAt(i)?.category == tagSelected &&
+                !habitBox.getAt(i)!.task ||
+            habitBox.getAt(i)?.tag == tagSelected && !habitBox.getAt(i)!.task)
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: NewHabitTile(
-              index: i,
+              id: habitBox.getAt(i)!.id,
               editcontroller: editcontroller,
               isAdLoaded: isAdLoaded,
               interstitialAd: interstitialAd,

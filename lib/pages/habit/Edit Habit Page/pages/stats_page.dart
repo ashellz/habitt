@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 Widget statsPage(
     BuildContext context,
-    int index,
+    int id,
     bool isAdLoaded,
     interstitialAd,
     double? lowestCompletionRate,
@@ -21,23 +21,25 @@ Widget statsPage(
     double? highestCompletionRate,
     List<int> everyFifthDay,
     List<int> everyFifthMonth) {
-  var habit = habitBox.getAt(index)!;
+  var habit = context.read<HabitProvider>().getHabitAt(id);
+
   int timesCompleted = 0;
   int timesMissed = 0;
   int timesSkipped = 0;
   int total = timesCompleted + timesMissed + timesSkipped;
 
   for (int i = 0; i < historicalBox.length; i++) {
-    int dataLength = historicalBox.getAt(i)!.data.length;
-    if (index < dataLength) {
-      if (historicalBox.getAt(i)!.data[index].completed) {
-        if (historicalBox.getAt(i)!.data[index].skipped) {
-          timesSkipped++;
+    for (var historicalHabit in historicalBox.getAt(i)!.data) {
+      if (historicalHabit.id == id) {
+        if (historicalHabit.completed) {
+          if (historicalHabit.skipped) {
+            timesSkipped++;
+          } else {
+            timesCompleted++;
+          }
         } else {
-          timesCompleted++;
+          timesMissed++;
         }
-      } else {
-        timesMissed++;
       }
     }
   }
@@ -76,10 +78,13 @@ Widget statsPage(
           ),
           onPressed: () {
             Provider.of<HabitProvider>(context, listen: false)
-                .completeHabitProvider(index, isAdLoaded, interstitialAd)
+                .completeHabitProvider(
+                    context.read<HabitProvider>().getIndexFromId(id),
+                    isAdLoaded,
+                    interstitialAd)
                 .then((value) {
               buildCompletionRateGraph(
-                  index,
+                  id,
                   completionRates,
                   highestCompletionRate,
                   lowestCompletionRate,
@@ -319,6 +324,7 @@ class StreakStats extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 AnimatedDigitWidget(
+                    loop: false,
                     duration: const Duration(milliseconds: 800),
                     value: displayBestStreak(),
                     textStyle: TextStyle(

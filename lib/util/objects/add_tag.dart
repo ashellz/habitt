@@ -94,6 +94,10 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                       flex: 4,
                       child: SizedBox(
                         child: TextFormField(
+                          keyboardAppearance:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Brightness.dark
+                                  : Brightness.light,
                           validator: validateTag,
                           focusNode: _focusNode,
                           inputFormatters: [

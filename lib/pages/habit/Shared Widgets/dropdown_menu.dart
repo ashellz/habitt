@@ -44,7 +44,7 @@ class DropDownMenu extends StatelessWidget {
         GestureDetector(
           onTap: () => context.read<HabitProvider>().toggleExpansion(),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               color: Colors.grey.shade900,
               borderRadius: BorderRadius.circular(20),

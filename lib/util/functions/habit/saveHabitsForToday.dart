@@ -25,6 +25,7 @@ void saveHabitsForToday() async {
         durationCompleted: habit.durationCompleted,
         skipped: habit.skipped,
         id: habit.id,
+        task: habit.task,
       );
 
       // Add the habit data to the list for today

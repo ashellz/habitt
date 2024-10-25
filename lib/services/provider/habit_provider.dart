@@ -2,6 +2,7 @@ import "dart:async";
 import "package:awesome_notifications/awesome_notifications.dart";
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:fluttertoast/fluttertoast.dart";
 import "package:habitt/data/habit_data.dart";
 import "package:habitt/main.dart";
@@ -15,15 +16,17 @@ import "package:habitt/util/functions/habit/habitsCompleted.dart";
 import "package:habitt/util/functions/habit/saveHabitsForToday.dart";
 import "package:hive/hive.dart";
 import "package:restart_app/restart_app.dart";
-import "package:vibration/vibration.dart";
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
   String mainCategory = "";
   bool somethingEdited = false;
   bool appearenceEdited = false;
+  bool additionalTask = false;
   Icon updatedIcon = startIcon;
   List habitsList = [];
+
+  double editHabitPageHeight = 0;
 
   String timeBasedText = "";
 
@@ -85,11 +88,26 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  getPageHeight(bool firstPage) {
+    editHabitPageHeight = 600;
+    if (firstPage) {
+      editHabitPageHeight += 20;
+    } else {
+      if (habitGoalValue != 0) {
+        editHabitPageHeight += 135;
+      }
+      if (categoriesExpanded) {
+        editHabitPageHeight += 190;
+      }
+    }
+  }
+
   void toggleExpansion() {
     if (isGestureEnabled) {
       isGestureEnabled = false;
 
       categoriesExpanded = !categoriesExpanded;
+      getPageHeight(false);
       if (categoriesExpanded) {
         Timer(const Duration(milliseconds: 500), () {
           categoryIsVisible = true;
@@ -164,20 +182,22 @@ class HabitProvider extends ChangeNotifier {
   void updateMainCategoryHeight() {
     _mainCategoryHeight = 200;
     for (int i = 0; i < habitListLength; i++) {
-      if (habitBox.getAt(i)?.category == 'Morning') {
-        if (mainCategory == 'Morning') {
+      if (!habitBox.getAt(i)!.task) {
+        if (habitBox.getAt(i)?.category == 'Morning') {
+          if (mainCategory == 'Morning') {
+            _mainCategoryHeight += 70;
+          }
+        } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+          if (mainCategory == 'Afternoon') {
+            _mainCategoryHeight += 70;
+          }
+        } else if (habitBox.getAt(i)?.category == 'Evening') {
+          if (mainCategory == 'Evening') {
+            _mainCategoryHeight += 70;
+          }
+        } else if (mainCategory == 'Any time') {
           _mainCategoryHeight += 70;
         }
-      } else if (habitBox.getAt(i)?.category == 'Afternoon') {
-        if (mainCategory == 'Afternoon') {
-          _mainCategoryHeight += 70;
-        }
-      } else if (habitBox.getAt(i)?.category == 'Evening') {
-        if (mainCategory == 'Evening') {
-          _mainCategoryHeight += 70;
-        }
-      } else if (mainCategory == 'Any time') {
-        _mainCategoryHeight += 70;
       }
     }
     _mainCategoryHeight -= 70;
@@ -214,6 +234,11 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateAdditionalTasks(bool value) {
+    additionalTask = value;
+    notifyListeners();
+  }
+
   Future<void> createNewHabitProvider(
       createcontroller, BuildContext context) async {
     await createNewHabit(createcontroller, context);
@@ -226,6 +251,8 @@ class HabitProvider extends ChangeNotifier {
   Future<void> completeHabitProvider(
       int index, bool isAdLoaded, interstitialAd) async {
     final existingHabit = habitBox.getAt(index);
+
+    bool isTask = habitBox.getAt(index)!.task;
 
     if (existingHabit == null) {
       return;
@@ -254,29 +281,70 @@ class HabitProvider extends ChangeNotifier {
         notifications: existingHabit.notifications,
         notes: existingHabit.notes,
         longestStreak: existingHabit.longestStreak,
-        id: existingHabit.id);
+        id: existingHabit.id,
+        task: existingHabit.task);
 
     await habitBox.putAt(index, updatedHabit);
 
     // apply haptic feedback or sound
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
-    if (allHabitsCompleted()) {
+    if (allHabitsCompleted() && !isTask) {
       if (isAdLoaded) {
         interstitialAd.show();
       }
       playSound();
       if (hapticFeedback) {
-        Vibration.vibrate(duration: 500);
+        HapticFeedback.heavyImpact();
       }
     } else if (!existingHabit.completed) {
       if (hapticFeedback) {
-        Vibration.vibrate(duration: 100);
+        HapticFeedback.mediumImpact();
       }
     }
 
-    if (existingHabit.completed) {
+    if (!existingHabit.completed) {
       for (int j = 0; j < habitBox.getAt(index)!.notifications.length; j++) {
         await AwesomeNotifications().cancel(index * 100 + j);
+      }
+
+      String habitCategory = habitBox.getAt(index)!.category;
+      int totalHabitsInCategory = 0;
+      int completedHabitsInCategory = 0;
+
+      int totalTasksInCategory = 0;
+      int completedTasksInCategory = 0;
+
+      for (var habit in habitBox.values) {
+        // used to check if the category is completed so ad is only shown if so
+        if (habit.category == habitCategory) {
+          totalHabitsInCategory++;
+          if (habit.completed && !habit.task) {
+            completedHabitsInCategory++;
+          }
+        }
+
+        if (isTask) {
+          if (habit.task) {
+            totalTasksInCategory++;
+            if (habit.completed) {
+              completedTasksInCategory++;
+            }
+          }
+        }
+      }
+
+      if (isTask) {
+        print("totaltasksicateory$totalTasksInCategory");
+        print("completedtasksicateory$completedTasksInCategory");
+        if (totalTasksInCategory == completedTasksInCategory) {
+          if (isAdLoaded) {
+            interstitialAd.show();
+          }
+        }
+      } else if (totalHabitsInCategory == completedHabitsInCategory) {
+        if (isAdLoaded) {
+          interstitialAd.show();
+        }
       }
     }
 
@@ -334,23 +402,23 @@ class HabitProvider extends ChangeNotifier {
 
     if (existingHabit != null) {
       final updatedHabit = HabitData(
-        name: existingHabit.name,
-        completed: !existingHabit.completed,
-        icon: existingHabit.icon,
-        category: existingHabit.category,
-        streak: existingHabit.streak,
-        amount: existingHabit.amount,
-        amountName: existingHabit.amountName,
-        amountCompleted: existingHabit.amountCompleted,
-        duration: existingHabit.duration,
-        durationCompleted: existingHabit.durationCompleted,
-        skipped: !existingHabit.skipped,
-        tag: existingHabit.tag,
-        notifications: existingHabit.notifications,
-        notes: existingHabit.notes,
-        longestStreak: existingHabit.longestStreak,
-        id: existingHabit.id,
-      );
+          name: existingHabit.name,
+          completed: !existingHabit.completed,
+          icon: existingHabit.icon,
+          category: existingHabit.category,
+          streak: existingHabit.streak,
+          amount: existingHabit.amount,
+          amountName: existingHabit.amountName,
+          amountCompleted: existingHabit.amountCompleted,
+          duration: existingHabit.duration,
+          durationCompleted: existingHabit.durationCompleted,
+          skipped: !existingHabit.skipped,
+          tag: existingHabit.tag,
+          notifications: existingHabit.notifications,
+          notes: existingHabit.notes,
+          longestStreak: existingHabit.longestStreak,
+          id: existingHabit.id,
+          task: existingHabit.task);
 
       await habitBox.putAt(index, updatedHabit);
       saveHabitsForToday();
@@ -358,8 +426,23 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
-  HabitData getHabitAt(int index) {
-    return habitBox.getAt(index)!;
+  HabitData getHabitAt(int id) {
+    for (var habit in habitBox.values) {
+      if (habit.id == id) {
+        return habit;
+      }
+    }
+
+    return habitBox.getAt(0)!;
+  }
+
+  int getIndexFromId(int id) {
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)!.id == id) {
+        return i;
+      }
+    }
+    return 0;
   }
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
@@ -405,7 +488,8 @@ class HabitProvider extends ChangeNotifier {
             notifications: habitBox.getAt(index)!.notifications,
             notes: habitBox.getAt(index)!.notes,
             longestStreak: habitBox.getAt(index)!.longestStreak,
-            id: habitBox.getAt(index)!.id));
+            id: habitBox.getAt(index)!.id,
+            task: habitBox.getAt(index)!.task));
     saveHabitsForToday();
     notifyListeners();
   }
@@ -430,6 +514,7 @@ class HabitProvider extends ChangeNotifier {
           notes: habitBox.getAt(index)!.notes,
           longestStreak: habitBox.getAt(index)!.longestStreak,
           id: habitBox.getAt(index)!.id,
+          task: habitBox.getAt(index)!.task,
         ));
     saveHabitsForToday();
     notifyListeners();

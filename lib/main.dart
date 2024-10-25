@@ -48,11 +48,15 @@ Future<void> main() async {
       ),
     ],
   );
+
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
   Hive.registerAdapter(TagDataAdapter());
   Hive.registerAdapter(HistoricalHabitAdapter());
   Hive.registerAdapter(HistoricalHabitDataAdapter());
+
+  await openHiveBoxes();
+  await fillKeys();
 
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
@@ -77,13 +81,16 @@ Future<void> main() async {
 hasHabits() {
   final habitBox = Hive.box<HabitData>('habits');
   for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == 'Morning') {
+    if (habitBox.getAt(i)!.category == 'Morning' && !habitBox.getAt(i)!.task) {
       morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+    } else if (habitBox.getAt(i)?.category == 'Afternoon' &&
+        !habitBox.getAt(i)!.task) {
       afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening') {
+    } else if (habitBox.getAt(i)?.category == 'Evening' &&
+        !habitBox.getAt(i)!.task) {
       eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time') {
+    } else if (habitBox.getAt(i)?.category == 'Any time' &&
+        !habitBox.getAt(i)!.task) {
       anytimeHasHabits = true;
     }
   }
@@ -95,14 +102,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       title: 'habitt',
       theme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.dark(
+          primary: theLightColor,
+        ),
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
-        colorScheme: ColorScheme.fromSeed(seedColor: theLightColor),
         useMaterial3: true,
         appBarTheme: AppBarTheme(
           iconTheme: const IconThemeData(color: Colors.white),
@@ -135,7 +145,7 @@ class AuthCheck extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
         if (snapshot.hasData) {
           // Create a FutureBuilder to wait for openHiveBoxes to complete
@@ -143,7 +153,8 @@ class AuthCheck extends StatelessWidget {
             future: openHiveAndPerformTasks(context),
             builder: (context, futureSnapshot) {
               if (futureSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
               }
 
               // After the Future is complete, check for onboarding or homepage
@@ -168,9 +179,6 @@ class AuthCheck extends StatelessWidget {
 
   // Create a function that wraps all necessary tasks
   Future<void> openHiveAndPerformTasks(BuildContext context) async {
-    await openHiveBoxes();
-    fillKeys();
-
     // Post-frame callback to update providers and perform actions
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HabitProvider>().chooseMainCategory();

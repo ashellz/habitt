@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
-import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:provider/provider.dart';
 
 void fillTagsList(BuildContext context) {
   categoriesList = ["All"];
@@ -31,32 +29,25 @@ void fillTagsList(BuildContext context) {
     }
   }
 
-  if (context.watch<HabitProvider>().displayEmptyCategories) {
+  if (anytimeHasHabits) {
     addAnytime();
+  } else {
+    categoriesList.remove("Any time");
+  }
+  if (morningHasHabits) {
     addMorning();
+  } else {
+    categoriesList.remove("Morning");
+  }
+  if (afternoonHasHabits) {
     addAfternoon();
+  } else {
+    categoriesList.remove("Afternoon");
+  }
+  if (eveningHasHabits) {
     addEvening();
   } else {
-    if (anytimeHasHabits) {
-      addAnytime();
-    } else {
-      categoriesList.remove("Any time");
-    }
-    if (morningHasHabits) {
-      addMorning();
-    } else {
-      categoriesList.remove("Morning");
-    }
-    if (afternoonHasHabits) {
-      addAfternoon();
-    } else {
-      categoriesList.remove("Afternoon");
-    }
-    if (eveningHasHabits) {
-      addEvening();
-    } else {
-      categoriesList.remove("Evening");
-    }
+    categoriesList.remove("Evening");
   }
 
   categoriesList.sort((a, b) {

@@ -53,8 +53,8 @@ bool tagCompleted(String tag) {
 }
 
 bool allHabitsCompleted() {
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.completed == false) {
+  for (var habit in habitBox.values) {
+    if (!habit.completed && !habit.task) {
       return false;
     }
   }

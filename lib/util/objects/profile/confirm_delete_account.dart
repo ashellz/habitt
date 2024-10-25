@@ -140,6 +140,10 @@ Widget reauthenticateUser(context) {
             padding: const EdgeInsets.only(top: 15),
             child: StatefulBuilder(builder: (context, StateSetter setState) {
               return TextFormField(
+                keyboardAppearance:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Brightness.dark
+                        : Brightness.light,
                 onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 cursorColor: Colors.white,
                 cursorWidth: 2.0,

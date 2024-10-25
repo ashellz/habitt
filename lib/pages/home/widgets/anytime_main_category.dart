@@ -17,7 +17,8 @@ Widget anyTimeMainCategory(
       children: [
         const SizedBox(height: 95),
         for (int i = 0; i < habitListLength; i++)
-          if (habitBox.getAt(i)?.category == "Any time")
+          if (habitBox.getAt(i)?.category == "Any time" &&
+              !habitBox.getAt(i)!.task)
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: NewHabitTile(
