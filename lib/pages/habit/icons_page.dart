@@ -102,7 +102,7 @@ class IconWidget extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),
-            backgroundColor: Colors.grey.shade900,
+            backgroundColor: context.watch<ColorProvider>().greyColor,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),

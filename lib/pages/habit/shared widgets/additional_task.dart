@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class _AdditionalTaskState extends State<AdditionalTask> {
       child: Container(
         padding: const EdgeInsets.only(left: 20, right: 10),
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          color: context.watch<ColorProvider>().greyColor,
           borderRadius: BorderRadius.circular(20),
         ),
         height: 55,

@@ -73,8 +73,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ),
           IconButton(
               icon: const Icon(Icons.add, color: Colors.grey, size: 32),
-              style: const ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(AppColors.theDarkGrey),
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                    context.watch<ColorProvider>().darkGreyColor),
               ),
               onPressed: () {
                 setState(() {
@@ -134,7 +135,7 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                   height: 100,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Colors.grey.shade900,
+                      color: context.watch<ColorProvider>().greyColor,
                       borderRadius: BorderRadius.circular(20)),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

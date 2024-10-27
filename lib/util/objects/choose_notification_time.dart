@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
@@ -87,7 +88,7 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-              color: Colors.grey.shade900,
+              color: context.watch<ColorProvider>().greyColor,
             ),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

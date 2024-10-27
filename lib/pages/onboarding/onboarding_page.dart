@@ -5,7 +5,9 @@ import 'package:habitt/pages/onboarding/page_four.dart';
 import 'package:habitt/pages/onboarding/page_one.dart';
 import 'package:habitt/pages/onboarding/page_three.dart';
 import 'package:habitt/pages/onboarding/page_two.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -22,7 +24,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: Stack(
         children: [
           PageView(

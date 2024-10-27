@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/objects/choose_notification_time.dart';
+import 'package:provider/provider.dart';
 
 Widget notificationContainer(String category) {
   late String box;
@@ -30,7 +32,7 @@ Widget notificationContainer(String category) {
         height: 130,
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Colors.grey.shade900,
+            color: context.watch<ColorProvider>().greyColor,
             borderRadius: BorderRadius.circular(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

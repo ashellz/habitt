@@ -6,6 +6,7 @@ import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/habit/complete_habit_dialog.dart';
@@ -112,7 +113,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
               onPressed: (context) {
                 context.read<HabitProvider>().skipHabitProvider(habitIndex);
               },
-              backgroundColor: Colors.grey.shade900,
+              backgroundColor: context.watch<ColorProvider>().greyColor,
               foregroundColor: Colors.white,
               label: habit.skipped ? 'Undo' : 'Skip',
               borderRadius: BorderRadius.circular(15),
@@ -287,7 +288,7 @@ class _CheckBoxState extends State<CheckBox> {
           decoration: BoxDecoration(
             color: widget.habit.completed
                 ? AppColors.theOtherColor
-                : Colors.grey.shade900,
+                : context.watch<ColorProvider>().greyColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: widget.habitBox.getAt(widget.index)!.completed &&
@@ -311,7 +312,8 @@ class _CheckBoxState extends State<CheckBox> {
                               return LinearProgressIndicator(
                                 value: value,
                                 color: AppColors.theOtherColor,
-                                backgroundColor: Colors.grey.shade900,
+                                backgroundColor:
+                                    context.watch<ColorProvider>().greyColor,
                               );
                             }),
                       ),
@@ -349,7 +351,9 @@ class _CheckBoxState extends State<CheckBox> {
                                             .skipped
                                         ? Colors.grey.shade800
                                         : AppColors.theOtherColor,
-                                    backgroundColor: Colors.grey.shade900,
+                                    backgroundColor: context
+                                        .watch<ColorProvider>()
+                                        .greyColor,
                                   );
                                 }),
                           ),
@@ -432,7 +436,9 @@ class _CheckBoxState extends State<CheckBox> {
                                                 .skipped
                                             ? Colors.grey.shade800
                                             : AppColors.theOtherColor,
-                                        backgroundColor: Colors.grey.shade900,
+                                        backgroundColor: context
+                                            .watch<ColorProvider>()
+                                            .greyColor,
                                       );
                                     }),
                               ),
@@ -532,7 +538,9 @@ class _CheckBoxState extends State<CheckBox> {
                                                 .skipped
                                             ? Colors.grey.shade800
                                             : AppColors.theOtherColor,
-                                        backgroundColor: Colors.grey.shade900,
+                                        backgroundColor: context
+                                            .watch<ColorProvider>()
+                                            .greyColor,
                                       );
                                     }),
                               ),

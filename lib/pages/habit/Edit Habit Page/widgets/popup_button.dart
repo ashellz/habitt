@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/habit/notifications_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/showCustomDialog.dart';
@@ -18,7 +19,7 @@ class PopUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      color: Colors.grey.shade900,
+      color: context.watch<ColorProvider>().greyColor,
       itemBuilder: (context) => [
         PopupMenuItem(
             onTap: () => Navigator.push(

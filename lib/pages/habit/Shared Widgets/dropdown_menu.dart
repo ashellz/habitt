@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/habit/shared%20widgets/choose_category.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class DropDownMenu extends StatelessWidget {
           padding: const EdgeInsets.only(top: 20),
           child: AnimatedContainer(
               decoration: BoxDecoration(
-                color: AppColors.theDarkGrey,
+                color: context.watch<ColorProvider>().darkGreyColor,
                 borderRadius: BorderRadius.circular(20),
               ),
               duration: const Duration(milliseconds: 600),
@@ -46,7 +47,7 @@ class DropDownMenu extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              color: Colors.grey.shade900,
+              color: context.watch<ColorProvider>().greyColor,
               borderRadius: BorderRadius.circular(20),
             ),
             height: 55,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -50,7 +51,7 @@ Widget completeHistoricalHabitDialog(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                       ),
                       min: 0,
                       max: habit.amount - 1,
@@ -83,7 +84,7 @@ Widget completeHistoricalHabitDialog(
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.shade900,
+                          fillColor: context.watch<ColorProvider>().greyColor,
                           labelStyle: const TextStyle(
                               fontSize: 16.0,
                               color: Colors.white38,
@@ -120,7 +121,7 @@ Widget completeHistoricalHabitDialog(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                         labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
@@ -179,8 +180,7 @@ Widget completeHistoricalHabitDialog(
                       color: AppColors.theLightColor,
                       width: 3.0,
                     )),
-                    backgroundColor:
-                        WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {

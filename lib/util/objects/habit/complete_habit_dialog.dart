@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
@@ -47,7 +48,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                       ),
                       min: 0,
                       max: habitBox.getAt(index)!.amount - 1,
@@ -82,7 +83,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.shade900,
+                          fillColor: context.watch<ColorProvider>().greyColor,
                           labelStyle: const TextStyle(
                               fontSize: 16.0,
                               color: Colors.white38,
@@ -123,7 +124,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                         labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
@@ -179,8 +180,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                       color: AppColors.theLightColor,
                       width: 3.0,
                     )),
-                    backgroundColor:
-                        WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {

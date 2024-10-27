@@ -10,7 +10,6 @@ import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
 import "package:habitt/services/ad_mob_service.dart";
 import "package:habitt/services/provider/color_provider.dart";
 import "package:habitt/services/provider/habit_provider.dart";
-import "package:habitt/util/colors.dart";
 import "package:provider/provider.dart";
 
 bool updated = false;
@@ -92,7 +91,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
             highlightColor: Colors.transparent),
         child: BottomNavigationBar(
             enableFeedback: false,
-            backgroundColor: AppColors.theDarkGrey,
+            backgroundColor: context.watch<ColorProvider>().darkGreyColor,
             unselectedItemColor: Colors.grey.shade700,
             selectedItemColor: Colors.white,
             currentIndex: currentIndex,

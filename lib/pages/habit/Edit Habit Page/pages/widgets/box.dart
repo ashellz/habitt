@@ -1,7 +1,9 @@
 import 'package:animated_digit/animated_digit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:provider/provider.dart';
 
 class box extends StatelessWidget {
   const box(
@@ -18,8 +20,9 @@ class box extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.5 - 30,
       height: MediaQuery.of(context).size.width * 0.5 - 30,
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: Colors.grey.shade900),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: context.watch<ColorProvider>().greyColor,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,6 +7,7 @@ import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletion
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/box.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/get_completion_rate_days.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
@@ -66,10 +67,10 @@ Widget statsPage(
             minimumSize: WidgetStateProperty.all<Size>(
                 Size(MediaQuery.of(context).size.width, 50)),
             backgroundColor: WidgetStateProperty.all<Color>(habit.skipped
-                ? Colors.grey.shade900
+                ? context.watch<ColorProvider>().greyColor
                 : habit.completed
                     ? AppColors.theOtherColor
-                    : Colors.grey.shade900),
+                    : context.watch<ColorProvider>().greyColor),
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
@@ -134,7 +135,7 @@ Widget statsPage(
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
-            color: Colors.grey.shade900,
+            color: context.watch<ColorProvider>().greyColor,
           ),
           child: Column(
             children: [

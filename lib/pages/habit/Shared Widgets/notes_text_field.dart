@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +68,7 @@ class _NotesTextFieldState extends State<NotesTextField> {
           ),
           hintStyle: const TextStyle(color: Colors.white38),
           filled: true,
-          fillColor: Colors.grey.shade900,
+          fillColor: context.watch<ColorProvider>().greyColor,
         ),
       ),
     );

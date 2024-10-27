@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/showCustomDialog.dart';
@@ -45,7 +46,7 @@ class _ChooseTagState extends State<ChooseTag> {
                         borderRadius: BorderRadius.circular(20),
                         color: habitTag == tagBox.getAt(i)!.tag
                             ? AppColors.theOtherColor
-                            : Colors.grey.shade900,
+                            : context.watch<ColorProvider>().greyColor,
                       ),
                       height: 30,
                       child: Center(child: Text(tagBox.getAt(i)!.tag))),
@@ -64,7 +65,7 @@ class _ChooseTagState extends State<ChooseTag> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: AppColors.theDarkGrey,
+                      color: context.watch<ColorProvider>().darkGreyColor,
                     ),
                     height: 30,
                     child: const Center(child: Text("+"))),

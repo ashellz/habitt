@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
+import 'package:provider/provider.dart';
 
 Widget anyTimeMainCategory(
     int habitListLength,
@@ -36,7 +38,7 @@ Widget anyTimeMainCategory(
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: AppColors.theDarkGrey,
+        color: context.watch<ColorProvider>().darkGreyColor,
       ),
       child: const Padding(
         padding: EdgeInsets.only(left: 20, top: 65),

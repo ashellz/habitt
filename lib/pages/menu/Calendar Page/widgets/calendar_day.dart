@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:provider/provider.dart';
 
 class CalendarDay extends StatelessWidget {
   const CalendarDay({super.key, required this.date, required this.selected});
@@ -56,7 +58,9 @@ class CalendarDay extends StatelessWidget {
             padding: const EdgeInsets.all(6.0),
             child: Container(
               decoration: BoxDecoration(
-                color: selected ? Colors.grey.shade800 : AppColors.theDarkGrey,
+                color: selected
+                    ? Colors.grey.shade800
+                    : context.watch<ColorProvider>().darkGreyColor,
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
@@ -84,7 +88,8 @@ class CalendarDay extends StatelessWidget {
                         strokeWidth: 2,
                         value: value,
                         color: AppColors.theOtherColor,
-                        backgroundColor: Colors.grey.shade900,
+                        backgroundColor:
+                            context.watch<ColorProvider>().greyColor,
                       ),
                     );
                   }),

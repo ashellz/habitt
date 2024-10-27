@@ -3,8 +3,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/widgets/anytime_main_category.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/menu/profile_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
+import 'package:provider/provider.dart';
 
 Widget mainCategoryList(
     habitListLength,
@@ -20,7 +23,7 @@ Widget mainCategoryList(
         height: mainCategoryHeight, // change
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: AppColors.theDarkGrey,
+          color: context.watch<ColorProvider>().darkGreyColor,
         ),
         child: mainCategory == "Morning"
             ? morningHasHabits

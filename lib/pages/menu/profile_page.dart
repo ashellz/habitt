@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.grey.shade900,
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       shape: const RoundedRectangleBorder(
@@ -210,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.grey.shade900,
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       shape: const RoundedRectangleBorder(
@@ -233,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   //sign out
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.grey.shade900,
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       shape: const RoundedRectangleBorder(
@@ -256,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.grey.shade900,
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
                       shape: const RoundedRectangleBorder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/pages/habit/icons_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/validate_text.dart';
@@ -77,7 +78,7 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
           ),
           hintStyle: const TextStyle(color: Colors.white38),
           filled: true,
-          fillColor: Colors.grey.shade900,
+          fillColor: context.watch<ColorProvider>().greyColor,
           suffixIcon: IconButton(
             onPressed: () {
               Navigator.push(

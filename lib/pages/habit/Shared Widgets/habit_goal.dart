@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/validate_text.dart';
@@ -67,7 +68,7 @@ class _HabitGoalState extends State<HabitGoal> {
                               .habitGoalValue ==
                           1
                       ? AppColors.theOtherColor
-                      : Colors.grey.shade900,
+                      : context.watch<ColorProvider>().greyColor,
                 ),
               ),
               child: const Text("Number of times",
@@ -113,7 +114,7 @@ class _HabitGoalState extends State<HabitGoal> {
                               .habitGoalValue ==
                           2
                       ? AppColors.theOtherColor
-                      : Colors.grey.shade900,
+                      : context.watch<ColorProvider>().greyColor,
                 ),
               ),
               child:
@@ -131,8 +132,7 @@ class _HabitGoalState extends State<HabitGoal> {
           child: Column(
             children: [
               SpinBox(
-
-        textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.done,
                 cursorColor: Colors.white,
                 enableInteractiveSelection: true,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
@@ -141,7 +141,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
+                  fillColor: context.watch<ColorProvider>().greyColor,
                   labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -206,7 +206,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
+                  fillColor: context.watch<ColorProvider>().greyColor,
                   labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -246,7 +246,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
+                  fillColor: context.watch<ColorProvider>().greyColor,
                   labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -280,15 +280,14 @@ class _HabitGoalState extends State<HabitGoal> {
               ),
               const SizedBox(height: 15),
               SpinBox(
-
-        textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.done,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
+                  fillColor: context.watch<ColorProvider>().greyColor,
                   labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,

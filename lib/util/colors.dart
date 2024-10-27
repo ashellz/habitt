@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color theBlack = Colors.black;
-  static const Color theAccentBlack = Color.fromARGB(255, 0, 15, 0);
+  static const Color theAccentBlack = Color.fromARGB(255, 5, 15, 5);
 
   static const Color theDarkGrey =
-      theDarkAccentGrey; // Color.fromARGB(255, 17, 17, 17)
-  static const Color theDarkAccentGrey = Color.fromARGB(255, 17, 23, 17);
+      theAccentDarkGrey; // Color.fromARGB(255, 17, 17, 17)
+  static const Color theAccentDarkGrey = Color.fromARGB(255, 17, 23, 17);
+
+  static const Color theGrey = Color.fromRGBO(33, 33, 33, 1);
+  static const Color theAccentGrey = Color.fromRGBO(33, 36, 33, 1);
 
   static const Color theDarkColor = Color.fromARGB(255, 37, 67, 54);
   static const Color theColor = Color.fromARGB(255, 62, 80, 71);
