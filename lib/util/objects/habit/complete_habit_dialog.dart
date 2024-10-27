@@ -18,9 +18,9 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
 
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theLightColor, width: 3.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        side: BorderSide(color: AppColors.theLightColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       content: SizedBox(
@@ -154,11 +154,12 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theLightColor)),
+                    backgroundColor:
+                        WidgetStatePropertyAll(AppColors.theLightColor)),
                 onPressed: () {
                   context
                       .read<HabitProvider>()
@@ -170,16 +171,16 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                   style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
             OutlinedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theLightColor,
+                      color: AppColors.theLightColor,
                       width: 3.0,
                     )),
                     backgroundColor:
-                        const WidgetStatePropertyAll(Colors.black)),
+                        WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {

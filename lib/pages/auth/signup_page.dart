@@ -152,6 +152,7 @@ class SignupPage extends StatelessWidget {
                     child: StatefulBuilder(
                         builder: (context, StateSetter setState) {
                       return TextFormField(
+                        textInputAction: TextInputAction.done,
                         validator: validatePassword,
                         keyboardAppearance:
                             Theme.of(context).brightness == Brightness.dark
@@ -234,13 +235,13 @@ class SignupPage extends StatelessWidget {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   if (boolBox.get("isGuest")!) {
-                                    showDialog(
+                                    keepData = true;
+                                    await AuthService().signUp(
                                         context: context,
-                                        builder: (context) => keepDataDialog(
-                                            context,
-                                            _emailController,
-                                            _passwordController,
-                                            _usernameController));
+                                        email: _emailController.text,
+                                        password: _passwordController.text);
+                                    stringBox.put(
+                                        'username', _usernameController.text);
                                   } else {
                                     signUpNewUser(
                                         context,

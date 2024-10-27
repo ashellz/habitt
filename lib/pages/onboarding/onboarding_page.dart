@@ -69,7 +69,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     controller: controller,
                     count: 5,
                     effect: ExpandingDotsEffect(
-                        activeDotColor: theLightColor,
+                        activeDotColor: AppColors.theLightColor,
                         dotColor: Colors.grey.shade800),
                   ),
                   currentPage != 4

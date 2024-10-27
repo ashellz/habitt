@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/Calendar%20Page/functions/historicalHasHabits.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/objects/habit/calendar_habit_tile.dart';
+import 'package:provider/provider.dart';
 
 Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Any time", habitsOnDate, habitListLength)) {
+    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Any time",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (historicalBox.getAt(boxIndex)!.data[i].category == 'Any time' &&
-              !historicalBox.getAt(boxIndex)!.data[i].task)
+          if (habitsOnDate[i].category == 'Any time' && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -49,14 +51,14 @@ Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
 Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Morning", habitsOnDate, habitListLength)) {
+    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Morning",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (historicalBox.getAt(boxIndex)!.data[i].category == 'Morning' &&
-              !historicalBox.getAt(boxIndex)!.data[i].task)
+          if (habitsOnDate[i].category == 'Morning' && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -92,14 +94,14 @@ Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
 Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Afternoon", habitsOnDate, habitListLength)) {
+    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Afternoon",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (historicalBox.getAt(boxIndex)!.data[i].category == 'Afternoon' &&
-              !historicalBox.getAt(boxIndex)!.data[i].task)
+          if (habitsOnDate[i].category == 'Afternoon' && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -135,14 +137,14 @@ Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
 Widget evening(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (historicalHasHabits("Evening", habitsOnDate, habitListLength)) {
+    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Evening",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (historicalBox.getAt(boxIndex)!.data[i].category == 'Evening' &&
-              !historicalBox.getAt(boxIndex)!.data[i].task)
+          if (habitsOnDate[i].category == 'Evening' && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(

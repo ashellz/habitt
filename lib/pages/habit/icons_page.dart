@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:habitt/util/colors.dart';
 
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +16,7 @@ class IconsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theBlackColor,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: const CustomScrollView(
         physics: BouncingScrollPhysics(),
         slivers: [

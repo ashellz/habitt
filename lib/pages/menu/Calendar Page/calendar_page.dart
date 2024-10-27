@@ -1,19 +1,16 @@
-import "dart:io";
-
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
-
 import "package:habitt/pages/menu/Calendar%20Page/widgets/additional_historical_tasks.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/calendar_day.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/other_categories.dart";
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
 import "package:habitt/services/ad_mob_service.dart";
+import "package:habitt/services/provider/color_provider.dart";
+import "package:habitt/services/provider/habit_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/util/colors.dart";
-
+import "package:habitt/util/functions/showCustomDialog.dart";
 import "package:provider/provider.dart";
-
 import "package:table_calendar/table_calendar.dart";
 
 class CalendarPage extends StatefulWidget {
@@ -66,7 +63,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theBlackColor,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -77,7 +74,7 @@ class _CalendarPageState extends State<CalendarPage> {
               child: Column(children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: theDarkGrey,
+                      color: AppColors.theDarkGrey,
                       borderRadius: BorderRadius.circular(20)),
                   child: TableCalendar(
                     availableGestures: AvailableGestures.horizontalSwipe,
@@ -89,22 +86,23 @@ class _CalendarPageState extends State<CalendarPage> {
                       todayBuilder: (context, day, events) =>
                           CalendarDay(date: day, selected: false),
                     ),
-                    calendarStyle: CalendarStyle(
+                    calendarStyle: const CalendarStyle(
                       outsideDaysVisible: false,
-                      weekendTextStyle: const TextStyle(color: Colors.white),
+                      weekendTextStyle: TextStyle(color: Colors.white),
                       selectedDecoration: BoxDecoration(
-                        color: theOtherColor,
+                        color: AppColors.theOtherColor,
                         shape: BoxShape.rectangle,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
                     startingDayOfWeek: StartingDayOfWeek.monday,
-                    daysOfWeekStyle: DaysOfWeekStyle(
+                    daysOfWeekStyle: const DaysOfWeekStyle(
                         weekendStyle: TextStyle(
-                            color: theLightColor, fontWeight: FontWeight.bold),
+                            color: AppColors.theLightColor,
+                            fontWeight: FontWeight.bold),
                         weekdayStyle: TextStyle(
-                            color: theLightColor, fontWeight: FontWeight.bold)),
+                            color: AppColors.theLightColor,
+                            fontWeight: FontWeight.bold)),
                     headerStyle: const HeaderStyle(
                       titleCentered: true,
                       formatButtonVisible: false,
@@ -131,71 +129,36 @@ class _CalendarPageState extends State<CalendarPage> {
                   interstitialAd: interstitialAd,
                   today: today,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 60.0, top: 20),
-                  child: GestureDetector(
-                    onTap: () {
-                      showResetDialog(context);
-                    },
-                    child: const Text(
-                      "Import current habits",
-                      style: TextStyle(color: Colors.grey),
+                const SizedBox(height: 20),
+                if (context.watch<HabitProvider>().dayHasHabits)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 60.0,
                     ),
-                  ),
-                )
+                    child: GestureDetector(
+                      onTap: () {
+                        showCustomDialog(
+                            context,
+                            "Import current habits",
+                            const Text(
+                                "This will erase previous data on this day. Are you sure?"),
+                            () => context
+                                .read<HistoricalHabitProvider>()
+                                .importCurrentHabits(today),
+                            "Yes",
+                            "No");
+                      },
+                      child: const Text(
+                        "Import current habits",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  )
               ]),
             ),
           ),
         ],
       ),
     );
-  }
-}
-
-void showResetDialog(BuildContext context) {
-  if (Platform.isAndroid) {
-    showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-              title: const Text("Import current habits"),
-              content: const Text(
-                  "This will erase previous data on this day. Are you sure?"),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text("Yes"),
-                  onPressed: () {
-                    // context.read<HistoricalHabitProvider>().resetDayProgress();
-                    Navigator.pop(context);
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: const Text("No"),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ));
-  } else {
-    showCupertinoDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-              title: const Text("Import current habits"),
-              content: const Text(
-                  "This will erase previous data on this day. Are you sure?"),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text("Yes"),
-                  onPressed: () {
-                    // context.read<HistoricalHabitProvider>().resetDayProgress();
-                    Navigator.pop(context);
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: const Text("No"),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ));
   }
 }

@@ -41,8 +41,9 @@ Widget tagsWidgets(String? tagSelected) {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color:
-                          tagSelected == category ? theOtherColor : theDarkGrey,
+                      color: tagSelected == category
+                          ? AppColors.theOtherColor
+                          : AppColors.theDarkGrey,
                     ),
                     height: 30,
                     child: Center(

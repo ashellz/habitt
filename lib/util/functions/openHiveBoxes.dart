@@ -54,6 +54,7 @@ Future<void> openHiveBoxes() async {
     }
     await Hive.openBox<HistoricalHabit>('historicalHabits');
     await Hive.openBox<HistoricalHabitData>('historicalHabitData');
+    await Hive.openBox<String>('accessToken');
   }
 }
 

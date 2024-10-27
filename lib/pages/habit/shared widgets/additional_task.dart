@@ -39,7 +39,7 @@ class _AdditionalTaskState extends State<AdditionalTask> {
                 }
                 context.read<HabitProvider>().updateAdditionalTasks(value!);
               },
-              activeColor: theLightColor,
+              activeColor: AppColors.theLightColor,
             )
           ],
         ),

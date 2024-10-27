@@ -17,6 +17,7 @@ import 'package:habitt/pages/home/widgets/selected_tag.dart';
 import 'package:habitt/pages/home/widgets/tags_widgets.dart';
 import 'package:habitt/pages/menu/menu_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
@@ -33,6 +34,7 @@ final stringBox = Hive.box<String>('string');
 final listBox = Hive.box<List>('list');
 final tagBox = Hive.box<TagData>('tags');
 final historicalBox = Hive.box<HistoricalHabit>('historicalHabits');
+final accessTokenBox = Hive.box<String>('accessToken');
 final historicalHabitDataBox =
     Hive.box<HistoricalHabitData>('historicalHabitData');
 late HabitData myHabit;
@@ -88,7 +90,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   }),
               onAdFailedToLoad: (error) {
                 isAdLoaded = false;
-                initInterstitialAd();
+                interstitialAd = null;
               }));
     }
   }
@@ -166,19 +168,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         onPressed: () {
           openAddHabitPage(context, createcontroller);
         },
-        backgroundColor: theLightColor,
+        backgroundColor: AppColors.theLightColor,
         child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
       ),
-      backgroundColor: theBlackColor,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
               automaticallyImplyLeading: false,
-              backgroundColor: theBlackColor,
+              backgroundColor: context.watch<ColorProvider>().blackColor,
               actions: [
                 IconButton(
                   icon: const Icon(Icons.menu),

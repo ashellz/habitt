@@ -19,12 +19,16 @@ import "package:restart_app/restart_app.dart";
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
+
   String mainCategory = "";
   bool somethingEdited = false;
   bool appearenceEdited = false;
   bool additionalTask = false;
+
   Icon updatedIcon = startIcon;
   List habitsList = [];
+
+  bool dayHasHabits = false;
 
   double editHabitPageHeight = 0;
 
@@ -57,6 +61,11 @@ class HabitProvider extends ChangeNotifier {
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
+
+  void updateDayHasHabits(bool value) {
+    dayHasHabits = value;
+    notifyListeners();
+  }
 
   void updateHabits() {
     habitsList = habitBox.values.toList();

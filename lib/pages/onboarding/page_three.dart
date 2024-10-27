@@ -23,18 +23,18 @@ class PageThree extends StatelessWidget {
             padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
             child: RichText(
               textAlign: TextAlign.center,
-              text: TextSpan(
-                  style: const TextStyle(fontFamily: "Poppins"),
+              text: const TextSpan(
+                  style: TextStyle(fontFamily: "Poppins"),
                   children: <TextSpan>[
-                    const TextSpan(
+                    TextSpan(
                         text: "Check your", style: TextStyle(fontSize: 16)),
                     TextSpan(
                         text: " calendar ",
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: theLightColor)),
-                    const TextSpan(
+                            color: AppColors.theLightColor)),
+                    TextSpan(
                         text: "to see how well you are",
                         style: TextStyle(fontSize: 16)),
                     TextSpan(
@@ -42,7 +42,7 @@ class PageThree extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: theLightColor)),
+                            color: AppColors.theLightColor)),
                   ]),
             ),
           )

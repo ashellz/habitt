@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +12,7 @@ import 'package:habitt/pages/auth/loading_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/profile_page.dart';
 import 'package:habitt/services/auth_service.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -119,37 +120,14 @@ Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
   for (final item in listResult.items) {
     final file = File('$hiveDirectory/${item.name}');
     try {
-      if (kDebugMode) {
-        print('Downloading file: ${item.name}');
-      }
-      await item.writeToFile(file);
-      if (kDebugMode) {
-        print('Successfully downloaded file: ${item.name}');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Failed to download file: ${item.name}, error: $e');
-      }
-    }
-  }
-  dataDownloaded = true;
-}
-
-Future<void> newAccountDownloadData(BuildContext context) async {
-  final storageRef = FirebaseStorage.instance.ref().child('new_account/');
-  final listResult = await storageRef.listAll();
-  final hiveDirectory = await getHiveBoxesDirectory();
-  await ensureDirectoryExists(hiveDirectory);
-
-  for (final item in listResult.items) {
-    final file = File('$hiveDirectory/${item.name}');
-    try {
-      if (kDebugMode) {
-        print('Downloading file: ${item.name}');
-      }
-      await item.writeToFile(file);
-      if (kDebugMode) {
-        print('Successfully downloaded file: ${item.name}');
+      if (!item.name.contains('acessToken')) {
+        if (kDebugMode) {
+          print('Downloading file: ${item.name}');
+        }
+        await item.writeToFile(file);
+        if (kDebugMode) {
+          print('Successfully downloaded file: ${item.name}');
+        }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -158,7 +136,6 @@ Future<void> newAccountDownloadData(BuildContext context) async {
     }
   }
   dataDownloaded = true;
-  Restart.restartApp();
 }
 
 Future<void> deleteUserCloudStorage(context) async {
@@ -271,5 +248,154 @@ void addInitialData() {
     for (int i = 0; i < initialHabits.length; i++) {
       habitBox.add(initialHabits[i]);
     }
+  }
+}
+
+// UPLOAD TO GOOGLE DRIVE
+
+// Function to upload a folder to Google Drive
+Future<void> uploadFolderToGoogleDrive(bool isDaily) async {
+  String accessToken =
+      accessTokenBox.get('accessToken') ?? 'failed access token';
+  print(accessToken);
+  var folderPath = await getHiveBoxesDirectory();
+
+  final directory = Directory(folderPath);
+  if (await directory.exists()) {
+    final files = directory.listSync();
+
+    // Step 1: Get or create the "habit_data" folder in Google Drive
+    String folderId = await getOrCreateFolder(accessToken, "habit_data");
+
+    try {
+      for (var file in files) {
+        if (file is File) {
+          final fileName = file.path.split('/').last;
+          try {
+            if (kDebugMode) {
+              print('Uploading file: ${file.path}');
+            }
+            if (isDaily) {
+              if (!fileName.contains('accessToken')) {
+                await uploadFileToDrive(
+                    accessToken, file.path, fileName, folderId);
+              }
+            } else if (fileName.contains('habit') ||
+                fileName.contains('tag') ||
+                fileName.contains('streak')) {
+              await uploadFileToDrive(
+                  accessToken, file.path, fileName, folderId);
+            }
+            if (kDebugMode) {
+              print('Successfully uploaded file: $fileName');
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              print('Failed to upload file: ${file.path}, error: $e');
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    // Show success message
+    Fluttertoast.showToast(
+      msg: 'Data uploaded',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.SNACKBAR,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 14.0,
+    );
+  } else {
+    if (kDebugMode) {
+      print('Directory does not exist: $folderPath');
+    }
+  }
+}
+
+// Function to get or create a folder in Google Drive
+Future<String> getOrCreateFolder(String accessToken, String folderName) async {
+  // Search for the folder by name
+  final searchUrl =
+      'https://www.googleapis.com/drive/v3/files?q=name="$folderName" and mimeType="application/vnd.google-apps.folder"';
+
+  final searchResponse = await http.get(
+    Uri.parse(searchUrl),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (searchResponse.statusCode == 200) {
+    final searchResult = json.decode(searchResponse.body);
+    if (searchResult['files'].isNotEmpty) {
+      // Return the existing folder ID
+      return searchResult['files'][0]['id'];
+    }
+  }
+
+  // If the folder doesn't exist, create it
+  const createFolderUrl = 'https://www.googleapis.com/drive/v3/files';
+  final folderMetadata = json.encode({
+    'name': folderName,
+    'mimeType': 'application/vnd.google-apps.folder',
+  });
+
+  final createResponse = await http.post(
+    Uri.parse(createFolderUrl),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: folderMetadata,
+  );
+
+  // Enhanced error handling
+  if (createResponse.statusCode != 200) {
+    print(
+        'Failed to create folder: ${createResponse.statusCode}, ${createResponse.body}');
+    throw Exception('Failed to create folder: ${createResponse.statusCode}');
+  }
+
+  final createdFolder = json.decode(createResponse.body);
+  return createdFolder['id']; // Return the new folder ID
+}
+
+// Function to upload a file to Google Drive
+Future<void> uploadFileToDrive(String accessToken, String filePath,
+    String fileName, String folderId) async {
+  const url =
+      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+
+  final fileBytes = await File(filePath).readAsBytes();
+
+  // Create metadata
+  final metadata = json.encode({
+    'name': fileName,
+    'parents': [folderId],
+  });
+
+  // Create a MultipartRequest
+  final http.MultipartRequest request =
+      http.MultipartRequest('POST', Uri.parse(url))
+        ..headers['Authorization'] = 'Bearer $accessToken'
+        ..headers['Content-Type'] =
+            'multipart/related; boundary=foo_bar_baz' // Set boundary
+        ..fields['metadata'] = metadata // Add metadata
+        ..files.add(http.MultipartFile.fromBytes('data', fileBytes,
+            filename: fileName)); // Add file data
+
+  // Send the request
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
+
+  // Check response status
+  if (response.statusCode == 200) {
+    print('File uploaded successfully: ${response.body}');
+  } else {
+    print('Error uploading file: ${response.statusCode}, ${response.body}');
   }
 }

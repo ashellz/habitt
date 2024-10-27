@@ -5,6 +5,7 @@ import "package:habitt/pages/menu/changelog_page.dart";
 import "package:habitt/pages/menu/profile_page.dart";
 import "package:habitt/pages/menu/settings_page.dart";
 import "package:habitt/services/ad_mob_service.dart";
+import "package:habitt/services/provider/color_provider.dart";
 import "package:habitt/services/provider/habit_provider.dart";
 import "package:habitt/util/colors.dart";
 import "package:provider/provider.dart";
@@ -38,8 +39,9 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: theBlackColor),
-      backgroundColor: theBlackColor,
+      appBar:
+          AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,8 +81,8 @@ Widget buildHeader(BuildContext context) {
             ),
             Text(
               streak == 1 ? "$streak day" : "$streak days",
-              style: TextStyle(
-                  color: theLightColor,
+              style: const TextStyle(
+                  color: AppColors.theLightColor,
                   fontSize: 42,
                   fontWeight: FontWeight.bold),
             ),

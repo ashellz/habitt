@@ -57,7 +57,8 @@ Widget confirmDeleteHabit(int index, TextEditingController editcontroller) {
                       .deleteHabitProvider(index, context, editcontroller);
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(theRedColor),
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(AppColors.theRedColor),
                 ),
                 child: const Text(
                   "Delete",

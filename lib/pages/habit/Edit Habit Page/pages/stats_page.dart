@@ -68,7 +68,7 @@ Widget statsPage(
             backgroundColor: WidgetStateProperty.all<Color>(habit.skipped
                 ? Colors.grey.shade900
                 : habit.completed
-                    ? theOtherColor
+                    ? AppColors.theOtherColor
                     : Colors.grey.shade900),
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -171,15 +171,15 @@ Widget statsPage(
                             dotData: const FlDotData(
                               show: false,
                             ),
-                            color: theOtherColor,
+                            color: AppColors.theOtherColor,
                             barWidth: 4,
                             isCurved: true,
                             belowBarData: BarAreaData(
                               show: true,
-                              color: theOtherColor.withOpacity(0.5),
+                              color: AppColors.theOtherColor.withOpacity(0.5),
                               gradient: LinearGradient(
                                 colors: [
-                                  theOtherColor.withOpacity(0.5),
+                                  AppColors.theOtherColor.withOpacity(0.5),
                                   Colors.transparent
                                 ],
                                 begin: Alignment.topCenter,
@@ -193,15 +193,15 @@ Widget statsPage(
                         horizontalInterval: 20,
                         verticalInterval: 5,
                         getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: theAppBarColor,
+                          return const FlLine(
+                            color: AppColors.theAppBarColor,
                             strokeWidth: 0.5,
                             dashArray: [5, 5],
                           );
                         },
                         getDrawingVerticalLine: (value) {
-                          return FlLine(
-                            color: theAppBarColor,
+                          return const FlLine(
+                            color: AppColors.theAppBarColor,
                             strokeWidth: 0.5,
                             dashArray: [5, 5],
                           );
@@ -256,7 +256,7 @@ class StreakStats extends StatelessWidget {
     Color color = Colors.white;
 
     if (habit.streak == habit.longestStreak) {
-      color = theOtherColor;
+      color = AppColors.theOtherColor;
     }
 
     return color;
@@ -309,7 +309,7 @@ class StreakStats extends StatelessWidget {
                       color: habit.skipped
                           ? Colors.white
                           : habit.completed
-                              ? theOtherColor
+                              ? AppColors.theOtherColor
                               : Colors.white),
                 ),
               ],

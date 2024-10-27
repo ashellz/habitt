@@ -23,17 +23,17 @@ class PageFive extends StatelessWidget {
             padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
             child: RichText(
               textAlign: TextAlign.center,
-              text: TextSpan(
-                  style: const TextStyle(fontFamily: "Poppins"),
+              text: const TextSpan(
+                  style: TextStyle(fontFamily: "Poppins"),
                   children: <TextSpan>[
-                    const TextSpan(
+                    TextSpan(
                         text: "That's it!", style: TextStyle(fontSize: 16)),
                     TextSpan(
                         text: " Let's get started!",
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: theLightColor)),
+                            color: AppColors.theLightColor)),
                   ]),
             ),
           )

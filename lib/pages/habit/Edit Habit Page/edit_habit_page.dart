@@ -8,6 +8,7 @@ import "package:habitt/pages/habit/Edit%20Habit%20Page/widgets/save_button.dart"
 import "package:habitt/pages/habit/shared%20widgets/habit_display.dart";
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
 import "package:habitt/services/ad_mob_service.dart";
+import "package:habitt/services/provider/color_provider.dart";
 import "package:habitt/services/provider/habit_provider.dart";
 import "package:habitt/util/colors.dart";
 import "package:provider/provider.dart";
@@ -19,11 +20,11 @@ final formKey = GlobalKey<FormState>();
 class EditHabitPage extends StatefulWidget {
   const EditHabitPage({
     super.key,
-    required this.index,
+    required this.id,
     required this.editcontroller,
   });
 
-  final int index;
+  final int id;
   final TextEditingController editcontroller;
 
   @override
@@ -72,32 +73,26 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
   @override
   Widget build(BuildContext context) {
+    final int index = context.read<HabitProvider>().getIndexFromId(widget.id);
     final editcontroller = widget.editcontroller;
     final desccontroller = context.watch<HabitProvider>().notescontroller;
 
-    buildEditedValues(
-        context,
-        widget.index,
-        editcontroller,
-        lowestCompletionRate,
-        completionRates,
-        highestCompletionRate,
-        everyFifthDay,
-        everyFifthMonth);
+    buildEditedValues(context, widget.id, editcontroller, lowestCompletionRate,
+        completionRates, highestCompletionRate, everyFifthDay, everyFifthMonth);
 
     bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     PageController pageController = PageController();
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: theBlackColor,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
             splashFactory: NoSplash.splashFactory,
             highlightColor: Colors.transparent),
         child: BottomNavigationBar(
             enableFeedback: false,
-            backgroundColor: theDarkGrey,
+            backgroundColor: AppColors.theDarkGrey,
             unselectedItemColor: Colors.grey.shade700,
             selectedItemColor: Colors.white,
             currentIndex: currentIndex,
@@ -129,7 +124,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
             CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
               ExpandableAppBar(
                 actionsWidget:
-                    PopUpButton(widget: widget, editcontroller: editcontroller),
+                    PopUpButton(index: index, editcontroller: editcontroller),
                 title: "Habit Info",
               ),
               SliverToBoxAdapter(
@@ -141,20 +136,25 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: SizedBox(
-                      height: Provider.of<HabitProvider>(context, listen: false).editHabitPageHeight,
+                      height: Provider.of<HabitProvider>(context, listen: false)
+                          .editHabitPageHeight,
                       child: PageView.builder(
                         onPageChanged: (value) {
                           if (value == 0) {
                             setState(() {
                               currentIndex = 0;
                               firstPage = true;
-                              context.read<HabitProvider>().getPageHeight(firstPage);
+                              context
+                                  .read<HabitProvider>()
+                                  .getPageHeight(firstPage);
                             });
                           } else {
                             setState(() {
                               currentIndex = 1;
                               firstPage = false;
-                              context.read<HabitProvider>().getPageHeight(firstPage);
+                              context
+                                  .read<HabitProvider>()
+                                  .getPageHeight(firstPage);
                             });
                           }
                         },
@@ -167,7 +167,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                             child: index == 0
                                 ? statsPage(
                                     context,
-                                    widget.index,
+                                    widget.id,
                                     isAdLoaded,
                                     interstitialAd,
                                     lowestCompletionRate,
@@ -176,7 +176,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     everyFifthDay,
                                     everyFifthMonth)
                                 : editPage(setState, context, editcontroller,
-                                    desccontroller, widget.index),
+                                    desccontroller, index),
                           );
                         },
                       ),
@@ -186,8 +186,8 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
             // SAVE BUTTON
             SaveButton(
+                index: index,
                 keyboardOpen: keyboardOpen,
-                widget: widget,
                 editcontroller: editcontroller),
           ])),
     );

@@ -24,7 +24,7 @@ class DropDownMenu extends StatelessWidget {
           padding: const EdgeInsets.only(top: 20),
           child: AnimatedContainer(
               decoration: BoxDecoration(
-                color: theDarkGrey,
+                color: AppColors.theDarkGrey,
                 borderRadius: BorderRadius.circular(20),
               ),
               duration: const Duration(milliseconds: 600),

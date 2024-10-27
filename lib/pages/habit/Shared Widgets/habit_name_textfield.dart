@@ -27,6 +27,7 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 15),
       child: TextFormField(
+        textInputAction: TextInputAction.done,
         keyboardAppearance: Theme.of(context).brightness == Brightness.dark
             ? Brightness.dark
             : Brightness.light,
@@ -65,10 +66,10 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
-              color: theLightColor),
+              color: AppColors.theLightColor),
           labelText: 'Habit Name',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),

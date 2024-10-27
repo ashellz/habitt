@@ -56,7 +56,7 @@ class CalendarDay extends StatelessWidget {
             padding: const EdgeInsets.all(6.0),
             child: Container(
               decoration: BoxDecoration(
-                color: selected ? Colors.grey.shade800 : theDarkGrey,
+                color: selected ? Colors.grey.shade800 : AppColors.theDarkGrey,
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
@@ -83,7 +83,7 @@ class CalendarDay extends StatelessWidget {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         value: value,
-                        color: theOtherColor,
+                        color: AppColors.theOtherColor,
                         backgroundColor: Colors.grey.shade900,
                       ),
                     );

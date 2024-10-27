@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/choose_notification_time.dart';
@@ -39,9 +40,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     editHabitNotifications = context.watch<HabitProvider>().habitNotifications;
 
     return Scaffold(
-      backgroundColor: theBlackColor,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       appBar: AppBar(
-        backgroundColor: theBlackColor,
+        backgroundColor: context.watch<ColorProvider>().blackColor,
       ),
       bottomNavigationBar: _banner == null
           ? Container()
@@ -72,8 +73,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
             ),
           IconButton(
               icon: const Icon(Icons.add, color: Colors.grey, size: 32),
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(theDarkGrey),
+              style: const ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(AppColors.theDarkGrey),
               ),
               onPressed: () {
                 setState(() {
@@ -145,8 +146,9 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                           size: 44,
                         ),
                         TextButton(
-                            style: ButtonStyle(
-                              overlayColor: WidgetStatePropertyAll(theColor),
+                            style: const ButtonStyle(
+                              overlayColor:
+                                  WidgetStatePropertyAll(AppColors.theColor),
                             ),
                             onPressed: () {
                               showModalBottomSheet(
@@ -159,8 +161,8 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                             },
                             child: Text(
                               getTime(),
-                              style: TextStyle(
-                                  color: theLightColor,
+                              style: const TextStyle(
+                                  color: AppColors.theLightColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold),
                             )),
@@ -183,7 +185,7 @@ Widget notificationTile(List<int> notification, BuildContext context) {
                       .removeNotification(notification);
                   context.read<HabitProvider>().updateSomethingEdited();
                 },
-                highlightColor: theDarkColor,
+                highlightColor: AppColors.theDarkColor,
                 icon: const Icon(Icons.close),
                 color: Colors.white,
               ),

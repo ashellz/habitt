@@ -4,9 +4,9 @@ import 'package:habitt/util/colors.dart';
 
 Widget deleteTagWidget(int tag, context) {
   return AlertDialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-      side: BorderSide(color: theRedColor, width: 3.0),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+      side: BorderSide(color: AppColors.theRedColor, width: 3.0),
     ),
     backgroundColor: Colors.black,
     title: Text(
@@ -19,11 +19,11 @@ Widget deleteTagWidget(int tag, context) {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-              style: ButtonStyle(
-                  fixedSize: const WidgetStatePropertyAll(
+              style: const ButtonStyle(
+                  fixedSize: WidgetStatePropertyAll(
                     Size(110, 50),
                   ),
-                  backgroundColor: WidgetStatePropertyAll(theRedColor)),
+                  backgroundColor: WidgetStatePropertyAll(AppColors.theRedColor)),
               onPressed: () {
                 for (int i = 0; i < tagBox.length; i++) {
                   if (tagBox.getAt(i)!.tag == tagBox.getAt(tag)!.tag) {
@@ -40,15 +40,15 @@ Widget deleteTagWidget(int tag, context) {
                 style: TextStyle(fontSize: 14, color: Colors.white),
               )),
           OutlinedButton(
-              style: ButtonStyle(
-                  fixedSize: const WidgetStatePropertyAll(
+              style: const ButtonStyle(
+                  fixedSize: WidgetStatePropertyAll(
                     Size(110, 50),
                   ),
                   side: WidgetStatePropertyAll(BorderSide(
-                    color: theRedColor,
+                    color: AppColors.theRedColor,
                     width: 3.0,
                   )),
-                  backgroundColor: const WidgetStatePropertyAll(Colors.black)),
+                  backgroundColor: WidgetStatePropertyAll(Colors.black)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

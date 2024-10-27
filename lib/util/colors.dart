@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 
-bool realBlack = false;
+class AppColors {
+  static const Color theBlack = Colors.black;
+  static const Color theAccentBlack = Color.fromARGB(255, 0, 15, 0);
+
+  static const Color theDarkGrey =
+      theDarkAccentGrey; // Color.fromARGB(255, 17, 17, 17)
+  static const Color theDarkAccentGrey = Color.fromARGB(255, 17, 23, 17);
+
+  static const Color theDarkColor = Color.fromARGB(255, 37, 67, 54);
+  static const Color theColor = Color.fromARGB(255, 62, 80, 71);
+  static const Color theOtherColor = Color.fromARGB(255, 107, 138, 122);
+  static const Color theLightColor = Color.fromARGB(255, 124, 175, 151);
+  static const Color theAppBarColor = Color.fromARGB(255, 163, 196, 183);
+  static const Color theRedColor = Color.fromARGB(255, 204, 86, 110);
+  static const Color theYellowColor = Color.fromARGB(255, 223, 223, 129);
+}
 
 Color selectedDarkColor = theDarkGreen;
 Color selectedColor = theGreen;
@@ -8,18 +23,6 @@ Color selectedOtherColor = theOtherGreen;
 Color selectedLightColor = theLightGreen;
 Color selectedAppBarColor = theLightestGreen;
 Color selectedBlackColor = const Color.fromARGB(255, 0, 15, 0);
-
-Color theBlackColor = selectedBlackColor;
-Color theDarkGrey = realBlack
-    ? const Color.fromARGB(255, 17, 17, 17)
-    : const Color.fromARGB(255, 17, 23, 17);
-Color theDarkColor = selectedDarkColor;
-Color theColor = selectedColor;
-Color theOtherColor = selectedOtherColor;
-Color theLightColor = selectedLightColor;
-Color theAppBarColor = selectedAppBarColor;
-Color theRedColor = const Color.fromARGB(255, 204, 86, 110);
-Color theYellowColor = const Color.fromARGB(255, 223, 223, 129);
 
 Color theDarkGreen = const Color.fromARGB(255, 37, 67, 54);
 Color theGreen = const Color.fromARGB(255, 62, 80, 71);

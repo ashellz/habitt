@@ -96,6 +96,7 @@ class LoginPage extends StatelessWidget {
                     child: StatefulBuilder(
                         builder: (context, StateSetter setState) {
                       return TextFormField(
+                        textInputAction: TextInputAction.done,
                         keyboardAppearance:
                             Theme.of(context).brightness == Brightness.dark
                                 ? Brightness.dark

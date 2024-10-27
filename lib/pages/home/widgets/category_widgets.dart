@@ -21,7 +21,7 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -63,7 +63,7 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -106,7 +106,7 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -148,7 +148,7 @@ Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,

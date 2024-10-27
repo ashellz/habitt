@@ -10,9 +10,9 @@ TextEditingController passwordControllerConfirm = TextEditingController();
 Widget confirmDeleteAccount() {
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theRedColor, width: 3.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        side: BorderSide(color: AppColors.theRedColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       title: Text(
@@ -27,11 +27,12 @@ Widget confirmDeleteAccount() {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theRedColor)),
+                    backgroundColor:
+                        WidgetStatePropertyAll(AppColors.theRedColor)),
                 onPressed: () {
                   if (confirmAgain) {
                     Navigator.pop(context);
@@ -49,16 +50,15 @@ Widget confirmDeleteAccount() {
                   style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
             OutlinedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theRedColor,
+                      color: AppColors.theRedColor,
                       width: 3.0,
                     )),
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -80,9 +80,9 @@ Widget reauthenticateUser(context) {
 
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theRedColor, width: 3.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        side: BorderSide(color: AppColors.theRedColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       title: const Text(
@@ -140,6 +140,7 @@ Widget reauthenticateUser(context) {
             padding: const EdgeInsets.only(top: 15),
             child: StatefulBuilder(builder: (context, StateSetter setState) {
               return TextFormField(
+                textInputAction: TextInputAction.done,
                 keyboardAppearance:
                     Theme.of(context).brightness == Brightness.dark
                         ? Brightness.dark
@@ -213,11 +214,12 @@ Widget reauthenticateUser(context) {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(120, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theRedColor)),
+                    backgroundColor:
+                        WidgetStatePropertyAll(AppColors.theRedColor)),
                 onPressed: () async {
                   await AuthService().reauthenticateUser(
                       emailControllerConfirm.text,
@@ -233,16 +235,15 @@ Widget reauthenticateUser(context) {
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 )),
             OutlinedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(120, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theRedColor,
+                      color: AppColors.theRedColor,
                       width: 3.0,
                     )),
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

@@ -47,7 +47,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: NewHabitTile(
-                    index: i,
+                    id: habitBox.getAt(i)!.id,
                     editcontroller: widget.editcontroller,
                     isAdLoaded: widget.isAdLoaded,
                     interstitialAd: widget.interstitialAd,

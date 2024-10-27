@@ -213,8 +213,9 @@ class _CheckBoxState extends State<CheckBox> {
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-            color:
-                widget.habit.completed ? theOtherColor : Colors.grey.shade900,
+            color: widget.habit.completed
+                ? AppColors.theOtherColor
+                : Colors.grey.shade900,
             borderRadius: BorderRadius.circular(15),
           ),
           child: habit.completed && !habit.skipped
@@ -233,7 +234,7 @@ class _CheckBoxState extends State<CheckBox> {
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color: theOtherColor,
+                                color: AppColors.theOtherColor,
                                 backgroundColor: Colors.grey.shade900,
                               );
                             }),
@@ -264,7 +265,7 @@ class _CheckBoxState extends State<CheckBox> {
                                     value: value,
                                     color: habit.skipped
                                         ? Colors.grey.shade800
-                                        : theOtherColor,
+                                        : AppColors.theOtherColor,
                                     backgroundColor: Colors.grey.shade900,
                                   );
                                 }),
@@ -329,7 +330,7 @@ class _CheckBoxState extends State<CheckBox> {
                                         value: value,
                                         color: habit.skipped
                                             ? Colors.grey.shade800
-                                            : theOtherColor,
+                                            : AppColors.theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),
@@ -401,7 +402,7 @@ class _CheckBoxState extends State<CheckBox> {
                                         value: value,
                                         color: habit.skipped
                                             ? Colors.grey.shade800
-                                            : theOtherColor,
+                                            : AppColors.theOtherColor,
                                         backgroundColor: Colors.grey.shade900,
                                       );
                                     }),

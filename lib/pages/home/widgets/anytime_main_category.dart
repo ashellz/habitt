@@ -22,7 +22,7 @@ Widget anyTimeMainCategory(
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: NewHabitTile(
-                index: i,
+                id: habitBox.getAt(i)!.id,
                 editcontroller: editcontroller,
                 isAdLoaded: isAdLoaded,
                 interstitialAd: interstitialAd,
@@ -36,7 +36,7 @@ Widget anyTimeMainCategory(
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: theDarkGrey,
+        color: AppColors.theDarkGrey,
       ),
       child: const Padding(
         padding: EdgeInsets.only(left: 20, top: 65),

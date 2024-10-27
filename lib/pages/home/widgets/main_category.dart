@@ -20,7 +20,7 @@ Widget mainCategoryList(
         height: mainCategoryHeight, // change
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theDarkGrey,
+          color: AppColors.theDarkGrey,
         ),
         child: mainCategory == "Morning"
             ? morningHasHabits
@@ -103,7 +103,7 @@ Widget mainCategoryList(
         height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theOtherColor,
+          color: AppColors.theOtherColor,
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 20),

@@ -66,7 +66,7 @@ class _HabitGoalState extends State<HabitGoal> {
                   Provider.of<HabitProvider>(context, listen: false)
                               .habitGoalValue ==
                           1
-                      ? theOtherColor
+                      ? AppColors.theOtherColor
                       : Colors.grey.shade900,
                 ),
               ),
@@ -112,7 +112,7 @@ class _HabitGoalState extends State<HabitGoal> {
                   Provider.of<HabitProvider>(context, listen: false)
                               .habitGoalValue ==
                           2
-                      ? theOtherColor
+                      ? AppColors.theOtherColor
                       : Colors.grey.shade900,
                 ),
               ),
@@ -131,6 +131,8 @@ class _HabitGoalState extends State<HabitGoal> {
           child: Column(
             children: [
               SpinBox(
+
+        textInputAction: TextInputAction.done,
                 cursorColor: Colors.white,
                 enableInteractiveSelection: true,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
@@ -140,10 +142,10 @@ class _HabitGoalState extends State<HabitGoal> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Amount",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -175,6 +177,7 @@ class _HabitGoalState extends State<HabitGoal> {
                 height: 15,
               ),
               TextFormField(
+                textInputAction: TextInputAction.done,
                 keyboardAppearance:
                     Theme.of(context).brightness == Brightness.dark
                         ? Brightness.dark
@@ -204,10 +207,10 @@ class _HabitGoalState extends State<HabitGoal> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Amount Name",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -236,6 +239,7 @@ class _HabitGoalState extends State<HabitGoal> {
           child: Column(
             children: [
               SpinBox(
+                textInputAction: TextInputAction.done,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
@@ -243,10 +247,10 @@ class _HabitGoalState extends State<HabitGoal> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Hours",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -276,6 +280,8 @@ class _HabitGoalState extends State<HabitGoal> {
               ),
               const SizedBox(height: 15),
               SpinBox(
+
+        textInputAction: TextInputAction.done,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
@@ -283,10 +289,10 @@ class _HabitGoalState extends State<HabitGoal> {
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Minutes",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),

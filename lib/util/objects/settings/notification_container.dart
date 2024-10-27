@@ -50,7 +50,7 @@ Widget notificationContainer(String category) {
                     height: 40,
                     child: FittedBox(
                       child: Switch(
-                        activeColor: theLightColor,
+                        activeColor: AppColors.theLightColor,
                         inactiveTrackColor: Colors.grey.shade800,
                         thumbColor: WidgetStateProperty.all(Colors.white),
                         value: boolBox.get('${box}Notification')!,

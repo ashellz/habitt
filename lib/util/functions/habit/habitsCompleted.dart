@@ -15,10 +15,10 @@ bool categoryCompleted(String category) {
   }
 
   for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == category) {
+    if (habitBox.getAt(i)?.category == category && !habitBox.getAt(i)!.task) {
       habits++;
 
-      if (habitBox.getAt(i)?.completed == true) {
+      if (habitBox.getAt(i)?.completed == true && !habitBox.getAt(i)!.task) {
         completedHabits++;
       }
     }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/showCustomDialog.dart';
 import 'package:habitt/util/objects/add_tag.dart';
-import 'package:habitt/util/objects/delete_tag.dart';
 import 'package:provider/provider.dart';
 
 class ChooseTag extends StatefulWidget {
@@ -44,7 +44,7 @@ class _ChooseTagState extends State<ChooseTag> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: habitTag == tagBox.getAt(i)!.tag
-                            ? theOtherColor
+                            ? AppColors.theOtherColor
                             : Colors.grey.shade900,
                       ),
                       height: 30,
@@ -64,7 +64,7 @@ class _ChooseTagState extends State<ChooseTag> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: theDarkGrey,
+                      color: AppColors.theDarkGrey,
                     ),
                     height: 30,
                     child: const Center(child: Text("+"))),
@@ -88,11 +88,19 @@ selectTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
 
 void deleteTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
   String? tempHabitTag = tagBox.getAt(i)!.tag;
+
   if (tagBox.getAt(i)!.tag != "No tag") {
-    showDialog(
-      context: context,
-      builder: (context) => deleteTagWidget(i, context),
-    ).then((value) {
+    showCustomDialog(context, "Delete Tag",
+            Text("Are you sure you want to delete $tempHabitTag tag?"), () {
+      for (int j = 0; i < tagBox.length; j++) {
+        if (tagBox.getAt(j)!.tag == tagBox.getAt(i)!.tag) {
+          tagBox.getAt(j)!.tag = "No tag";
+        }
+      }
+
+      tagBox.deleteAt(i);
+    }, "Yes", "No")
+        .then((value) {
       setState(() {
         if (habitTag == tempHabitTag.toString()) {
           habitTag = "No tag";

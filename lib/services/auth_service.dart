@@ -177,7 +177,11 @@ class AuthService {
 
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(
+        scopes: [
+          'https://www.googleapis.com/auth/drive.file',
+        ],
+      ).signIn();
 
       if (googleUser == null) {
         return;
@@ -190,6 +194,8 @@ class AuthService {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+
+      accessTokenBox.put('accessToken', googleAuth.accessToken!);
 
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);

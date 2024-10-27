@@ -136,9 +136,10 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                                 hour = value;
                               });
                             },
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               border: Border.symmetric(
-                                  horizontal: BorderSide(color: theLightColor)),
+                                  horizontal: BorderSide(
+                                      color: AppColors.theLightColor)),
                             ),
                           ),
                           NumberPicker(
@@ -159,9 +160,10 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                                 minute = value;
                               });
                             },
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               border: Border.symmetric(
-                                  horizontal: BorderSide(color: theLightColor)),
+                                  horizontal: BorderSide(
+                                      color: AppColors.theLightColor)),
                             ),
                           ),
                         ],
@@ -228,7 +230,7 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: theLightColor,
+                              backgroundColor: AppColors.theLightColor,
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width / 2 - 20,
                                   50)),

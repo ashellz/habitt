@@ -56,10 +56,10 @@ class _NotesTextFieldState extends State<NotesTextField> {
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
-              color: theLightColor),
+              color: AppColors.theLightColor),
           labelText: "Notes",
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),

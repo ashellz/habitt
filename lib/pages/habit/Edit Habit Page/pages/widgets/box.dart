@@ -43,19 +43,19 @@ class box extends StatelessWidget {
                 loop: false,
                 duration: const Duration(milliseconds: 800),
                 value: value,
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 36,
-                    color: theLightColor),
+                    color: AppColors.theLightColor),
               ),
               if (perc)
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
+                const Padding(
+                  padding: EdgeInsets.only(top: 5),
                   child: Text("%",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 36,
-                        color: theLightColor,
+                        color: AppColors.theLightColor,
                       )),
                 )
             ],

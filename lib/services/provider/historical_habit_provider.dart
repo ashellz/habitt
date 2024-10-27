@@ -352,4 +352,42 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void importCurrentHabits(DateTime today) {
+    print("importing current habits");
+    List<int> date = [today.year, today.month, today.day];
+
+    for (int i = 0; i < historicalBox.length; i++) {
+      List<int> habitDate = [
+        historicalBox.getAt(i)!.date.year,
+        historicalBox.getAt(i)!.date.month,
+        historicalBox.getAt(i)!.date.day
+      ];
+
+      if (const ListEquality().equals(habitDate, date)) {
+        historicalBox.getAt(i)!.data.clear();
+        for (int j = 0; j < habitBox.length; j++) {
+          var currentHabit = habitBox.getAt(j)!;
+          historicalBox.getAt(i)!.data.add(HistoricalHabitData(
+                name: currentHabit.name,
+                completed: false,
+                icon: currentHabit.icon,
+                category: currentHabit.category,
+                amount: currentHabit.amount,
+                amountCompleted: 0,
+                amountName: currentHabit.amountName,
+                duration: currentHabit.duration,
+                durationCompleted: 0,
+                skipped: false,
+                id: currentHabit.id,
+                task: currentHabit.task,
+              ));
+        }
+
+        updateHistoricalHabits(today);
+        notifyListeners();
+        break;
+      }
+    }
+  }
 }
