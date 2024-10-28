@@ -28,8 +28,6 @@ class HabitProvider extends ChangeNotifier {
   Icon updatedIcon = startIcon;
   List habitsList = [];
 
-  bool dayHasHabits = false;
-
   double editHabitPageHeight = 0;
 
   String timeBasedText = "";
@@ -61,11 +59,6 @@ class HabitProvider extends ChangeNotifier {
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
-
-  void updateDayHasHabits(bool value) {
-    dayHasHabits = value;
-    notifyListeners();
-  }
 
   void updateHabits() {
     habitsList = habitBox.values.toList();

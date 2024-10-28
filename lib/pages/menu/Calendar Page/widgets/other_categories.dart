@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/Calendar%20Page/widgets/category_widgets.dart';
-import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,12 +14,6 @@ otherCategoriesList(
   List<int> todayDate = [chosenDay.year, chosenDay.month, chosenDay.day];
   bool todayExists = false;
 
-  if (context.watch<HabitProvider>().dayHasHabits != false) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().updateDayHasHabits(false);
-    });
-  }
-
   for (int i = 0; i < historicalBox.length; i++) {
     List<int> date = [
       historicalBox.getAt(i)!.date.year,
@@ -29,8 +22,6 @@ otherCategoriesList(
     ];
 
     if (const ListEquality().equals(date, todayDate)) {
-      context.watch<HabitProvider>().dayHasHabits = true;
-
       todayExists = true;
       boxIndex = i;
       habitListLength = historicalBox.getAt(i)!.data.length;
@@ -65,7 +56,6 @@ otherCategoriesList(
     historicalBox.add(HistoricalHabit(date: chosenDay, data: todayHabitsList));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().updateDayHasHabits(true);
       context.read<HistoricalHabitProvider>().updateHistoricalHabits(chosenDay);
     });
 

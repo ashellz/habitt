@@ -1,12 +1,13 @@
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
+import "package:habitt/pages/home/home_page.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/additional_historical_tasks.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/calendar_day.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/other_categories.dart";
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
 import "package:habitt/services/ad_mob_service.dart";
 import "package:habitt/services/provider/color_provider.dart";
-import "package:habitt/services/provider/habit_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/util/colors.dart";
 import "package:habitt/util/functions/showCustomDialog.dart";
@@ -29,6 +30,20 @@ class _CalendarPageState extends State<CalendarPage> {
     });
 
     context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
+  }
+
+  void onDayLongPressed(DateTime day, DateTime focusedDay) {
+    if (checkForImportAvailability(day, context)) {
+      showCustomDialog(
+          context,
+          "Import current habits",
+          Text(
+              "This will erase previous data on ${day.year}-${day.month}-${day.day}. Are you sure?"),
+          () =>
+              context.read<HistoricalHabitProvider>().importCurrentHabits(day),
+          "Yes",
+          "No");
+    }
   }
 
   @override
@@ -120,6 +135,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     focusedDay: today,
                     selectedDayPredicate: (day) => isSameDay(day, today),
                     onDaySelected: onDaySelected,
+                    onDayLongPressed: onDayLongPressed,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -130,7 +146,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   today: today,
                 ),
                 const SizedBox(height: 20),
-                if (context.watch<HabitProvider>().dayHasHabits)
+                if (checkForImportAvailability(today, context))
                   Padding(
                     padding: const EdgeInsets.only(
                       bottom: 60.0,
@@ -161,4 +177,30 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
     );
   }
+}
+
+bool checkForImportAvailability(DateTime day, BuildContext context) {
+  List longPressedDay = [day.year, day.month, day.day];
+  List todayDate = [
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day
+  ];
+
+  if (const ListEquality().equals(todayDate, longPressedDay)) {
+    return false;
+  }
+
+  for (int i = 0; i < historicalBox.length; i++) {
+    List<int> habitDay = [
+      historicalBox.getAt(i)!.date.year,
+      historicalBox.getAt(i)!.date.month,
+      historicalBox.getAt(i)!.date.day
+    ];
+    if (const ListEquality().equals(habitDay, longPressedDay)) {
+      return true;
+    }
+  }
+
+  return false;
 }
