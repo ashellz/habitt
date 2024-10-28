@@ -88,28 +88,29 @@ selectTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
 }
 
 void deleteTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
-  String? tempHabitTag = tagBox.getAt(i)!.tag;
+  String tempHabitTag = tagBox.getAt(i)!.tag;
 
   if (tagBox.getAt(i)!.tag != "No tag") {
     showCustomDialog(context, "Delete Tag",
-            Text("Are you sure you want to delete $tempHabitTag tag?"), () {
-      for (int j = 0; i < tagBox.length; j++) {
-        if (tagBox.getAt(j)!.tag == tagBox.getAt(i)!.tag) {
-          tagBox.getAt(j)!.tag = "No tag";
+        Text("Are you sure you want to delete $tempHabitTag tag?"), () {
+      for (int j = 0; j < habitBox.length; j++) {
+        if (habitBox.getAt(j)!.tag == tagBox.getAt(i)!.tag) {
+          setState(() {
+            habitBox.getAt(j)!.tag = "No tag";
+          });
         }
       }
 
-      tagBox.deleteAt(i);
-    }, "Yes", "No")
-        .then((value) {
-      setState(() {
-        if (habitTag == tempHabitTag.toString()) {
-          habitTag = "No tag";
-          if (!isEdit) {
-            context.read<HabitProvider>().updateSomethingEdited();
-          }
+      if (habitTag == tagBox.getAt(i)!.tag) {
+        habitTag = "No tag";
+        if (isEdit) {
+          context.read<HabitProvider>().updateSomethingEdited();
         }
+      }
+
+      setState(() {
+        tagBox.deleteAt(i);
       });
-    });
+    }, "Yes", "No");
   }
 }

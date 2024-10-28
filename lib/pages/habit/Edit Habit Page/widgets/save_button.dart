@@ -52,7 +52,7 @@ class SaveButton extends StatelessWidget {
                       Text(boolBox.get("editHistoricalHabits")!
                           ? "The changes will affect this habit in the past. You can change this in settings."
                           : "The changes won't affect this habit in the past. You can change this in settings."),
-                      Provider.of<HabitProvider>(context, listen: false)
+                      () => Provider.of<HabitProvider>(context, listen: false)
                           .editHabitProvider(index, context, editcontroller),
                       "Edit",
                       "Cancel");
