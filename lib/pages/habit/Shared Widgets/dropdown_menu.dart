@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habitt/pages/habit/shared%20widgets/choose_category.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 class DropDownMenu extends StatelessWidget {

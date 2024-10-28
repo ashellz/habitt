@@ -29,7 +29,7 @@ otherCategoriesList(
     ];
 
     if (const ListEquality().equals(date, todayDate)) {
-      context.read<HabitProvider>().updateDayHasHabits(true);
+      context.watch<HabitProvider>().dayHasHabits = true;
 
       todayExists = true;
       boxIndex = i;
