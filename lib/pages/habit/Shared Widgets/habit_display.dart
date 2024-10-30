@@ -50,10 +50,10 @@ class HabitDisplay extends StatelessWidget {
                     ),
                   ),
                   Text(context.watch<HabitProvider>().dropDownValue,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          color: theLightColor)),
+                          color: AppColors.theLightColor)),
                 ],
               ),
             ),

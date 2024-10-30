@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/data/tags.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/validate_text.dart';
+import 'package:provider/provider.dart';
 
 GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -49,7 +51,7 @@ class _AddTagWidgetState extends State<AddTagWidget> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          color: theColor,
+          color: context.watch<ColorProvider>().greyColor,
         ),
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -87,33 +89,63 @@ class _AddTagWidgetState extends State<AddTagWidget> {
               Form(
                 key: formKey,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       flex: 4,
                       child: SizedBox(
                         child: TextFormField(
-                          validator: validateTag,
-                          focusNode: _focusNode,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(25)
                           ],
-                          style: TextStyle(color: Colors.grey.shade900),
-                          cursorColor: Colors.grey.shade900,
-                          controller: tagNameController,
-                          keyboardType: TextInputType.text,
+                          keyboardAppearance:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Brightness.dark
+                                  : Brightness.light,
+                          validator: validateTag,
+                          focusNode: _focusNode,
                           onEditingComplete: () =>
                               FocusScope.of(context).nextFocus(),
-                          decoration: const InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
+                          cursorColor: Colors.white,
+                          cursorWidth: 2.0,
+                          cursorHeight: 22.0,
+                          cursorRadius: const Radius.circular(10.0),
+                          cursorOpacityAnimates: true,
+                          enableInteractiveSelection: true,
+                          controller: tagNameController,
+                          keyboardType: TextInputType.text,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: const BorderSide(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: const OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.black),
+                            ),
+                            prefixIcon: const Icon(Icons.bookmark_rounded,
+                                color: Colors.white),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 25, horizontal: 20),
+                            labelStyle: const TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.white38,
+                                fontWeight: FontWeight.bold),
+                            labelText: "TAG",
+                            border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.black),
                             ),
                             hintText: 'Tag name',
-                            errorStyle: TextStyle(color: Colors.redAccent),
+                            hintStyle: const TextStyle(color: Colors.white38),
+                            filled: true,
+                            fillColor: context.watch<ColorProvider>().greyColor,
                           ),
                         ),
                       ),

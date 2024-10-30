@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/validate_text.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 // ignore: must_be_immutable
 class HabitGoal extends StatefulWidget {
@@ -67,8 +67,8 @@ class _HabitGoalState extends State<HabitGoal> {
                   Provider.of<HabitProvider>(context, listen: false)
                               .habitGoalValue ==
                           1
-                      ? theOtherColor
-                      : Colors.grey.shade900,
+                      ? AppColors.theOtherColor
+                      : context.watch<ColorProvider>().greyColor,
                 ),
               ),
               child: const Text("Number of times",
@@ -113,8 +113,8 @@ class _HabitGoalState extends State<HabitGoal> {
                   Provider.of<HabitProvider>(context, listen: false)
                               .habitGoalValue ==
                           2
-                      ? theOtherColor
-                      : Colors.grey.shade900,
+                      ? AppColors.theOtherColor
+                      : context.watch<ColorProvider>().greyColor,
                 ),
               ),
               child:
@@ -132,6 +132,7 @@ class _HabitGoalState extends State<HabitGoal> {
           child: Column(
             children: [
               SpinBox(
+                textInputAction: TextInputAction.done,
                 cursorColor: Colors.white,
                 enableInteractiveSelection: true,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
@@ -140,11 +141,11 @@ class _HabitGoalState extends State<HabitGoal> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  fillColor: context.watch<ColorProvider>().greyColor,
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Amount",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -166,7 +167,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     .toDouble(),
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
-                  Vibration.vibrate(duration: 10);
+                  HapticFeedback.lightImpact();
                   setState(() =>
                       Provider.of<HabitProvider>(context, listen: false)
                           .amount = value.toInt());
@@ -176,6 +177,11 @@ class _HabitGoalState extends State<HabitGoal> {
                 height: 15,
               ),
               TextFormField(
+                textInputAction: TextInputAction.done,
+                keyboardAppearance:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Brightness.dark
+                        : Brightness.light,
                 onChanged: (newValue) {
                   context.read<HabitProvider>().updateSomethingEdited();
                   Provider.of<HabitProvider>(context, listen: false)
@@ -200,11 +206,11 @@ class _HabitGoalState extends State<HabitGoal> {
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  fillColor: context.watch<ColorProvider>().greyColor,
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Amount Name",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -233,17 +239,18 @@ class _HabitGoalState extends State<HabitGoal> {
           child: Column(
             children: [
               SpinBox(
+                textInputAction: TextInputAction.done,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  fillColor: context.watch<ColorProvider>().greyColor,
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Hours",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -265,7 +272,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     .toDouble(),
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
-                  Vibration.vibrate(duration: 10);
+                  HapticFeedback.lightImpact();
                   setState(() =>
                       Provider.of<HabitProvider>(context, listen: false)
                           .durationHours = value.toInt());
@@ -273,17 +280,18 @@ class _HabitGoalState extends State<HabitGoal> {
               ),
               const SizedBox(height: 15),
               SpinBox(
+                textInputAction: TextInputAction.done,
                 iconColor: WidgetStateProperty.all<Color>(Colors.white),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey.shade900,
-                  labelStyle: TextStyle(
+                  fillColor: context.watch<ColorProvider>().greyColor,
+                  labelStyle: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: theLightColor),
+                      color: AppColors.theLightColor),
                   labelText: "Minutes",
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -305,7 +313,7 @@ class _HabitGoalState extends State<HabitGoal> {
                     .toDouble(),
                 onChanged: (value) {
                   context.read<HabitProvider>().updateSomethingEdited();
-                  Vibration.vibrate(duration: 10);
+                  HapticFeedback.lightImpact();
                   setState(() =>
                       Provider.of<HabitProvider>(context, listen: false)
                           .durationMinutes = value.toInt());

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/habit/habitsCompleted.dart';
+import 'package:provider/provider.dart';
 
 Widget tagsWidgets(String? tagSelected) {
   List<String> visibleList = visibleListTags();
@@ -41,8 +43,9 @@ Widget tagsWidgets(String? tagSelected) {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color:
-                          tagSelected == category ? theOtherColor : theDarkGrey,
+                      color: tagSelected == category
+                          ? AppColors.theOtherColor
+                          : context.watch<ColorProvider>().greyColor,
                     ),
                     height: 30,
                     child: Center(

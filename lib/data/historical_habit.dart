@@ -26,7 +26,8 @@ class HistoricalHabitData extends HiveObject {
       required this.duration,
       required this.durationCompleted,
       required this.skipped,
-      required this.id});
+      required this.id,
+      required this.task});
 
   @HiveField(0)
   String name;
@@ -60,4 +61,7 @@ class HistoricalHabitData extends HiveObject {
 
   @HiveField(10)
   int id;
+
+  @HiveField(11)
+  bool task;
 }

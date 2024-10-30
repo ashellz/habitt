@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/settings/notification_container.dart';
@@ -30,13 +31,12 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
 
     requestNotificationAccess(true, setState);
-    disableBatteryOptimization(true, setState);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -56,8 +56,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Display empty categories on home page",
-                  Switch(
-                      activeColor: theLightColor,
+                  Switch.adaptive(
+                      activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
                       value:
@@ -66,6 +66,19 @@ class _SettingsPageState extends State<SettingsPage> {
                         context
                             .read<HabitProvider>()
                             .updateDisplayEmptyCategories(value);
+                      }),
+                ),
+                textAndSwitchContainer(
+                  "Black mode",
+                  Switch.adaptive(
+                      activeColor: AppColors.theLightColor,
+                      inactiveTrackColor: Colors.grey.shade800,
+                      thumbColor: WidgetStateProperty.all(Colors.white),
+                      value: context.watch<ColorProvider>().isTrueBlack,
+                      onChanged: (value) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          context.read<ColorProvider>().updateDarkColor(value);
+                        });
                       }),
                 ),
                 const Padding(
@@ -80,8 +93,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Haptic feedback (vibration)",
-                  Switch(
-                      activeColor: theLightColor,
+                  Switch.adaptive(
+                      activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
                       value: boolBox.get("hapticFeedback")!,
@@ -93,8 +106,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Sound",
-                  Switch(
-                      activeColor: theLightColor,
+                  Switch.adaptive(
+                      activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
                       value: boolBox.get("sound")!,
@@ -104,8 +117,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "12-hour format",
-                  Switch(
-                      activeColor: theLightColor,
+                  Switch.adaptive(
+                      activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
                       value: boolBox.get("12hourFormat")!,
@@ -115,8 +128,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 textAndSwitchContainer(
                   "Edit habit in the past",
-                  Switch(
-                      activeColor: theLightColor,
+                  Switch.adaptive(
+                      activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
                       thumbColor: WidgetStateProperty.all(Colors.white),
                       value: boolBox.get("editHistoricalHabits")!,
@@ -139,11 +152,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   visible: boolBox.get('hasNotificationAccess')!,
                   text: "Request Notification Access",
                   func: () => requestNotificationAccess(false, setState),
-                ),
-                VisibilityButton(
-                  visible: boolBox.get('disabledBatteryOptimization')!,
-                  text: "Disable Battery Optimization",
-                  func: () => disableBatteryOptimization(false, setState),
                 ),
               ],
             ),
@@ -176,7 +184,8 @@ class VisibilityButton extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: TextButton(
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all<Color>(theLightColor),
+              backgroundColor:
+                  WidgetStateProperty.all<Color>(AppColors.theLightColor),
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -207,18 +216,4 @@ void requestNotificationAccess(bool start, StateSetter setState) {
       });
     }
   });
-}
-
-void disableBatteryOptimization(bool start, StateSetter setState) async {
-  // bool? isBatteryOptimizationDisabled =
-  //     await DisableBatteryOptimization.isBatteryOptimizationDisabled;
-  // if (isBatteryOptimizationDisabled == false) {
-  //   if (!start) {
-  //     await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
-  //   }
-  // } else {
-  //   setState(() async {
-  //     await boolBox.put('disabledBatteryOptimization', true);
-  //   });
-  // }
 }

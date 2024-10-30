@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:provider/provider.dart';
 
 class ChangelogPage extends StatefulWidget {
   const ChangelogPage({super.key});
@@ -20,7 +22,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
         ExpandableAppBar(actionsWidget: Container(), title: "Changelog"),
         SliverToBoxAdapter(
@@ -28,7 +30,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               changelogContainer("v1.0.4",
-                  "- Added iOS support\n- Improved home screen under the hood"),
+                  "- Added iOS support\n- Added additional tasks feature\n- Added a greenish color theme as default (you can change this in settings)\n- Added ability to import current habits to any day in the past since the day the user joined until the current day\n- Improved home screen under the hood\n- Changed dialogs appearence\n- Changed when the login screen appears\n- Minimalized the profile page\n- Increased amount of ads that appear\n- Increased amount of android devices compatible (down to Android 6.0)\n- Various bugs fixed"),
               changelogContainer("v1.0.3",
                   "- Increased sign out speed\n- Added completion rate graph for last 30 days\n- Added option that editing a habit edits the habit in the past too\n- Fixed padding on the right side of the habit name in add and edit habit pages\n- Habit completion status now doesn't reset every time you save a habit unless you changed the amount or duration\n- Fixed main category height not increasing after it has been changed in the background\n- Fixed “Save Changes” button not appearing after tag is changed\n- Added more animations"),
               changelogContainer("v1.0.2",
@@ -140,8 +142,10 @@ Widget changelogContainer(String date, String text) {
             const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
         child: Text(
           date,
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: theLightColor),
+          style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.theLightColor),
         ),
       ),
       Padding(

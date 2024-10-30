@@ -10,8 +10,6 @@ PODS:
   - awesome_notifications (0.9.3):
     - Flutter
     - IosAwnCore (~> 0.9.3)
-  - device_info_plus (0.0.1):
-    - Flutter
   - Firebase/Auth (11.2.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 11.2.0)
@@ -115,8 +113,6 @@ PODS:
   - restart_app (0.0.1):
     - Flutter
   - Toast (4.1.1)
-  - vibration (1.7.5):
-    - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -124,7 +120,6 @@ PODS:
 DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
-  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
@@ -134,7 +129,6 @@ DEPENDENCIES:
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - restart_app (from `.symlinks/plugins/restart_app/ios`)
-  - vibration (from `.symlinks/plugins/vibration/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
@@ -163,8 +157,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
   awesome_notifications:
     :path: ".symlinks/plugins/awesome_notifications/ios"
-  device_info_plus:
-    :path: ".symlinks/plugins/device_info_plus/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -183,8 +175,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   restart_app:
     :path: ".symlinks/plugins/restart_app/ios"
-  vibration:
-    :path: ".symlinks/plugins/vibration/ios"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
@@ -192,7 +182,6 @@ SPEC CHECKSUMS:
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   awesome_notifications: 66d28ab7174ca2823b04d275cb043e0a4a3eb9cf
-  device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
   firebase_auth: 0c77e299a8f2d1c74d1b1f6b78b3d4d802c19f47
   firebase_core: 2bedc3136ec7c7b8561c6123ed0239387b53f2af
@@ -219,7 +208,6 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   restart_app: 806659942bf932f6ce51c5372f91ce5e81c8c14a
   Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
-  vibration: 7d883d141656a1c1a6d8d238616b2042a51a1241
   webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
 
 PODFILE CHECKSUM: 579ea1f56f1ed10a7da98b897e80a0906da5a6cc

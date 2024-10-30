@@ -15,9 +15,9 @@ Widget header(username, String greetingText) {
       ),
       Text(
         username,
-        style: TextStyle(
+        style: const TextStyle(
           height: 1,
-          color: theLightColor,
+          color: AppColors.theLightColor,
           fontSize: 42,
           fontWeight: FontWeight.bold,
         ),

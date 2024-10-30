@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
-import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
-import 'package:provider/provider.dart';
 
 Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
-  List habitsList = context.watch<HabitProvider>().habitsList;
-  int habitListLength = habitsList.length;
+  int habitListLength = habitBox.length;
 
   if (mainCategory != 'Any time' || tag) {
     if (anytimeHasHabits) {
@@ -19,11 +16,12 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
           const Text("Any time",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)!.category == 'Any time')
+            if (habitBox.getAt(i)!.category == 'Any time' &&
+                !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -41,7 +39,7 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Text("No habits in this category",
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
             SizedBox(height: 20),
           ]);
     }
@@ -51,7 +49,7 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
 
 Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
-  int habitListLength = context.watch<HabitProvider>().habitsList.length;
+  int habitListLength = habitBox.length;
   if (mainCategory != 'Morning' || tag) {
     if (morningHasHabits) {
       return Column(
@@ -60,11 +58,12 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
           const Text("Morning",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)?.category == 'Morning')
+            if (habitBox.getAt(i)?.category == 'Morning' &&
+                !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -82,7 +81,7 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Text("No habits in this category",
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
             SizedBox(height: 20),
           ]);
     }
@@ -93,7 +92,7 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
 
 Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
-  int habitListLength = context.watch<HabitProvider>().habitsList.length;
+  int habitListLength = habitBox.length;
   if (mainCategory != 'Afternoon' || tag) {
     if (afternoonHasHabits) {
       return Column(
@@ -102,11 +101,12 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
           const Text("Afternoon",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)?.category == 'Afternoon')
+            if (habitBox.getAt(i)?.category == 'Afternoon' &&
+                !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -124,7 +124,7 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Text("No habits in this category",
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
             SizedBox(height: 20),
           ]);
     }
@@ -134,7 +134,7 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
 
 Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
-  int habitListLength = context.watch<HabitProvider>().habitsList.length;
+  int habitListLength = habitBox.length;
   if (mainCategory != 'Evening' || tag) {
     if (eveningHasHabits) {
       return Column(
@@ -143,11 +143,12 @@ Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
           const Text("Evening",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)?.category == 'Evening')
+            if (habitBox.getAt(i)?.category == 'Evening' &&
+                !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: NewHabitTile(
-                  index: i,
+                  id: habitBox.getAt(i)!.id,
                   editcontroller: editcontroller,
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -165,7 +166,7 @@ Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Text("No habits in this category",
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
             SizedBox(height: 20),
           ]);
     }

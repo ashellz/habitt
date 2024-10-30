@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:provider/provider.dart';
 
 class ExpandableAppBar extends StatelessWidget {
   const ExpandableAppBar(
@@ -19,17 +22,18 @@ class ExpandableAppBar extends StatelessWidget {
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
           // Calculate the percentage of the scroll completed
-          var percent = (constraints.maxHeight - kToolbarHeight) / 100.0;
+          var percent =
+              (constraints.maxHeight - kToolbarHeight) / (kToolbarHeight * 2);
           // Make sure percent is within range
           percent = (1.0 - percent).clamp(0.0, 1.0);
 
           Color backgroundColor = ColorTween(
-            begin: Colors.black,
-            end: theAppBarColor,
-          ).lerp(percent)!;
+            begin: context.watch<ColorProvider>().blackColor,
+            end: AppColors.theOtherColor,
+          ).lerp(percent * 1.5)!;
 
           Color textColor = ColorTween(
-            begin: theLightColor,
+            begin: AppColors.theLightColor,
             end: Colors.white,
           ).lerp(percent * 3)!;
 

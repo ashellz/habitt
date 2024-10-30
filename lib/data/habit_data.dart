@@ -20,7 +20,8 @@ class HabitData extends HiveObject {
       required this.notifications,
       required this.notes,
       required this.longestStreak,
-      required this.id});
+      required this.id,
+      required this.task});
   @HiveField(0)
   String name;
 
@@ -68,4 +69,7 @@ class HabitData extends HiveObject {
 
   @HiveField(15)
   int id;
+
+  @HiveField(16)
+  bool task;
 }

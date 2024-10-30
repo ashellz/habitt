@@ -33,13 +33,14 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       notes: fields[13] == null ? "" : fields[13] as String,
       longestStreak: fields[14] == null ? fields[4] as int : fields[14] as int,
       id: fields[15] == null ? 12345 : fields[15] as int,
+      task: fields[16] == null ? false : fields[16] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -71,7 +72,9 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(14)
       ..write(obj.longestStreak)
       ..writeByte(15)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(16)
+      ..write(obj.task);
   }
 
   @override

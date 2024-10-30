@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habitt/pages/habit/icons_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/validate_text.dart';
@@ -27,6 +28,10 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 15),
       child: TextFormField(
+        textInputAction: TextInputAction.done,
+        keyboardAppearance: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
         onChanged: (value) {
           if (widget.isEdit) {
             context.read<HabitProvider>().updateSomethingEdited();
@@ -62,10 +67,10 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
-              color: theLightColor),
+              color: AppColors.theLightColor),
           labelText: 'Habit Name',
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -73,7 +78,7 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
           ),
           hintStyle: const TextStyle(color: Colors.white38),
           filled: true,
-          fillColor: Colors.grey.shade900,
+          fillColor: context.watch<ColorProvider>().greyColor,
           suffixIcon: IconButton(
             onPressed: () {
               Navigator.push(

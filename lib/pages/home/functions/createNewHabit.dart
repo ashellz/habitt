@@ -44,9 +44,10 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
           .notescontroller
           .text,
       longestStreak: 0,
-      id: streakBox.get('highestId')! + 1);
+      id: streakBox.get('highestId')! + 1,
+      task: Provider.of<HabitProvider>(context, listen: false).additionalTask);
   await habitBox.add(myHabit);
-  streakBox.put('highestId', habitBox.length - 1);
+  streakBox.put('highestId', streakBox.get('highestId')! + 1);
   hasHabits();
   saveHabitsForToday();
   // Updates the main category height if new habit category is same as the main category

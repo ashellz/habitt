@@ -3,8 +3,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/widgets/anytime_main_category.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
+import 'package:provider/provider.dart';
 
 Widget mainCategoryList(
     habitListLength,
@@ -20,7 +22,7 @@ Widget mainCategoryList(
         height: mainCategoryHeight, // change
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theDarkGrey,
+          color: context.watch<ColorProvider>().darkGreyColor,
         ),
         child: mainCategory == "Morning"
             ? morningHasHabits
@@ -29,11 +31,12 @@ Widget mainCategoryList(
                     children: [
                       const SizedBox(height: 95),
                       for (int i = 0; i < habitListLength; i++)
-                        if (habitBox.getAt(i)?.category == mainCategory)
+                        if (habitBox.getAt(i)?.category == mainCategory &&
+                            !habitBox.getAt(i)!.task)
                           Padding(
                             padding: const EdgeInsets.only(top: 15),
                             child: NewHabitTile(
-                              index: i,
+                              id: habitBox.getAt(i)!.id,
                               editcontroller: editcontroller,
                               isAdLoaded: isAdLoaded,
                               interstitialAd: interstitialAd,
@@ -50,11 +53,12 @@ Widget mainCategoryList(
                         children: [
                           const SizedBox(height: 95),
                           for (int i = 0; i < habitListLength; i++)
-                            if (habitBox.getAt(i)?.category == mainCategory)
+                            if (habitBox.getAt(i)?.category == mainCategory &&
+                                !habitBox.getAt(i)!.task)
                               Padding(
                                 padding: const EdgeInsets.only(top: 15),
                                 child: NewHabitTile(
-                                  index: i,
+                                  id: habitBox.getAt(i)!.id,
                                   editcontroller: editcontroller,
                                   isAdLoaded: isAdLoaded,
                                   interstitialAd: interstitialAd,
@@ -71,11 +75,13 @@ Widget mainCategoryList(
                             children: [
                               const SizedBox(height: 95),
                               for (int i = 0; i < habitListLength; i++)
-                                if (habitBox.getAt(i)?.category == mainCategory)
+                                if (habitBox.getAt(i)?.category ==
+                                        mainCategory &&
+                                    !habitBox.getAt(i)!.task)
                                   Padding(
                                     padding: const EdgeInsets.only(top: 15),
                                     child: NewHabitTile(
-                                      index: i,
+                                      id: habitBox.getAt(i)!.id,
                                       editcontroller: editcontroller,
                                       isAdLoaded: isAdLoaded,
                                       interstitialAd: interstitialAd,
@@ -99,7 +105,7 @@ Widget mainCategoryList(
         height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: theOtherColor,
+          color: AppColors.theOtherColor,
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 20),

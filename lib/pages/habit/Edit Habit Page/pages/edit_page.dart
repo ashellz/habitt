@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/pages/habit/shared%20widgets/additional_task.dart';
 import 'package:habitt/pages/habit/shared%20widgets/choose_tag.dart';
 import 'package:habitt/pages/habit/shared%20widgets/dropdown_menu.dart';
 import 'package:habitt/pages/habit/shared%20widgets/habit_goal.dart';
@@ -33,5 +34,9 @@ Widget editPage(
 
     // HABIT GOAL
     HabitGoal(index: index, isEdit: true),
+
+    const AdditionalTask(
+      isEdit: true,
+    )
   ]);
 }

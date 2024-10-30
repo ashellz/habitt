@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
+import 'package:provider/provider.dart';
 
 Widget textAndSwitchContainer(String text, Widget switchWidget) {
   return Padding(
@@ -9,7 +11,7 @@ Widget textAndSwitchContainer(String text, Widget switchWidget) {
           height: 100,
           width: double.infinity,
           decoration: BoxDecoration(
-              color: Colors.grey.shade900,
+              color: context.watch<ColorProvider>().greyColor,
               borderRadius: BorderRadius.circular(20)),
           child: Row(
             children: [

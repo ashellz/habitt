@@ -4,11 +4,14 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/auth/login_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
+import 'package:habitt/services/auth_service.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/showCustomDialog.dart';
 import 'package:habitt/util/objects/profile/change_username.dart';
 import 'package:habitt/util/objects/profile/confirm_delete_account.dart';
-import 'package:habitt/util/objects/profile/confirm_sign_out.dart';
+import 'package:provider/provider.dart';
 
 bool uploadButtonEnabled = true;
 
@@ -20,6 +23,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final usernameFormKey = GlobalKey<FormState>();
+  TextEditingController changeController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   BannerAd? _banner;
   RewardedAd? _rewardedAd;
 
@@ -42,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => setState(() => _rewardedAd = ad),
-        onAdFailedToLoad: (error) => setState(() => _rewardedAd = null),
+        onAdFailedToLoad: (error) => _createRewardedAd(),
       ),
     );
   }
@@ -79,22 +85,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void uploadData() {
     setState(() => uploadButtonEnabled = false);
-    backupHiveBoxesToFirebase(userId, true)
+
+    backupHiveBoxesToFirebase(userId, false)
         .then((value) => setState(() => uploadButtonEnabled = true));
   }
 
   @override
   Widget build(BuildContext context) {
-    void updateUsername(changeUsernameController) {
+    void updateUsername(String newUsername) {
       setState(() {
-        stringBox.put('username', changeUsernameController);
+        stringBox.put('username', newUsername);
       });
     }
 
     if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
       return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black),
-        backgroundColor: Colors.black,
+        appBar:
+            AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
+        backgroundColor: context.watch<ColorProvider>().blackColor,
         body: Padding(
           padding: const EdgeInsets.only(bottom: 50),
           child: Center(
@@ -126,8 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     } else {
       return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.black),
-        backgroundColor: Colors.black,
+        appBar:
+            AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
+        backgroundColor: context.watch<ColorProvider>().blackColor,
         body: ListView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(left: 20, top: 30, right: 20),
@@ -147,9 +156,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Text(
                     stringBox.get("username") ?? 'Guest',
-                    style: TextStyle(
+                    style: const TextStyle(
                       height: 1,
-                      color: theLightColor,
+                      color: AppColors.theLightColor,
                       fontSize: 42,
                       fontWeight: FontWeight.bold,
                     ),
@@ -169,23 +178,26 @@ class _ProfilePageState extends State<ProfilePage> {
                 spacing: wrapSpacing(context),
                 runSpacing: wrapSpacing(context),
                 children: [
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: theLightColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
-                    onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          changeController.text = "";
-                          passwordController.text = "";
-                          return changeUsernameDialog(
-                              context, "Change username", updateUsername);
-                        }),
+                    onPressed: () => showCustomDialog(
+                        context,
+                        "Change username",
+                        ChangeUsernameWidget(
+                          changeController: changeController,
+                          formKey: usernameFormKey,
+                        ), () {
+                      if (usernameFormKey.currentState!.validate()) {
+                        updateUsername(changeController.text);
+                      }
+                    }, "Confirm", "Cancel"),
                     child: Text(
                         textAlign: TextAlign.center,
                         "Change Username",
@@ -196,12 +208,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   // Upload data
 
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
-                      disabledForegroundColor: Colors.grey,
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: theLightColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
@@ -220,18 +231,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
 
                   //sign out
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: theYellowColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
-                    onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => confirmSignOut(context)),
+                    onPressed: () => showCustomDialog(
+                        context,
+                        "Sign out",
+                        const Text(
+                            "Your data won't be saved automatically. Are you sure you want to sign out?",
+                            textAlign: TextAlign.center), () {
+                      AuthService().signOut(context);
+                    }, "Yes", "No"),
                     child: Text(
                         textAlign: TextAlign.center,
                         "Sign out",
@@ -242,11 +258,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   // delete account
 
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: context.watch<ColorProvider>().greyColor,
                       fixedSize: buttonSize(context),
                       foregroundColor: Colors.white,
-                      side: BorderSide(color: theRedColor, width: 3),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
@@ -272,12 +288,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: <TextSpan>[
                     const TextSpan(
                         text: "Joined", style: TextStyle(fontSize: 18)),
-                    TextSpan(
+                    const TextSpan(
                         text: " habitt ",
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: theLightColor)),
+                            color: AppColors.theLightColor)),
                     const TextSpan(
                         text: "on: ", style: TextStyle(fontSize: 18)),
                     TextSpan(

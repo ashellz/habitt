@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/habit/notifications_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
-import 'package:habitt/util/objects/habit/confirm_delete_habit.dart';
+import 'package:habitt/util/functions/showCustomDialog.dart';
+import 'package:provider/provider.dart';
 
 class PopUpButton extends StatelessWidget {
   const PopUpButton({
     super.key,
-    required this.widget,
+    required this.index,
     required this.editcontroller,
   });
-
-  final EditHabitPage widget;
   final TextEditingController editcontroller;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      color: Colors.grey.shade900,
+      color: context.watch<ColorProvider>().greyColor,
       itemBuilder: (context) => [
         PopupMenuItem(
             onTap: () => Navigator.push(
@@ -54,10 +55,16 @@ class PopUpButton extends StatelessWidget {
               ],
             )),
         PopupMenuItem(
-            onTap: () => showDialog(
-                        context: context,
-                        builder: (context) =>
-                            confirmDeleteHabit(widget.index, editcontroller))
+            onTap: () => showCustomDialog(
+                        context,
+                        "Delete Habit",
+                        const Text(
+                            "Are you sure you want to delete this habit? This action cannot be undone.",
+                            textAlign: TextAlign.center),
+                        () => context.read<HabitProvider>().deleteHabitProvider(
+                            index, context, editcontroller),
+                        "Yes",
+                        "No")
                     .then((value) {
                   if (deleted) {
                     if (context.mounted) {

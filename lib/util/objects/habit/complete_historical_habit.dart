@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 Widget completeHistoricalHabitDialog(
     int index, BuildContext context, DateTime time, bool isToday) {
@@ -21,9 +22,9 @@ Widget completeHistoricalHabitDialog(
 
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theLightColor, width: 3.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        side: BorderSide(color: AppColors.theLightColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       content: SizedBox(
@@ -50,13 +51,13 @@ Widget completeHistoricalHabitDialog(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                       ),
                       min: 0,
                       max: habit.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
-                        Vibration.vibrate(duration: 10);
+                        HapticFeedback.lightImpact();
                         theAmountValue = value.toInt();
                       }),
                     ),
@@ -83,7 +84,7 @@ Widget completeHistoricalHabitDialog(
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.shade900,
+                          fillColor: context.watch<ColorProvider>().greyColor,
                           labelStyle: const TextStyle(
                               fontSize: 16.0,
                               color: Colors.white38,
@@ -94,7 +95,7 @@ Widget completeHistoricalHabitDialog(
                         max: (habit.duration ~/ 60).toDouble(),
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
-                          Vibration.vibrate(duration: 10);
+                          HapticFeedback.lightImpact();
                           theDurationValueHours = value.toInt();
                           if (theDurationValueHours == (habit.duration ~/ 60)) {
                             if (theDurationValueMinutes >
@@ -120,7 +121,7 @@ Widget completeHistoricalHabitDialog(
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                         labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
@@ -148,11 +149,12 @@ Widget completeHistoricalHabitDialog(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theLightColor)),
+                    backgroundColor:
+                        WidgetStatePropertyAll(AppColors.theLightColor)),
                 onPressed: () {
                   if (isToday) {
                     context
@@ -170,16 +172,15 @@ Widget completeHistoricalHabitDialog(
                   style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
             OutlinedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theLightColor,
+                      color: AppColors.theLightColor,
                       width: 3.0,
                     )),
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {

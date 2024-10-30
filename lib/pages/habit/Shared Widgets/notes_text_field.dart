@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,9 @@ class _NotesTextFieldState extends State<NotesTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
+        keyboardAppearance: Theme.of(context).brightness == Brightness.dark
+            ? Brightness.dark
+            : Brightness.light,
         onChanged: (value) =>
             context.read<HabitProvider>().updateSomethingEdited(),
         onSaved: (newValue) {
@@ -53,10 +57,10 @@ class _NotesTextFieldState extends State<NotesTextField> {
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
-              color: theLightColor),
+              color: AppColors.theLightColor),
           labelText: "Notes",
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -64,7 +68,7 @@ class _NotesTextFieldState extends State<NotesTextField> {
           ),
           hintStyle: const TextStyle(color: Colors.white38),
           filled: true,
-          fillColor: Colors.grey.shade900,
+          fillColor: context.watch<ColorProvider>().greyColor,
         ),
       ),
     );

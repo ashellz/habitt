@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,11 +8,12 @@ import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
 import 'package:habitt/firebase_options.dart';
-import 'package:habitt/pages/auth/login_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
@@ -48,11 +48,15 @@ Future<void> main() async {
       ),
     ],
   );
+
   await Hive.initFlutter("hive_folder");
   Hive.registerAdapter(HabitDataAdapter());
   Hive.registerAdapter(TagDataAdapter());
   Hive.registerAdapter(HistoricalHabitAdapter());
   Hive.registerAdapter(HistoricalHabitDataAdapter());
+
+  await openHiveBoxes();
+  await fillKeys();
 
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
@@ -68,6 +72,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => HabitProvider()),
         ChangeNotifierProvider(create: (context) => HistoricalHabitProvider()),
+        ChangeNotifierProvider(create: (context) => ColorProvider()),
       ],
       child: const MyApp(),
     ),
@@ -77,13 +82,16 @@ Future<void> main() async {
 hasHabits() {
   final habitBox = Hive.box<HabitData>('habits');
   for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == 'Morning') {
+    if (habitBox.getAt(i)!.category == 'Morning' && !habitBox.getAt(i)!.task) {
       morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+    } else if (habitBox.getAt(i)?.category == 'Afternoon' &&
+        !habitBox.getAt(i)!.task) {
       afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening') {
+    } else if (habitBox.getAt(i)?.category == 'Evening' &&
+        !habitBox.getAt(i)!.task) {
       eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time') {
+    } else if (habitBox.getAt(i)?.category == 'Any time' &&
+        !habitBox.getAt(i)!.task) {
       anytimeHasHabits = true;
     }
   }
@@ -95,19 +103,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       title: 'habitt',
       theme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: const ColorScheme.dark(
+          primary: AppColors.theLightColor,
+        ),
         pageTransitionsTheme: const PageTransitionsTheme(builders: {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
-        colorScheme: ColorScheme.fromSeed(seedColor: theLightColor),
         useMaterial3: true,
-        appBarTheme: AppBarTheme(
-          iconTheme: const IconThemeData(color: Colors.white),
+        appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
-              color: theLightColor,
+              color: AppColors.theLightColor,
               fontSize: 22,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700),
@@ -131,57 +142,44 @@ class AuthCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+    // Create a FutureBuilder to wait for openHiveBoxes to complete
+    return FutureBuilder<void>(
+      future: openHiveAndPerformTasks(context),
+      builder: (context, futureSnapshot) {
+        if (futureSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
-        if (snapshot.hasData) {
-          // Create a FutureBuilder to wait for openHiveBoxes to complete
-          return FutureBuilder<void>(
-            future: openHiveAndPerformTasks(context),
-            builder: (context, futureSnapshot) {
-              if (futureSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
 
-              // After the Future is complete, check for onboarding or homepage
-              if (boolBox.containsKey("firstTimeOpened")) {
-                if (boolBox.get("firstTimeOpened")!) {
-                  boolBox.put("firstTimeOpened", false);
-                  return const OnboardingPage();
-                } else {
-                  return const HomePage();
-                }
-              } else {
-                return const HomePage();
-              }
-            },
-          );
+        // After the Future is complete, check for onboarding or homepage
+        if (boolBox.containsKey("firstTimeOpened")) {
+          if (boolBox.get("firstTimeOpened")!) {
+            addInitialData();
+            boolBox.put("firstTimeOpened", false);
+            return const OnboardingPage();
+          } else {
+            return const HomePage();
+          }
         } else {
-          return LoginPage();
+          boolBox.put("firstTimeOpened", false);
+          return const OnboardingPage();
         }
       },
     );
   }
+}
 
-  // Create a function that wraps all necessary tasks
-  Future<void> openHiveAndPerformTasks(BuildContext context) async {
-    await openHiveBoxes();
-    fillKeys();
+// Create a function that wraps all necessary tasks
+Future<void> openHiveAndPerformTasks(BuildContext context) async {
+  // Post-frame callback to update providers and perform actions
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    context.read<HabitProvider>().chooseMainCategory();
+    context.read<HabitProvider>().updateMainCategoryHeight();
+    context.read<HistoricalHabitProvider>().calculateStreak(context);
+    context.read<HabitProvider>().chooseTimeBasedText();
+    context.read<HabitProvider>().updateLastOpenedDate();
+    context.read<HabitProvider>().updateHabits();
+  });
 
-    // Post-frame callback to update providers and perform actions
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HabitProvider>().chooseMainCategory();
-      context.read<HabitProvider>().updateMainCategoryHeight();
-      context.read<HistoricalHabitProvider>().calculateStreak(context);
-      context.read<HabitProvider>().chooseTimeBasedText();
-      context.read<HabitProvider>().updateLastOpenedDate();
-      context.read<HabitProvider>().updateHabits();
-    });
-
-    saveHabitsForToday();
-    checkForNotifications();
-  }
+  saveHabitsForToday();
+  checkForNotifications();
 }

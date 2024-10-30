@@ -6,6 +6,7 @@ import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/habit/complete_habit_dialog.dart';
@@ -16,12 +17,12 @@ import 'package:provider/provider.dart';
 class NewHabitTile extends StatefulWidget {
   const NewHabitTile({
     super.key,
-    required this.index,
+    required this.id,
     required this.editcontroller,
     required this.isAdLoaded,
     required this.interstitialAd,
   });
-  final int index;
+  final int id;
   final TextEditingController editcontroller;
   final bool isAdLoaded;
   final InterstitialAd? interstitialAd;
@@ -35,18 +36,18 @@ class _NewHabitTileState extends State<NewHabitTile> {
 
   @override
   Widget build(BuildContext context) {
+    var editcontroller = widget.editcontroller;
+    int id = widget.id;
+    int habitIndex = context.read<HabitProvider>().getIndexFromId(id);
+    var habit = context.read<HabitProvider>().getHabitAt(id);
     bool amountCheck = false;
     bool durationCheck = false;
 
-    if (habitBox.getAt(widget.index)!.amount > 1) {
+    if (habit.amount > 1) {
       amountCheck = true;
-    } else if (habitBox.getAt(widget.index)!.duration > 0) {
+    } else if (habit.duration > 0) {
       durationCheck = true;
     }
-
-    var editcontroller = widget.editcontroller;
-    int index = widget.index;
-    var habit = context.read<HabitProvider>().getHabitAt(index);
 
     return GestureDetector(
       onTap: () {
@@ -56,26 +57,24 @@ class _NewHabitTileState extends State<NewHabitTile> {
         updated = false;
         editcontroller.text = "";
         changed = false;
-        Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-            startIcon;
         deleted = false;
 
         Navigator.of(context)
             .push(MaterialPageRoute(
                 builder: (context) => EditHabitPage(
-                      index: index,
+                      id: id,
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
           bool changeTag = true;
           for (int i = 0; i < tagBox.length; i++) {
-            if (tagBox.getAt(i)!.tag == habitBox.getAt(index)!.tag) {
+            if (tagBox.getAt(i)!.tag == habit.tag) {
               changeTag = false;
               break;
             }
           }
           if (changeTag) {
-            habitBox.getAt(index)!.tag = habitTag;
+            habit.tag = habitTag;
             changeTag = true;
           }
           if (context.mounted) {
@@ -95,8 +94,6 @@ class _NewHabitTileState extends State<NewHabitTile> {
           editcontroller.clear();
           changed = false;
           if (context.mounted) {
-            Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-                startIcon;
             Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
                 0;
           }
@@ -114,9 +111,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
             ),
             SlidableAction(
               onPressed: (context) {
-                context.read<HabitProvider>().skipHabitProvider(index);
+                context.read<HabitProvider>().skipHabitProvider(habitIndex);
               },
-              backgroundColor: Colors.grey.shade900,
+              backgroundColor: context.watch<ColorProvider>().greyColor,
               foregroundColor: Colors.white,
               label: habit.skipped ? 'Undo' : 'Skip',
               borderRadius: BorderRadius.circular(15),
@@ -124,7 +121,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
           ],
         ),
         child: HabitTile(
-          index: index,
+          index: habitIndex,
           habitBox: habitBox,
           widget: widget,
           amountCheck: amountCheck,
@@ -200,7 +197,7 @@ class HabitTile extends StatelessWidget {
   TextStyle textStyleCompletedCheck() {
     return TextStyle(
         color: habit.completed ? Colors.grey.shade700 : Colors.white,
-        decoration: habitBox.getAt(widget.index)!.completed
+        decoration: habitBox.getAt(index)!.completed
             ? TextDecoration.lineThrough
             : null,
         decorationColor: Colors.grey.shade700,
@@ -289,8 +286,9 @@ class _CheckBoxState extends State<CheckBox> {
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-            color:
-                widget.habit.completed ? theOtherColor : Colors.grey.shade900,
+            color: widget.habit.completed
+                ? AppColors.theOtherColor
+                : context.watch<ColorProvider>().greyColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: widget.habitBox.getAt(widget.index)!.completed &&
@@ -313,8 +311,9 @@ class _CheckBoxState extends State<CheckBox> {
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color: theOtherColor,
-                                backgroundColor: Colors.grey.shade900,
+                                color: AppColors.theOtherColor,
+                                backgroundColor:
+                                    context.watch<ColorProvider>().greyColor,
                               );
                             }),
                       ),
@@ -351,8 +350,10 @@ class _CheckBoxState extends State<CheckBox> {
                                             .getAt(widget.index)!
                                             .skipped
                                         ? Colors.grey.shade800
-                                        : theOtherColor,
-                                    backgroundColor: Colors.grey.shade900,
+                                        : AppColors.theOtherColor,
+                                    backgroundColor: context
+                                        .watch<ColorProvider>()
+                                        .greyColor,
                                   );
                                 }),
                           ),
@@ -434,8 +435,10 @@ class _CheckBoxState extends State<CheckBox> {
                                                 .getAt(widget.index)!
                                                 .skipped
                                             ? Colors.grey.shade800
-                                            : theOtherColor,
-                                        backgroundColor: Colors.grey.shade900,
+                                            : AppColors.theOtherColor,
+                                        backgroundColor: context
+                                            .watch<ColorProvider>()
+                                            .greyColor,
                                       );
                                     }),
                               ),
@@ -534,8 +537,10 @@ class _CheckBoxState extends State<CheckBox> {
                                                 .getAt(widget.index)!
                                                 .skipped
                                             ? Colors.grey.shade800
-                                            : theOtherColor,
-                                        backgroundColor: Colors.grey.shade900,
+                                            : AppColors.theOtherColor,
+                                        backgroundColor: context
+                                            .watch<ColorProvider>()
+                                            .greyColor,
                                       );
                                     }),
                               ),

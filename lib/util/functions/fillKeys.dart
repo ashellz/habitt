@@ -3,10 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:habitt/pages/home/home_page.dart';
 
 fillKeys() {
-  if (habitBox.isEmpty) {
-    // addInitialData(); TODO: connect with database
-  }
-
   for (int i = 0; i < historicalBox.length; i++) {
     for (int j = 0; j < historicalBox.getAt(i)!.data.length; j++) {
       if (historicalBox.getAt(i)!.data[j].id == 12345) {
@@ -31,8 +27,14 @@ fillKeys() {
     streakBox.put('highestId', habitBox.length - 1);
   }
 
+  if (!boolBox.containsKey("blackColor")) {
+    boolBox.put("blackColor", false);
+  }
   if (!boolBox.containsKey("editHistoricalHabits")) {
     boolBox.put("editHistoricalHabits", true);
+  }
+  if (!boolBox.containsKey("realBlack")) {
+    boolBox.put("realBlack", false);
   }
 
   if (!boolBox.containsKey("firstTimeEditAppearence")) {

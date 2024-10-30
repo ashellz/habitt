@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -85,7 +86,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
                 context.read<HabitProvider>().skipHabitProvider(index);
               }
             },
-            backgroundColor: Colors.grey.shade900,
+            backgroundColor: context.watch<ColorProvider>().greyColor,
             foregroundColor: Colors.white,
             label: habit.skipped ? 'Undo' : 'Skip',
             borderRadius: BorderRadius.circular(15),
@@ -213,8 +214,9 @@ class _CheckBoxState extends State<CheckBox> {
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-            color:
-                widget.habit.completed ? theOtherColor : Colors.grey.shade900,
+            color: widget.habit.completed
+                ? AppColors.theOtherColor
+                : context.watch<ColorProvider>().greyColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: habit.completed && !habit.skipped
@@ -233,8 +235,9 @@ class _CheckBoxState extends State<CheckBox> {
                             builder: (context, value, _) {
                               return LinearProgressIndicator(
                                 value: value,
-                                color: theOtherColor,
-                                backgroundColor: Colors.grey.shade900,
+                                color: AppColors.theOtherColor,
+                                backgroundColor:
+                                    context.watch<ColorProvider>().greyColor,
                               );
                             }),
                       ),
@@ -264,8 +267,10 @@ class _CheckBoxState extends State<CheckBox> {
                                     value: value,
                                     color: habit.skipped
                                         ? Colors.grey.shade800
-                                        : theOtherColor,
-                                    backgroundColor: Colors.grey.shade900,
+                                        : AppColors.theOtherColor,
+                                    backgroundColor: context
+                                        .watch<ColorProvider>()
+                                        .greyColor,
                                   );
                                 }),
                           ),
@@ -329,8 +334,10 @@ class _CheckBoxState extends State<CheckBox> {
                                         value: value,
                                         color: habit.skipped
                                             ? Colors.grey.shade800
-                                            : theOtherColor,
-                                        backgroundColor: Colors.grey.shade900,
+                                            : AppColors.theOtherColor,
+                                        backgroundColor: context
+                                            .watch<ColorProvider>()
+                                            .greyColor,
                                       );
                                     }),
                               ),
@@ -401,8 +408,10 @@ class _CheckBoxState extends State<CheckBox> {
                                         value: value,
                                         color: habit.skipped
                                             ? Colors.grey.shade800
-                                            : theOtherColor,
-                                        backgroundColor: Colors.grey.shade900,
+                                            : AppColors.theOtherColor,
+                                        backgroundColor: context
+                                            .watch<ColorProvider>()
+                                            .greyColor,
                                       );
                                     }),
                               ),

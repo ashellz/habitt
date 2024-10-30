@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 
 import 'package:icons_flutter/icons_flutter.dart';
@@ -14,67 +16,58 @@ class IconsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: const [
-          Padding(
-            padding: EdgeInsets.only(
-              top: 20.0,
-              left: 25.0,
-              bottom: 10.0,
-            ),
-            child: Text(
-              "Choose an icon",
-              style: TextStyle(
-                fontSize: 32.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
+      body: const CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: [
+          ExpandableAppBar(
+            actionsWidget: SizedBox(),
+            title: "Choose an icon",
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: Center(
+                child: Wrap(
+                  spacing: 30,
+                  children: [
+                    IconWidget(icon: Icon(Icons.add)),
+                    IconWidget(icon: Icon(Icons.fastfood_outlined)),
+                    IconWidget(icon: Icon(Icons.shopping_bag_outlined)),
+                    IconWidget(icon: Icon(Icons.attach_money_rounded)),
+                    IconWidget(icon: Icon(Icons.audiotrack)),
+                    IconWidget(icon: Icon(Icons.delete_rounded)),
+                    IconWidget(icon: Icon(Icons.book)),
+                    IconWidget(icon: Icon(Icons.edit_document)),
+                    IconWidget(icon: Icon(Icons.laptop_mac_rounded)),
+                    IconWidget(icon: Icon(Ionicons.md_shirt)),
+                    IconWidget(icon: Icon(Icons.directions_bike)),
+                    IconWidget(icon: Icon(Icons.directions_car)),
+                    IconWidget(icon: Icon(Icons.camera_alt_rounded)),
+                    IconWidget(icon: Icon(Icons.celebration)),
+                    IconWidget(icon: Icon(Icons.cake_rounded)),
+                    IconWidget(icon: Icon(Icons.call)),
+                    IconWidget(icon: Icon(Icons.checkroom_rounded)),
+                    IconWidget(icon: Icon(MaterialCommunityIcons.puzzle)),
+                    IconWidget(icon: Icon(Icons.clean_hands_rounded)),
+                    IconWidget(icon: Icon(MaterialCommunityIcons.tooth)),
+                    IconWidget(icon: Icon(Icons.coffee_rounded)),
+                    IconWidget(icon: Icon(Icons.science_rounded)),
+                    IconWidget(icon: Icon(Icons.door_front_door_rounded)),
+                    IconWidget(icon: Icon(Icons.sports_esports_rounded)),
+                    IconWidget(icon: Icon(Icons.sports_football_rounded)),
+                    IconWidget(icon: Icon(MaterialIcons.fitness_center)),
+                    IconWidget(icon: Icon(MaterialIcons.directions_walk)),
+                    IconWidget(icon: Icon(Icons.water_drop_rounded)),
+                    IconWidget(icon: Icon(Icons.egg_alt)),
+                    IconWidget(icon: Icon(MaterialIcons.hotel)),
+                    IconWidget(icon: Icon(FontAwesome.shower)),
+                    IconWidget(icon: Icon(FontAwesome.book)),
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Center(
-              child: Wrap(
-                spacing: 30,
-                children: [
-                  IconWidget(icon: Icon(Icons.add)),
-                  IconWidget(icon: Icon(Icons.fastfood_outlined)),
-                  IconWidget(icon: Icon(Icons.shopping_bag_outlined)),
-                  IconWidget(icon: Icon(Icons.attach_money_rounded)),
-                  IconWidget(icon: Icon(Icons.audiotrack)),
-                  IconWidget(icon: Icon(Icons.delete_rounded)),
-                  IconWidget(icon: Icon(Icons.book)),
-                  IconWidget(icon: Icon(Icons.edit_document)),
-                  IconWidget(icon: Icon(Icons.laptop_mac_rounded)),
-                  IconWidget(icon: Icon(Ionicons.md_shirt)),
-                  IconWidget(icon: Icon(Icons.directions_bike)),
-                  IconWidget(icon: Icon(Icons.directions_car)),
-                  IconWidget(icon: Icon(Icons.camera_alt_rounded)),
-                  IconWidget(icon: Icon(Icons.celebration)),
-                  IconWidget(icon: Icon(Icons.cake_rounded)),
-                  IconWidget(icon: Icon(Icons.call)),
-                  IconWidget(icon: Icon(Icons.checkroom_rounded)),
-                  IconWidget(icon: Icon(MaterialCommunityIcons.puzzle)),
-                  IconWidget(icon: Icon(Icons.clean_hands_rounded)),
-                  IconWidget(icon: Icon(MaterialCommunityIcons.tooth)),
-                  IconWidget(icon: Icon(Icons.coffee_rounded)),
-                  IconWidget(icon: Icon(Icons.science_rounded)),
-                  IconWidget(icon: Icon(Icons.door_front_door_rounded)),
-                  IconWidget(icon: Icon(Icons.sports_esports_rounded)),
-                  IconWidget(icon: Icon(Icons.sports_football_rounded)),
-                  IconWidget(icon: Icon(MaterialIcons.fitness_center)),
-                  IconWidget(icon: Icon(MaterialIcons.directions_walk)),
-                  IconWidget(icon: Icon(Icons.water_drop_rounded)),
-                  IconWidget(icon: Icon(Icons.egg_alt)),
-                  IconWidget(icon: Icon(MaterialIcons.hotel)),
-                  IconWidget(icon: Icon(FontAwesome.shower)),
-                  IconWidget(icon: Icon(FontAwesome.book)),
-                ],
-              ),
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -109,7 +102,7 @@ class IconWidget extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(0),
-            backgroundColor: Colors.grey.shade900,
+            backgroundColor: context.watch<ColorProvider>().greyColor,
             elevation: 0,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),

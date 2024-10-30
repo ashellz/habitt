@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 void buildEditedValues(
     BuildContext context,
-    int index,
+    int id,
     TextEditingController editcontroller,
     double? lowestCompletionRate,
     List<double> completionRates,
@@ -18,9 +18,10 @@ void buildEditedValues(
     List<int> everyFifthDay,
     List<int> everyFifthMonth) {
   var habitProvider = Provider.of<HabitProvider>(context, listen: false);
+  var habit = context.read<HabitProvider>().getHabitAt(id);
 
   if (!changed) {
-    habitProvider.updatedIcon = Icon(getIcon(index));
+    habitProvider.updatedIcon = Icon(getIcon(habitProvider.getIndexFromId(id)));
   }
 
   if (!updated) {
@@ -30,17 +31,16 @@ void buildEditedValues(
     int durationMinutes = habitProvider.durationMinutes;
 
     habitProvider.categoriesExpanded = false;
-    if (habitBox.getAt(index)!.amount > 1) {
+    if (habit.amount > 1) {
       habitProvider.habitGoalValue = 1;
-      habitProvider.amount = habitBox.getAt(index)!.amount;
-      habitProvider.habitGoalController.text =
-          habitBox.getAt(index)!.amountName;
+      habitProvider.amount = habit.amount;
+      habitProvider.habitGoalController.text = habit.amountName;
       habitProvider.duration = 0;
       habitProvider.durationHours = 0;
       habitProvider.durationMinutes = 0;
-    } else if (habitBox.getAt(index)!.duration > 0) {
+    } else if (habit.duration > 0) {
       habitProvider.habitGoalValue = 2;
-      habitProvider.duration = habitBox.getAt(index)!.duration;
+      habitProvider.duration = habit.duration;
       habitProvider.amount = 1;
       habitProvider.durationHours = duration ~/ 60;
       habitProvider.durationMinutes = duration % 60;
@@ -53,27 +53,28 @@ void buildEditedValues(
     }
 
     if (editcontroller.text.isEmpty) {
-      editcontroller.text = habitBox.getAt(index)!.name;
+      editcontroller.text = habit.name;
     }
 
     if (habitProvider.habitGoalController.text.isEmpty) {
       habitProvider.habitGoalController.text = "times";
     }
 
-    habitTag = habitBox.getAt(index)!.tag;
+    habitTag = habit.tag;
+
+    Provider.of<HabitProvider>(context, listen: false).additionalTask =
+        habit.task;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context
           .read<HabitProvider>()
-          .changeNotification(List.from(habitBox.getAt(index)!.notifications));
-      context
-          .read<HabitProvider>()
-          .updateDropDownValue(habitBox.getAt(index)!.category);
+          .changeNotification(List.from(habit.notifications));
+      context.read<HabitProvider>().updateDropDownValue(habit.category);
     });
 
-    habitProvider.notescontroller.text = habitBox.getAt(index)!.notes;
+    habitProvider.notescontroller.text = habit.notes;
 
-    buildCompletionRateGraph(index, completionRates, highestCompletionRate,
+    buildCompletionRateGraph(id, completionRates, highestCompletionRate,
         lowestCompletionRate, everyFifthDay, everyFifthMonth);
 
     updated = true;

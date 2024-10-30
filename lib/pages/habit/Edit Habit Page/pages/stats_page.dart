@@ -7,13 +7,14 @@ import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletion
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/box.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/get_completion_rate_days.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 Widget statsPage(
     BuildContext context,
-    int index,
+    int id,
     bool isAdLoaded,
     interstitialAd,
     double? lowestCompletionRate,
@@ -21,23 +22,25 @@ Widget statsPage(
     double? highestCompletionRate,
     List<int> everyFifthDay,
     List<int> everyFifthMonth) {
-  var habit = habitBox.getAt(index)!;
+  var habit = context.read<HabitProvider>().getHabitAt(id);
+
   int timesCompleted = 0;
   int timesMissed = 0;
   int timesSkipped = 0;
   int total = timesCompleted + timesMissed + timesSkipped;
 
   for (int i = 0; i < historicalBox.length; i++) {
-    int dataLength = historicalBox.getAt(i)!.data.length;
-    if (index < dataLength) {
-      if (historicalBox.getAt(i)!.data[index].completed) {
-        if (historicalBox.getAt(i)!.data[index].skipped) {
-          timesSkipped++;
+    for (var historicalHabit in historicalBox.getAt(i)!.data) {
+      if (historicalHabit.id == id) {
+        if (historicalHabit.completed) {
+          if (historicalHabit.skipped) {
+            timesSkipped++;
+          } else {
+            timesCompleted++;
+          }
         } else {
-          timesCompleted++;
+          timesMissed++;
         }
-      } else {
-        timesMissed++;
       }
     }
   }
@@ -64,10 +67,10 @@ Widget statsPage(
             minimumSize: WidgetStateProperty.all<Size>(
                 Size(MediaQuery.of(context).size.width, 50)),
             backgroundColor: WidgetStateProperty.all<Color>(habit.skipped
-                ? Colors.grey.shade900
+                ? context.watch<ColorProvider>().greyColor
                 : habit.completed
-                    ? theOtherColor
-                    : Colors.grey.shade900),
+                    ? AppColors.theOtherColor
+                    : context.watch<ColorProvider>().greyColor),
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
@@ -76,10 +79,13 @@ Widget statsPage(
           ),
           onPressed: () {
             Provider.of<HabitProvider>(context, listen: false)
-                .completeHabitProvider(index, isAdLoaded, interstitialAd)
+                .completeHabitProvider(
+                    context.read<HabitProvider>().getIndexFromId(id),
+                    isAdLoaded,
+                    interstitialAd)
                 .then((value) {
               buildCompletionRateGraph(
-                  index,
+                  id,
                   completionRates,
                   highestCompletionRate,
                   lowestCompletionRate,
@@ -129,7 +135,7 @@ Widget statsPage(
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
-            color: Colors.grey.shade900,
+            color: context.watch<ColorProvider>().greyColor,
           ),
           child: Column(
             children: [
@@ -166,15 +172,15 @@ Widget statsPage(
                             dotData: const FlDotData(
                               show: false,
                             ),
-                            color: theOtherColor,
+                            color: AppColors.theOtherColor,
                             barWidth: 4,
                             isCurved: true,
                             belowBarData: BarAreaData(
                               show: true,
-                              color: theOtherColor.withOpacity(0.5),
+                              color: AppColors.theOtherColor.withOpacity(0.5),
                               gradient: LinearGradient(
                                 colors: [
-                                  theOtherColor.withOpacity(0.5),
+                                  AppColors.theOtherColor.withOpacity(0.5),
                                   Colors.transparent
                                 ],
                                 begin: Alignment.topCenter,
@@ -188,15 +194,15 @@ Widget statsPage(
                         horizontalInterval: 20,
                         verticalInterval: 5,
                         getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: theAppBarColor,
+                          return const FlLine(
+                            color: AppColors.theAppBarColor,
                             strokeWidth: 0.5,
                             dashArray: [5, 5],
                           );
                         },
                         getDrawingVerticalLine: (value) {
-                          return FlLine(
-                            color: theAppBarColor,
+                          return const FlLine(
+                            color: AppColors.theAppBarColor,
                             strokeWidth: 0.5,
                             dashArray: [5, 5],
                           );
@@ -251,7 +257,7 @@ class StreakStats extends StatelessWidget {
     Color color = Colors.white;
 
     if (habit.streak == habit.longestStreak) {
-      color = theOtherColor;
+      color = AppColors.theOtherColor;
     }
 
     return color;
@@ -304,7 +310,7 @@ class StreakStats extends StatelessWidget {
                       color: habit.skipped
                           ? Colors.white
                           : habit.completed
-                              ? theOtherColor
+                              ? AppColors.theOtherColor
                               : Colors.white),
                 ),
               ],
@@ -319,6 +325,7 @@ class StreakStats extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 AnimatedDigitWidget(
+                    loop: false,
                     duration: const Duration(milliseconds: 800),
                     value: displayBestStreak(),
                     textStyle: TextStyle(

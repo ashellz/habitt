@@ -64,13 +64,14 @@ class HistoricalHabitDataAdapter extends TypeAdapter<HistoricalHabitData> {
         duration: fields[7] as int,
         durationCompleted: fields[8] as int,
         skipped: fields[9] as bool,
-        id: fields[10] == null ? 12345 : fields[10] as int);
+        id: fields[10] == null ? 12345 : fields[10] as int,
+        task: fields[11] == null ? false : fields[11] as bool);
   }
 
   @override
   void write(BinaryWriter writer, HistoricalHabitData obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -92,7 +93,9 @@ class HistoricalHabitDataAdapter extends TypeAdapter<HistoricalHabitData> {
       ..writeByte(9)
       ..write(obj.skipped)
       ..writeByte(10)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(11)
+      ..write(obj.task);
   }
 
   @override

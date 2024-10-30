@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:provider/provider.dart';
-import 'package:vibration/vibration.dart';
 
 Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
   bool amountCheck = false;
@@ -18,9 +19,9 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
 
   return StatefulBuilder(
     builder: (BuildContext context, StateSetter mystate) => AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-        side: BorderSide(color: theLightColor, width: 3.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+        side: BorderSide(color: AppColors.theLightColor, width: 3.0),
       ),
       backgroundColor: Colors.black,
       content: SizedBox(
@@ -47,14 +48,14 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                       ),
                       min: 0,
                       max: habitBox.getAt(index)!.amount - 1,
                       value: theAmountValue.toDouble(),
                       onChanged: (value) => mystate(() {
                         if (boolBox.get('hapticFeedback')!) {
-                          Vibration.vibrate(duration: 10);
+                          HapticFeedback.lightImpact();
                         }
                         theAmountValue = value.toInt();
                       }),
@@ -82,7 +83,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                                 BorderRadius.all(Radius.circular(20.0)),
                           ),
                           filled: true,
-                          fillColor: Colors.grey.shade900,
+                          fillColor: context.watch<ColorProvider>().greyColor,
                           labelStyle: const TextStyle(
                               fontSize: 16.0,
                               color: Colors.white38,
@@ -94,7 +95,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                         value: theDurationValueHours.toDouble(),
                         onChanged: (value) => mystate(() {
                           if (boolBox.get('hapticFeedback')!) {
-                            Vibration.vibrate(duration: 10);
+                            HapticFeedback.lightImpact();
                           }
 
                           theDurationValueHours = value.toInt();
@@ -123,7 +124,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade900,
+                        fillColor: context.watch<ColorProvider>().greyColor,
                         labelStyle: const TextStyle(
                             fontSize: 16.0,
                             color: Colors.white38,
@@ -138,7 +139,7 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                       value: theDurationValueMinutes.toDouble(),
                       onChanged: (value) => mystate(() {
                         if (boolBox.get('hapticFeedback')!) {
-                          Vibration.vibrate(duration: 10);
+                          HapticFeedback.lightImpact();
                         }
                         theDurationValueMinutes = value.toInt();
                       }),
@@ -154,11 +155,12 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(theLightColor)),
+                    backgroundColor:
+                        WidgetStatePropertyAll(AppColors.theLightColor)),
                 onPressed: () {
                   context
                       .read<HabitProvider>()
@@ -170,16 +172,15 @@ Widget completeHabitDialog(int index, bool isAdLoaded, interstitialAd) {
                   style: TextStyle(fontSize: 14, color: Colors.white),
                 )),
             OutlinedButton(
-                style: ButtonStyle(
-                    fixedSize: const WidgetStatePropertyAll(
+                style: const ButtonStyle(
+                    fixedSize: WidgetStatePropertyAll(
                       Size(110, 50),
                     ),
                     side: WidgetStatePropertyAll(BorderSide(
-                      color: theLightColor,
+                      color: AppColors.theLightColor,
                       width: 3.0,
                     )),
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Colors.black)),
+                    backgroundColor: WidgetStatePropertyAll(Colors.black)),
                 onPressed: () {
                   mystate(() {
                     if (amountCheck) {

@@ -1,14 +1,18 @@
 import "package:flutter/material.dart";
 import "package:habitt/pages/habit/notifications_page.dart";
+import "package:habitt/pages/habit/shared%20widgets/additional_task.dart";
 import "package:habitt/pages/habit/shared%20widgets/choose_tag.dart";
 import "package:habitt/pages/habit/shared%20widgets/dropdown_menu.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_display.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_goal.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_name_textfield.dart";
 import "package:habitt/pages/habit/shared%20widgets/notes_text_field.dart";
+
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
+import "package:habitt/services/provider/color_provider.dart";
 import "package:habitt/services/provider/habit_provider.dart";
 import "package:habitt/util/colors.dart";
+
 import "package:provider/provider.dart";
 
 TextEditingController amountNameController = TextEditingController();
@@ -49,7 +53,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.black,
+      backgroundColor: context.watch<ColorProvider>().blackColor,
       body: Form(
         key: formKey,
         child: Stack(
@@ -94,6 +98,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
                             index: 0,
                             isEdit: false,
                           ),
+
+                          const AdditionalTask(
+                            isEdit: false,
+                          )
                         ],
                       ),
                     ),
@@ -109,7 +117,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theLightColor,
+                    backgroundColor: AppColors.theLightColor,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
