@@ -49,9 +49,11 @@ class SaveButton extends StatelessWidget {
                   showCustomDialog(
                       context,
                       "Edit Habit",
-                      Text(boolBox.get("editHistoricalHabits")!
-                          ? "The changes will affect this habit in the past. You can change this in settings."
-                          : "The changes won't affect this habit in the past. You can change this in settings."),
+                      Text(
+                          boolBox.get("editHistoricalHabits")!
+                              ? "The changes will affect this habit in the past. You can change this in settings."
+                              : "The changes won't affect this habit in the past. You can change this in settings.",
+                          textAlign: TextAlign.center),
                       () => Provider.of<HabitProvider>(context, listen: false)
                           .editHabitProvider(index, context, editcontroller),
                       "Edit",

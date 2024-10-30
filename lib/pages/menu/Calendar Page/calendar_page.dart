@@ -38,7 +38,8 @@ class _CalendarPageState extends State<CalendarPage> {
           context,
           "Import current habits",
           Text(
-              "This will erase previous data on ${day.year}-${day.month}-${day.day}. Are you sure?"),
+              "This will erase previous data on ${day.year}-${day.month}-${day.day}. Are you sure?",
+              textAlign: TextAlign.center),
           () =>
               context.read<HistoricalHabitProvider>().importCurrentHabits(day),
           "Yes",
@@ -157,7 +158,8 @@ class _CalendarPageState extends State<CalendarPage> {
                             context,
                             "Import current habits",
                             const Text(
-                                "This will erase previous data on this day. Are you sure?"),
+                                "This will erase previous data on this day. Are you sure?",
+                                textAlign: TextAlign.center),
                             () => context
                                 .read<HistoricalHabitProvider>()
                                 .importCurrentHabits(today),

@@ -240,8 +240,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
-                    onPressed: () => showCustomDialog(context, "Sign out",
-                        const Text("Are you sure you want to sign out?"), () {
+                    onPressed: () => showCustomDialog(
+                        context,
+                        "Sign out",
+                        const Text(
+                            "Your data won't be saved automatically. Are you sure you want to sign out?",
+                            textAlign: TextAlign.center), () {
                       AuthService().signOut(context);
                     }, "Yes", "No"),
                     child: Text(

@@ -59,7 +59,8 @@ class PopUpButton extends StatelessWidget {
                         context,
                         "Delete Habit",
                         const Text(
-                            "Are you sure you want to delete this habit? This action cannot be undone."),
+                            "Are you sure you want to delete this habit? This action cannot be undone.",
+                            textAlign: TextAlign.center),
                         () => context.read<HabitProvider>().deleteHabitProvider(
                             index, context, editcontroller),
                         "Yes",

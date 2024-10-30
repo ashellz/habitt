@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habitt/pages/auth/loading_page.dart';
-import 'package:habitt/pages/auth/login_page.dart';
 import 'package:habitt/pages/auth/signup_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_page.dart';
@@ -284,9 +283,13 @@ class AuthService {
     );
     await FirebaseAuth.instance.signOut();
     isLoggedIn = false;
+    userId = null;
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (BuildContext context) => const HomePage(),
+      ),
+      (Route<dynamic> route) => false,
     );
   }
 

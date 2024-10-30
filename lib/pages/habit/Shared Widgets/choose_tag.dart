@@ -91,8 +91,11 @@ void deleteTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
   String tempHabitTag = tagBox.getAt(i)!.tag;
 
   if (tagBox.getAt(i)!.tag != "No tag") {
-    showCustomDialog(context, "Delete Tag",
-        Text("Are you sure you want to delete $tempHabitTag tag?"), () {
+    showCustomDialog(
+        context,
+        "Delete Tag",
+        Text("Are you sure you want to delete '$tempHabitTag' tag?",
+            textAlign: TextAlign.center), () {
       for (int j = 0; j < habitBox.length; j++) {
         if (habitBox.getAt(j)!.tag == tagBox.getAt(i)!.tag) {
           setState(() {

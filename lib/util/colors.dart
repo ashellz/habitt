@@ -4,8 +4,7 @@ class AppColors {
   static const Color theBlack = Colors.black;
   static const Color theAccentBlack = Color.fromARGB(255, 5, 15, 5);
 
-  static const Color theDarkGrey =
-      theAccentDarkGrey; // Color.fromARGB(255, 17, 17, 17)
+  static const Color theDarkGrey = Color.fromARGB(255, 17, 17, 17);
   static const Color theAccentDarkGrey = Color.fromARGB(255, 17, 23, 17);
 
   static const Color theGrey = Color.fromRGBO(33, 33, 33, 1);
