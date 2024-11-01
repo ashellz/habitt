@@ -3,6 +3,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
@@ -26,6 +27,7 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
+final FlutterLocalization localization = FlutterLocalization.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -129,6 +131,8 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Poppins',
             ),
       ),
+      supportedLocales: localization.supportedLocales,
+      localizationsDelegates: localization.localizationsDelegates,
       home: const AuthCheck(),
       routes: {
         "/home": (_) => const HomePage(),
