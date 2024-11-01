@@ -1,6 +1,8 @@
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
+import "package:flutter_localization/flutter_localization.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
+import "package:habitt/data/app_locale.dart";
 import "package:habitt/pages/home/home_page.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/additional_historical_tasks.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/calendar_day.dart";
@@ -163,8 +165,8 @@ class _CalendarPageState extends State<CalendarPage> {
                             () => context
                                 .read<HistoricalHabitProvider>()
                                 .importCurrentHabits(today),
-                            "Yes",
-                            "No");
+                            AppLocale.yes.getString(context),
+                            AppLocale.no.getString(context));
                       },
                       child: const Text(
                         "Import current habits",

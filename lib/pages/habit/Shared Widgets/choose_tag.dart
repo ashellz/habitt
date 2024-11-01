@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -114,6 +116,6 @@ void deleteTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
       setState(() {
         tagBox.deleteAt(i);
       });
-    }, "Yes", "No");
+    }, AppLocale.yes.getString(context), AppLocale.no.getString(context));
   }
 }

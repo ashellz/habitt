@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
@@ -14,6 +15,7 @@ import 'package:habitt/pages/onboarding/onboarding_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
@@ -60,6 +62,14 @@ Future<void> main() async {
   await openHiveBoxes();
   await fillKeys();
 
+  localization.init(
+    mapLocales: [
+      const MapLocale('en', AppLocale.en),
+      const MapLocale('ba', AppLocale.ba),
+    ],
+    initLanguageCode: stringBox.get('language')!,
+  );
+
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
     if (!isAllowed) {
@@ -75,6 +85,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => HabitProvider()),
         ChangeNotifierProvider(create: (context) => HistoricalHabitProvider()),
         ChangeNotifierProvider(create: (context) => ColorProvider()),
+        ChangeNotifierProvider(create: (context) => LanguageProvider()),
       ],
       child: const MyApp(),
     ),
@@ -104,38 +115,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      title: 'habitt',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.theLightColor,
-        ),
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        }),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-              color: AppColors.theLightColor,
-              fontSize: 22,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w700),
-        ),
-        textTheme: ThemeData.light().textTheme.apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-              fontFamily: 'Poppins',
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, _) {
+        return MaterialApp(
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          title: 'habitt',
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.theLightColor,
             ),
-      ),
-      supportedLocales: localization.supportedLocales,
-      localizationsDelegates: localization.localizationsDelegates,
-      home: const AuthCheck(),
-      routes: {
-        "/home": (_) => const HomePage(),
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            }),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+              iconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(
+                  color: AppColors.theLightColor,
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700),
+            ),
+            textTheme: ThemeData.light().textTheme.apply(
+                  bodyColor: Colors.white,
+                  displayColor: Colors.white,
+                  fontFamily: 'Poppins',
+                ),
+          ),
+          supportedLocales: localization.supportedLocales,
+          localizationsDelegates: localization.localizationsDelegates,
+          home: const AuthCheck(),
+          routes: {
+            "/home": (_) => const HomePage(),
+          },
+        );
       },
     );
   }

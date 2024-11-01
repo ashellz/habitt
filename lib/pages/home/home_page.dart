@@ -1,9 +1,7 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
@@ -105,7 +103,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("instance");
       if (interstitialAd == null) {
         initInterstitialAd();
       }
@@ -160,8 +157,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     int habitListLength = context.watch<HabitProvider>().habitListLength;
     double mainCategoryHeight =
         context.watch<HabitProvider>().mainCategoryHeight;
-    String username = AppLocale.yes
-        .getString(context); // stringBox.get('username') ?? 'Guest';
+    String username = stringBox.get('username') ?? 'Guest';
 
     TextEditingController createcontroller = TextEditingController();
     TextEditingController editcontroller = TextEditingController();

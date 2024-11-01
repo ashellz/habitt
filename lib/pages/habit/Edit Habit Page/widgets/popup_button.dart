@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/habit/notifications_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
@@ -63,8 +65,8 @@ class PopUpButton extends StatelessWidget {
                             textAlign: TextAlign.center),
                         () => context.read<HabitProvider>().deleteHabitProvider(
                             index, context, editcontroller),
-                        "Yes",
-                        "No")
+                        AppLocale.yes.getString(context),
+                        AppLocale.no.getString(context))
                     .then((value) {
                   if (deleted) {
                     if (context.mounted) {

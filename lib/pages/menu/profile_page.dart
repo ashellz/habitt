@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/auth/login_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
@@ -242,12 +244,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     onPressed: () => showCustomDialog(
                         context,
-                        "Sign out",
-                        const Text(
-                            "Your data won't be saved automatically. Are you sure you want to sign out?",
+                        AppLocale.signOut.getString(context),
+                        Text(
+                            AppLocale.dataWontBeSavedSignOut.getString(context),
                             textAlign: TextAlign.center), () {
                       AuthService().signOut(context);
-                    }, "Yes", "No"),
+                    }, AppLocale.yes.getString(context),
+                        AppLocale.no.getString(context)),
                     child: Text(
                         textAlign: TextAlign.center,
                         "Sign out",

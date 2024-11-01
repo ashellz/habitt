@@ -114,6 +114,10 @@ fillKeys() {
   if (boolBox.get("isLoggenIn") == null) {
     boolBox.put("isLoggenIn", false);
   }
+
+  if (stringBox.get("language") == null) {
+    stringBox.put("language", "en");
+  }
 }
 
 checkForDayJoined() {

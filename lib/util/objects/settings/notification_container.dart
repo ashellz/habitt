@@ -51,7 +51,7 @@ Widget notificationContainer(String category) {
                     width: 50,
                     height: 40,
                     child: FittedBox(
-                      child: Switch(
+                      child: Switch.adaptive(
                         activeColor: AppColors.theLightColor,
                         inactiveTrackColor: Colors.grey.shade800,
                         thumbColor: WidgetStateProperty.all(Colors.white),

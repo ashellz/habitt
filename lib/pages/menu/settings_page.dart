@@ -4,6 +4,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/settings/notification_container.dart';
 import 'package:habitt/util/objects/settings/text_and_switch_container.dart';
@@ -40,7 +41,22 @@ class _SettingsPageState extends State<SettingsPage> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          ExpandableAppBar(actionsWidget: Container(), title: "Settings"),
+          ExpandableAppBar(
+              actionsWidget: TextButton(
+                  onPressed: () {
+                    var languageProvider =
+                        Provider.of<LanguageProvider>(context, listen: false);
+                    final newLanguage =
+                        languageProvider.languageCode == 'en' ? 'ba' : 'en';
+                    languageProvider.changeLanguage(newLanguage);
+                  },
+                  child: Text(
+                      context
+                          .watch<LanguageProvider>()
+                          .languageCode
+                          .toUpperCase(),
+                      style: const TextStyle(color: Colors.white))),
+              title: "Settings"),
           SliverToBoxAdapter(
               child: Padding(
             padding: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
