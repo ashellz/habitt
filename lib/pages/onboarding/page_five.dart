@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:lottie/lottie.dart';
 
@@ -23,14 +25,15 @@ class PageFive extends StatelessWidget {
             padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
             child: RichText(
               textAlign: TextAlign.center,
-              text: const TextSpan(
-                  style: TextStyle(fontFamily: "Poppins"),
+              text: TextSpan(
+                  style: const TextStyle(fontFamily: "Poppins"),
                   children: <TextSpan>[
                     TextSpan(
-                        text: "That's it!", style: TextStyle(fontSize: 16)),
+                        text: AppLocale.getStarted1.getString(context),
+                        style: const TextStyle(fontSize: 16)),
                     TextSpan(
-                        text: " Let's get started!",
-                        style: TextStyle(
+                        text: AppLocale.getStarted2.getString(context),
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: AppColors.theLightColor)),

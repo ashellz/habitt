@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:lottie/lottie.dart';
 
@@ -23,23 +25,24 @@ class PageTwo extends StatelessWidget {
             padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
             child: RichText(
               textAlign: TextAlign.center,
-              text: const TextSpan(
-                  style: TextStyle(fontFamily: "Poppins"),
+              text: TextSpan(
+                  style: const TextStyle(fontFamily: "Poppins"),
                   children: <TextSpan>[
                     TextSpan(
-                        text: "Add your own", style: TextStyle(fontSize: 16)),
+                        text: AppLocale.addYourCustomHabits1.getString(context),
+                        style: const TextStyle(fontSize: 16)),
                     TextSpan(
-                        text: " custom ",
-                        style: TextStyle(
+                        text: AppLocale.addYourCustomHabits2.getString(context),
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: AppColors.theLightColor)),
                     TextSpan(
-                        text: "habits, complete them and feel",
-                        style: TextStyle(fontSize: 16)),
+                        text: AppLocale.addYourCustomHabits3.getString(context),
+                        style: const TextStyle(fontSize: 16)),
                     TextSpan(
-                        text: " accomplished!",
-                        style: TextStyle(
+                        text: AppLocale.addYourCustomHabits4.getString(context),
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: AppColors.theLightColor)),

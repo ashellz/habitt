@@ -13,10 +13,10 @@ import 'package:habitt/firebase_options.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/services/provider/language_provider.dart';
-import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
@@ -86,6 +86,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => HistoricalHabitProvider()),
         ChangeNotifierProvider(create: (context) => ColorProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
+        ChangeNotifierProvider(create: (context) => DataProvider()),
       ],
       child: const MyApp(),
     ),
@@ -172,7 +173,6 @@ class AuthCheck extends StatelessWidget {
         // After the Future is complete, check for onboarding or homepage
         if (boolBox.containsKey("firstTimeOpened")) {
           if (boolBox.get("firstTimeOpened")!) {
-            addInitialData();
             boolBox.put("firstTimeOpened", false);
             return const OnboardingPage();
           } else {

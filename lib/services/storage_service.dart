@@ -12,6 +12,7 @@ import 'package:habitt/pages/auth/loading_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/profile_page.dart';
 import 'package:habitt/services/auth_service.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -198,7 +199,7 @@ Future<void> deleteGuestHabits() async {
   dataDownloaded = true;
 }
 
-void addInitialData() {
+void addInitialData(context) {
   List initialHabits = [
     HabitData(
         name: 'Open the app',
@@ -239,6 +240,8 @@ void addInitialData() {
   ];
 
   if (tagBox.isEmpty) {
+    List<String> tagsList = context.watch<DataProvider>().tagsList;
+
     for (int i = 0; i < tagsList.length; i++) {
       tagBox.add(TagData(tag: tagsList[i]));
     }

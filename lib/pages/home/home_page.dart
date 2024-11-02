@@ -16,6 +16,7 @@ import 'package:habitt/pages/home/widgets/other_categories.dart';
 import 'package:habitt/pages/home/widgets/selected_tag.dart';
 import 'package:habitt/pages/home/widgets/tags_widgets.dart';
 import 'package:habitt/pages/menu/menu_page.dart';
+import 'package:habitt/pages/onboarding/onboarding_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -44,13 +45,6 @@ final player = AudioPlayer();
 bool changed = false, keepData = false, deleted = false;
 
 List<String> categoriesList = ['All'];
-List<String> tagsList = [
-  'No tag',
-  'Healthy Lifestyle',
-  'Better Sleep',
-  'Morning Routine',
-  'Workout',
-];
 
 List<String> greetingTexts = [
   "Hi there",
