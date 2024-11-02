@@ -16,6 +16,7 @@ mixin AppLocale {
   //Onboarding page
   static const String skip = 'Skip';
   static const String next = 'Next';
+  static const String done = 'Done';
   static const String chooseYourLanguage1 = 'Choose your';
   static const String chooseYourLanguage2 = ' language!';
 
@@ -55,6 +56,7 @@ mixin AppLocale {
     workout: 'Workout',
     skip: 'Skip',
     next: 'Next',
+    done: 'Done',
     chooseYourLanguage1: 'Choose your',
     chooseYourLanguage2: ' language!',
     welcomeToHabitt1: "Welcome to",
@@ -87,6 +89,7 @@ mixin AppLocale {
     workout: 'Trening',
     skip: 'Preskoči',
     next: 'Dalje',
+    done: 'Završi',
     chooseYourLanguage1: 'Odaberi svoj',
     chooseYourLanguage2: ' jezik!',
     welcomeToHabitt1: "Dobrodošli u",

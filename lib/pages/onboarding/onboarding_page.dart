@@ -111,11 +111,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               builder: (context) => const HomePage(),
                             ));
                           },
-                          child: const SizedBox(
-                            width: 50,
+                          child: SizedBox(
+                            width: 75,
                             child: Text(
-                              "Done",
-                              style: TextStyle(
+                              textAlign: TextAlign.center,
+                              AppLocale.done.getString(context),
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                           ),
