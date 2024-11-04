@@ -41,6 +41,8 @@ class _ChangelogPageState extends State<ChangelogPage> {
                       style:
                           TextStyle(color: Colors.grey.shade600, fontSize: 16)),
                 ),
+              changelogContainer("v1.0.5",
+                  "- Added Bosnian language\n- Made a few design changes\n- You can now only sign in with google, other options are unavaiable\n- Fixed more bugs"),
               changelogContainer("v1.0.4",
                   "- Added iOS support\n- Added additional tasks feature\n- Added a greenish color theme as default (you can change this in settings)\n- Added ability to import current habits to any day in the past since the day the user joined until the current day\n- Improved home screen under the hood\n- Changed dialogs appearence\n- Changed when the login screen appears\n- Minimalized the profile page\n- Increased amount of ads that appear\n- Increased amount of android devices compatible (down to Android 6.0)\n- Various bugs fixed"),
               changelogContainer("v1.0.3",

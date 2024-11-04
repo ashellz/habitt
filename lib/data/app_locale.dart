@@ -5,6 +5,7 @@ mixin AppLocale {
   static const String save = 'Save';
   static const String cancel = 'Cancel';
   static const String add = "Add";
+  static const String enter = "Enter";
   static const String delete = "Delete";
   static const String deleteHabit = "Delete Habit";
   static const String areYouSureDeleteHabit =
@@ -146,6 +147,7 @@ mixin AppLocale {
     save: 'Save',
     cancel: 'Cancel',
     add: 'Add',
+    enter: "Enter",
     delete: 'Delete',
     deleteHabit: "Delete Habit",
     areYouSureDeleteHabit:
@@ -258,6 +260,7 @@ mixin AppLocale {
     save: 'Sačuvaj',
     cancel: 'Odustani',
     add: 'Dodaj',
+    enter: "Unesi",
     delete: 'Obriši',
     deleteHabit: "Obriši naviku",
     areYouSureDeleteHabit:

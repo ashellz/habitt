@@ -114,22 +114,21 @@ Widget statsPage(
           children: [
             box(
                 text: AppLocale.completed.getString(context),
-                value: timesCompleted,
-                perc: false),
+                value: timesCompleted),
             const SizedBox(width: 10),
             box(
-                text: AppLocale.skipped.getString(context),
-                value: timesSkipped,
-                perc: false),
+              text: AppLocale.skipped.getString(context),
+              value: timesSkipped,
+            ),
             const SizedBox(width: 10),
             box(
-                text: AppLocale.notCompleted.getString(context),
-                value: timesMissed == 1
-                    ? total == 1
-                        ? 0
-                        : 1
-                    : timesMissed,
-                perc: false)
+              text: AppLocale.notCompleted.getString(context),
+              value: timesMissed == 1
+                  ? total == 1
+                      ? 0
+                      : 1
+                  : timesMissed,
+            )
           ],
         ),
       ),
