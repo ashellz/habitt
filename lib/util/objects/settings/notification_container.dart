@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -6,22 +8,17 @@ import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/objects/choose_notification_time.dart';
 import 'package:provider/provider.dart';
 
-Widget notificationContainer(String category) {
+Widget notificationContainer(String category, BuildContext context) {
   late String box;
 
-  switch (category) {
-    case "Morning":
-      box = "morning";
-      break;
-    case "Afternoon":
-      box = "afternoon";
-      break;
-    case "Evening":
-      box = "evening";
-      break;
-    case "Daily":
-      box = "daily";
-      break;
+  if (category == AppLocale.notificationMorning.getString(context)) {
+    box = "morning";
+  } else if (category == AppLocale.notificationAfternoon.getString(context)) {
+    box = "afternoon";
+  } else if (category == AppLocale.notificationEvening.getString(context)) {
+    box = "evening";
+  } else if (category == AppLocale.notificationDaily.getString(context)) {
+    box = "daily";
   }
 
   return Padding(
@@ -43,9 +40,9 @@ Widget notificationContainer(String category) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "$category notification",
+                    "$category ${AppLocale.notification.getString(context)}",
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     width: 50,
@@ -83,8 +80,8 @@ Widget notificationContainer(String category) {
                       builder: (context) =>
                           chooseNotificationTime(category, setState, context));
                 },
-                child: const Text("Choose time",
-                    style: TextStyle(
+                child: Text(AppLocale.chooseTime.getString(context),
+                    style: const TextStyle(
                       color: Colors.white,
                     ))),
           ],

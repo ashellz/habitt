@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/widgets/anytime_main_category.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +25,25 @@ Widget mainCategoryList(
           color: context.watch<ColorProvider>().darkGreyColor,
         ),
         child: mainCategory == "Morning"
-            ? morningHasHabits
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 95),
+                  for (int i = 0; i < habitListLength; i++)
+                    if (habitBox.getAt(i)?.category == mainCategory &&
+                        !habitBox.getAt(i)!.task)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: NewHabitTile(
+                          id: habitBox.getAt(i)!.id,
+                          editcontroller: editcontroller,
+                          isAdLoaded: isAdLoaded,
+                          interstitialAd: interstitialAd,
+                        ),
+                      ),
+                ],
+              )
+            : mainCategory == "Afternoon"
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -44,10 +62,7 @@ Widget mainCategoryList(
                           ),
                     ],
                   )
-                : anyTimeMainCategory(habitListLength, editcontroller,
-                    anytimeHasHabits, context, isAdLoaded, interstitialAd)
-            : mainCategory == "Afternoon"
-                ? afternoonHasHabits
+                : mainCategory == "Evening"
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -66,38 +81,14 @@ Widget mainCategoryList(
                               ),
                         ],
                       )
-                    : anyTimeMainCategory(habitListLength, editcontroller,
-                        anytimeHasHabits, context, isAdLoaded, interstitialAd)
-                : mainCategory == "Evening"
-                    ? eveningHasHabits
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 95),
-                              for (int i = 0; i < habitListLength; i++)
-                                if (habitBox.getAt(i)?.category ==
-                                        mainCategory &&
-                                    !habitBox.getAt(i)!.task)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 15),
-                                    child: NewHabitTile(
-                                      id: habitBox.getAt(i)!.id,
-                                      editcontroller: editcontroller,
-                                      isAdLoaded: isAdLoaded,
-                                      interstitialAd: interstitialAd,
-                                    ),
-                                  ),
-                            ],
-                          )
-                        : anyTimeMainCategory(
-                            habitListLength,
-                            editcontroller,
-                            anytimeHasHabits,
-                            context,
-                            isAdLoaded,
-                            interstitialAd)
-                    : anyTimeMainCategory(habitListLength, editcontroller,
-                        anytimeHasHabits, context, isAdLoaded, interstitialAd),
+                    : anyTimeMainCategory(
+                        habitListLength,
+                        editcontroller,
+                        true,
+                        context,
+                        isAdLoaded,
+                        interstitialAd,
+                      ),
       ),
       Container(
         alignment: Alignment.centerLeft,
@@ -110,7 +101,7 @@ Widget mainCategoryList(
         child: Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
-            mainCategory,
+            translateCategory(mainCategory, context),
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:habitt/services/auth_service.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/functions/validate_text.dart';
+import 'package:habitt/util/objects/profile/signin_method.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
@@ -314,34 +315,6 @@ class SignupPage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class SignInMethod extends StatelessWidget {
-  const SignInMethod({
-    super.key,
-    required this.icon,
-    required this.signInFunction,
-  });
-
-  final IconData icon;
-  final Future<void> Function(BuildContext context) signInFunction;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.only(top: 5),
-        child: IconButton(
-            onPressed: () async {
-              await signInFunction(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: context.watch<ColorProvider>().greyColor,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              ),
-            ),
-            icon: Icon(icon, color: Colors.white38, size: 25)));
   }
 }
 

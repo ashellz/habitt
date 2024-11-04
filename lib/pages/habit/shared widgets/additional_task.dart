@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -28,9 +30,9 @@ class _AdditionalTaskState extends State<AdditionalTask> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
-              "Additional task",
-              style: TextStyle(fontSize: 16),
+            Text(
+              AppLocale.additionalTask.getString(context),
+              style: const TextStyle(fontSize: 16),
             ),
             Checkbox.adaptive(
               value: context.watch<HabitProvider>().additionalTask,

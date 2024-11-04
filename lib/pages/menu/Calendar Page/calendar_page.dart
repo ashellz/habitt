@@ -6,11 +6,12 @@ import "package:habitt/data/app_locale.dart";
 import "package:habitt/pages/home/home_page.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/additional_historical_tasks.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/calendar_day.dart";
-import "package:habitt/pages/menu/Calendar%20Page/widgets/other_categories.dart";
+import "package:habitt/pages/menu/Calendar%20Page/widgets/other_categories_calendar.dart";
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
 import "package:habitt/services/ad_mob_service.dart";
 import "package:habitt/services/provider/color_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
+import "package:habitt/services/provider/language_provider.dart";
 import "package:habitt/util/colors.dart";
 import "package:habitt/util/functions/showCustomDialog.dart";
 import "package:provider/provider.dart";
@@ -38,9 +39,9 @@ class _CalendarPageState extends State<CalendarPage> {
     if (checkForImportAvailability(day, context)) {
       showCustomDialog(
           context,
-          "Import current habits",
+          AppLocale.importCurrentHabits.getString(context),
           Text(
-              "This will erase previous data on ${day.year}-${day.month}-${day.day}. Are you sure?",
+              "${AppLocale.thisWillErasePreviousDataOn.getString(context)} ${today.year}-${today.month}-${today.day}. ${AppLocale.areYouSure.getString(context)}",
               textAlign: TextAlign.center),
           () =>
               context.read<HistoricalHabitProvider>().importCurrentHabits(day),
@@ -85,7 +86,9 @@ class _CalendarPageState extends State<CalendarPage> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          ExpandableAppBar(actionsWidget: Container(), title: "Calendar"),
+          ExpandableAppBar(
+              actionsWidget: Container(),
+              title: AppLocale.calendar.getString(context)),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -95,6 +98,10 @@ class _CalendarPageState extends State<CalendarPage> {
                       color: AppColors.theDarkGrey,
                       borderRadius: BorderRadius.circular(20)),
                   child: TableCalendar(
+                    locale:
+                        context.watch<LanguageProvider>().languageCode == "en"
+                            ? "en_US"
+                            : "bs_BA",
                     availableGestures: AvailableGestures.horizontalSwipe,
                     calendarBuilders: CalendarBuilders(
                       selectedBuilder: (context, date, events) =>
@@ -142,7 +149,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                otherCategoriesList(context, today, isAdLoaded, interstitialAd),
+                otherCategoriesListCalendar(
+                    context, today, isAdLoaded, interstitialAd),
                 AdditionalHistoricalTasks(
                   isAdLoaded: isAdLoaded,
                   interstitialAd: interstitialAd,
@@ -158,9 +166,9 @@ class _CalendarPageState extends State<CalendarPage> {
                       onTap: () {
                         showCustomDialog(
                             context,
-                            "Import current habits",
-                            const Text(
-                                "This will erase previous data on this day. Are you sure?",
+                            AppLocale.importCurrentHabits.getString(context),
+                            Text(
+                                "${AppLocale.thisWillErasePreviousDataOn.getString(context)} ${today.year}-${today.month}-${today.day}. ${AppLocale.areYouSure.getString(context)}",
                                 textAlign: TextAlign.center),
                             () => context
                                 .read<HistoricalHabitProvider>()
@@ -168,9 +176,9 @@ class _CalendarPageState extends State<CalendarPage> {
                             AppLocale.yes.getString(context),
                             AppLocale.no.getString(context));
                       },
-                      child: const Text(
-                        "Import current habits",
-                        style: TextStyle(color: Colors.grey),
+                      child: Text(
+                        AppLocale.importCurrentHabits.getString(context),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ),
                   )

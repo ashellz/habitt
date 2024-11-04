@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/data/app_locale.dart';
-import 'package:habitt/pages/auth/login_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
 import 'package:habitt/services/auth_service.dart';
@@ -13,6 +12,8 @@ import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/showCustomDialog.dart';
 import 'package:habitt/util/objects/profile/change_username.dart';
 import 'package:habitt/util/objects/profile/confirm_delete_account.dart';
+import 'package:habitt/util/objects/profile/signin_method.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
 bool uploadButtonEnabled = true;
@@ -105,26 +106,10 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar:
             AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
         backgroundColor: context.watch<ColorProvider>().blackColor,
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Center(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('You are not logged in. ',
-                  style: TextStyle(fontSize: 18)),
-              GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                ),
-                child: const Text("Log in?",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              )
-            ],
-          )),
+        body: Center(
+          child: SignInMethod(
+              icon: Bootstrap.google,
+              signInFunction: AuthService().signInWithGoogle),
         ),
         bottomNavigationBar: _banner == null
             ? Container()

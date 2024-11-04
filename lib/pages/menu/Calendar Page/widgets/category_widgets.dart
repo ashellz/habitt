@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/Calendar%20Page/functions/historicalHasHabits.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/calendar_habit_tile.dart';
 import 'package:provider/provider.dart';
 
 Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
-  if (historicalHasHabits("Any time", habitsOnDate, habitListLength)) {
+  const String category = 'Any time';
+
+  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
     habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Any time",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(translateCategory(category, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Any time' && !habitsOnDate[i].task)
+          if (habitsOnDate[i].category == category && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -33,16 +38,14 @@ Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
     );
   }
   if (boolBox.get("displayEmptyCategories")!) {
-    return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Any time",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("No habits in this category",
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
-          SizedBox(height: 20),
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(translateCategory(category, context),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 10),
+      Text(AppLocale.noHabitsInCategory.getString(context),
+          style: const TextStyle(fontSize: 18, color: Colors.grey)),
+      const SizedBox(height: 20),
+    ]);
   }
 
   return const SizedBox(height: 0);
@@ -50,15 +53,17 @@ Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
 
 Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
-  if (historicalHasHabits("Morning", habitsOnDate, habitListLength)) {
+  const String category = 'Morning';
+
+  if (historicalHasHabits(morning, habitsOnDate, habitListLength)) {
     habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Morning",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(translateCategory(category, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Morning' && !habitsOnDate[i].task)
+          if (habitsOnDate[i].category == category && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -76,16 +81,14 @@ Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
   }
 
   if (boolBox.get("displayEmptyCategories")!) {
-    return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Morning",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("No habits in this category",
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
-          SizedBox(height: 20),
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(translateCategory(category, context),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 10),
+      Text(AppLocale.noHabitsInCategory.getString(context),
+          style: const TextStyle(fontSize: 18, color: Colors.grey)),
+      const SizedBox(height: 20),
+    ]);
   }
 
   return const SizedBox(height: 0);
@@ -93,15 +96,17 @@ Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
 
 Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
-  if (historicalHasHabits("Afternoon", habitsOnDate, habitListLength)) {
+  const String category = 'Afternoon';
+
+  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
     habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Afternoon",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(translateCategory(category, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Afternoon' && !habitsOnDate[i].task)
+          if (habitsOnDate[i].category == category && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -119,16 +124,14 @@ Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
   }
 
   if (boolBox.get("displayEmptyCategories")!) {
-    return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Afternoon",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("No habits in this category",
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
-          SizedBox(height: 20),
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(translateCategory(category, context),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 10),
+      Text(AppLocale.noHabitsInCategory.getString(context),
+          style: const TextStyle(fontSize: 18, color: Colors.grey)),
+      const SizedBox(height: 20),
+    ]);
   }
 
   return const SizedBox(height: 0);
@@ -136,15 +139,17 @@ Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
 
 Widget evening(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
-  if (historicalHasHabits("Evening", habitsOnDate, habitListLength)) {
+  const String category = 'Evening';
+
+  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
     habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Evening",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(translateCategory(category, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         for (int i = 0; i < habitListLength; i++)
-          if (habitsOnDate[i].category == 'Evening' && !habitsOnDate[i].task)
+          if (habitsOnDate[i].category == category && !habitsOnDate[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
@@ -162,16 +167,14 @@ Widget evening(BuildContext context, habitListLength, habitsOnDate, today,
   }
 
   if (boolBox.get("displayEmptyCategories")!) {
-    return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Evening",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          Text("No habits in this category",
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
-          SizedBox(height: 20),
-        ]);
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(translateCategory(category, context),
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 10),
+      Text(AppLocale.noHabitsInCategory.getString(context),
+          style: const TextStyle(fontSize: 18, color: Colors.grey)),
+      const SizedBox(height: 20),
+    ]);
   }
 
   return const SizedBox(height: 0);

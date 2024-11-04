@@ -1,10 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
 
 class DataProvider extends ChangeNotifier {
+  List<String> categoriesList = [];
   List<String> tagsList =
       []; // This list is going to be empty except when initialized in onboarding page
+
+  List<String> greetingTexts = [];
+  String greetingText = "";
 
   // Initialize tagsList with context to access localization
   void initializeTagsList(BuildContext context) {
@@ -15,6 +21,42 @@ class DataProvider extends ChangeNotifier {
       AppLocale.morningRoutine.getString(context),
       AppLocale.workout.getString(context),
     ];
+
+    notifyListeners();
+  }
+
+  void initializeLists(context) {
+    greetingTexts = [
+      AppLocale.hiThere.getString(context),
+      AppLocale.heyThere.getString(context),
+      AppLocale.helloThere.getString(context),
+      AppLocale.hello.getString(context),
+      AppLocale.hi.getString(context),
+      AppLocale.hey.getString(context),
+      AppLocale.whatsUp.getString(context)
+    ];
+
+    categoriesList = [
+      AppLocale.all.getString(context),
+    ];
+
+    String timeBasedText = "";
+    int hour = DateTime.now().hour;
+
+    if (hour >= 4 && hour < 12) {
+      timeBasedText = AppLocale.goodMorning.getString(context);
+    } else if (hour >= 12 && hour < 19) {
+      timeBasedText = AppLocale.goodAfternoon.getString(context);
+    } else {
+      timeBasedText = AppLocale.goodEvening.getString(context);
+    }
+
+    if (!greetingTexts.contains(timeBasedText)) {
+      greetingTexts.add(timeBasedText);
+    }
+
+    greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
+
     notifyListeners();
   }
 

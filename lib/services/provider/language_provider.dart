@@ -8,11 +8,11 @@ class LanguageProvider extends ChangeNotifier {
   String get languageCode => _languageCode;
 
   LanguageProvider() {
-    _loadLanguage();
+    loadLanguage();
   }
 
   // Load language from SharedPreferences
-  Future<void> _loadLanguage() async {
+  Future<void> loadLanguage() async {
     _languageCode = stringBox.get('language') ?? 'en';
     localization.translate(_languageCode);
     notifyListeners();

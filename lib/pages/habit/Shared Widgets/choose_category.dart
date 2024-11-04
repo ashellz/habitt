@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:provider/provider.dart';
 
 Widget chooseCategory(String category, BuildContext context, bool isEdit) {
@@ -8,7 +9,7 @@ Widget chooseCategory(String category, BuildContext context, bool isEdit) {
     duration: const Duration(milliseconds: 200),
     curve: Curves.fastOutSlowIn,
     child: Padding(
-      padding: const EdgeInsets.only(left: 10, bottom: 20),
+      padding: const EdgeInsets.only(left: 20, bottom: 20),
       child: GestureDetector(
           onTap: () {
             context.read<HabitProvider>().updateDropDownValue(category);
@@ -21,7 +22,7 @@ Widget chooseCategory(String category, BuildContext context, bool isEdit) {
             }
           },
           child: Text(
-            category,
+            translateCategory(category, context),
             style: const TextStyle(fontSize: 16),
           )),
     ),

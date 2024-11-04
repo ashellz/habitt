@@ -50,9 +50,8 @@ class HabitProvider extends ChangeNotifier {
   String? _tagSelected = 'All';
   int allHabitsCompletedStreakP = streakBox.get('allHabitsCompletedStreak')!;
 
-  List _habitNotifications = [];
+  List habitNotifications = [];
 
-  List get habitNotifications => _habitNotifications;
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
   int get allHabitsCompletedStreak => allHabitsCompletedStreakP;
@@ -87,6 +86,12 @@ class HabitProvider extends ChangeNotifier {
 
   void resetSomethingEdited() {
     somethingEdited = false;
+    notifyListeners();
+  }
+
+  setHabitGoalValue(int value) {
+    habitGoalValue = value;
+    getPageHeight(false);
     notifyListeners();
   }
 
@@ -127,35 +132,17 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void changeNotification(List notification) {
-    _habitNotifications = notification;
+    habitNotifications = notification;
     notifyListeners();
   }
 
   void removeNotification(notification) {
-    _habitNotifications.remove(notification);
+    habitNotifications.remove(notification);
     notifyListeners();
   }
 
   void setTagSelected(String? tag) {
     _tagSelected = tag;
-    notifyListeners();
-  }
-
-  void chooseTimeBasedText() {
-    int hour = DateTime.now().hour;
-
-    if (hour >= 4 && hour < 12) {
-      timeBasedText = "Good morning";
-    } else if (hour >= 12 && hour < 19) {
-      timeBasedText = "Good afternoon";
-    } else {
-      timeBasedText = "Good evening";
-    }
-
-    if (!greetingTexts.contains(timeBasedText)) {
-      greetingTexts.add(timeBasedText);
-    }
-
     notifyListeners();
   }
 

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
 
 Widget tagSelectedWidget(tagSelected, editcontroller, bool isAdLoaded,
-    InterstitialAd? interstitialAd) {
+    InterstitialAd? interstitialAd, BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(tagSelected,
+      Text(translateCategory(tagSelected, context),
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
         if (habitBox.getAt(i)?.category == tagSelected &&

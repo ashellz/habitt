@@ -29,6 +29,7 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
+bool doOnce = true;
 final FlutterLocalization localization = FlutterLocalization.instance;
 
 Future<void> main() async {
@@ -190,11 +191,16 @@ class AuthCheck extends StatelessWidget {
 // Create a function that wraps all necessary tasks
 Future<void> openHiveAndPerformTasks(BuildContext context) async {
   // Post-frame callback to update providers and perform actions
+
   WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (doOnce) {
+      context.read<LanguageProvider>().loadLanguage();
+      doOnce = false;
+    }
+    context.read<DataProvider>().initializeLists(context);
     context.read<HabitProvider>().chooseMainCategory();
     context.read<HabitProvider>().updateMainCategoryHeight();
     context.read<HistoricalHabitProvider>().calculateStreak(context);
-    context.read<HabitProvider>().chooseTimeBasedText();
     context.read<HabitProvider>().updateLastOpenedDate();
     context.read<HabitProvider>().updateHabits();
   });

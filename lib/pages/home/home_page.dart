@@ -1,7 +1,8 @@
-import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
@@ -16,9 +17,9 @@ import 'package:habitt/pages/home/widgets/other_categories.dart';
 import 'package:habitt/pages/home/widgets/selected_tag.dart';
 import 'package:habitt/pages/home/widgets/tags_widgets.dart';
 import 'package:habitt/pages/menu/menu_page.dart';
-import 'package:habitt/pages/onboarding/onboarding_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
@@ -45,16 +46,6 @@ final player = AudioPlayer();
 bool changed = false, keepData = false, deleted = false;
 
 List<String> categoriesList = ['All'];
-
-List<String> greetingTexts = [
-  "Hi there",
-  "Hey there",
-  "Hello there",
-  "Hello",
-  "Hi",
-  "Hey",
-  "What's up?",
-];
 
 final pageController = PageController(initialPage: 0);
 
@@ -133,14 +124,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       context.read<HabitProvider>().updateLastOpenedDate();
       context.read<HabitProvider>().chooseMainCategory();
       context.read<HabitProvider>().updateMainCategoryHeight();
-      context.read<HabitProvider>().chooseTimeBasedText();
       if (interstitialAd == null) {
         initInterstitialAd();
       }
     }
   }
-
-  String greetingText = greetingTexts[Random().nextInt(greetingTexts.length)];
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +183,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 30),
-                      header(username, greetingText),
+                      header(
+                          username, context.watch<DataProvider>().greetingText),
                       const SizedBox(height: 20),
                       SizedBox(height: 30, child: tagsWidgets(tagSelected)),
                     ],
@@ -238,7 +227,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 ]),
                               if (tag != 'All')
                                 tagSelectedWidget(tag, editcontroller,
-                                    isAdLoaded, interstitialAd),
+                                    isAdLoaded, interstitialAd, context),
                               SizedBox(
                                 height: height == null
                                     ? 0
@@ -304,14 +293,15 @@ void openAddHabitPage(
   Provider.of<HabitProvider>(context, listen: false).habitGoalValue = 0;
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   Provider.of<HabitProvider>(context, listen: false).habitGoalController.text =
-      "times";
+      AppLocale.times.getString(context);
   Provider.of<HabitProvider>(context, listen: false).amount = 2;
   Provider.of<HabitProvider>(context, listen: false).durationMinutes = 0;
   Provider.of<HabitProvider>(context, listen: false).durationHours = 0;
   Provider.of<HabitProvider>(context, listen: false).duration = 0;
-  createcontroller.text = "Habit Name";
-
+  createcontroller.text = AppLocale.habitName.getString(context);
   Provider.of<HabitProvider>(context, listen: false).categoriesExpanded = false;
+
+  Provider.of<HabitProvider>(context, listen: false).habitNotifications = [];
 
   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
     return AddHabitPage(

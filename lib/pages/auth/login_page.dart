@@ -3,6 +3,7 @@ import 'package:habitt/pages/auth/signup_page.dart';
 import 'package:habitt/services/auth_service.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/functions/validate_text.dart';
+import 'package:habitt/util/objects/profile/signin_method.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 

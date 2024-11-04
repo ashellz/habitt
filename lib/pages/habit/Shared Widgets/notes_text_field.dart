@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -61,7 +63,7 @@ class _NotesTextFieldState extends State<NotesTextField> {
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: AppColors.theLightColor),
-          labelText: "Notes",
+          labelText: AppLocale.notes.getString(context),
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             borderSide: BorderSide(color: Colors.black),

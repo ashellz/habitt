@@ -46,22 +46,21 @@ class PopUpButton extends StatelessWidget {
                   ),
                 ).whenComplete(() => checkForNotifications()),
             value: 0,
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.notifications),
-                SizedBox(width: 5),
+                const Icon(Icons.notifications),
+                const SizedBox(width: 5),
                 Text(
-                  "Notifications",
-                  style: TextStyle(color: Colors.white),
+                  AppLocale.notifications.getString(context),
+                  style: const TextStyle(color: Colors.white),
                 )
               ],
             )),
         PopupMenuItem(
             onTap: () => showCustomDialog(
                         context,
-                        "Delete Habit",
-                        const Text(
-                            "Are you sure you want to delete this habit? This action cannot be undone.",
+                        AppLocale.deleteHabit.getString(context),
+                        Text(AppLocale.areYouSureDeleteHabit.getString(context),
                             textAlign: TextAlign.center),
                         () => context.read<HabitProvider>().deleteHabitProvider(
                             index, context, editcontroller),
@@ -75,13 +74,13 @@ class PopUpButton extends StatelessWidget {
                   }
                 }),
             value: 1,
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.delete),
-                SizedBox(width: 5),
+                const Icon(Icons.delete),
+                const SizedBox(width: 5),
                 Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.white),
+                  AppLocale.delete.getString(context),
+                  style: const TextStyle(color: Colors.white),
                 )
               ],
             )),

@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:flutter_localization/flutter_localization.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
+import "package:habitt/data/app_locale.dart";
 import "package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildEditedValues.dart";
 import "package:habitt/pages/habit/Edit%20Habit%20Page/pages/edit_page.dart";
 import "package:habitt/pages/habit/Edit%20Habit%20Page/pages/stats_page.dart";
@@ -103,17 +105,17 @@ class _EditHabitPageState extends State<EditHabitPage> {
                     curve: Curves.easeInOut,
                   );
                 }),
-            items: const [
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.percent_outlined),
-                label: 'Stats',
+                label: AppLocale.stats.getString(context),
                 backgroundColor: Colors.black,
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.edit,
                 ),
-                label: 'Edit',
+                label: AppLocale.edit.getString(context),
               ),
             ]),
       ),
@@ -124,7 +126,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
               ExpandableAppBar(
                 actionsWidget:
                     PopUpButton(index: index, editcontroller: editcontroller),
-                title: "Habit Info",
+                title: AppLocale.habitInfo.getString(context),
               ),
               SliverToBoxAdapter(
                   child: Column(children: [

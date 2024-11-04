@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
 import 'package:habitt/services/provider/color_provider.dart';
@@ -17,14 +19,14 @@ class IconsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.watch<ColorProvider>().blackColor,
-      body: const CustomScrollView(
-        physics: BouncingScrollPhysics(),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           ExpandableAppBar(
-            actionsWidget: SizedBox(),
-            title: "Choose an icon",
+            actionsWidget: const SizedBox(),
+            title: AppLocale.chooseAnIcon.getString(context),
           ),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 30),
               child: Center(

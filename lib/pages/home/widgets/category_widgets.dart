@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
 
 Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
   int habitListLength = habitBox.length;
 
-  if (mainCategory != 'Any time' || tag) {
+  String anyTime = "Any time";
+
+  if (mainCategory != anyTime || tag) {
     if (anytimeHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Any time",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(translateCategory(anyTime, context),
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)!.category == 'Any time' &&
+            if (habitBox.getAt(i)!.category == anyTime &&
                 !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
@@ -32,16 +38,14 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
       );
     }
     if (boolBox.get("displayEmptyCategories")!) {
-      return const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Any time",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text("No habits in this category",
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 20),
-          ]);
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(translateCategory(anyTime, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(AppLocale.noHabitsInCategory.getString(context),
+            style: const TextStyle(fontSize: 16, color: Colors.grey)),
+        const SizedBox(height: 20),
+      ]);
     }
   }
   return Container();
@@ -50,15 +54,19 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
 Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
   int habitListLength = habitBox.length;
-  if (mainCategory != 'Morning' || tag) {
+
+  String morning = "Morning";
+
+  if (mainCategory != morning || tag) {
     if (morningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Morning",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(translateCategory(morning, context),
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)?.category == 'Morning' &&
+            if (habitBox.getAt(i)?.category == morning &&
                 !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
@@ -74,16 +82,14 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
       );
     }
     if (boolBox.get("displayEmptyCategories")!) {
-      return const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Morning",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text("No habits in this category",
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 20),
-          ]);
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(translateCategory(morning, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(AppLocale.noHabitsInCategory.getString(context),
+            style: const TextStyle(fontSize: 16, color: Colors.grey)),
+        const SizedBox(height: 20),
+      ]);
     }
   }
 
@@ -93,15 +99,19 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
 Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
   int habitListLength = habitBox.length;
-  if (mainCategory != 'Afternoon' || tag) {
+
+  String afternoon = "Afternoon";
+
+  if (mainCategory != afternoon || tag) {
     if (afternoonHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Afternoon",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(translateCategory(afternoon, context),
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)?.category == 'Afternoon' &&
+            if (habitBox.getAt(i)?.category == afternoon &&
                 !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
@@ -117,16 +127,14 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
       );
     }
     if (boolBox.get("displayEmptyCategories")!) {
-      return const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Afternoon",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text("No habits in this category",
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 20),
-          ]);
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(translateCategory(afternoon, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(AppLocale.noHabitsInCategory.getString(context),
+            style: const TextStyle(fontSize: 16, color: Colors.grey)),
+        const SizedBox(height: 20),
+      ]);
     }
   }
   return Container();
@@ -135,15 +143,19 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
 Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
     bool isAdLoaded, InterstitialAd? interstitialAd) {
   int habitListLength = habitBox.length;
-  if (mainCategory != 'Evening' || tag) {
+
+  String evening = "Evening";
+
+  if (mainCategory != evening || tag) {
     if (eveningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Evening",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(translateCategory(evening, context),
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           for (int i = 0; i < habitListLength; i++)
-            if (habitBox.getAt(i)?.category == 'Evening' &&
+            if (habitBox.getAt(i)?.category == evening &&
                 !habitBox.getAt(i)!.task)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
@@ -159,16 +171,14 @@ Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
       );
     }
     if (boolBox.get("displayEmptyCategories")!) {
-      return const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Evening",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text("No habits in this category",
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 20),
-          ]);
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(translateCategory(evening, context),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(AppLocale.noHabitsInCategory.getString(context),
+            style: const TextStyle(fontSize: 16, color: Colors.grey)),
+        const SizedBox(height: 20),
+      ]);
     }
   }
   return Container();
