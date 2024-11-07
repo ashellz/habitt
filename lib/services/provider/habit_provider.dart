@@ -48,13 +48,12 @@ class HabitProvider extends ChangeNotifier {
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
-  int allHabitsCompletedStreakP = streakBox.get('allHabitsCompletedStreak')!;
+  int allHabitsCompletedStreak = streakBox.get('allHabitsCompletedStreak')!;
 
   List habitNotifications = [];
 
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
-  int get allHabitsCompletedStreak => allHabitsCompletedStreakP;
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
@@ -92,6 +91,12 @@ class HabitProvider extends ChangeNotifier {
   setHabitGoalValue(int value) {
     habitGoalValue = value;
     getPageHeight(false);
+    notifyListeners();
+  }
+
+  updateAllHabitsCompletedStreak(int value) {
+    allHabitsCompletedStreak = value;
+    streakBox.put('allHabitsCompletedStreak', value);
     notifyListeners();
   }
 
@@ -509,7 +514,7 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateLastOpenedDate() async {
+  void updateLastOpenedDate(BuildContext context) async {
     DateTime now = DateTime.now();
     int day = now.day;
     int lastOpenedDate = streakBox.get('lastOpenedDay') ?? 0;
@@ -522,7 +527,7 @@ class HabitProvider extends ChangeNotifier {
       saveHabitsForToday();
 
       if (userId != null) {
-        await backupHiveBoxesToFirebase(userId, true);
+        await backupHiveBoxesToFirebase(userId, true, context);
       }
     }
   }

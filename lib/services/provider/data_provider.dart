@@ -1,16 +1,23 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
+import 'package:habitt/pages/home/home_page.dart';
 
 class DataProvider extends ChangeNotifier {
   List<String> categoriesList = [];
   List<String> tagsList =
       []; // This list is going to be empty except when initialized in onboarding page
+  bool accountDeletionPending = boolBox.get("accountDeletionPending")!;
 
   List<String> greetingTexts = [];
   String greetingText = "";
+
+  void updateAccountDeletionPending(bool value) {
+    accountDeletionPending = value;
+    boolBox.put("accountDeletionPending", value);
+    notifyListeners();
+  }
 
   // Initialize tagsList with context to access localization
   void initializeTagsList(BuildContext context) {

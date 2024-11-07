@@ -5,17 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/tags.dart';
-import 'package:habitt/pages/auth/loading_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/profile_page.dart';
-import 'package:habitt/services/auth_service.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:restart_app/restart_app.dart';
 
 String? userId = FirebaseAuth.instance.currentUser?.uid;
 String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
@@ -38,8 +37,8 @@ Future<void> ensureDirectoryExists(String path) async {
   }
 }
 
-Future<void> uploadFolderToFirebase(
-    String folderPath, String? userId, bool isDaily) async {
+Future<void> uploadFolderToFirebase(String folderPath, String? userId,
+    bool isDaily, BuildContext context) async {
   final directory = Directory(folderPath);
   if (await directory.exists()) {
     final files = directory.listSync();
@@ -72,11 +71,13 @@ Future<void> uploadFolderToFirebase(
         }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
     uploadButtonEnabled = true;
     Fluttertoast.showToast(
-      msg: 'Data uploaded',
+      msg: AppLocale.dataUploaded.getString(context),
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.SNACKBAR,
       backgroundColor: Colors.black54,
@@ -90,7 +91,8 @@ Future<void> uploadFolderToFirebase(
   }
 }
 
-Future<void> backupHiveBoxesToFirebase(String? userId, bool isDaily) async {
+Future<void> backupHiveBoxesToFirebase(
+    String? userId, bool isDaily, BuildContext context) async {
   if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
     if (kDebugMode) {
       print('User is not authenticated');
@@ -103,7 +105,7 @@ Future<void> backupHiveBoxesToFirebase(String? userId, bool isDaily) async {
     print('Hive directory: $hiveDirectory');
   }
   await ensureDirectoryExists(hiveDirectory);
-  await uploadFolderToFirebase(hiveDirectory, userId, isDaily);
+  await uploadFolderToFirebase(hiveDirectory, userId, isDaily, context);
 }
 
 Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
@@ -136,66 +138,6 @@ Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
       }
     }
   }
-  dataDownloaded = true;
-}
-
-Future<void> deleteUserCloudStorage(context) async {
-  Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (BuildContext context) =>
-          const LoadingScreen(text: "Deleting account...")));
-
-  if (userId == null) {
-    if (kDebugMode) {
-      print('User is not authenticated');
-    }
-    return;
-  }
-
-  final storageRef = FirebaseStorage.instance.ref().child('$userId/');
-  final listResult = await storageRef.listAll();
-
-  for (final item in listResult.items) {
-    try {
-      if (kDebugMode) {
-        print('Deleting from cloud storage: ${item.name}');
-      }
-      await item.delete();
-      if (kDebugMode) {
-        print('Successfully deleted file from cloud storage: ${item.name}');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print(
-            'Failed to delete file from cloud storage: ${item.name}, error: $e');
-      }
-    }
-  }
-  await AuthService().deleteAccount();
-  Timer(const Duration(milliseconds: 500), () {
-    Restart.restartApp();
-  });
-}
-
-Future<void> deleteGuestHabits() async {
-  final hiveDirectory = await getHiveBoxesDirectory();
-  await ensureDirectoryExists(hiveDirectory);
-
-  final directory = Directory(hiveDirectory);
-
-  List<String> keywords = ['habits.', 'habitdata.', 'tag'];
-
-  if (await directory.exists()) {
-    final files = directory.listSync();
-
-    for (final file in files) {
-      if (file is File) {
-        if (keywords.any((keyword) => file.path.contains(keyword))) {
-          file.deleteSync();
-        }
-      }
-    }
-  }
-
   dataDownloaded = true;
 }
 
@@ -257,7 +199,8 @@ void addInitialData(context) {
 // UPLOAD TO GOOGLE DRIVE
 
 // Function to upload a folder to Google Drive
-Future<void> uploadFolderToGoogleDrive(bool isDaily) async {
+Future<void> uploadFolderToGoogleDrive(
+    bool isDaily, BuildContext context) async {
   String accessToken =
       accessTokenBox.get('accessToken') ?? 'failed access token';
   print(accessToken);
@@ -305,7 +248,7 @@ Future<void> uploadFolderToGoogleDrive(bool isDaily) async {
 
     // Show success message
     Fluttertoast.showToast(
-      msg: 'Data uploaded',
+      msg: AppLocale.dataUploaded.getString(context),
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.SNACKBAR,
       backgroundColor: Colors.black54,

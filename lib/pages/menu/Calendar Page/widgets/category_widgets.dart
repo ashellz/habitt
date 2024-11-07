@@ -55,7 +55,7 @@ Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
     boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
   const String category = 'Morning';
 
-  if (historicalHasHabits(morning, habitsOnDate, habitListLength)) {
+  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
     habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read<HabitProvider>().updateLastOpenedDate();
+      context.read<HabitProvider>().updateLastOpenedDate(context);
       context.read<HabitProvider>().chooseMainCategory();
       context.read<HabitProvider>().updateMainCategoryHeight();
       if (interstitialAd == null) {

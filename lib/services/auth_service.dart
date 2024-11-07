@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habitt/pages/auth/loading_page.dart';
-import 'package:habitt/pages/auth/signup_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
-import 'package:habitt/pages/onboarding/onboarding_page.dart';
 import 'package:habitt/services/storage_service.dart';
 import 'package:restart_app/restart_app.dart';
 
@@ -17,162 +15,6 @@ bool isLoggedIn = boolBox.get('isLoggedIn') ?? false;
 
 class AuthService {
   User? user;
-
-  Future<void> signUp(
-      {required String email,
-      required String password,
-      required BuildContext context}) async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      if (keepData) {
-        boolBox.put("isGuest", false);
-        if (context.mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => const HomePage(),
-            ),
-          );
-        }
-      } else {
-        deleteGuestHabits().then(
-          (value) {
-            if (context.mounted) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const OnboardingPage(),
-                ),
-              );
-            }
-          },
-        );
-        metadataBox.put("dayJoined", DateTime.now());
-      }
-      isLoggedIn = true;
-    } on FirebaseException catch (e) {
-      errorMessage = 'An unexpected error occurred.';
-
-      if (e.code == 'weak-password') {
-        errorMessage = 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        errorMessage = 'An account with that email already exists.';
-      }
-
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
-
-      if (errorMessage == 'An unexpected error occurred') {
-        if (context.mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => SignupPage(),
-            ),
-          );
-        }
-      }
-    }
-  }
-
-  int signInCounter = 0;
-
-  Future<void> signIn({
-    required String email,
-    required String password,
-    required BuildContext context,
-  }) async {
-    signInCounter++;
-    try {
-      // Sign in the user
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      if (context.mounted) {
-        getIntoTheApp(context);
-      }
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'The email or password is incorrect';
-      if (e.code == 'user-not-found') {
-        errorMessage = 'User not found';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'The password is incorrect';
-      }
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: 'An unexpected error occurred',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
-
-      await FirebaseAuth.instance.signOut().then(
-        (value) {
-          if (signInCounter < 3) {
-            if (context.mounted) {
-              signIn(email: email, password: password, context: context);
-            }
-          }
-        },
-      );
-
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    }
-  }
-
-  Future<void> signInAsGuest(BuildContext context) async {
-    await signInAnonimusly();
-    if (boolBox.get("isGuest")!) {
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const HomePage(),
-          ),
-        );
-      }
-    } else {
-      boolBox.put("isGuest", true);
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const LoadingScreen(
-              text: "Loading data...",
-            ),
-          ),
-        );
-      }
-      metadataBox.put("dayJoined", DateTime.now());
-      stringBox.put("username", "Guest");
-      boolBox.put("firstTimeOpened", true);
-      deleteGuestHabits().then((value) {
-        Restart.restartApp();
-      });
-    }
-  }
 
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
@@ -231,49 +73,6 @@ class AuthService {
     }
   }
 
-  Future<void> signInWithGitHub(BuildContext context) async {
-    try {
-      GithubAuthProvider githubProvider = GithubAuthProvider();
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithProvider(githubProvider);
-
-      final githubUsername = userCredential.additionalUserInfo?.username;
-
-      String username = stringBox.get('username') ?? "Guest";
-
-      if (username == "Guest") {
-        stringBox.put('username', githubUsername!);
-      }
-
-      if (userCredential.additionalUserInfo?.isNewUser ?? false) {
-        // The user is new
-        metadataBox.put("dayJoined", DateTime.now());
-        boolBox.put("firstTimeOpened", true);
-      }
-
-      if (context.mounted) {
-        getIntoTheApp(context);
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'account-exists-with-different-credential') {
-        Fluttertoast.showToast(
-          msg:
-              'An account with that email is signed in with a different credential.',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.SNACKBAR,
-          backgroundColor: Colors.black54,
-          textColor: Colors.white,
-          fontSize: 14.0,
-        );
-      }
-    }
-  }
-
-  Future<void> signInAnonimusly() async {
-    await FirebaseAuth.instance.signInAnonymously();
-    isLoggedIn = true;
-  }
-
   Future<void> signOut(context) async {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -291,60 +90,6 @@ class AuthService {
       ),
       (Route<dynamic> route) => false,
     );
-  }
-
-  Future<void> deleteAccount() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await user.delete();
-      if (kDebugMode) {
-        print("Account deleted successfully");
-      }
-    }
-  }
-
-  /*
-
-  Future<void> changeEmail(String newEmail) async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      try {
-        await user.updateEmail(newEmail);
-        print("Email updated successfully");
-      } catch (e) {
-        print("Failed to update email: $e");
-      }
-    }
-  }
-*/
-  Future<void> reauthenticateUser(String email, String password) async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      AuthCredential credential =
-          EmailAuthProvider.credential(email: email, password: password);
-      try {
-        await user.reauthenticateWithCredential(credential);
-        passwordIncorrect = false;
-        if (kDebugMode) {
-          print("User re-authenticated");
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print("Failed to re-authenticate user: $e");
-        }
-        passwordIncorrect = true;
-        Fluttertoast.showToast(
-          msg: 'Password incorrect',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.SNACKBAR,
-          backgroundColor: Colors.black54,
-          textColor: Colors.white,
-          fontSize: 14.0,
-        );
-      }
-    }
   }
 
   getIntoTheApp(BuildContext context) async {

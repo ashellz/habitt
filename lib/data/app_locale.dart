@@ -4,6 +4,7 @@ mixin AppLocale {
   static const String no = 'No';
   static const String save = 'Save';
   static const String cancel = 'Cancel';
+  static const String confirm = 'Confirm';
   static const String add = "Add";
   static const String enter = "Enter";
   static const String delete = "Delete";
@@ -17,6 +18,7 @@ mixin AppLocale {
   static const String signOut = 'Sign out';
   static const String dataWontBeSavedSignOut =
       "Your data won't be saved automatically. Are you sure you want to sign out?";
+  static const String dataUploaded = 'Data uploaded';
 
   // Tags
   static const String noTag = 'No tag';
@@ -82,6 +84,17 @@ mixin AppLocale {
   static const String chooseTime = 'Choose time';
   static const String requestNotificationAccess = "Request Notification Access";
 
+  // Profile Page
+  static const String profileOf = 'Profile of';
+  static const String changeUsername = 'Change username';
+  static const String uploadData = 'Upload data';
+  static const String deleteAccount = 'Delete account';
+  static const String revokeAccountDeletion = 'Revoke account deletion';
+  static const String confirmRevokeAccountDeletion =
+      'Confirm revoke account deletion';
+  static const String confirmDeleteAccount =
+      'Your account and all associated data will be deleted in 14 days, until then you have a chance to abort this action. Are you sure?';
+
   //Home Page
   static const String goodMorning = 'Good Morning';
   static const String goodAfternoon = 'Good Afternoon';
@@ -146,6 +159,7 @@ mixin AppLocale {
     no: 'No',
     save: 'Save',
     cancel: 'Cancel',
+    confirm: 'Confirm',
     add: 'Add',
     enter: "Enter",
     delete: 'Delete',
@@ -252,6 +266,16 @@ mixin AppLocale {
     thisWillErasePreviousDataOn: 'This will erase previous data on ',
     areYouSure: 'Are you sure?',
     stats: 'Stats',
+    profileOf: "Profile of",
+    changeUsername: "Change username",
+    uploadData: "Upload data",
+    deleteAccount: "Delete account",
+    revokeAccountDeletion: "Revoke account deletion",
+    confirmRevokeAccountDeletion:
+        "Your account deletion request will be revoked, so your account and associated data won't be deleted. Make sure you SEND the email for the request to process. Proceed?",
+    confirmDeleteAccount:
+        'Your account and all associated data will be deleted in 14 days, until then you have a chance to abort this action. Make sure you SEND the email for the request to process. Are you sure?',
+    dataUploaded: 'Data uploaded',
   };
 
   static const Map<String, dynamic> ba = {
@@ -259,14 +283,15 @@ mixin AppLocale {
     no: 'Ne',
     save: 'Sačuvaj',
     cancel: 'Odustani',
+    confirm: 'Potvrdi',
     add: 'Dodaj',
     enter: "Unesi",
     delete: 'Obriši',
     deleteHabit: "Obriši naviku",
     areYouSureDeleteHabit:
-        "Da li si siguran da želiš obrisati ovu naviku? Ova radnja se ne može poništiti.",
+        "Da li sigurno želite obrisati ovu naviku? Ova radnja se ne može poništiti.",
     deleteTag: "Obriši oznaku",
-    areYouSureDeleteTag1: "Da li si siguran daželiš obrisati ",
+    areYouSureDeleteTag1: "Da li sigurno želite obrisati ",
     areYouSureDeleteTag2: " oznaku? Ova radnja se ne može ponišiti.",
     signOut: 'Odjava',
     dataWontBeSavedSignOut:
@@ -366,5 +391,15 @@ mixin AppLocale {
     thisWillErasePreviousDataOn: "Vaše navike će biti obrisane na dan ",
     areYouSure: "Nastavi?",
     stats: "Statistika",
+    profileOf: "Profil od",
+    changeUsername: "Promijeni ime",
+    uploadData: "Sačuvaj podatke",
+    revokeAccountDeletion: "Otkaži brisanje računa",
+    confirmRevokeAccountDeletion:
+        "Vaš zahtjev za brisanje računa će biti otkazan te Vaš račun i svi povezani podaci neće biti obrisani. Da bi se zahtjev ostvario, morate POSLATI email.  Nastavi?",
+    confirmDeleteAccount:
+        'Vaš račun i svi povezani podaci će biti obrisani za 14 dana, do tada se ova radnja može poništiti. Da bi se zahtjev ostvario, morate POSLATI email. Da li ste sigurni?',
+    deleteAccount: 'Obrisi račun',
+    dataUploaded: 'Podaci sačuvani',
   };
 }
