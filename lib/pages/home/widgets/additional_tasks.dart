@@ -3,7 +3,9 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
+import 'package:provider/provider.dart';
 
 class AdditionalTasks extends StatefulWidget {
   const AdditionalTasks(
@@ -36,6 +38,7 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
 
   @override
   Widget build(BuildContext context) {
+    hasTasks = context.watch<DataProvider>().hasTasks;
     if (!hasTasks) {
       return const SizedBox();
     } else {

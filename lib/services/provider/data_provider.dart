@@ -13,6 +13,8 @@ class DataProvider extends ChangeNotifier {
   List<String> greetingTexts = [];
   String greetingText = "";
 
+  bool hasTasks = false;
+
   void updateAccountDeletionPending(bool value) {
     accountDeletionPending = value;
     boolBox.put("accountDeletionPending", value);
