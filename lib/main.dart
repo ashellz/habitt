@@ -3,7 +3,9 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
@@ -11,9 +13,10 @@ import 'package:habitt/firebase_options.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
-import 'package:habitt/services/storage_service.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
@@ -26,6 +29,8 @@ bool morningHasHabits = false;
 bool afternoonHasHabits = false;
 bool eveningHasHabits = false;
 bool anytimeHasHabits = false;
+bool doOnce = true;
+final FlutterLocalization localization = FlutterLocalization.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +63,14 @@ Future<void> main() async {
   await openHiveBoxes();
   await fillKeys();
 
+  localization.init(
+    mapLocales: [
+      const MapLocale('en', AppLocale.en),
+      const MapLocale('ba', AppLocale.ba),
+    ],
+    initLanguageCode: stringBox.get('language')!,
+  );
+
   // checking for notification access
   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
     if (!isAllowed) {
@@ -73,6 +86,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => HabitProvider()),
         ChangeNotifierProvider(create: (context) => HistoricalHabitProvider()),
         ChangeNotifierProvider(create: (context) => ColorProvider()),
+        ChangeNotifierProvider(create: (context) => LanguageProvider()),
+        ChangeNotifierProvider(create: (context) => DataProvider()),
       ],
       child: const MyApp(),
     ),
@@ -102,36 +117,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      title: 'habitt',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.theLightColor,
-        ),
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        }),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-              color: AppColors.theLightColor,
-              fontSize: 22,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w700),
-        ),
-        textTheme: ThemeData.light().textTheme.apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-              fontFamily: 'Poppins',
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, _) {
+        return MaterialApp(
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          title: 'habitt',
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: const ColorScheme.dark(
+              primary: AppColors.theLightColor,
             ),
-      ),
-      home: const AuthCheck(),
-      routes: {
-        "/home": (_) => const HomePage(),
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            }),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+              iconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(
+                  color: AppColors.theLightColor,
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700),
+            ),
+            textTheme: ThemeData.light().textTheme.apply(
+                  bodyColor: Colors.white,
+                  displayColor: Colors.white,
+                  fontFamily: 'Poppins',
+                ),
+          ),
+          supportedLocales: localization.supportedLocales,
+          localizationsDelegates: localization.localizationsDelegates,
+          home: const AuthCheck(),
+          routes: {
+            "/home": (_) => const HomePage(),
+          },
+        );
       },
     );
   }
@@ -153,7 +174,6 @@ class AuthCheck extends StatelessWidget {
         // After the Future is complete, check for onboarding or homepage
         if (boolBox.containsKey("firstTimeOpened")) {
           if (boolBox.get("firstTimeOpened")!) {
-            addInitialData();
             boolBox.put("firstTimeOpened", false);
             return const OnboardingPage();
           } else {
@@ -171,12 +191,17 @@ class AuthCheck extends StatelessWidget {
 // Create a function that wraps all necessary tasks
 Future<void> openHiveAndPerformTasks(BuildContext context) async {
   // Post-frame callback to update providers and perform actions
+
   WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (doOnce) {
+      context.read<LanguageProvider>().loadLanguage();
+      doOnce = false;
+    }
+    context.read<DataProvider>().initializeLists(context);
     context.read<HabitProvider>().chooseMainCategory();
     context.read<HabitProvider>().updateMainCategoryHeight();
     context.read<HistoricalHabitProvider>().calculateStreak(context);
-    context.read<HabitProvider>().chooseTimeBasedText();
-    context.read<HabitProvider>().updateLastOpenedDate();
+    context.read<HabitProvider>().updateLastOpenedDate(context);
     context.read<HabitProvider>().updateHabits();
   });
 

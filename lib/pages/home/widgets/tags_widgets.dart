@@ -3,6 +3,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/habit/habitsCompleted.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:provider/provider.dart';
 
 Widget tagsWidgets(String? tagSelected) {
@@ -49,7 +50,7 @@ Widget tagsWidgets(String? tagSelected) {
                     ),
                     height: 30,
                     child: Center(
-                      child: Text(category.toString(),
+                      child: Text(translateCategory(category, context),
                           style: TextStyle(
                               color: getTextColor(category),
                               decorationThickness: 3.0)),

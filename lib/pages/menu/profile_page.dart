@@ -1,16 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habitt/pages/auth/login_page.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
 import 'package:habitt/services/auth_service.dart';
+import 'package:habitt/services/mail_service.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/showCustomDialog.dart';
 import 'package:habitt/util/objects/profile/change_username.dart';
-import 'package:habitt/util/objects/profile/confirm_delete_account.dart';
+import 'package:habitt/util/objects/profile/signin_method.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
 bool uploadButtonEnabled = true;
@@ -86,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void uploadData() {
     setState(() => uploadButtonEnabled = false);
 
-    backupHiveBoxesToFirebase(userId, false)
+    backupHiveBoxesToFirebase(userId, false, context)
         .then((value) => setState(() => uploadButtonEnabled = true));
   }
 
@@ -103,26 +107,10 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar:
             AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
         backgroundColor: context.watch<ColorProvider>().blackColor,
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Center(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('You are not logged in. ',
-                  style: TextStyle(fontSize: 18)),
-              GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                ),
-                child: const Text("Log in?",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              )
-            ],
-          )),
+        body: Center(
+          child: SignInMethod(
+              icon: Bootstrap.google,
+              signInFunction: AuthService().signInWithGoogle),
         ),
         bottomNavigationBar: _banner == null
             ? Container()
@@ -146,16 +134,16 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Profile of",
-                    style: TextStyle(
+                  Text(
+                    AppLocale.profileOf.getString(context),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    stringBox.get("username") ?? 'Guest',
+                    stringBox.get("username")!,
                     style: const TextStyle(
                       height: 1,
                       color: AppColors.theLightColor,
@@ -189,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     onPressed: () => showCustomDialog(
                         context,
-                        "Change username",
+                        AppLocale.changeUsername.getString(context),
                         ChangeUsernameWidget(
                           changeController: changeController,
                           formKey: usernameFormKey,
@@ -197,10 +185,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       if (usernameFormKey.currentState!.validate()) {
                         updateUsername(changeController.text);
                       }
-                    }, "Confirm", "Cancel"),
+                    }, AppLocale.confirm.getString(context),
+                        AppLocale.cancel.getString(context)),
                     child: Text(
                         textAlign: TextAlign.center,
-                        "Change Username",
+                        AppLocale.changeUsername.getString(context),
                         style: TextStyle(
                           fontSize: fontSize(context),
                         )),
@@ -224,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                     child: Text(
                         textAlign: TextAlign.center,
-                        "Upload Data",
+                        AppLocale.uploadData.getString(context),
                         style: TextStyle(
                           fontSize: fontSize(context),
                         )),
@@ -242,15 +231,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     onPressed: () => showCustomDialog(
                         context,
-                        "Sign out",
-                        const Text(
-                            "Your data won't be saved automatically. Are you sure you want to sign out?",
+                        AppLocale.signOut.getString(context),
+                        Text(
+                            AppLocale.dataWontBeSavedSignOut.getString(context),
                             textAlign: TextAlign.center), () {
                       AuthService().signOut(context);
-                    }, "Yes", "No"),
+                    }, AppLocale.yes.getString(context),
+                        AppLocale.no.getString(context)),
                     child: Text(
                         textAlign: TextAlign.center,
-                        "Sign out",
+                        AppLocale.signOut.getString(context),
                         style: TextStyle(
                           fontSize: fontSize(context),
                         )),
@@ -268,14 +258,38 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     onPressed: () {
-                      showDialog(
-                              context: context,
-                              builder: (context) => confirmDeleteAccount())
-                          .whenComplete(() => confirmAgain = false);
+                      bool accountDeletionPending =
+                          Provider.of<DataProvider>(context, listen: false)
+                              .accountDeletionPending;
+
+                      showCustomDialog(
+                        context,
+                        accountDeletionPending
+                            ? AppLocale.revokeAccountDeletion.getString(context)
+                            : AppLocale.deleteAccount.getString(context),
+                        Text(
+                            accountDeletionPending
+                                ? AppLocale.confirmRevokeAccountDeletion
+                                    .getString(context)
+                                : AppLocale.confirmDeleteAccount
+                                    .getString(context),
+                            textAlign: TextAlign.center),
+                        () {
+                          if (accountDeletionPending) {
+                            MailService().sendRevokeDeletionEmail(context);
+                          } else {
+                            MailService().sendDeletionEmail(context);
+                          }
+                        },
+                        AppLocale.yes.getString(context),
+                        AppLocale.no.getString(context),
+                      );
                     },
                     child: Text(
                         textAlign: TextAlign.center,
-                        "Delete Account",
+                        context.watch<DataProvider>().accountDeletionPending
+                            ? AppLocale.revokeAccountDeletion.getString(context)
+                            : AppLocale.deleteAccount.getString(context),
                         style: TextStyle(
                           fontSize: fontSize(context),
                         )),

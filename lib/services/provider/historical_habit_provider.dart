@@ -329,9 +329,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
       }
     }
 
-    streakBox.put('allHabitsCompletedStreak', allHabitsCompletedStreak);
     Provider.of<HabitProvider>(context, listen: false)
-        .allHabitsCompletedStreakP = allHabitsCompletedStreak;
+        .updateAllHabitsCompletedStreak(allHabitsCompletedStreak);
 
     notifyListeners();
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/ad_mob_service.dart';
 import 'package:habitt/services/provider/color_provider.dart';
@@ -55,9 +57,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
         children: [
-          const Text(
-            "Habit Notifications",
-            style: TextStyle(
+          Text(
+            AppLocale.habitNotifications.getString(context),
+            style: const TextStyle(
               fontSize: 32.0,
               color: Colors.white,
               fontWeight: FontWeight.bold,

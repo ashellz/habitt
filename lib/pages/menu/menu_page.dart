@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:flutter_localization/flutter_localization.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
+import "package:habitt/data/app_locale.dart";
 import "package:habitt/pages/menu/Calendar%20Page/calendar_page.dart";
 import "package:habitt/pages/menu/changelog_page.dart";
 import "package:habitt/pages/menu/profile_page.dart";
@@ -42,13 +44,10 @@ class _MenuPageState extends State<MenuPage> {
       appBar:
           AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
       backgroundColor: context.watch<ColorProvider>().blackColor,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
         children: [
           buildHeader(context),
           buildMenuItems(context),
-          Container(),
         ],
       ),
       bottomNavigationBar: _banner == null
@@ -64,30 +63,27 @@ class _MenuPageState extends State<MenuPage> {
 
 Widget buildHeader(BuildContext context) {
   int streak = context.watch<HabitProvider>().allHabitsCompletedStreak;
-  return SizedBox(
-    height: MediaQuery.of(context).size.height / 6,
-    child: Padding(
-      padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Text(
-              "All habits completed streak:",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              streak == 1 ? "$streak day" : "$streak days",
-              style: const TextStyle(
-                  color: AppColors.theLightColor,
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold),
-            ),
-          ]),
-    ),
+  return Padding(
+    padding: const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
+    child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            AppLocale.allHabitsCompletedStreak.getString(context),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            streak == 1
+                ? "$streak ${AppLocale.day.getString(context)}"
+                : "$streak ${AppLocale.days.getString(context)}",
+            style: const TextStyle(
+                color: AppColors.theLightColor,
+                fontSize: 42,
+                fontWeight: FontWeight.bold),
+          ),
+        ]),
   );
 }
 
@@ -104,9 +100,9 @@ Widget buildMenuItems(BuildContext context) => Center(
                   color: Colors.white,
                   size: 25,
                 ),
-                title: const Text(
-                  'Calendar',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                title: Text(
+                  AppLocale.calendar.getString(context),
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 onTap: () => Navigator.push(
                       context,
@@ -120,9 +116,9 @@ Widget buildMenuItems(BuildContext context) => Center(
                   color: Colors.white,
                   size: 25,
                 ),
-                title: const Text(
-                  'Settings',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                title: Text(
+                  AppLocale.settings.getString(context),
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 onTap: () => Navigator.push(
                       context,
@@ -136,9 +132,9 @@ Widget buildMenuItems(BuildContext context) => Center(
                   color: Colors.white,
                   size: 25,
                 ),
-                title: const Text(
-                  'Changelog',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                title: Text(
+                  AppLocale.changelog.getString(context),
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 onTap: () => Navigator.push(
                       context,
@@ -152,9 +148,9 @@ Widget buildMenuItems(BuildContext context) => Center(
                   color: Colors.white,
                   size: 25,
                 ),
-                title: const Text(
-                  'Profile',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                title: Text(
+                  AppLocale.profile.getString(context),
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 onTap: () => Navigator.push(
                       context,

@@ -6,12 +6,10 @@ import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 class box extends StatelessWidget {
-  const box(
-      {super.key, required this.value, required this.text, this.perc = false});
+  const box({super.key, required this.value, required this.text});
 
   final int value;
   final String text;
-  final bool perc;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +27,7 @@ class box extends StatelessWidget {
         children: [
           AutoSizeText(
             minFontSize: 12,
-            text.split(" ")[0],
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          AutoSizeText(
-            minFontSize: 12,
-            text.split(" ")[1],
+            text,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(
@@ -51,16 +44,6 @@ class box extends StatelessWidget {
                     fontSize: 36,
                     color: AppColors.theLightColor),
               ),
-              if (perc)
-                const Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Text("%",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 36,
-                        color: AppColors.theLightColor,
-                      )),
-                )
             ],
           ),
         ],

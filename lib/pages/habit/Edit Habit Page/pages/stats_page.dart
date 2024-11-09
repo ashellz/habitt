@@ -2,6 +2,8 @@ import 'package:animated_digit/animated_digit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletionRateGraph.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/box.dart';
@@ -48,12 +50,12 @@ Widget statsPage(
   String habitCompleted() {
     if (habit.completed) {
       if (habit.skipped) {
-        return "Skipped";
+        return AppLocale.skipped.getString(context);
       } else {
-        return "Completed";
+        return AppLocale.completed.getString(context);
       }
     } else {
-      return "Not Completed";
+      return AppLocale.notCompleted.getString(context);
     }
   }
 
@@ -110,18 +112,23 @@ Widget statsPage(
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
-            box(text: "Times completed", value: timesCompleted, perc: false),
-            const SizedBox(width: 10),
-            box(text: "Times skipped", value: timesSkipped, perc: false),
+            box(
+                text: AppLocale.completed.getString(context),
+                value: timesCompleted),
             const SizedBox(width: 10),
             box(
-                text: "Times missed",
-                value: timesMissed == 1
-                    ? total == 1
-                        ? 0
-                        : 1
-                    : timesMissed,
-                perc: false)
+              text: AppLocale.skipped.getString(context),
+              value: timesSkipped,
+            ),
+            const SizedBox(width: 10),
+            box(
+              text: AppLocale.notCompleted.getString(context),
+              value: timesMissed == 1
+                  ? total == 1
+                      ? 0
+                      : 1
+                  : timesMissed,
+            )
           ],
         ),
       ),
@@ -139,11 +146,12 @@ Widget statsPage(
           ),
           child: Column(
             children: [
-              const SizedBox(
+              SizedBox(
                 width: double.infinity,
                 child: Text(
-                  "Completion rate",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  AppLocale.completionRate.getString(context),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                   textAlign: TextAlign.start,
                 ),
               ),
@@ -290,9 +298,10 @@ class StreakStats extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.4,
             child: Column(
               children: [
-                const AutoSizeText(
-                  "Current streak",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                AutoSizeText(
+                  AppLocale.currentStreak.getString(context),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                   maxLines: 1,
                   minFontSize: 12,
                 ),
@@ -320,9 +329,10 @@ class StreakStats extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.4,
             child: Column(
               children: [
-                const Text(
-                  "Best streak",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                AutoSizeText(
+                  AppLocale.bestStreak.getString(context),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 AnimatedDigitWidget(
                     loop: false,

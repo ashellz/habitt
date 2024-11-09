@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -39,16 +41,15 @@ class _HabitGoalState extends State<HabitGoal> {
                   if (Provider.of<HabitProvider>(context, listen: false)
                           .habitGoalValue ==
                       1) {
-                    Provider.of<HabitProvider>(context, listen: false)
-                        .habitGoalValue = 0;
+                    context.read<HabitProvider>().setHabitGoalValue(0);
                     if (widget.isEdit) {
                       habitBox.getAt(widget.index)!.amount = 1;
                     }
                   } else {
                     Provider.of<HabitProvider>(context, listen: false).amount =
                         2;
-                    Provider.of<HabitProvider>(context, listen: false)
-                        .habitGoalValue = 1;
+
+                    context.read<HabitProvider>().setHabitGoalValue(1);
                     if (widget.isEdit) {
                       habitBox.getAt(widget.index)!.duration = 0;
                     }
@@ -71,9 +72,9 @@ class _HabitGoalState extends State<HabitGoal> {
                       : context.watch<ColorProvider>().greyColor,
                 ),
               ),
-              child: const Text("Number of times",
+              child: Text(AppLocale.amount.getString(context),
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white)),
             ),
             const SizedBox(
               width: 15,
@@ -85,16 +86,15 @@ class _HabitGoalState extends State<HabitGoal> {
                   if (Provider.of<HabitProvider>(context, listen: false)
                           .habitGoalValue ==
                       2) {
-                    Provider.of<HabitProvider>(context, listen: false)
-                        .habitGoalValue = 0;
+                    context.read<HabitProvider>().setHabitGoalValue(0);
                     if (widget.isEdit) {
                       habitBox.getAt(widget.index)!.duration = 0;
                     }
                   } else {
                     Provider.of<HabitProvider>(context, listen: false)
                         .duration = 1;
-                    Provider.of<HabitProvider>(context, listen: false)
-                        .habitGoalValue = 2;
+
+                    context.read<HabitProvider>().setHabitGoalValue(2);
                     if (widget.isEdit) {
                       habitBox.getAt(widget.index)!.amount = 1;
                     }
@@ -117,8 +117,8 @@ class _HabitGoalState extends State<HabitGoal> {
                       : context.watch<ColorProvider>().greyColor,
                 ),
               ),
-              child:
-                  const Text("Duration", style: TextStyle(color: Colors.white)),
+              child: Text(AppLocale.duration.getString(context),
+                  style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -146,7 +146,7 @@ class _HabitGoalState extends State<HabitGoal> {
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.theLightColor),
-                  labelText: "Amount",
+                  labelText: AppLocale.amount.getString(context),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide: const BorderSide(
@@ -211,7 +211,7 @@ class _HabitGoalState extends State<HabitGoal> {
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.theLightColor),
-                  labelText: "Amount Name",
+                  labelText: AppLocale.amountName.getString(context),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide: const BorderSide(
@@ -251,7 +251,7 @@ class _HabitGoalState extends State<HabitGoal> {
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.theLightColor),
-                  labelText: "Hours",
+                  labelText: AppLocale.hours.getString(context),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide: const BorderSide(
@@ -292,7 +292,7 @@ class _HabitGoalState extends State<HabitGoal> {
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       color: AppColors.theLightColor),
-                  labelText: "Minutes",
+                  labelText: AppLocale.minutes.getString(context),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15.0),
                     borderSide: const BorderSide(

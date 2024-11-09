@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/onboarding/language_page.dart';
 import 'package:habitt/pages/onboarding/page_five.dart';
 import 'package:habitt/pages/onboarding/page_four.dart';
 import 'package:habitt/pages/onboarding/page_one.dart';
 import 'package:habitt/pages/onboarding/page_three.dart';
 import 'package:habitt/pages/onboarding/page_two.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -36,6 +41,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             },
             controller: controller,
             children: const [
+              LanguagePage(),
               PageOne(),
               PageTwo(),
               PageThree(),
@@ -48,20 +54,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  currentPage < 4
+                  currentPage < 5
                       ? GestureDetector(
                           onTap: () {
                             setState(() {
-                              controller.animateToPage(4,
+                              controller.animateToPage(5,
                                   duration: const Duration(milliseconds: 400),
                                   curve: Curves.easeInOut);
                             });
                           },
-                          child: const SizedBox(
-                            width: 50,
+                          child: SizedBox(
+                            width: 75,
                             child: Text(
-                              "Skip",
-                              style: TextStyle(
+                              textAlign: TextAlign.center,
+                              AppLocale.skip.getString(context),
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                           ),
@@ -69,12 +76,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       : const SizedBox(width: 50),
                   SmoothPageIndicator(
                     controller: controller,
-                    count: 5,
+                    count: 6,
                     effect: ExpandingDotsEffect(
                         activeDotColor: AppColors.theLightColor,
                         dotColor: Colors.grey.shade800),
                   ),
-                  currentPage != 4
+                  currentPage != 5
                       ? GestureDetector(
                           onTap: () {
                             setState(() {
@@ -83,25 +90,33 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   curve: Curves.easeInOut);
                             });
                           },
-                          child: const SizedBox(
-                            width: 50,
+                          child: SizedBox(
+                            width: 75,
                             child: Text(
-                              "Next",
-                              style: TextStyle(
+                              textAlign: TextAlign.center,
+                              AppLocale.next.getString(context),
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                           ),
                         )
                       : GestureDetector(
-                          onTap: () => Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          )),
-                          child: const SizedBox(
-                            width: 50,
+                          onTap: () {
+                            context
+                                .read<DataProvider>()
+                                .initializeTagsList(context);
+                            addInitialData(context);
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => const HomePage(),
+                            ));
+                          },
+                          child: SizedBox(
+                            width: 75,
                             child: Text(
-                              "Done",
-                              style: TextStyle(
+                              textAlign: TextAlign.center,
+                              AppLocale.done.getString(context),
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                           ),

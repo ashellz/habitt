@@ -6,7 +6,7 @@ import 'package:habitt/pages/menu/Calendar%20Page/widgets/category_widgets.dart'
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:provider/provider.dart';
 
-otherCategoriesList(
+otherCategoriesListCalendar(
     BuildContext context, chosenDay, bool isAdLoaded, interstitialAd) {
   late int habitListLength = 0;
   late List habitsOnDate = [];

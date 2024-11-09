@@ -48,14 +48,12 @@ class HabitProvider extends ChangeNotifier {
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
   String? _tagSelected = 'All';
-  int allHabitsCompletedStreakP = streakBox.get('allHabitsCompletedStreak')!;
+  int allHabitsCompletedStreak = streakBox.get('allHabitsCompletedStreak')!;
 
-  List _habitNotifications = [];
+  List habitNotifications = [];
 
-  List get habitNotifications => _habitNotifications;
   String? get tagSelected => _tagSelected;
   double get mainCategoryHeight => _mainCategoryHeight;
-  int get allHabitsCompletedStreak => allHabitsCompletedStreakP;
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
@@ -87,6 +85,18 @@ class HabitProvider extends ChangeNotifier {
 
   void resetSomethingEdited() {
     somethingEdited = false;
+    notifyListeners();
+  }
+
+  setHabitGoalValue(int value) {
+    habitGoalValue = value;
+    getPageHeight(false);
+    notifyListeners();
+  }
+
+  updateAllHabitsCompletedStreak(int value) {
+    allHabitsCompletedStreak = value;
+    streakBox.put('allHabitsCompletedStreak', value);
     notifyListeners();
   }
 
@@ -127,35 +137,17 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void changeNotification(List notification) {
-    _habitNotifications = notification;
+    habitNotifications = notification;
     notifyListeners();
   }
 
   void removeNotification(notification) {
-    _habitNotifications.remove(notification);
+    habitNotifications.remove(notification);
     notifyListeners();
   }
 
   void setTagSelected(String? tag) {
     _tagSelected = tag;
-    notifyListeners();
-  }
-
-  void chooseTimeBasedText() {
-    int hour = DateTime.now().hour;
-
-    if (hour >= 4 && hour < 12) {
-      timeBasedText = "Good morning";
-    } else if (hour >= 12 && hour < 19) {
-      timeBasedText = "Good afternoon";
-    } else {
-      timeBasedText = "Good evening";
-    }
-
-    if (!greetingTexts.contains(timeBasedText)) {
-      greetingTexts.add(timeBasedText);
-    }
-
     notifyListeners();
   }
 
@@ -522,7 +514,7 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateLastOpenedDate() async {
+  void updateLastOpenedDate(BuildContext context) async {
     DateTime now = DateTime.now();
     int day = now.day;
     int lastOpenedDate = streakBox.get('lastOpenedDay') ?? 0;
@@ -535,7 +527,7 @@ class HabitProvider extends ChangeNotifier {
       saveHabitsForToday();
 
       if (userId != null) {
-        await backupHiveBoxesToFirebase(userId, true);
+        await backupHiveBoxesToFirebase(userId, true, context);
       }
     }
   }

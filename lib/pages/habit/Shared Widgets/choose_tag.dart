@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/showCustomDialog.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/add_tag.dart';
 import 'package:provider/provider.dart';
 
@@ -33,24 +36,25 @@ class _ChooseTagState extends State<ChooseTag> {
               Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
-                  onTap: () {
-                    selectTag(i, context, widget.isEdit, setState);
-                    context.read<HabitProvider>().updateSomethingEdited();
-                  },
-                  onLongPress: () {
-                    deleteTag(i, context, widget.isEdit, setState);
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: habitTag == tagBox.getAt(i)!.tag
-                            ? AppColors.theOtherColor
-                            : context.watch<ColorProvider>().greyColor,
-                      ),
-                      height: 30,
-                      child: Center(child: Text(tagBox.getAt(i)!.tag))),
-                ),
+                    onTap: () {
+                      selectTag(i, context, widget.isEdit, setState);
+                      context.read<HabitProvider>().updateSomethingEdited();
+                    },
+                    onLongPress: () {
+                      deleteTag(i, context, widget.isEdit, setState);
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: habitTag == tagBox.getAt(i)!.tag
+                              ? AppColors.theOtherColor
+                              : context.watch<ColorProvider>().greyColor,
+                        ),
+                        height: 30,
+                        child: Center(
+                            child: Text(
+                                translateTag(tagBox.getAt(i)!.tag, context))))),
               ),
             Padding(
               padding: const EdgeInsets.only(right: 10),
@@ -93,8 +97,9 @@ void deleteTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
   if (tagBox.getAt(i)!.tag != "No tag") {
     showCustomDialog(
         context,
-        "Delete Tag",
-        Text("Are you sure you want to delete '$tempHabitTag' tag?",
+        AppLocale.deleteTag.getString(context),
+        Text(
+            "${AppLocale.areYouSureDeleteTag1.getString(context)}'${translateTag(tempHabitTag, context)}'${AppLocale.areYouSureDeleteTag2.getString(context)}",
             textAlign: TextAlign.center), () {
       for (int j = 0; j < habitBox.length; j++) {
         if (habitBox.getAt(j)!.tag == tagBox.getAt(i)!.tag) {
@@ -114,6 +119,6 @@ void deleteTag(int i, BuildContext context, bool isEdit, StateSetter setState) {
       setState(() {
         tagBox.deleteAt(i);
       });
-    }, "Yes", "No");
+    }, AppLocale.yes.getString(context), AppLocale.no.getString(context));
   }
 }

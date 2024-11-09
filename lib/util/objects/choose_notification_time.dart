@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -94,12 +96,12 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
                     child: Text(
-                      "Choose time",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      AppLocale.chooseTime.getString(context),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Stack(
@@ -186,9 +188,9 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                             fixedSize: Size(
                                 MediaQuery.of(context).size.width / 2 - 20, 50),
                           ),
-                          child: const Text(
-                            "Cancel",
-                            style: TextStyle(color: Colors.white),
+                          child: Text(
+                            AppLocale.cancel.getString(context),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         const SizedBox(
@@ -235,9 +237,9 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width / 2 - 20,
                                   50)),
-                          child: const Text(
-                            "Save",
-                            style: TextStyle(color: Colors.white),
+                          child: Text(
+                            AppLocale.save.getString(context),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         )
                       ],

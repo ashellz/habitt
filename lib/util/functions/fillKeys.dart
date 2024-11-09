@@ -103,8 +103,8 @@ fillKeys() {
   if (!boolBox.containsKey('hasNotificationAccess')) {
     boolBox.put('hasNotificationAccess', false);
   }
-  if (!boolBox.containsKey('disabledBatteryOptimization')) {
-    boolBox.put('disabledBatteryOptimization', false);
+  if (!boolBox.containsKey('accountDeletionPending')) {
+    boolBox.put('accountDeletionPending', false);
   }
 
   if (boolBox.get("isGuest") == null) {
@@ -113,6 +113,10 @@ fillKeys() {
 
   if (boolBox.get("isLoggenIn") == null) {
     boolBox.put("isLoggenIn", false);
+  }
+
+  if (stringBox.get("language") == null) {
+    stringBox.put("language", "en");
   }
 }
 

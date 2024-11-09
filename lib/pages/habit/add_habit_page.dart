@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:flutter_localization/flutter_localization.dart";
+import "package:habitt/data/app_locale.dart";
 import "package:habitt/pages/habit/notifications_page.dart";
 import "package:habitt/pages/habit/shared%20widgets/additional_task.dart";
 import "package:habitt/pages/habit/shared%20widgets/choose_tag.dart";
@@ -65,7 +67,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               slivers: [
                 ExpandableAppBar(
                   actionsWidget: notificationBell(context),
-                  title: "New Habit",
+                  title: AppLocale.newHabit.getString(context),
                 ),
                 SliverToBoxAdapter(
                   child: Column(children: [

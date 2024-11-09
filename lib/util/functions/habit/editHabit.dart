@@ -4,6 +4,7 @@ import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/habit/checkForTasks.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -105,6 +106,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
+    checkForTasks(context);
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   }
 

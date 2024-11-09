@@ -566,10 +566,7 @@ void checkCompleteHabit(amountCheck, durationCheck, int index,
           .read<HabitProvider>()
           .completeHabitProvider(index, isAdLoaded, interstitialAd);
     } else {
-      showDialog(
-          context: context,
-          builder: (context) =>
-              completeHabitDialog(index, isAdLoaded, interstitialAd));
+      completeHabitDialog(index, isAdLoaded, interstitialAd, context);
     }
   } else {
     context

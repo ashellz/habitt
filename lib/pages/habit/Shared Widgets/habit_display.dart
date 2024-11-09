@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/translate_category.dart';
 import 'package:provider/provider.dart';
 
 class HabitDisplay extends StatelessWidget {
@@ -49,7 +50,10 @@ class HabitDisplay extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(context.watch<HabitProvider>().dropDownValue,
+                  Text(
+                      translateCategory(
+                          context.watch<HabitProvider>().dropDownValue,
+                          context),
                       style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,

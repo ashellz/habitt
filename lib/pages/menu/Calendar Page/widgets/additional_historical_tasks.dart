@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/historical_habit.dart';
 
 import 'package:habitt/pages/home/home_page.dart';
@@ -93,12 +95,12 @@ class TasksDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 30, left: 40, right: 40),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30, left: 40, right: 40),
       child: Row(
         children: <Widget>[
           // Left Divider
-          Expanded(
+          const Expanded(
             child: Divider(
               color: Colors.grey, // Customize color
               thickness: 1, // Customize thickness
@@ -106,17 +108,18 @@ class TasksDivider extends StatelessWidget {
           ),
           // The Text in the middle
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              "Additional tasks", // Customize the text
-              style: TextStyle(
+              AppLocale.additionalTasks
+                  .getString(context), // Customize the text
+              style: const TextStyle(
                 fontSize: 14,
                 color: Colors.grey,
               ), // Customize text style
             ),
           ),
           // Right Divider
-          Expanded(
+          const Expanded(
             child: Divider(
               color: Colors.grey, // Customize color
               thickness: 1, // Customize thickness

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/tags.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
@@ -60,9 +62,9 @@ class _AddTagWidgetState extends State<AddTagWidget> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    "Add tag",
-                    style: TextStyle(
+                  Text(
+                    AppLocale.addTag.getString(context),
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
@@ -136,13 +138,13 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                                 fontSize: 16.0,
                                 color: Colors.white38,
                                 fontWeight: FontWeight.bold),
-                            labelText: "TAG",
+                            labelText: AppLocale.tag.getString(context),
                             border: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15.0)),
                               borderSide: BorderSide(color: Colors.black),
                             ),
-                            hintText: 'Tag name',
+                            hintText: AppLocale.tagName.getString(context),
                             hintStyle: const TextStyle(color: Colors.white38),
                             filled: true,
                             fillColor: context.watch<ColorProvider>().greyColor,
@@ -162,9 +164,9 @@ class _AddTagWidgetState extends State<AddTagWidget> {
                             ),
                             backgroundColor:
                                 WidgetStateProperty.all(theLightGreen)),
-                        child: const Text(
-                          "Add",
-                          style: TextStyle(color: Colors.white),
+                        child: Text(
+                          AppLocale.add.getString(context),
+                          style: const TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
                           if (!formKey.currentState!.validate()) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/habit/icons_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -71,7 +73,7 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
               fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: AppColors.theLightColor),
-          labelText: 'Habit Name',
+          labelText: AppLocale.habitName.getString(context),
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
             borderSide: BorderSide(color: Colors.black),

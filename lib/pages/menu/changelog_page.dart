@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -24,11 +27,22 @@ class _ChangelogPageState extends State<ChangelogPage> {
     return Scaffold(
       backgroundColor: context.watch<ColorProvider>().blackColor,
       body: CustomScrollView(physics: const BouncingScrollPhysics(), slivers: [
-        ExpandableAppBar(actionsWidget: Container(), title: "Changelog"),
+        ExpandableAppBar(
+            actionsWidget: Container(),
+            title: AppLocale.changelog.getString(context)),
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (context.watch<LanguageProvider>().languageCode == "ba")
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text("Izmjene će uvijek biti na engleskom jeziku.",
+                      style:
+                          TextStyle(color: Colors.grey.shade600, fontSize: 16)),
+                ),
+              changelogContainer("v1.0.5",
+                  "- Added Bosnian language\n- Made a few design changes\n- You can now only sign in with google, other options are unavaiable\n- Changed how account and data deletion works\n- Fixed more bugs"),
               changelogContainer("v1.0.4",
                   "- Added iOS support\n- Added additional tasks feature\n- Added a greenish color theme as default (you can change this in settings)\n- Added ability to import current habits to any day in the past since the day the user joined until the current day\n- Improved home screen under the hood\n- Changed dialogs appearence\n- Changed when the login screen appears\n- Minimalized the profile page\n- Increased amount of ads that appear\n- Increased amount of android devices compatible (down to Android 6.0)\n- Various bugs fixed"),
               changelogContainer("v1.0.3",

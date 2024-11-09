@@ -1,9 +1,12 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/settings/notification_container.dart';
 import 'package:habitt/util/objects/settings/text_and_switch_container.dart';
@@ -19,6 +22,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool onInit = true;
   List<String> notificationCategories = [
     "Morning",
     "Afternoon",
@@ -35,27 +39,60 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (onInit) {
+      notificationCategories = [
+        AppLocale.notificationMorning.getString(context),
+        AppLocale.notificationAfternoon.getString(context),
+        AppLocale.notificationEvening.getString(context),
+        AppLocale.notificationDaily.getString(context),
+      ];
+
+      onInit = false;
+    }
+
     return Scaffold(
       backgroundColor: context.watch<ColorProvider>().blackColor,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          ExpandableAppBar(actionsWidget: Container(), title: "Settings"),
+          ExpandableAppBar(
+              actionsWidget: TextButton(
+                  onPressed: () {
+                    var languageProvider =
+                        Provider.of<LanguageProvider>(context, listen: false);
+                    final newLanguage =
+                        languageProvider.languageCode == 'en' ? 'ba' : 'en';
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      languageProvider.changeLanguage(newLanguage);
+                    });
+
+                    onInit = true;
+                  },
+                  child: Text(
+                      context
+                          .watch<LanguageProvider>()
+                          .languageCode
+                          .toUpperCase(),
+                      style: const TextStyle(color: Colors.white))),
+              title: AppLocale.settings.getString(context)),
           SliverToBoxAdapter(
               child: Padding(
             padding: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 10),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, bottom: 10),
                   child: Text(
-                    "Appearance",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    AppLocale.appearance.getString(context),
+                    key: ValueKey<String>(
+                        AppLocale.appearance.getString(context)),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 textAndSwitchContainer(
-                  "Display empty categories on home page",
+                  AppLocale.displayEmptyCategories.getString(context),
                   Switch.adaptive(
                       activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -69,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }),
                 ),
                 textAndSwitchContainer(
-                  "Black mode",
+                  AppLocale.blackMode.getString(context),
                   Switch.adaptive(
                       activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -81,18 +118,18 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       }),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    "Prefferences",
-                    style: TextStyle(
-                        fontSize: 20,
+                    AppLocale.preferences.getString(context),
+                    style: const TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
                 ),
                 textAndSwitchContainer(
-                  "Haptic feedback (vibration)",
+                  AppLocale.hapticFeedback.getString(context),
                   Switch.adaptive(
                       activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -105,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }),
                 ),
                 textAndSwitchContainer(
-                  "Sound",
+                  AppLocale.sound.getString(context),
                   Switch.adaptive(
                       activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -116,7 +153,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }),
                 ),
                 textAndSwitchContainer(
-                  "12-hour format",
+                  AppLocale.hourFormat.getString(context),
                   Switch.adaptive(
                       activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -127,7 +164,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }),
                 ),
                 textAndSwitchContainer(
-                  "Edit habit in the past",
+                  AppLocale.editHabitInThePast.getString(context),
                   Switch.adaptive(
                       activeColor: AppColors.theLightColor,
                       inactiveTrackColor: Colors.grey.shade800,
@@ -139,18 +176,19 @@ class _SettingsPageState extends State<SettingsPage> {
                             .updateEditHistoricalHabits(value);
                       }),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 10),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    "Notifications",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    AppLocale.notifications.getString(context),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 for (String category in notificationCategories)
-                  notificationContainer(category),
+                  notificationContainer(category, context),
                 VisibilityButton(
                   visible: boolBox.get('hasNotificationAccess')!,
-                  text: "Request Notification Access",
+                  text: AppLocale.requestNotificationAccess.getString(context),
                   func: () => requestNotificationAccess(false, setState),
                 ),
               ],

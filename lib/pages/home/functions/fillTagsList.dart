@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 
 void fillTagsList(BuildContext context) {
   categoriesList = ["All"];
@@ -55,15 +57,22 @@ void fillTagsList(BuildContext context) {
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
 
+  // add tags to categoriesList
+
+  List<String> tagsList = context.watch<DataProvider>().tagsList;
+
   for (int i = 0; i < tagBox.length; i++) {
     String tag = tagBox.getAt(i)!.tag;
     if (!tagsList.contains(tag)) {
-      tagsList.add(tag);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<DataProvider>().addToTagsList(tag);
+      });
     }
   }
 
   for (int i = 0; i < tagsList.length; i++) {
-    if (tagsList[i] != 'No tag' && !categoriesList.contains(tagsList[i])) {
+    if ((tagsList[i] != 'No tag' || tagsList[i] != 'Bez oznake') &&
+        !categoriesList.contains(tagsList[i])) {
       categoriesList.add(tagsList[i]);
     }
   }
