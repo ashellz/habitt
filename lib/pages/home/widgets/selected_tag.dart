@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/pages/home/widgets/additional_tasks.dart';
 import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
 
@@ -24,6 +25,12 @@ Widget tagSelectedWidget(tagSelected, editcontroller, bool isAdLoaded,
               interstitialAd: interstitialAd,
             ),
           ),
+      AdditionalTasks(
+        editcontroller: editcontroller,
+        isAdLoaded: isAdLoaded,
+        interstitialAd: interstitialAd,
+        tag: tagSelected,
+      ),
       const SizedBox(height: 20),
     ],
   );

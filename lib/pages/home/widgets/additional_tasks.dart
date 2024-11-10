@@ -12,34 +12,48 @@ class AdditionalTasks extends StatefulWidget {
       {super.key,
       required this.editcontroller,
       required this.isAdLoaded,
-      required this.interstitialAd});
+      required this.interstitialAd,
+      this.tag = ""});
 
   final TextEditingController editcontroller;
   final bool isAdLoaded;
   final InterstitialAd? interstitialAd;
+  final String tag;
 
   @override
   State<AdditionalTasks> createState() => _AdditionalTasksState();
 }
 
 class _AdditionalTasksState extends State<AdditionalTasks> {
-  bool hasTasks = false;
+  List tasks = [];
+  List categories = ["Any time", "Morning", "Afternoon", "Evening"];
 
   @override
   void initState() {
     super.initState();
-
-    for (var habit in habitBox.values) {
-      if (habit.task) {
-        hasTasks = true;
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    hasTasks = context.watch<DataProvider>().hasTasks;
-    if (!hasTasks) {
+    for (var habit in habitBox.values) {
+      if (habit.task) {
+        if (!tasks.contains(habit)) {
+          if (widget.tag == "") {
+            tasks.add(habit);
+          } else if (categories.contains(widget.tag)) {
+            if (habit.category == widget.tag) {
+              tasks.add(habit);
+            }
+          } else {
+            if (habit.tag == widget.tag) {
+              tasks.add(habit);
+            }
+          }
+        }
+      }
+    }
+
+    if (tasks.isEmpty || !context.watch<DataProvider>().hasTasks) {
       return const SizedBox();
     } else {
       return Padding(
@@ -47,17 +61,16 @@ class _AdditionalTasksState extends State<AdditionalTasks> {
         child: Column(
           children: [
             const TasksDivider(),
-            for (int i = 0; i < habitBox.length; i++)
-              if (habitBox.getAt(i)?.task == true)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: NewHabitTile(
-                    id: habitBox.getAt(i)!.id,
-                    editcontroller: widget.editcontroller,
-                    isAdLoaded: widget.isAdLoaded,
-                    interstitialAd: widget.interstitialAd,
-                  ),
-                )
+            for (int i = 0; i < tasks.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: NewHabitTile(
+                  id: tasks[i].id,
+                  editcontroller: widget.editcontroller,
+                  isAdLoaded: widget.isAdLoaded,
+                  interstitialAd: widget.interstitialAd,
+                ),
+              ),
           ],
         ),
       );

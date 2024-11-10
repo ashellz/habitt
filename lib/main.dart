@@ -167,10 +167,6 @@ class AuthCheck extends StatelessWidget {
     return FutureBuilder<void>(
       future: openHiveAndPerformTasks(context),
       builder: (context, futureSnapshot) {
-        if (futureSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator.adaptive());
-        }
-
         // After the Future is complete, check for onboarding or homepage
         if (boolBox.containsKey("firstTimeOpened")) {
           if (boolBox.get("firstTimeOpened")!) {
