@@ -4,8 +4,8 @@ import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:habitt/util/functions/habit/checkForTasks.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:provider/provider.dart';
 
@@ -53,7 +53,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   saveHabitsForToday();
   // Updates the main category height if new habit category is same as the main category
   if (context.mounted) {
-    checkForTasks(context);
+    context.read<DataProvider>().updateHabits();
     if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
         context.watch<HabitProvider>().mainCategory) {
       Provider.of<HabitProvider>(context, listen: false)

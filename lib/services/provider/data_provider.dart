@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
+import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
 
 class DataProvider extends ChangeNotifier {
@@ -13,7 +14,14 @@ class DataProvider extends ChangeNotifier {
   List<String> greetingTexts = [];
   String greetingText = "";
 
-  bool hasTasks = false;
+  List<HabitData> tasksList = [];
+  List<HabitData> habitsList = [];
+
+  void updateHabits() {
+    habitsList = habitBox.values.toList();
+    tasksList = habitsList.where((habit) => habit.task).toList();
+    notifyListeners();
+  }
 
   void updateAccountDeletionPending(bool value) {
     accountDeletionPending = value;

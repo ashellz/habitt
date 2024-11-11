@@ -193,6 +193,7 @@ Future<void> openHiveAndPerformTasks(BuildContext context) async {
       context.read<LanguageProvider>().loadLanguage();
       doOnce = false;
     }
+    context.read<DataProvider>().updateHabits();
     context.read<DataProvider>().initializeLists(context);
     context.read<HabitProvider>().chooseMainCategory();
     context.read<HabitProvider>().updateMainCategoryHeight();

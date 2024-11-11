@@ -1,6 +1,7 @@
 import 'package:habitt/pages/home/home_page.dart';
 
 bool categoryCompleted(String category) {
+  // does count tasks as well
   int habits = 0;
   int completedHabits = 0;
 
@@ -15,10 +16,10 @@ bool categoryCompleted(String category) {
   }
 
   for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == category && !habitBox.getAt(i)!.task) {
+    if (habitBox.getAt(i)?.category == category) {
       habits++;
 
-      if (habitBox.getAt(i)?.completed == true && !habitBox.getAt(i)!.task) {
+      if (habitBox.getAt(i)?.completed == true) {
         completedHabits++;
       }
     }
@@ -54,7 +55,7 @@ bool tagCompleted(String tag) {
 
 bool allHabitsCompleted() {
   for (var habit in habitBox.values) {
-    if (!habit.completed && !habit.task) {
+    if (!habit.completed) {
       return false;
     }
   }

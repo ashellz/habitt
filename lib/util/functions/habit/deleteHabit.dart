@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:habitt/util/functions/habit/checkForTasks.dart';
 import 'package:provider/provider.dart';
 
 late String category;
@@ -30,7 +30,8 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
   }
 
   habitBox.deleteAt(index);
-  checkForTasks(context);
+
+  Provider.of<DataProvider>(context, listen: false).updateHabits();
 
   deleted = true;
   editcontroller.text = "";
