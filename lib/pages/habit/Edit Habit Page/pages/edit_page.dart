@@ -4,6 +4,7 @@ import 'package:habitt/pages/habit/shared%20widgets/choose_tag.dart';
 import 'package:habitt/pages/habit/shared%20widgets/dropdown_menu.dart';
 import 'package:habitt/pages/habit/shared%20widgets/habit_goal.dart';
 import 'package:habitt/pages/habit/shared%20widgets/habit_name_textfield.dart';
+import 'package:habitt/pages/habit/shared%20widgets/habit_type.dart';
 import 'package:habitt/pages/habit/shared%20widgets/notes_text_field.dart';
 
 Widget editPage(
@@ -11,6 +12,7 @@ Widget editPage(
     BuildContext context,
     TextEditingController editcontroller,
     TextEditingController desccontroller,
+    TextEditingController habitTypeController,
     int index) {
   return Column(children: [
     //TAG
@@ -30,7 +32,9 @@ Widget editPage(
     //DROPDOWN MENU
 
     const DropDownMenu(),
-    const SizedBox(height: 15),
+
+    //HABIT TYPE
+    HabitType(controller: habitTypeController, isEdit: true),
 
     // HABIT GOAL
     HabitGoal(index: index, isEdit: true),

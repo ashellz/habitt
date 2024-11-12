@@ -33,6 +33,7 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends State<EditHabitPage> {
+  final TextEditingController habitTypeController = TextEditingController();
   InterstitialAd? interstitialAd;
   bool isAdLoaded = false;
   bool firstPage = true;
@@ -68,6 +69,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
   @override
   void initState() {
     super.initState();
+    habitTypeController.text = "Daily";
     initInterstitialAd();
     context.read<HabitProvider>().getPageHeight(firstPage);
   }
@@ -107,12 +109,12 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 }),
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.percent_outlined),
+                icon: const Icon(Icons.percent_outlined),
                 label: AppLocale.stats.getString(context),
                 backgroundColor: Colors.black,
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon: const Icon(
                   Icons.edit,
                 ),
                 label: AppLocale.edit.getString(context),
@@ -177,7 +179,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
                                     everyFifthDay,
                                     everyFifthMonth)
                                 : editPage(setState, context, editcontroller,
-                                    desccontroller, index),
+                                    desccontroller, habitTypeController, index),
                           );
                         },
                       ),

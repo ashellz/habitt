@@ -8,6 +8,7 @@ import "package:habitt/pages/habit/shared%20widgets/dropdown_menu.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_display.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_goal.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_name_textfield.dart";
+import "package:habitt/pages/habit/shared%20widgets/habit_type.dart";
 import "package:habitt/pages/habit/shared%20widgets/notes_text_field.dart";
 
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
@@ -37,10 +38,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
   ScrollController scrollController = ScrollController();
   double scrollPosition = 0.0;
   final chooseCategoriesList = ["Any time", "Morning", "Afternoon", "Evening"];
+  final TextEditingController habitTypeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    habitTypeController.text = "Daily";
     scrollController.addListener(() {
       setState(() {
         scrollPosition = scrollController.position.pixels;
@@ -93,7 +96,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
                           // DROPDOWN MENU
                           const DropDownMenu(),
-                          const SizedBox(height: 15),
+
+                          // HABIT TYPE
+                          HabitType(
+                              controller: habitTypeController, isEdit: false),
 
                           // HABIT GOAL
                           const HabitGoal(

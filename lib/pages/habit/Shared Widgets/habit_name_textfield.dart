@@ -81,17 +81,20 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
           hintStyle: const TextStyle(color: Colors.white38),
           filled: true,
           fillColor: context.watch<ColorProvider>().greyColor,
-          suffixIcon: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const IconsPage(),
-                ),
-              );
-            },
-            icon: context.watch<HabitProvider>().updatedIcon,
-            color: Colors.white,
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const IconsPage(),
+                  ),
+                );
+              },
+              icon: context.watch<HabitProvider>().updatedIcon,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

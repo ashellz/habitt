@@ -94,6 +94,8 @@ mixin AppLocale {
       'Confirm revoke account deletion';
   static const String confirmDeleteAccount =
       'Your account and all associated data will be deleted in 14 days, until then you have a chance to abort this action. Are you sure?';
+  static const String joined = 'Joined';
+  static const String onDate = 'on';
 
   //Home Page
   static const String goodMorning = 'Good Morning';
@@ -141,6 +143,7 @@ mixin AppLocale {
   static const String currentStreak = 'Current streak';
   static const String bestStreak = 'Best streak';
   static const String completionRate = 'Completion rate';
+  static const String habitType = 'Habit Type';
 
   // Notifications Page
   static const String habitNotifications = 'Habit Notifications';
@@ -239,6 +242,7 @@ mixin AppLocale {
     currentStreak: 'Current streak',
     bestStreak: 'Best streak',
     completionRate: "Completion rate",
+    habitType: "Habit Type",
     all: 'All',
     anyTime: 'Any time',
     morning: 'Morning',
@@ -364,6 +368,7 @@ mixin AppLocale {
     currentStreak: 'Trenutni streak',
     bestStreak: 'Najbolji streak',
     completionRate: "Graf ispunjavanja",
+    habitType: 'Tip Navike',
     all: 'Sve',
     anyTime: 'Bilo kada',
     morning: 'Jutro',
