@@ -103,6 +103,7 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
     "Five days",
     "Six days"
   ];
+
   List<bool> selectedDaysAWeek = [
     false,
     false,
@@ -322,6 +323,7 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
 
   @override
   Widget build(BuildContext context) {
+    int selectedDays = 0;
     return Expanded(
       child: AspectRatio(
         aspectRatio: 1,
@@ -329,8 +331,15 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
           padding: const EdgeInsets.all(5),
           child: GestureDetector(
             onTap: () => setState(() {
-              widget.selectedDaysAWeek[widget.index] =
-                  !widget.selectedDaysAWeek[widget.index];
+              for (bool selectedDay in widget.selectedDaysAWeek) {
+                if (selectedDay) {
+                  selectedDays++;
+                }
+              }
+              if (selectedDays != 6 || widget.selectedDaysAWeek[widget.index]) {
+                widget.selectedDaysAWeek[widget.index] =
+                    !widget.selectedDaysAWeek[widget.index];
+              }
             }),
             child: Stack(
               children: [
