@@ -454,10 +454,7 @@ void checkCompleteHabit(
             .completeHistoricalHabit(index, habit, time, context);
       }
     } else {
-      showDialog(
-          context: context,
-          builder: (context) =>
-              completeHistoricalHabitDialog(index, context, time, isToday));
+      completeHistoricalHabitDialog(index, context, time, isToday);
     }
   } else {
     if (isToday) {

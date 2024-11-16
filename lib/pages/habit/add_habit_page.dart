@@ -98,8 +98,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
                           const DropDownMenu(),
 
                           // HABIT TYPE
-                          HabitType(
-                              controller: habitTypeController, isEdit: false),
+                          HabitType(isEdit: false),
 
                           // HABIT GOAL
                           const HabitGoal(

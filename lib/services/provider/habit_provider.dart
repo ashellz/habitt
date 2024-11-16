@@ -105,11 +105,12 @@ class HabitProvider extends ChangeNotifier {
     if (firstPage) {
       editHabitPageHeight += 20;
     } else {
+      editHabitPageHeight += 50;
       if (habitGoalValue != 0) {
-        editHabitPageHeight += 135;
+        editHabitPageHeight += 150;
       }
       if (categoriesExpanded) {
-        editHabitPageHeight += 190;
+        editHabitPageHeight += 200;
       }
     }
   }

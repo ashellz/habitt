@@ -17,6 +17,13 @@ class DataProvider extends ChangeNotifier {
   List<HabitData> tasksList = [];
   List<HabitData> habitsList = [];
 
+  TextEditingController habitTypeController = TextEditingController();
+
+  void updateHabitType(String value) {
+    habitTypeController.text = value;
+    notifyListeners();
+  }
+
   void updateHabits() {
     habitsList = habitBox.values.toList();
     tasksList = habitsList.where((habit) => habit.task).toList();

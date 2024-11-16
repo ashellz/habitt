@@ -318,6 +318,8 @@ void openAddHabitPage(
     );
 
     if (context.mounted) {
+      Provider.of<DataProvider>(context, listen: false).updateHabitType(
+          "Daily"); // TODO: Change this to grab the actual value of the habit
       Provider.of<HabitProvider>(context, listen: false)
           .notescontroller
           .clear();

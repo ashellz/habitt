@@ -5,6 +5,7 @@ import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletionRateGraph.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -64,6 +65,7 @@ void buildEditedValues(
 
     Provider.of<HabitProvider>(context, listen: false).additionalTask =
         habit.task;
+    Provider.of<DataProvider>(context, listen: false).updateHabitType("Daily");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context

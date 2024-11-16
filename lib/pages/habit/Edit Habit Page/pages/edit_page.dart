@@ -34,7 +34,7 @@ Widget editPage(
     const DropDownMenu(),
 
     //HABIT TYPE
-    HabitType(controller: habitTypeController, isEdit: true),
+    HabitType(isEdit: true),
 
     // HABIT GOAL
     HabitGoal(index: index, isEdit: true),
