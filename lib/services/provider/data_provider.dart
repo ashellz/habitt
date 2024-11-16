@@ -16,8 +16,19 @@ class DataProvider extends ChangeNotifier {
 
   List<HabitData> tasksList = [];
   List<HabitData> habitsList = [];
-
   TextEditingController habitTypeController = TextEditingController();
+
+  int valueSelected = 0;
+
+  void setValueSelected(int value) {
+    valueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseValueSelected() {
+    valueSelected++;
+    notifyListeners();
+  }
 
   void updateHabitType(String value) {
     habitTypeController.text = value;

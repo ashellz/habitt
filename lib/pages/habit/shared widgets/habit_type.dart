@@ -93,7 +93,6 @@ class _HabitNameTextFieldState extends State<HabitType> {
 }
 
 void showChooseHabitType(BuildContext context, bool isEdit) {
-  int valueSelected = 0;
   List<String> options = ["Daily", "Weekly", "Monthly", "Custom"];
   List<String> values = [
     "Once",
@@ -116,6 +115,7 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
 
   void showHabitTypeOptions(BuildContext context, String type) {
     bool showMoreOptionsWeekly = false;
+    context.read<DataProvider>().setValueSelected(0); // remove later
 
     showModalBottomSheet(
       context: context,
@@ -147,18 +147,23 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                                             .watch<ColorProvider>()
                                             .greyColor)),
                                 onPressed: () {
-                                  if (valueSelected == 5) {
-                                    setState(() {
-                                      valueSelected = 0;
-                                    });
+                                  if (Provider.of<DataProvider>(context,
+                                              listen: false)
+                                          .valueSelected >
+                                      4) {
+                                    context
+                                        .read<DataProvider>()
+                                        .setValueSelected(0);
                                   } else {
-                                    setState(() {
-                                      valueSelected++;
-                                    });
+                                    context
+                                        .read<DataProvider>()
+                                        .increaseValueSelected();
                                   }
                                 },
                                 child: Text(
-                                  values[valueSelected],
+                                  values[context
+                                      .watch<DataProvider>()
+                                      .valueSelected],
                                   style: const TextStyle(
                                     fontSize: 18,
                                   ),
@@ -173,7 +178,7 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                         ),
                         const SizedBox(height: 15),
                         Text(
-                          "This habit will appear ${values[valueSelected].toLowerCase()} a week until completed${valueSelected == 0 ? "." : " ${valueSelected + 1} times."}",
+                          "This habit will appear ${values[context.watch<DataProvider>().valueSelected].toLowerCase()} a week until completed${context.watch<DataProvider>().valueSelected == 0 ? "." : " ${context.watch<DataProvider>().valueSelected + 1} times."}",
                           style: const TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(height: 15),
@@ -208,11 +213,15 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                                     children: [
                                       for (int i = 0; i < 7; i++)
                                         SelectableDayInTheWeek(
-                                            selectedDaysAWeek:
-                                                selectedDaysAWeek,
-                                            index: i),
+                                          selectedDaysAWeek: selectedDaysAWeek,
+                                          index: i,
+                                        ),
                                     ]),
-                              )
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                  "Leave unselected if you want the habit to appear every day until completed${context.watch<DataProvider>().valueSelected == 0 ? "." : " ${context.watch<DataProvider>().valueSelected + 1} times."}",
+                                  style: const TextStyle(color: Colors.grey))
                             ],
                           )
                       ],
@@ -336,9 +345,23 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
                   selectedDays++;
                 }
               }
-              if (selectedDays != 6 || widget.selectedDaysAWeek[widget.index]) {
+
+              if (selectedDays < 6 || widget.selectedDaysAWeek[widget.index]) {
                 widget.selectedDaysAWeek[widget.index] =
                     !widget.selectedDaysAWeek[widget.index];
+              }
+
+              selectedDays = 0;
+              for (bool selectedDay in widget.selectedDaysAWeek) {
+                if (selectedDay) {
+                  selectedDays++;
+                }
+              }
+
+              if (selectedDays == 0) {
+                context.read<DataProvider>().setValueSelected(selectedDays);
+              } else {
+                context.read<DataProvider>().setValueSelected(selectedDays - 1);
               }
             }),
             child: Stack(
