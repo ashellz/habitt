@@ -147,6 +147,15 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                                             .watch<ColorProvider>()
                                             .greyColor)),
                                 onPressed: () {
+                                  selectedDaysAWeek = [
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false,
+                                    false
+                                  ];
                                   if (Provider.of<DataProvider>(context,
                                               listen: false)
                                           .valueSelected >
