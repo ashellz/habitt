@@ -160,7 +160,13 @@ void addInitialData(context) {
         notifications: List.empty(),
         longestStreak: 0,
         id: 0,
-        task: false),
+        task: false,
+        type: "Daily",
+        weekValue: 0,
+        monthValue: 0,
+        customValue: 0,
+        selectedDaysAWeek: List.generate(7, (index) => false),
+        selectedDaysAMonth: List.generate(31, (index) => false)),
     HabitData(
         name: 'Add a new habit',
         notes: '',
@@ -178,7 +184,13 @@ void addInitialData(context) {
         notifications: List.empty(),
         longestStreak: 0,
         id: 1,
-        task: false)
+        task: false,
+        type: "Daily",
+        weekValue: 0,
+        monthValue: 0,
+        customValue: 0,
+        selectedDaysAWeek: List.generate(7, (index) => false),
+        selectedDaysAMonth: List.generate(31, (index) => false))
   ];
 
   if (tagBox.isEmpty) {

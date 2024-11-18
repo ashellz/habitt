@@ -71,7 +71,12 @@ void buildEditedValues(
           .read<HabitProvider>()
           .changeNotification(List.from(habit.notifications));
       context.read<HabitProvider>().updateDropDownValue(habit.category);
-      context.read<DataProvider>().updateHabitType("Daily");
+      context.read<DataProvider>().updateHabitType(habit.type);
+      context.read<DataProvider>().setCustomValueSelected(habit.customValue);
+      context.read<DataProvider>().setMonthValueSelected(habit.monthValue);
+      context.read<DataProvider>().setWeekValueSelected(habit.weekValue);
+      context.read<DataProvider>().selectDaysAWeek(habit.selectedDaysAWeek);
+      context.read<DataProvider>().selectDaysAMonth(habit.selectedDaysAMonth);
     });
 
     habitProvider.notescontroller.text = habit.notes;

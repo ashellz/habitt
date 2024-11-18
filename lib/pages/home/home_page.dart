@@ -300,8 +300,12 @@ void openAddHabitPage(
   Provider.of<HabitProvider>(context, listen: false).duration = 0;
   createcontroller.text = AppLocale.habitName.getString(context);
   Provider.of<HabitProvider>(context, listen: false).categoriesExpanded = false;
-
   Provider.of<HabitProvider>(context, listen: false).habitNotifications = [];
+  context.read<DataProvider>().setCustomValueSelected(0);
+  context.read<DataProvider>().setMonthValueSelected(0);
+  context.read<DataProvider>().setWeekValueSelected(0);
+  context.read<DataProvider>().unselectAllDaysAWeek();
+  context.read<DataProvider>().unselectAllDaysAMonth();
 
   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
     return AddHabitPage(

@@ -255,31 +255,38 @@ class HabitProvider extends ChangeNotifier {
       return;
     }
     final updatedHabit = HabitData(
-        name: existingHabit.name,
-        completed: !existingHabit.completed,
-        icon: existingHabit.icon,
-        category: existingHabit.category,
-        streak: existingHabit.streak,
-        amount: existingHabit.amount,
-        amountName: existingHabit.amountName,
-        amountCompleted: !existingHabit.completed
-            ? existingHabit.amount
-            : !existingHabit.skipped
-                ? 0
-                : existingHabit.amountCompleted,
-        duration: existingHabit.duration,
-        durationCompleted: !existingHabit.completed
-            ? existingHabit.duration
-            : !existingHabit.skipped
-                ? 0
-                : existingHabit.durationCompleted,
-        skipped: false,
-        tag: existingHabit.tag,
-        notifications: existingHabit.notifications,
-        notes: existingHabit.notes,
-        longestStreak: existingHabit.longestStreak,
-        id: existingHabit.id,
-        task: existingHabit.task);
+      name: existingHabit.name,
+      completed: !existingHabit.completed,
+      icon: existingHabit.icon,
+      category: existingHabit.category,
+      streak: existingHabit.streak,
+      amount: existingHabit.amount,
+      amountName: existingHabit.amountName,
+      amountCompleted: !existingHabit.completed
+          ? existingHabit.amount
+          : !existingHabit.skipped
+              ? 0
+              : existingHabit.amountCompleted,
+      duration: existingHabit.duration,
+      durationCompleted: !existingHabit.completed
+          ? existingHabit.duration
+          : !existingHabit.skipped
+              ? 0
+              : existingHabit.durationCompleted,
+      skipped: false,
+      tag: existingHabit.tag,
+      notifications: existingHabit.notifications,
+      notes: existingHabit.notes,
+      longestStreak: existingHabit.longestStreak,
+      id: existingHabit.id,
+      task: existingHabit.task,
+      type: existingHabit.type,
+      weekValue: existingHabit.weekValue,
+      monthValue: existingHabit.monthValue,
+      customValue: existingHabit.customValue,
+      selectedDaysAWeek: existingHabit.selectedDaysAWeek,
+      selectedDaysAMonth: existingHabit.selectedDaysAMonth,
+    );
 
     await habitBox.putAt(index, updatedHabit);
 
@@ -415,7 +422,13 @@ class HabitProvider extends ChangeNotifier {
           notes: existingHabit.notes,
           longestStreak: existingHabit.longestStreak,
           id: existingHabit.id,
-          task: existingHabit.task);
+          task: existingHabit.task,
+          type: existingHabit.type,
+          weekValue: existingHabit.weekValue,
+          monthValue: existingHabit.monthValue,
+          customValue: existingHabit.customValue,
+          selectedDaysAWeek: existingHabit.selectedDaysAWeek,
+          selectedDaysAMonth: existingHabit.selectedDaysAMonth);
 
       await habitBox.putAt(index, updatedHabit);
       saveHabitsForToday();
@@ -486,7 +499,13 @@ class HabitProvider extends ChangeNotifier {
             notes: habitBox.getAt(index)!.notes,
             longestStreak: habitBox.getAt(index)!.longestStreak,
             id: habitBox.getAt(index)!.id,
-            task: habitBox.getAt(index)!.task));
+            task: habitBox.getAt(index)!.task,
+            type: habitBox.getAt(index)!.type,
+            weekValue: habitBox.getAt(index)!.weekValue,
+            monthValue: habitBox.getAt(index)!.monthValue,
+            customValue: habitBox.getAt(index)!.customValue,
+            selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
+            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth));
     saveHabitsForToday();
     notifyListeners();
   }
@@ -495,24 +514,29 @@ class HabitProvider extends ChangeNotifier {
     habitBox.putAt(
         index,
         HabitData(
-          name: habitBox.getAt(index)!.name,
-          completed: habitBox.getAt(index)!.completed,
-          icon: habitBox.getAt(index)!.icon,
-          category: habitBox.getAt(index)!.category,
-          streak: habitBox.getAt(index)!.streak,
-          amount: habitBox.getAt(index)!.amount,
-          amountName: habitBox.getAt(index)!.amountName,
-          amountCompleted: theAmountValue,
-          duration: habitBox.getAt(index)!.duration,
-          durationCompleted: habitBox.getAt(index)!.durationCompleted,
-          skipped: habitBox.getAt(index)!.skipped,
-          tag: habitBox.getAt(index)!.tag,
-          notifications: habitBox.getAt(index)!.notifications,
-          notes: habitBox.getAt(index)!.notes,
-          longestStreak: habitBox.getAt(index)!.longestStreak,
-          id: habitBox.getAt(index)!.id,
-          task: habitBox.getAt(index)!.task,
-        ));
+            name: habitBox.getAt(index)!.name,
+            completed: habitBox.getAt(index)!.completed,
+            icon: habitBox.getAt(index)!.icon,
+            category: habitBox.getAt(index)!.category,
+            streak: habitBox.getAt(index)!.streak,
+            amount: habitBox.getAt(index)!.amount,
+            amountName: habitBox.getAt(index)!.amountName,
+            amountCompleted: theAmountValue,
+            duration: habitBox.getAt(index)!.duration,
+            durationCompleted: habitBox.getAt(index)!.durationCompleted,
+            skipped: habitBox.getAt(index)!.skipped,
+            tag: habitBox.getAt(index)!.tag,
+            notifications: habitBox.getAt(index)!.notifications,
+            notes: habitBox.getAt(index)!.notes,
+            longestStreak: habitBox.getAt(index)!.longestStreak,
+            id: habitBox.getAt(index)!.id,
+            task: habitBox.getAt(index)!.task,
+            type: habitBox.getAt(index)!.type,
+            weekValue: habitBox.getAt(index)!.weekValue,
+            monthValue: habitBox.getAt(index)!.monthValue,
+            customValue: habitBox.getAt(index)!.customValue,
+            selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
+            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth));
     saveHabitsForToday();
     notifyListeners();
   }

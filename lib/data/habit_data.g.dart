@@ -34,13 +34,23 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       longestStreak: fields[14] == null ? fields[4] as int : fields[14] as int,
       id: fields[15] == null ? 12345 : fields[15] as int,
       task: fields[16] == null ? false : fields[16] as bool,
+      type: fields[17] == null ? "Daily" : fields[17] as String,
+      weekValue: fields[18] == null ? 0 : fields[18] as int,
+      monthValue: fields[19] == null ? 0 : fields[19] as int,
+      customValue: fields[20] == null ? 0 : fields[20] as int,
+      selectedDaysAWeek: fields[21] == null
+          ? List.generate(7, (index) => false)
+          : fields[21] as List<bool>,
+      selectedDaysAMonth: fields[22] == null
+          ? List.generate(31, (index) => false)
+          : fields[22] as List<bool>,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -74,7 +84,19 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(15)
       ..write(obj.id)
       ..writeByte(16)
-      ..write(obj.task);
+      ..write(obj.task)
+      ..writeByte(17)
+      ..write(obj.type)
+      ..writeByte(18)
+      ..write(obj.weekValue)
+      ..writeByte(19)
+      ..write(obj.monthValue)
+      ..writeByte(20)
+      ..write(obj.customValue)
+      ..writeByte(21)
+      ..write(obj.selectedDaysAWeek)
+      ..writeByte(22)
+      ..write(obj.selectedDaysAMonth);
   }
 
   @override

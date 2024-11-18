@@ -21,7 +21,14 @@ class HabitData extends HiveObject {
       required this.notes,
       required this.longestStreak,
       required this.id,
-      required this.task});
+      required this.task,
+      required this.type,
+      required this.weekValue,
+      required this.monthValue,
+      required this.customValue,
+      required this.selectedDaysAWeek,
+      required this.selectedDaysAMonth});
+
   @HiveField(0)
   String name;
 
@@ -72,4 +79,22 @@ class HabitData extends HiveObject {
 
   @HiveField(16)
   bool task;
+
+  @HiveField(17)
+  String type;
+
+  @HiveField(18)
+  int weekValue;
+
+  @HiveField(19)
+  int monthValue;
+
+  @HiveField(20)
+  int customValue;
+
+  @HiveField(21)
+  List<bool> selectedDaysAWeek;
+
+  @HiveField(22)
+  List<bool> selectedDaysAMonth;
 }

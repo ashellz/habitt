@@ -46,7 +46,20 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
           .text,
       longestStreak: 0,
       id: streakBox.get('highestId')! + 1,
-      task: Provider.of<HabitProvider>(context, listen: false).additionalTask);
+      task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
+      type: Provider.of<DataProvider>(context, listen: false)
+          .habitTypeController
+          .text,
+      weekValue:
+          Provider.of<DataProvider>(context, listen: false).weekValueSelected,
+      monthValue:
+          Provider.of<DataProvider>(context, listen: false).monthValueSelected,
+      customValue:
+          Provider.of<DataProvider>(context, listen: false).customValueSelected,
+      selectedDaysAWeek:
+          Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
+      selectedDaysAMonth:
+          Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth);
   await habitBox.add(myHabit);
   streakBox.put('highestId', streakBox.get('highestId')! + 1);
   hasHabits();

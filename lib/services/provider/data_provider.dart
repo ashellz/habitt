@@ -22,51 +22,9 @@ class DataProvider extends ChangeNotifier {
   int monthValueSelected = 0;
   int customValueSelected = 0;
 
-  List<bool> selectedDaysAWeek = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  List<bool> selectedDaysAWeek = List.generate(7, (index) => false);
 
-  List<bool> selectedDaysAMonth = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ];
+  List<bool> selectedDaysAMonth = List.generate(31, (index) => false);
 
   bool showMoreOptionsWeekly = false;
   bool showMoreOptionsMonthly = false;
@@ -82,14 +40,22 @@ class DataProvider extends ChangeNotifier {
   }
 
   void unselectAllDaysAWeek() {
-    selectedDaysAWeek = [false, false, false, false, false, false, false];
+    selectedDaysAWeek = List.generate(7, (index) => false);
     notifyListeners();
   }
 
   void unselectAllDaysAMonth() {
-    for (int i = 0; i < selectedDaysAMonth.length; i++) {
-      selectedDaysAMonth[i] = false;
-    }
+    selectedDaysAMonth = List.generate(31, (index) => false);
+    notifyListeners();
+  }
+
+  void selectDaysAWeek(List<bool> days) {
+    selectedDaysAWeek = days;
+    notifyListeners();
+  }
+
+  void selectDaysAMonth(List<bool> days) {
+    selectedDaysAMonth = days;
     notifyListeners();
   }
 

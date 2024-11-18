@@ -68,41 +68,49 @@ void editHabit(int index, BuildContext context, editcontroller) {
   habitBox.putAt(
       index,
       HabitData(
-        name: editcontroller.text,
-        completed: resetCompleted ? false : habitBox.getAt(index)!.completed,
-        icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
-            .updatedIcon
-            .icon),
-        category:
-            Provider.of<HabitProvider>(context, listen: false).dropDownValue,
-        streak: habitBox.getAt(index)?.streak ?? 0,
-        amount:
-            Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
-                    1
-                ? Provider.of<HabitProvider>(context, listen: false).amount
-                : habitBox.getAt(index)!.amount,
-        amountName: Provider.of<HabitProvider>(context, listen: false)
-            .habitGoalController
-            .text,
-        amountCompleted:
-            resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
-        duration:
-            Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
-                    2
-                ? duration
-                : habitBox.getAt(index)?.duration ?? 0,
-        durationCompleted:
-            resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
-        skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
-        tag: habitTag,
-        notifications: editHabitNotifications,
-        notes: Provider.of<HabitProvider>(context, listen: false)
-            .notescontroller
-            .text,
-        longestStreak: habitBox.getAt(index)!.longestStreak,
-        id: habitBox.getAt(index)!.id,
-        task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
-      ));
+          name: editcontroller.text,
+          completed: resetCompleted ? false : habitBox.getAt(index)!.completed,
+          icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
+              .updatedIcon
+              .icon),
+          category:
+              Provider.of<HabitProvider>(context, listen: false).dropDownValue,
+          streak: habitBox.getAt(index)?.streak ?? 0,
+          amount:
+              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
+                  ? Provider.of<HabitProvider>(context, listen: false).amount
+                  : habitBox.getAt(index)!.amount,
+          amountName: Provider.of<HabitProvider>(context, listen: false)
+              .habitGoalController
+              .text,
+          amountCompleted:
+              resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
+          duration:
+              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
+                  ? duration
+                  : habitBox.getAt(index)?.duration ?? 0,
+          durationCompleted:
+              resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
+          skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
+          tag: habitTag,
+          notifications: editHabitNotifications,
+          notes: Provider.of<HabitProvider>(context, listen: false)
+              .notescontroller
+              .text,
+          longestStreak: habitBox.getAt(index)!.longestStreak,
+          id: habitBox.getAt(index)!.id,
+          task:
+              Provider.of<HabitProvider>(context, listen: false).additionalTask,
+          type: Provider.of<DataProvider>(context, listen: false)
+              .habitTypeController
+              .text,
+          weekValue: Provider.of<DataProvider>(context, listen: false)
+              .weekValueSelected,
+          monthValue: Provider.of<DataProvider>(context, listen: false)
+              .monthValueSelected,
+          customValue: Provider.of<DataProvider>(context, listen: false).customValueSelected,
+          selectedDaysAWeek: Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
+          selectedDaysAMonth: Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth));
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
