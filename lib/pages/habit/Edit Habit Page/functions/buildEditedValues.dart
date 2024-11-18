@@ -65,13 +65,13 @@ void buildEditedValues(
 
     Provider.of<HabitProvider>(context, listen: false).additionalTask =
         habit.task;
-    Provider.of<DataProvider>(context, listen: false).updateHabitType("Daily");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context
           .read<HabitProvider>()
           .changeNotification(List.from(habit.notifications));
       context.read<HabitProvider>().updateDropDownValue(habit.category);
+      context.read<DataProvider>().updateHabitType("Daily");
     });
 
     habitProvider.notescontroller.text = habit.notes;

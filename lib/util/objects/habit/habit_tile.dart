@@ -77,11 +77,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
             habit.tag = habitTag;
             changeTag = true;
           }
-          if (context.mounted) {
-            context.read<HabitProvider>().changeNotification([]);
-          }
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.read<HabitProvider>().setTagSelected("All");
+            context.read<HabitProvider>().setTagSelected(
+                "All"); //TODO: only change if selected tag is deleted
           });
           pageController.animateToPage(
             0,
@@ -94,6 +92,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
           editcontroller.clear();
           changed = false;
           if (context.mounted) {
+            context.read<HabitProvider>().changeNotification([]);
             Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
                 0;
           }

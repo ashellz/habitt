@@ -8,6 +8,7 @@ import "package:habitt/data/habit_data.dart";
 import "package:habitt/main.dart";
 import "package:habitt/pages/home/functions/createNewHabit.dart";
 import "package:habitt/pages/home/home_page.dart";
+import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/services/storage_service.dart";
 import "package:habitt/util/functions/habit/checkIfEmpty.dart";
 import "package:habitt/util/functions/habit/deleteHabit.dart";
@@ -15,6 +16,7 @@ import "package:habitt/util/functions/habit/editHabit.dart";
 import "package:habitt/util/functions/habit/habitsCompleted.dart";
 import "package:habitt/util/functions/habit/saveHabitsForToday.dart";
 import "package:hive/hive.dart";
+import "package:provider/provider.dart";
 import "package:restart_app/restart_app.dart";
 
 class HabitProvider extends ChangeNotifier {
@@ -524,11 +526,14 @@ class HabitProvider extends ChangeNotifier {
     await streakBox.put('lastOpenedDay', day);
 
     if (daysDifference > 0 || daysDifference < 0) {
-      resetCompletionStatus();
-      saveHabitsForToday();
+      resetCompletionStatus(); //sets all current habits completed to false
+      saveHabitsForToday(); //puts all current habits to historical habits
 
-      if (userId != null) {
-        await backupHiveBoxesToFirebase(userId, true, context);
+      if (context.mounted) {
+        context.read<HistoricalHabitProvider>().calculateStreak(context);
+        if (userId != null) {
+          await backupHiveBoxesToFirebase(userId, true, context);
+        }
       }
     }
   }

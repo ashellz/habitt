@@ -71,6 +71,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
     super.initState();
     habitTypeController.text = "Daily";
     initInterstitialAd();
+
     context.read<HabitProvider>().getPageHeight(firstPage);
   }
 

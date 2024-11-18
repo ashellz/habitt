@@ -18,15 +18,108 @@ class DataProvider extends ChangeNotifier {
   List<HabitData> habitsList = [];
   TextEditingController habitTypeController = TextEditingController();
 
-  int valueSelected = 0;
+  int weekValueSelected = 0;
+  int monthValueSelected = 0;
+  int customValueSelected = 0;
 
-  void setValueSelected(int value) {
-    valueSelected = value;
+  List<bool> selectedDaysAWeek = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
+  List<bool> selectedDaysAMonth = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
+  bool showMoreOptionsWeekly = false;
+  bool showMoreOptionsMonthly = false;
+
+  void setShowMoreOptionsWeekly(bool value) {
+    showMoreOptionsWeekly = value;
     notifyListeners();
   }
 
-  void increaseValueSelected() {
-    valueSelected++;
+  void setShowMoreOptionsMonthly(bool value) {
+    showMoreOptionsMonthly = value;
+    notifyListeners();
+  }
+
+  void unselectAllDaysAWeek() {
+    selectedDaysAWeek = [false, false, false, false, false, false, false];
+    notifyListeners();
+  }
+
+  void unselectAllDaysAMonth() {
+    for (int i = 0; i < selectedDaysAMonth.length; i++) {
+      selectedDaysAMonth[i] = false;
+    }
+    notifyListeners();
+  }
+
+  void setCustomValueSelected(int value) {
+    customValueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseCustomValueSelected() {
+    customValueSelected++;
+    notifyListeners();
+  }
+
+  void setMonthValueSelected(int value) {
+    monthValueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseMonthValueSelected() {
+    monthValueSelected++;
+    notifyListeners();
+  }
+
+  void setWeekValueSelected(int value) {
+    weekValueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseWeekValueSelected() {
+    weekValueSelected++;
     notifyListeners();
   }
 
