@@ -53,7 +53,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     var createcontroller = widget.createcontroller;
 
     return Scaffold(
@@ -117,30 +116,27 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ],
             ),
-            Transform.translate(
-              offset: Offset(0, keyboardOpen ? 100 : 0),
-              child: SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.theLightColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                    ),
+            SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.theLightColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                   ),
-                  child: const Text('Add Habit',
-                      style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      Provider.of<HabitProvider>(context, listen: false)
-                          .createNewHabitProvider(createcontroller, context);
-                      Navigator.pop(context);
-                    }
-                  },
                 ),
+                child: const Text('Add Habit',
+                    style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    Provider.of<HabitProvider>(context, listen: false)
+                        .createNewHabitProvider(createcontroller, context);
+                    Navigator.pop(context);
+                  }
+                },
               ),
             ),
           ],

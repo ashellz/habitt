@@ -9,7 +9,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
-import 'package:habitt/util/objects/habit/complete_habit_dialog.dart';
+import 'package:habitt/util/objects/habit/Complete%20Habit%20Dialog/complete_habit_dialog.dart';
 import 'package:hive/hive.dart';
 import 'package:icons_flutter/icons_flutter.dart';
 import 'package:provider/provider.dart';

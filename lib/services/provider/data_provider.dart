@@ -29,6 +29,27 @@ class DataProvider extends ChangeNotifier {
   bool showMoreOptionsWeekly = false;
   bool showMoreOptionsMonthly = false;
 
+  // complete habit dialog
+
+  int theAmountValue = 0;
+  int theDurationValueHours = 0;
+  int theDurationValueMinutes = 0;
+
+  void setAmountValue(int value) {
+    theAmountValue = value;
+    notifyListeners();
+  }
+
+  void setDurationValueHours(int value) {
+    theDurationValueHours = value;
+    notifyListeners();
+  }
+
+  void setDurationValueMinutes(int value) {
+    theDurationValueMinutes = value;
+    notifyListeners();
+  }
+
   void setShowMoreOptionsWeekly(bool value) {
     showMoreOptionsWeekly = value;
     notifyListeners();

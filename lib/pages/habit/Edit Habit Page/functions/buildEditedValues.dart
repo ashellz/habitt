@@ -26,11 +26,6 @@ void buildEditedValues(
   }
 
   if (!updated) {
-    int amount = habitProvider.amount;
-    int duration = habitProvider.duration;
-    int durationHours = habitProvider.durationHours;
-    int durationMinutes = habitProvider.durationMinutes;
-
     habitProvider.categoriesExpanded = false;
     if (habit.amount > 1) {
       habitProvider.habitGoalValue = 1;
@@ -43,8 +38,8 @@ void buildEditedValues(
       habitProvider.habitGoalValue = 2;
       habitProvider.duration = habit.duration;
       habitProvider.amount = 1;
-      habitProvider.durationHours = duration ~/ 60;
-      habitProvider.durationMinutes = duration % 60;
+      habitProvider.durationHours = habit.duration ~/ 60;
+      habitProvider.durationMinutes = habit.duration % 60;
     } else {
       habitProvider.habitGoalValue = 0;
       habitProvider.amount = 1;

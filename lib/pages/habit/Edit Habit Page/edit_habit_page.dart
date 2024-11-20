@@ -84,8 +84,6 @@ class _EditHabitPageState extends State<EditHabitPage> {
     buildEditedValues(context, widget.id, editcontroller, lowestCompletionRate,
         completionRates, highestCompletionRate, everyFifthDay, everyFifthMonth);
 
-    bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-
     PageController pageController = PageController();
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -189,10 +187,7 @@ class _EditHabitPageState extends State<EditHabitPage> {
             ]),
 
             // SAVE BUTTON
-            SaveButton(
-                index: index,
-                keyboardOpen: keyboardOpen,
-                editcontroller: editcontroller),
+            SaveButton(index: index, editcontroller: editcontroller),
           ])),
     );
   }

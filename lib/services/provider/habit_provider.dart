@@ -8,6 +8,7 @@ import "package:habitt/data/habit_data.dart";
 import "package:habitt/main.dart";
 import "package:habitt/pages/home/functions/createNewHabit.dart";
 import "package:habitt/pages/home/home_page.dart";
+import "package:habitt/services/provider/data_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/services/storage_service.dart";
 import "package:habitt/util/functions/habit/checkIfEmpty.dart";
@@ -477,8 +478,13 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  applyDurationCompleted(
-      index, int theDurationValueHours, int theDurationValueMinutes) {
+  applyDurationCompleted(index, BuildContext context) {
+    int theDurationValueHours =
+        Provider.of<DataProvider>(context, listen: false).theDurationValueHours;
+    int theDurationValueMinutes =
+        Provider.of<DataProvider>(context, listen: false)
+            .theDurationValueMinutes;
+
     habitBox.putAt(
         index,
         HabitData(
@@ -510,7 +516,10 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  applyAmountCompleted(index, theAmountValue) {
+  applyAmountCompleted(index, BuildContext context) {
+    int theAmountValue =
+        Provider.of<DataProvider>(context, listen: false).theAmountValue;
+
     habitBox.putAt(
         index,
         HabitData(

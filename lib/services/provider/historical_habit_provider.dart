@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -207,8 +208,11 @@ class HistoricalHabitProvider extends ChangeNotifier {
   }
 
   applyHistoricalAmountCompleted(
-      habit, theAmountValue, DateTime time, int index) {
+      habit, BuildContext context, DateTime time, int index) {
     List<int> currentDate = [time.year, time.month, time.day];
+
+    int theAmountValue =
+        Provider.of<DataProvider>(context, listen: false).theAmountValue;
 
     HistoricalHabitData habitData = HistoricalHabitData(
         name: habit.name,
@@ -229,9 +233,15 @@ class HistoricalHabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  applyHistoricalDurationCompleted(habit, int theDurationValueHours,
-      int theDurationValueMinutes, DateTime time, int index) {
+  applyHistoricalDurationCompleted(
+      habit, BuildContext context, DateTime time, int index) {
     List<int> currentDate = [time.year, time.month, time.day];
+
+    int theDurationValueHours =
+        Provider.of<DataProvider>(context, listen: false).theDurationValueHours;
+    int theDurationValueMinutes =
+        Provider.of<DataProvider>(context, listen: false)
+            .theDurationValueMinutes;
 
     HistoricalHabitData habitData = HistoricalHabitData(
         name: habit.name,

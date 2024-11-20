@@ -7,7 +7,7 @@ import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/colors.dart';
-import 'package:habitt/util/objects/habit/complete_historical_habit.dart';
+import 'package:habitt/util/objects/habit/Complete%20Historical%20Habit%20Dialog/complete_historical_habit_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
