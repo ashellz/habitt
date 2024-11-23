@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 class CustomWidgets extends StatefulWidget {
@@ -11,24 +14,16 @@ class CustomWidgets extends StatefulWidget {
 }
 
 class _CustomWidgetsState extends State<CustomWidgets> {
-  List<String> values = [
-    "other",
-    "third",
-    "fourth",
-    "fifth",
-    "sixth",
-    "seventh",
-    "eighth",
-    "ninth",
-    "tenth"
-  ];
+  List<String> values = [];
 
   String getCustomText() {
     String text = "";
     if (context.watch<DataProvider>().customValueSelected < 9) {
-      text = "${values[context.watch<DataProvider>().customValueSelected]} day";
+      text =
+          "${values[context.watch<DataProvider>().customValueSelected]} ${AppLocale.day.getString(context)}";
     } else {
-      text = "${context.watch<DataProvider>().customValueSelected + 2} days";
+      text =
+          "${context.watch<DataProvider>().customValueSelected + 2} ${AppLocale.days.getString(context)}";
     }
 
     return text;
@@ -36,13 +31,32 @@ class _CustomWidgetsState extends State<CustomWidgets> {
 
   @override
   Widget build(BuildContext context) {
+    values = [
+      AppLocale.other.getString(context),
+      AppLocale.third.getString(context),
+      AppLocale.fourth.getString(context),
+      AppLocale.fifth.getString(context),
+      AppLocale.sixth.getString(context),
+      AppLocale.seventh.getString(context),
+      AppLocale.eighth.getString(context),
+      AppLocale.ninth.getString(context),
+      AppLocale.tenth.getString(context),
+    ];
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(AppLocale.custom.getString(context),
+            style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: AppColors.theLightColor)),
+        const SizedBox(height: 15),
         Row(
           children: [
-            const Text(
-              "Every",
-              style: TextStyle(
+            Text(
+              AppLocale.every.getString(context),
+              style: const TextStyle(
                 fontSize: 18,
               ),
             ),

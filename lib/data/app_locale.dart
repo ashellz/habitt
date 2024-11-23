@@ -79,7 +79,7 @@ mixin AppLocale {
   static const String notificationMorning = 'Morning';
   static const String notificationAfternoon = 'Afternoon';
   static const String notificationEvening = 'Evening';
-  static const String notificationDaily = 'Daily';
+  static const String notificationDaily = 'Daily notif';
   static const String notification = 'notification';
   static const String chooseTime = 'Choose time';
   static const String requestNotificationAccess = "Request Notification Access";
@@ -143,7 +143,49 @@ mixin AppLocale {
   static const String currentStreak = 'Current streak';
   static const String bestStreak = 'Best streak';
   static const String completionRate = 'Completion rate';
+
+  //Habit Type
   static const String habitType = 'Habit Type';
+  static const String daily = 'Daily';
+  static const String weekly = 'Weekly';
+  static const String monthly = 'Monthly';
+  static const String custom = 'Custom';
+  static const String once = 'Once';
+  static const String twice = 'Twice';
+  static const String three = 'Three';
+  static const String four = 'Four';
+  static const String five = 'Five';
+  static const String six = 'Six';
+  static const String seven = 'Seven';
+  static const String eight = 'Eight';
+  static const String nine = 'Nine';
+  static const String ten = 'Ten';
+  static const String aWeek = 'a week';
+  static const String aMonth = 'a month';
+  static const String moreOptions = 'More options';
+  static const String other = 'other';
+  static const String third = 'third';
+  static const String fourth = 'fourth';
+  static const String fifth = 'fifth';
+  static const String sixth = 'sixth';
+  static const String seventh = 'seventh';
+  static const String eighth = 'eighth';
+  static const String ninth = 'ninth';
+  static const String tenth = 'tenth';
+  static const String every = 'every';
+  static const String selectDays = 'Select days for this habit';
+  static const String untilCompleted = 'Until completed';
+  static const String thisHabitWillAppear = 'This habit will appear';
+  static const String mon = 'Mon';
+  static const String tue = 'Tue';
+  static const String wed = 'Wed';
+  static const String thu = 'Thu';
+  static const String fri = 'Fri';
+  static const String sat = "Sat";
+  static const String sun = "Sun";
+  static const String leaveUnselectedWeek = 'leaveUnselectedWeek';
+  static const String leaveUnselectedMonth = 'leaveUnselectedMonth';
+  static const String noteMonth = 'Note month';
 
   // Notifications Page
   static const String habitNotifications = 'Habit Notifications';
@@ -280,6 +322,49 @@ mixin AppLocale {
     confirmDeleteAccount:
         'Your account and all associated data will be deleted in 14 days, until then you have a chance to abort this action. Make sure you SEND the email for the request to process. Are you sure?',
     dataUploaded: 'Data uploaded',
+    daily: 'Daily',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    custom: 'Custom',
+    once: 'Once',
+    twice: 'Twice',
+    three: 'Three',
+    four: 'Four',
+    five: 'Five',
+    six: 'Six',
+    seven: 'Seven',
+    eight: 'Eight',
+    nine: 'Nine',
+    ten: 'Ten',
+    aWeek: 'a week',
+    aMonth: 'a month',
+    moreOptions: 'More options',
+    other: 'other',
+    third: 'third',
+    fourth: 'fourth',
+    fifth: 'fifth',
+    sixth: 'sixth',
+    seventh: 'seventh',
+    eighth: 'eighth',
+    ninth: 'ninth',
+    tenth: 'tenth',
+    every: 'every',
+    selectDays: 'Select days for this habit',
+    untilCompleted: "until completed",
+    thisHabitWillAppear: "This habit will appear",
+    mon: 'Mon',
+    tue: 'Tue',
+    wed: 'Wed',
+    thu: 'Thu',
+    fri: 'Fri',
+    sat: 'Sat',
+    sun: 'Sun',
+    leaveUnselectedWeek:
+        "Leave unselected if you want the habit to appear every day of the week until completed",
+    leaveUnselectedMonth:
+        "Leave unselected if you want the habit to appear every day of the month until completed",
+    noteMonth:
+        "Note: If a month doesn't have the selected day (31st, 30th, etc.) this habit, of course, won't appear that day.",
   };
 
   static const Map<String, dynamic> ba = {
@@ -406,5 +491,48 @@ mixin AppLocale {
         'Vaš račun i svi povezani podaci će biti obrisani za 14 dana, do tada se ova radnja može poništiti. Da bi se zahtjev ostvario, morate POSLATI email. Da li ste sigurni?',
     deleteAccount: 'Obrisi račun',
     dataUploaded: 'Podaci sačuvani',
+    daily: 'Dnevno',
+    weekly: 'Sedmično',
+    monthly: 'Mjesečno',
+    custom: 'Prilagođeno',
+    once: 'Jednom',
+    twice: 'Dvaput',
+    three: 'Tri',
+    four: 'Četiri',
+    five: 'Pet',
+    six: 'Šest',
+    seven: 'Sedam',
+    eight: 'Osam',
+    nine: 'Devet',
+    ten: 'Deset',
+    aWeek: 'sedmično',
+    aMonth: 'mjesečno',
+    moreOptions: 'Više opcija',
+    other: 'drugi',
+    third: 'treći',
+    fourth: 'četvrti',
+    fifth: 'peti',
+    sixth: 'šesti',
+    seventh: 'sedmi',
+    eighth: 'osmi',
+    ninth: 'deveti',
+    tenth: 'deseti',
+    every: 'Svaki',
+    selectDays: 'Odaberi dane za ovu naviku',
+    untilCompleted: 'dok se ne ispuni',
+    thisHabitWillAppear: 'Ova navika će se pojaviti',
+    mon: 'Pon',
+    tue: 'Uto',
+    wed: 'Sri',
+    thu: 'Čet',
+    fri: 'Pet',
+    sat: 'Sub',
+    sun: 'Ned',
+    leaveUnselectedMonth:
+        "Ostavi neoznačeno ako želiš da se navika pojavi svaki dan u mjesecu dok se ne ispuni",
+    leaveUnselectedWeek:
+        "Ostavi neoznačeno ako želiš da se navika pojavi svaki dan u sedmici dok se ne ispuni",
+    noteMonth:
+        "Napomena: Ako mjesec nema odabrani dan (31, 30 i dr.) ova navika, naravno, neće biti prikazana taj dan."
   };
 }

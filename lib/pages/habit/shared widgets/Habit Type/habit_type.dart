@@ -93,7 +93,12 @@ class _HabitNameTextFieldState extends State<HabitType> {
 }
 
 void showChooseHabitType(BuildContext context, bool isEdit) {
-  List<String> options = ["Daily", "Weekly", "Monthly", "Custom"];
+  List<String> options = [
+    AppLocale.daily.getString(context),
+    AppLocale.weekly.getString(context),
+    AppLocale.monthly.getString(context),
+    AppLocale.custom.getString(context)
+  ];
 
   if (Platform.isIOS) {
     showCupertinoModalPopup(
@@ -129,7 +134,9 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                       context.read<HabitProvider>().updateSomethingEdited();
                     }
                     Navigator.pop(context);
-                    if (option != "Daily") {
+
+                    print("Option here: !!!!! " + option);
+                    if (option != AppLocale.daily.getString(context)) {
                       showHabitTypeOptions(context, option);
                     }
                   },
@@ -149,6 +156,7 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
           for (var option in options)
             Column(
               children: [
+                if (option == options.first) const SizedBox(height: 6),
                 ListTile(
                   visualDensity: VisualDensity.compact,
                   enableFeedback: boolBox.get("hapticFeedback"),
@@ -178,11 +186,12 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                       context.read<HabitProvider>().updateSomethingEdited();
                     }
                     Navigator.pop(context);
-                    if (option != "Daily") {
+                    if (option != AppLocale.daily.getString(context)) {
                       showHabitTypeOptions(context, option);
                     }
                   },
                 ),
+                if (option == options.last) const SizedBox(height: 6),
                 if (option != options.last)
                   const Divider(
                     thickness: 0.5,

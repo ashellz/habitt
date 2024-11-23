@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/habit/shared%20widgets/Habit%20Type/Monthly%20Widgets/selectable_day_month.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 class MonthlyWidgets extends StatefulWidget {
@@ -12,27 +15,18 @@ class MonthlyWidgets extends StatefulWidget {
 }
 
 class _MonthlyWidgetsState extends State<MonthlyWidgets> {
-  List<String> values = [
-    "Once",
-    "Twice",
-    "Three",
-    "Four",
-    "Five",
-    "Six",
-    "Seven",
-    "Eight",
-    "Nine",
-    "Ten",
-  ];
+  List<String> values = [];
 
   String getMonthlyText() {
     String text = "";
     if (context.watch<DataProvider>().monthValueSelected < 2) {
       text = values[context.watch<DataProvider>().monthValueSelected];
     } else if (context.watch<DataProvider>().monthValueSelected < 9) {
-      text = "${values[context.watch<DataProvider>().monthValueSelected]} days";
+      text =
+          "${values[context.watch<DataProvider>().monthValueSelected]} ${AppLocale.days.getString(context)}";
     } else {
-      text = "${context.watch<DataProvider>().monthValueSelected + 1} days";
+      text =
+          "${context.watch<DataProvider>().monthValueSelected + 1} ${AppLocale.days.getString(context)}";
     }
 
     return text;
@@ -40,10 +34,29 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
 
   @override
   Widget build(BuildContext context) {
+    values = [
+      AppLocale.once.getString(context),
+      AppLocale.twice.getString(context),
+      AppLocale.three.getString(context),
+      AppLocale.four.getString(context),
+      AppLocale.five.getString(context),
+      AppLocale.six.getString(context),
+      AppLocale.seven.getString(context),
+      AppLocale.eight.getString(context),
+      AppLocale.nine.getString(context),
+      AppLocale.ten.getString(context)
+    ];
     bool showMoreOptionsMonthly =
         context.watch<DataProvider>().showMoreOptionsMonthly;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(AppLocale.monthly.getString(context),
+            style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: AppColors.theLightColor)),
+        const SizedBox(height: 15),
         Row(
           children: [
             TextButton(
@@ -66,27 +79,37 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
                     fontSize: 18,
                   ),
                 )),
-            const Text(
-              " a month.",
-              style: TextStyle(
+            Text(
+              " ${AppLocale.aMonth.getString(context)}.",
+              style: const TextStyle(
                 fontSize: 18,
               ),
             )
           ],
         ),
-        const SizedBox(height: 15),
-        Text(
-          "This habit will appear ${getMonthlyText().toLowerCase()} a month until completed${context.watch<DataProvider>().monthValueSelected == 0 ? "." : " ${context.watch<DataProvider>().monthValueSelected + 1} times."}",
-          style: const TextStyle(color: Colors.grey),
-        ),
-        const SizedBox(height: 15),
+        Visibility(
+            visible: !context
+                .watch<DataProvider>()
+                .selectedDaysAMonth
+                .contains(true),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 15),
+                Text(
+                  "${AppLocale.thisHabitWillAppear.getString(context)} ${getMonthlyText().toLowerCase()} ${AppLocale.aMonth.getString(context)} ${AppLocale.untilCompleted.getString(context)}${context.watch<DataProvider>().monthValueSelected == 0 ? "" : " ${context.watch<DataProvider>().monthValueSelected + 1} ${AppLocale.times.getString(context)}."}",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 15),
+              ],
+            )),
         ListTile(
             onTap: () => context
                 .read<DataProvider>()
                 .setShowMoreOptionsMonthly(!showMoreOptionsMonthly),
             splashColor: Colors.transparent,
             contentPadding: const EdgeInsets.all(0),
-            title: const Text("More options"),
+            title: Text(AppLocale.moreOptions.getString(context)),
             trailing: Icon(showMoreOptionsMonthly
                 ? Icons.expand_less
                 : Icons.expand_more)),
@@ -94,7 +117,9 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Select days for this habit:"),
+              Text(
+                "${AppLocale.selectDays.getString(context)}:",
+              ),
               const SizedBox(height: 5),
               Container(
                 width: double.infinity,
@@ -150,12 +175,11 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
               ),
               const SizedBox(height: 10),
               Text(
-                  "Leave unselected if you want the habit to appear every day until completed${context.watch<DataProvider>().monthValueSelected == 0 ? "" : " ${context.watch<DataProvider>().monthValueSelected + 1} times"} every month.",
+                  "${AppLocale.leaveUnselectedMonth.getString(context)} ${context.watch<DataProvider>().monthValueSelected == 0 ? "" : " ${context.watch<DataProvider>().monthValueSelected + 1} ${AppLocale.times.getString(context)}."}",
                   style: const TextStyle(color: Colors.grey)),
               const SizedBox(height: 10),
-              const Text(
-                  "Note: If a month doesn't have the selected day (31st, 30th, etc.) this habit, of course, won't appear that day.",
-                  style: TextStyle(color: Colors.grey))
+              Text(AppLocale.noteMonth.getString(context),
+                  style: const TextStyle(color: Colors.grey))
             ],
           )
       ],

@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -18,20 +20,21 @@ class SelectableDayInTheWeek extends StatefulWidget {
 }
 
 class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
-  final List<String> dayNames = [
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-    "Sun"
-  ];
+  List<String> dayNames = [];
 
   @override
   Widget build(BuildContext context) {
     final selectedDaysAWeek = context.watch<DataProvider>().selectedDaysAWeek;
     int selectedDays = 0;
+    dayNames = [
+      AppLocale.mon.getString(context),
+      AppLocale.tue.getString(context),
+      AppLocale.wed.getString(context),
+      AppLocale.thu.getString(context),
+      AppLocale.fri.getString(context),
+      AppLocale.sat.getString(context),
+      AppLocale.sun.getString(context),
+    ];
     return Expanded(
       child: AspectRatio(
         aspectRatio: 1,

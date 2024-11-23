@@ -306,6 +306,8 @@ void openAddHabitPage(
   context.read<DataProvider>().setWeekValueSelected(0);
   context.read<DataProvider>().unselectAllDaysAWeek();
   context.read<DataProvider>().unselectAllDaysAMonth();
+  Provider.of<DataProvider>(context, listen: false)
+      .updateHabitType(AppLocale.daily.getString(context));
 
   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
     return AddHabitPage(
@@ -322,8 +324,6 @@ void openAddHabitPage(
     );
 
     if (context.mounted) {
-      Provider.of<DataProvider>(context, listen: false).updateHabitType(
-          "Daily"); // TODO: Change this to grab the actual value of the habit
       Provider.of<HabitProvider>(context, listen: false)
           .notescontroller
           .clear();

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/habit/shared%20widgets/Habit%20Type/Weekly%20Widgets/selectable_day_week.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
 class WeeklyWidgets extends StatefulWidget {
@@ -12,15 +15,6 @@ class WeeklyWidgets extends StatefulWidget {
 }
 
 class _WeeklyWidgetsState extends State<WeeklyWidgets> {
-  List<String> values = [
-    "Once",
-    "Twice",
-    "Three days",
-    "Four days",
-    "Five days",
-    "Six days"
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -47,10 +41,25 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> values = [
+      AppLocale.once.getString(context),
+      AppLocale.twice.getString(context),
+      "${AppLocale.three.getString(context)} ${AppLocale.days.getString(context)}",
+      "${AppLocale.four.getString(context)} ${AppLocale.days.getString(context)}",
+      "${AppLocale.five.getString(context)} ${AppLocale.days.getString(context)}",
+      "${AppLocale.six.getString(context)} ${AppLocale.days.getString(context)}",
+    ];
     bool showMoreOptionsWeekly =
         context.watch<DataProvider>().showMoreOptionsWeekly;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(AppLocale.weekly.getString(context),
+            style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: AppColors.theLightColor)),
+        const SizedBox(height: 15),
         Row(
           children: [
             TextButton(
@@ -73,34 +82,45 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
                     fontSize: 18,
                   ),
                 )),
-            const Text(
-              " a week.",
-              style: TextStyle(
+            Text(
+              " ${AppLocale.aWeek.getString(context)}.",
+              style: const TextStyle(
                 fontSize: 18,
               ),
             )
           ],
         ),
-        const SizedBox(height: 15),
-        Text(
-          "This habit will appear ${values[context.watch<DataProvider>().weekValueSelected].toLowerCase()} a week until completed${context.watch<DataProvider>().weekValueSelected == 0 ? "." : " ${context.watch<DataProvider>().weekValueSelected + 1} times."}",
-          style: const TextStyle(color: Colors.grey),
+        Visibility(
+          visible:
+              !context.watch<DataProvider>().selectedDaysAWeek.contains(true),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 15),
+              Text(
+                "${AppLocale.thisHabitWillAppear.getString(context)} ${values[context.watch<DataProvider>().weekValueSelected].toLowerCase()} ${AppLocale.aWeek.getString(context)} ${AppLocale.untilCompleted.getString(context)}${context.watch<DataProvider>().weekValueSelected == 0 ? "." : " ${context.watch<DataProvider>().weekValueSelected + 1} ${AppLocale.times.getString(context)}."}",
+                style: const TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 15),
+            ],
+          ),
         ),
-        const SizedBox(height: 15),
         ListTile(
             onTap: () => context
                 .read<DataProvider>()
                 .setShowMoreOptionsWeekly(!showMoreOptionsWeekly),
             splashColor: Colors.transparent,
             contentPadding: const EdgeInsets.all(0),
-            title: const Text("More options"),
+            title: Text(
+              AppLocale.moreOptions.getString(context),
+            ),
             trailing: Icon(
                 showMoreOptionsWeekly ? Icons.expand_less : Icons.expand_more)),
         if (showMoreOptionsWeekly)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Select days for this habit:"),
+              Text("${AppLocale.selectDays.getString(context)}:"),
               const SizedBox(height: 5),
               Container(
                 width: double.infinity,
@@ -120,7 +140,7 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
               ),
               const SizedBox(height: 10),
               Text(
-                  "Leave unselected if you want the habit to appear every day until completed${context.watch<DataProvider>().weekValueSelected == 0 ? "" : " ${context.watch<DataProvider>().weekValueSelected + 1} times"} every week.",
+                  "${AppLocale.leaveUnselectedWeek.getString(context)}${context.watch<DataProvider>().weekValueSelected == 0 ? "." : " ${context.watch<DataProvider>().weekValueSelected + 1} ${AppLocale.times.getString(context)}."}",
                   style: const TextStyle(color: Colors.grey))
             ],
           )
