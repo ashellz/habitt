@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
 import 'package:provider/provider.dart';
 
-Widget anyTimeMainCategory(
-    int habitListLength,
-    editcontroller,
-    anyTimeHasHabits,
-    BuildContext context,
-    bool isAdLoaded,
-    InterstitialAd? interstitialAd) {
+Widget anyTimeMainCategory(editcontroller, anyTimeHasHabits,
+    BuildContext context, bool isAdLoaded, InterstitialAd? interstitialAd) {
+  List habitsList = context.watch<DataProvider>().habitsList;
+  int habitListLength = habitsList.length;
   if (anyTimeHasHabits) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 95),
         for (int i = 0; i < habitListLength; i++)
-          if (habitBox.getAt(i)?.category == "Any time" &&
-              !habitBox.getAt(i)!.task)
+          if (habitsList[i].category == "Any time" && !habitsList[i].task)
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: NewHabitTile(
-                id: habitBox.getAt(i)!.id,
+                id: habitsList[i].id,
                 editcontroller: editcontroller,
                 isAdLoaded: isAdLoaded,
                 interstitialAd: interstitialAd,
@@ -39,11 +37,11 @@ Widget anyTimeMainCategory(
         borderRadius: BorderRadius.circular(20),
         color: context.watch<ColorProvider>().darkGreyColor,
       ),
-      child: const Padding(
-        padding: EdgeInsets.only(left: 20, top: 65),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, top: 65),
         child: Text(
-          "No habits in this category",
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+          AppLocale.noHabitsInCategory.getString(context),
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
       ),
     );

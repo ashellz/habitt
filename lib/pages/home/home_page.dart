@@ -129,7 +129,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     String? tagSelected = context.watch<HabitProvider>().tagSelected;
 
     String mainCategory = context.watch<HabitProvider>().mainCategory;
-    int habitListLength = context.watch<HabitProvider>().habitListLength;
     double mainCategoryHeight =
         context.watch<HabitProvider>().mainCategoryHeight;
     String username = stringBox.get('username') ?? 'Guest';
@@ -198,7 +197,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               if (tag == 'All')
                                 Column(children: [
                                   mainCategoryList(
-                                      habitListLength,
                                       mainCategoryHeight,
                                       mainCategory,
                                       editcontroller,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/widgets/anytime_main_category.dart';
-import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/util/colors.dart';
@@ -9,20 +8,18 @@ import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
 import 'package:provider/provider.dart';
 
-Widget mainCategoryList(
-    habitListLength,
-    mainCategoryHeight,
-    mainCategory,
-    editcontroller,
-    BuildContext context,
-    bool isAdLoaded,
-    InterstitialAd? interstitialAd) {
+Widget mainCategoryList(mainCategoryHeight, mainCategory, editcontroller,
+    BuildContext context, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (context.watch<DataProvider>().habitsList.isEmpty) {
     return Text(
       "Nothing to see here.",
       textAlign: TextAlign.center,
     ); // TODO: edit this later
   }
+
+  final habitsList = context.watch<DataProvider>().habitsList;
+  final habitListLength = habitsList.length;
+
   return Stack(
     children: [
       Container(
@@ -37,12 +34,12 @@ Widget mainCategoryList(
                 children: [
                   const SizedBox(height: 95),
                   for (int i = 0; i < habitListLength; i++)
-                    if (habitBox.getAt(i)?.category == mainCategory &&
-                        !habitBox.getAt(i)!.task)
+                    if (habitsList[i].category == mainCategory &&
+                        !habitsList[i].task)
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: NewHabitTile(
-                          id: habitBox.getAt(i)!.id,
+                          id: habitsList[i].id,
                           editcontroller: editcontroller,
                           isAdLoaded: isAdLoaded,
                           interstitialAd: interstitialAd,
@@ -56,12 +53,12 @@ Widget mainCategoryList(
                     children: [
                       const SizedBox(height: 95),
                       for (int i = 0; i < habitListLength; i++)
-                        if (habitBox.getAt(i)?.category == mainCategory &&
-                            !habitBox.getAt(i)!.task)
+                        if (habitsList[i].category == mainCategory &&
+                            !habitsList[i].task)
                           Padding(
                             padding: const EdgeInsets.only(top: 15),
                             child: NewHabitTile(
-                              id: habitBox.getAt(i)!.id,
+                              id: habitsList[i].id,
                               editcontroller: editcontroller,
                               isAdLoaded: isAdLoaded,
                               interstitialAd: interstitialAd,
@@ -75,12 +72,12 @@ Widget mainCategoryList(
                         children: [
                           const SizedBox(height: 95),
                           for (int i = 0; i < habitListLength; i++)
-                            if (habitBox.getAt(i)?.category == mainCategory &&
-                                !habitBox.getAt(i)!.task)
+                            if (habitsList[i].category == mainCategory &&
+                                !habitsList[i].task)
                               Padding(
                                 padding: const EdgeInsets.only(top: 15),
                                 child: NewHabitTile(
-                                  id: habitBox.getAt(i)!.id,
+                                  id: habitsList[i].id,
                                   editcontroller: editcontroller,
                                   isAdLoaded: isAdLoaded,
                                   interstitialAd: interstitialAd,
@@ -89,7 +86,6 @@ Widget mainCategoryList(
                         ],
                       )
                     : anyTimeMainCategory(
-                        habitListLength,
                         editcontroller,
                         true,
                         context,
