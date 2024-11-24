@@ -22,9 +22,9 @@ class DataProvider extends ChangeNotifier {
   int monthValueSelected = 0;
   int customValueSelected = 0;
 
-  List<bool> selectedDaysAWeek = List.generate(7, (index) => false);
+  List selectedDaysAWeek = [];
 
-  List<bool> selectedDaysAMonth = List.generate(31, (index) => false);
+  List selectedDaysAMonth = [];
 
   bool showMoreOptionsWeekly = false;
   bool showMoreOptionsMonthly = false;
@@ -61,21 +61,21 @@ class DataProvider extends ChangeNotifier {
   }
 
   void unselectAllDaysAWeek() {
-    selectedDaysAWeek = List.generate(7, (index) => false);
+    selectedDaysAWeek = [];
     notifyListeners();
   }
 
   void unselectAllDaysAMonth() {
-    selectedDaysAMonth = List.generate(31, (index) => false);
+    selectedDaysAMonth = [];
     notifyListeners();
   }
 
-  void selectDaysAWeek(List<bool> days) {
+  void selectDaysAWeek(List days) {
     selectedDaysAWeek = days;
     notifyListeners();
   }
 
-  void selectDaysAMonth(List<bool> days) {
+  void selectDaysAMonth(List days) {
     selectedDaysAMonth = days;
     notifyListeners();
   }
@@ -110,7 +110,17 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHabitType(String value) {
+  void updateHabitType(String value, BuildContext context) {
+    if (value == "Daily") {
+      value = AppLocale.daily.getString(context);
+    } else if (value == "Weekly") {
+      value = AppLocale.weekly.getString(context);
+    } else if (value == "Monthly") {
+      value = AppLocale.monthly.getString(context);
+    } else if (value == "Custom") {
+      value = AppLocale.custom.getString(context);
+    }
+
     habitTypeController.text = value;
     notifyListeners();
   }

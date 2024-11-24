@@ -10,7 +10,7 @@ Widget tagSelectedWidget(tagSelected, editcontroller, bool isAdLoaded,
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(translateCategory(tagSelected, context),
+      Text(translateBoth(tagSelected, context),
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       for (int i = 0; i < habitBox.length; i++)
         if (habitBox.getAt(i)?.category == tagSelected &&

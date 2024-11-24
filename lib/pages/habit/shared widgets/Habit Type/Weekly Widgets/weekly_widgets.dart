@@ -20,11 +20,13 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
     super.initState();
 
     int selectedDays = 0;
-    for (bool selectedDay in Provider.of<DataProvider>(context, listen: false)
-        .selectedDaysAWeek) {
-      if (selectedDay) {
-        selectedDays++;
-      }
+    for (int i = 0;
+        i <
+            Provider.of<DataProvider>(context, listen: false)
+                .selectedDaysAWeek
+                .length;
+        i++) {
+      selectedDays++;
     }
 
     if (selectedDays == 0) {

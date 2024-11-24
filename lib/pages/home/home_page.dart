@@ -83,14 +83,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (interstitialAd == null) {
-      initInterstitialAd();
-    }
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (interstitialAd == null) {
-        initInterstitialAd();
-      }
       final boxHeight = sizeKey.currentContext?.size?.height;
 
       setState(() {
@@ -307,7 +300,7 @@ void openAddHabitPage(
   context.read<DataProvider>().unselectAllDaysAWeek();
   context.read<DataProvider>().unselectAllDaysAMonth();
   Provider.of<DataProvider>(context, listen: false)
-      .updateHabitType(AppLocale.daily.getString(context));
+      .updateHabitType(AppLocale.daily.getString(context), context);
 
   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
     return AddHabitPage(

@@ -93,8 +93,8 @@ class HabitData extends HiveObject {
   int customValue;
 
   @HiveField(21)
-  List<bool> selectedDaysAWeek;
+  List selectedDaysAWeek;
 
   @HiveField(22)
-  List<bool> selectedDaysAMonth;
+  List selectedDaysAMonth;
 }

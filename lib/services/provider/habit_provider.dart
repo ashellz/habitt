@@ -29,7 +29,6 @@ class HabitProvider extends ChangeNotifier {
   bool additionalTask = false;
 
   Icon updatedIcon = startIcon;
-  List habitsList = [];
 
   double editHabitPageHeight = 0;
 
@@ -60,11 +59,6 @@ class HabitProvider extends ChangeNotifier {
   bool isGestureEnabled = true;
   bool categoriesExpanded = false;
   bool categoryIsVisible = false;
-
-  void updateHabits() {
-    habitsList = habitBox.values.toList();
-    notifyListeners();
-  }
 
   void updateDropDownValue(String value) {
     dropDownValue = value;
@@ -353,12 +347,13 @@ class HabitProvider extends ChangeNotifier {
       }
     }
 
-    updateHabits();
     saveHabitsForToday();
     notifyListeners();
   }
 
-  void skipHabitProvider(int index) async {
+  void skipHabitProvider(
+    int index,
+  ) async {
     // Check if the user is skipping more than 3 habits a day
 
     int habitsSkipped = 0;

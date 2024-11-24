@@ -50,7 +50,7 @@ Widget tagsWidgets(String? tagSelected) {
                     ),
                     height: 30,
                     child: Center(
-                      child: Text(translateCategory(category, context),
+                      child: Text(translateBoth(category, context),
                           style: TextStyle(
                               color: getTextColor(category),
                               decorationThickness: 3.0)),

@@ -15,16 +15,12 @@ class CalendarHabitTile extends StatefulWidget {
   const CalendarHabitTile({
     super.key,
     required this.index,
-    required this.habits,
     required this.time,
-    required this.boxIndex,
     required this.isAdLoaded,
     required this.interstitialAd,
   });
   final int index;
-  final List<HistoricalHabitData> habits;
   final DateTime time;
-  final int boxIndex;
 
   final bool isAdLoaded;
   final InterstitialAd? interstitialAd;
@@ -50,21 +46,19 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
     bool isToday = const ListEquality().equals(chosenDate, realDate);
 
     int index = widget.index;
-    List<HistoricalHabitData> habits = widget.habits;
 
     bool amountCheck = false;
     bool durationCheck = false;
 
-    if (habits[index].amount > 1) {
+    HistoricalHabitData habit = context
+        .watch<HistoricalHabitProvider>()
+        .getHistoricalHabitAt(index, widget.time);
+
+    if (habit.amount > 1) {
       amountCheck = true;
-    } else if (habits[index].duration > 0) {
+    } else if (habit.duration > 0) {
       durationCheck = true;
     }
-
-    var habit = context
-        .watch<HistoricalHabitProvider>()
-        .allHistoricalHabits[widget.boxIndex]
-        .data[index];
 
     return Slidable(
       enabled: habit.completed ? habit.skipped : true,
@@ -95,7 +89,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
       ),
       child: HabitTile(
         index: index,
-        widget: widget,
+        time: widget.time,
         amountCheck: amountCheck,
         durationCheck: durationCheck,
         habit: habit,
@@ -111,7 +105,7 @@ class HabitTile extends StatelessWidget {
   const HabitTile({
     super.key,
     required this.index,
-    required this.widget,
+    required this.time,
     required this.amountCheck,
     required this.durationCheck,
     required this.habit,
@@ -121,7 +115,7 @@ class HabitTile extends StatelessWidget {
   });
 
   final int index;
-  final CalendarHabitTile widget;
+  final DateTime time;
   final bool amountCheck;
   final bool durationCheck;
   final HistoricalHabitData habit;
@@ -132,10 +126,9 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime time = widget.time;
     return ListTile(
       leading: Icon(
-        getIcon(index),
+        convertIcon(habit.icon),
         color: habit.completed ? Colors.grey.shade700 : Colors.white,
       ),
       title: Text(

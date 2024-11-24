@@ -42,20 +42,17 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
           padding: const EdgeInsets.all(5),
           child: GestureDetector(
             onTap: () => setState(() {
-              for (bool selectedDay in selectedDaysAWeek) {
-                if (selectedDay) {
-                  selectedDays++;
-                }
+              for (int i = 0; i < selectedDaysAWeek.length; i++) {
+                selectedDays++;
               }
 
-              if (selectedDays < 6 || selectedDaysAWeek[widget.index]) {
-                selectedDaysAWeek[widget.index] =
-                    !selectedDaysAWeek[widget.index];
-              }
-
-              selectedDays = 0;
-              for (bool selectedDay in selectedDaysAWeek) {
-                if (selectedDay) {
+              if (selectedDays < 6 ||
+                  selectedDaysAWeek.contains(widget.index)) {
+                if (selectedDaysAWeek.contains(widget.index)) {
+                  selectedDaysAWeek.remove(widget.index);
+                  selectedDays--;
+                } else {
+                  selectedDaysAWeek.add(widget.index);
                   selectedDays++;
                 }
               }
@@ -78,7 +75,7 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
                         curve: Curves.easeInOut,
                         tween: Tween<double>(
                           begin: 0,
-                          end: selectedDaysAWeek[widget.index] ? 1 : 0,
+                          end: selectedDaysAWeek.contains(widget.index) ? 1 : 0,
                         ),
                         builder: (context, value, _) {
                           return LinearProgressIndicator(

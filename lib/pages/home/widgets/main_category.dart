@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/pages/home/widgets/anytime_main_category.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/habit_tile.dart';
@@ -16,10 +17,16 @@ Widget mainCategoryList(
     BuildContext context,
     bool isAdLoaded,
     InterstitialAd? interstitialAd) {
+  if (context.watch<DataProvider>().habitsList.isEmpty) {
+    return Text(
+      "Nothing to see here.",
+      textAlign: TextAlign.center,
+    ); // TODO: edit this later
+  }
   return Stack(
     children: [
       Container(
-        height: mainCategoryHeight, // change
+        height: mainCategoryHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: context.watch<ColorProvider>().darkGreyColor,

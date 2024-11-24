@@ -10,8 +10,6 @@ import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
-  List get allHistoricalHabits => historicalBox.values.toList();
-
   DateTime calendarDay = DateTime.now();
 
   List<HistoricalHabitData> historicalHabits = [];
@@ -38,6 +36,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
     return historicalBox.getAt(0)!.data[index]; // default
   }
 
+  int boxIndex = 0;
+
   void updateHistoricalHabits(DateTime date) {
     if (kDebugMode) {
       print("updating historical habits");
@@ -51,6 +51,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
       if (const ListEquality()
           .equals(intDate, [date.year, date.month, date.day])) {
         historicalHabits = historicalBox.getAt(i)!.data;
+        boxIndex = i;
         notifyListeners();
         break;
       } else {

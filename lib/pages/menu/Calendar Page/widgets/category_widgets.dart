@@ -9,12 +9,15 @@ import 'package:habitt/util/functions/translate_category.dart';
 import 'package:habitt/util/objects/habit/calendar_habit_tile.dart';
 import 'package:provider/provider.dart';
 
-Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
-    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
+Widget anyTime(BuildContext context, today, boxIndex, bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   const String category = 'Any time';
 
-  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
-    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
+  if (historicalHasHabits(category, context)) {
+    var habitsOnDate =
+        context.watch<HistoricalHabitProvider>().historicalHabits;
+    int habitListLength = habitsOnDate.length;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,9 +29,7 @@ Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
                 index: i,
-                habits: habitsOnDate,
                 time: today,
-                boxIndex: boxIndex,
                 isAdLoaded: isAdLoaded,
                 interstitialAd: interstitialAd,
               ),
@@ -51,12 +52,14 @@ Widget anyTime(BuildContext context, habitListLength, habitsOnDate, today,
   return const SizedBox(height: 0);
 }
 
-Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
-    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
+Widget morning(BuildContext context, today, boxIndex, bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   const String category = 'Morning';
 
-  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
-    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
+  if (historicalHasHabits(category, context)) {
+    var habitsOnDate =
+        context.watch<HistoricalHabitProvider>().historicalHabits;
+    int habitListLength = habitsOnDate.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -68,9 +71,7 @@ Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
                 index: i,
-                habits: habitsOnDate,
                 time: today,
-                boxIndex: boxIndex,
                 isAdLoaded: isAdLoaded,
                 interstitialAd: interstitialAd,
               ),
@@ -94,12 +95,14 @@ Widget morning(BuildContext context, habitListLength, habitsOnDate, today,
   return const SizedBox(height: 0);
 }
 
-Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
-    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
+Widget afternoon(BuildContext context, today, boxIndex, bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   const String category = 'Afternoon';
 
-  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
-    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
+  if (historicalHasHabits(category, context)) {
+    var habitsOnDate =
+        context.watch<HistoricalHabitProvider>().historicalHabits;
+    int habitListLength = habitsOnDate.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,9 +114,7 @@ Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
                 index: i,
-                habits: habitsOnDate,
                 time: today,
-                boxIndex: boxIndex,
                 isAdLoaded: isAdLoaded,
                 interstitialAd: interstitialAd,
               ),
@@ -137,12 +138,14 @@ Widget afternoon(BuildContext context, habitListLength, habitsOnDate, today,
   return const SizedBox(height: 0);
 }
 
-Widget evening(BuildContext context, habitListLength, habitsOnDate, today,
-    boxIndex, bool isAdLoaded, InterstitialAd? interstitialAd) {
+Widget evening(BuildContext context, today, boxIndex, bool isAdLoaded,
+    InterstitialAd? interstitialAd) {
   const String category = 'Evening';
 
-  if (historicalHasHabits(category, habitsOnDate, habitListLength)) {
-    habitsOnDate = context.watch<HistoricalHabitProvider>().historicalHabits;
+  if (historicalHasHabits(category, context)) {
+    var habitsOnDate =
+        context.watch<HistoricalHabitProvider>().historicalHabits;
+    int habitListLength = habitsOnDate.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -154,9 +157,7 @@ Widget evening(BuildContext context, habitListLength, habitsOnDate, today,
               padding: const EdgeInsets.only(top: 10),
               child: CalendarHabitTile(
                 index: i,
-                habits: habitsOnDate,
                 time: today,
-                boxIndex: boxIndex,
                 isAdLoaded: isAdLoaded,
                 interstitialAd: interstitialAd,
               ),

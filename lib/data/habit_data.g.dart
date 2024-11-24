@@ -38,12 +38,8 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       weekValue: fields[18] == null ? 0 : fields[18] as int,
       monthValue: fields[19] == null ? 0 : fields[19] as int,
       customValue: fields[20] == null ? 0 : fields[20] as int,
-      selectedDaysAWeek: fields[21] == null
-          ? List.generate(7, (index) => false)
-          : fields[21] as List<bool>,
-      selectedDaysAMonth: fields[22] == null
-          ? List.generate(31, (index) => false)
-          : fields[22] as List<bool>,
+      selectedDaysAWeek: fields[21] == null ? [] : fields[21] as List,
+      selectedDaysAMonth: fields[22] == null ? [] : fields[22] as List,
     );
   }
 

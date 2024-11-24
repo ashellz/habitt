@@ -109,6 +109,7 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const SizedBox(),
                         Text(
@@ -129,13 +130,14 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                     ),
                   ),
                   onPressed: () {
-                    context.read<DataProvider>().updateHabitType(option);
+                    context
+                        .read<DataProvider>()
+                        .updateHabitType(option, context);
                     if (isEdit) {
                       context.read<HabitProvider>().updateSomethingEdited();
                     }
                     Navigator.pop(context);
 
-                    print("Option here: !!!!! " + option);
                     if (option != AppLocale.daily.getString(context)) {
                       showHabitTypeOptions(context, option);
                     }
@@ -181,7 +183,9 @@ void showChooseHabitType(BuildContext context, bool isEdit) {
                     color: AppColors.theLightColor,
                   ),
                   onTap: () {
-                    context.read<DataProvider>().updateHabitType(option);
+                    context
+                        .read<DataProvider>()
+                        .updateHabitType(option, context);
                     if (isEdit) {
                       context.read<HabitProvider>().updateSomethingEdited();
                     }

@@ -199,7 +199,7 @@ Future<void> openHiveAndPerformTasks(BuildContext context) async {
     context.read<HabitProvider>().updateMainCategoryHeight();
     context.read<HistoricalHabitProvider>().calculateStreak(context);
     context.read<HabitProvider>().updateLastOpenedDate(context);
-    context.read<HabitProvider>().updateHabits();
+    context.read<DataProvider>().updateHabits();
   });
 
   saveHabitsForToday();

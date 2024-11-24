@@ -165,8 +165,8 @@ void addInitialData(context) {
         weekValue: 0,
         monthValue: 0,
         customValue: 0,
-        selectedDaysAWeek: List.generate(7, (index) => false),
-        selectedDaysAMonth: List.generate(31, (index) => false)),
+        selectedDaysAWeek: [],
+        selectedDaysAMonth: []),
     HabitData(
         name: 'Add a new habit',
         notes: '',
@@ -189,8 +189,8 @@ void addInitialData(context) {
         weekValue: 0,
         monthValue: 0,
         customValue: 0,
-        selectedDaysAWeek: List.generate(7, (index) => false),
-        selectedDaysAMonth: List.generate(31, (index) => false))
+        selectedDaysAWeek: [],
+        selectedDaysAMonth: [])
   ];
 
   if (tagBox.isEmpty) {

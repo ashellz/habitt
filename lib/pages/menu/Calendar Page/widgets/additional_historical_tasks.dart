@@ -1,12 +1,11 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/historical_habit.dart';
-
-import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/util/objects/habit/calendar_habit_tile.dart';
+import 'package:provider/provider.dart';
 
 class AdditionalHistoricalTasks extends StatefulWidget {
   const AdditionalHistoricalTasks(
@@ -28,29 +27,13 @@ class _AdditionalHistoricalTasksState extends State<AdditionalHistoricalTasks> {
   @override
   Widget build(BuildContext context) {
     bool hasTasks = false;
-    bool todayExists = false;
+    bool todayExists =
+        context.watch<HistoricalHabitProvider>().historicalHabits.isNotEmpty;
 
-    int habitListLength = 0;
-    int boxIndex = 0;
-    List<HistoricalHabitData> habitsOnDate = [];
-    DateTime today = widget.today;
-    List<int> todayDate = [today.year, today.month, today.day];
-
-    for (int i = 0; i < historicalBox.length; i++) {
-      List<int> date = [
-        historicalBox.getAt(i)!.date.year,
-        historicalBox.getAt(i)!.date.month,
-        historicalBox.getAt(i)!.date.day
-      ];
-
-      if (const ListEquality().equals(date, todayDate)) {
-        todayExists = true;
-        boxIndex = i;
-        habitListLength = historicalBox.getAt(i)!.data.length;
-        habitsOnDate = historicalBox.getAt(i)!.data;
-        break;
-      }
-    }
+    int habitListLength =
+        context.watch<HistoricalHabitProvider>().historicalHabits.length;
+    List<HistoricalHabitData> habitsOnDate =
+        context.watch<HistoricalHabitProvider>().historicalHabits;
 
     for (var habit in habitsOnDate) {
       if (habit.task == true) {
@@ -73,9 +56,7 @@ class _AdditionalHistoricalTasksState extends State<AdditionalHistoricalTasks> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: CalendarHabitTile(
-                    boxIndex: boxIndex,
                     time: widget.today,
-                    habits: habitsOnDate,
                     index: i,
                     isAdLoaded: widget.isAdLoaded,
                     interstitialAd: widget.interstitialAd,

@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 
 otherCategoriesListCalendar(
     BuildContext context, chosenDay, bool isAdLoaded, interstitialAd) {
-  late int habitListLength = 0;
-  late List habitsOnDate = [];
   late int boxIndex = 0;
   List<int> todayDate = [chosenDay.year, chosenDay.month, chosenDay.day];
   bool todayExists = false;
@@ -24,8 +22,6 @@ otherCategoriesListCalendar(
     if (const ListEquality().equals(date, todayDate)) {
       todayExists = true;
       boxIndex = i;
-      habitListLength = historicalBox.getAt(i)!.data.length;
-      habitsOnDate = historicalBox.getAt(i)!.data;
       break;
     }
   }
@@ -61,11 +57,12 @@ otherCategoriesListCalendar(
 
     int index = historicalBox.length - 1;
     boxIndex = index;
-    habitListLength = historicalBox.getAt(index)!.data.length;
-    habitsOnDate = historicalBox.getAt(index)!.data;
   }
 
-  if (habitListLength == 0 || !todayExists) {
+  if (Provider.of<HistoricalHabitProvider>(context, listen: false)
+          .historicalHabits
+          .isEmpty ||
+      !todayExists) {
     DateTime dayJoined = metadataBox.get('dayJoined')!;
 
     if (dayJoined.isBefore(chosenDay)) {
@@ -101,13 +98,9 @@ otherCategoriesListCalendar(
   }
 
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    anyTime(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
-        isAdLoaded, interstitialAd),
-    morning(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
-        isAdLoaded, interstitialAd),
-    afternoon(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
-        isAdLoaded, interstitialAd),
-    evening(context, habitListLength, habitsOnDate, chosenDay, boxIndex,
-        isAdLoaded, interstitialAd),
+    anyTime(context, chosenDay, boxIndex, isAdLoaded, interstitialAd),
+    morning(context, chosenDay, boxIndex, isAdLoaded, interstitialAd),
+    afternoon(context, chosenDay, boxIndex, isAdLoaded, interstitialAd),
+    evening(context, chosenDay, boxIndex, isAdLoaded, interstitialAd),
   ]);
 }

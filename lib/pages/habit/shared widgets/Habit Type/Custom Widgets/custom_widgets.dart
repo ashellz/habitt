@@ -3,6 +3,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,7 @@ class _CustomWidgetsState extends State<CustomWidgets> {
         Row(
           children: [
             Text(
-              AppLocale.every.getString(context),
+              "${AppLocale.every.getString(context)}${context.watch<LanguageProvider>().languageCode == "ba" && context.watch<DataProvider>().customValueSelected > 8 ? "h" : ""}",
               style: const TextStyle(
                 fontSize: 18,
               ),

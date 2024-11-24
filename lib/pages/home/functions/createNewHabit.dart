@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
@@ -18,6 +20,20 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
 
   List habitNotifications =
       Provider.of<HabitProvider>(context, listen: false).habitNotifications;
+
+  String habitType = Provider.of<DataProvider>(context, listen: false)
+      .habitTypeController
+      .text;
+
+  if (habitType == AppLocale.daily.getString(context)) {
+    habitType = "Daily";
+  } else if (habitType == AppLocale.weekly.getString(context)) {
+    habitType = "Weekly";
+  } else if (habitType == AppLocale.monthly.getString(context)) {
+    habitType = "Monthly";
+  } else if (habitType == AppLocale.custom.getString(context)) {
+    habitType = "Custom";
+  }
 
   myHabit = HabitData(
       name: createcontroller.text,
@@ -47,9 +63,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
       longestStreak: 0,
       id: streakBox.get('highestId')! + 1,
       task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
-      type: Provider.of<DataProvider>(context, listen: false)
-          .habitTypeController
-          .text,
+      type: habitType,
       weekValue:
           Provider.of<DataProvider>(context, listen: false).weekValueSelected,
       monthValue:

@@ -30,20 +30,17 @@ class _SelectableDayInTheMonthState extends State<SelectableDayInTheMonth> {
           padding: const EdgeInsets.all(5),
           child: GestureDetector(
             onTap: () => setState(() {
-              for (bool selectedDay in selectedDaysAMonth) {
-                if (selectedDay) {
-                  selectedDays++;
-                }
+              for (int i = 0; i < selectedDaysAMonth.length; i++) {
+                selectedDays++;
               }
 
-              if (selectedDays < 30 || selectedDaysAMonth[widget.index]) {
-                selectedDaysAMonth[widget.index] =
-                    !selectedDaysAMonth[widget.index];
-              }
-
-              selectedDays = 0;
-              for (bool selectedDay in selectedDaysAMonth) {
-                if (selectedDay) {
+              if (selectedDays < 30 ||
+                  selectedDaysAMonth.contains(widget.index)) {
+                if (selectedDaysAMonth.contains(widget.index)) {
+                  selectedDaysAMonth.remove(widget.index);
+                  selectedDays--;
+                } else {
+                  selectedDaysAMonth.add(widget.index);
                   selectedDays++;
                 }
               }
@@ -68,7 +65,8 @@ class _SelectableDayInTheMonthState extends State<SelectableDayInTheMonth> {
                         curve: Curves.easeInOut,
                         tween: Tween<double>(
                           begin: 0,
-                          end: selectedDaysAMonth[widget.index] ? 1 : 0,
+                          end:
+                              selectedDaysAMonth.contains(widget.index) ? 1 : 0,
                         ),
                         builder: (context, value, _) {
                           return LinearProgressIndicator(
