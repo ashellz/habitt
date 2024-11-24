@@ -47,7 +47,7 @@ class _PageViewHeightAdaptableState extends State<PageViewHeightAdaptable> {
           physics: const BouncingScrollPhysics(),
           onPageChanged: (value) => context
               .read<HabitProvider>()
-              .setTagSelected(visibleListTags()[value]),
+              .setTagSelected(visibleListTags(context)[value]),
           controller: widget.controller,
           children: [
             for (final (i, child) in widget.children.indexed)

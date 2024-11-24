@@ -500,13 +500,13 @@ void checkCompleteHabit(amountCheck, durationCheck, int index,
     if (habitBox.getAt(index)!.completed) {
       context
           .read<HabitProvider>()
-          .completeHabitProvider(index, isAdLoaded, interstitialAd);
+          .completeHabitProvider(index, isAdLoaded, interstitialAd, context);
     } else {
       completeHabitDialog(index, isAdLoaded, interstitialAd, context);
     }
   } else {
     context
         .read<HabitProvider>()
-        .completeHabitProvider(index, isAdLoaded, interstitialAd);
+        .completeHabitProvider(index, isAdLoaded, interstitialAd, context);
   }
 }

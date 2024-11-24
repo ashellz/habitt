@@ -437,7 +437,7 @@ void checkCompleteHabit(
       if (isToday) {
         context
             .read<HabitProvider>()
-            .completeHabitProvider(index, isAdLoaded, interstitialAd);
+            .completeHabitProvider(index, isAdLoaded, interstitialAd, context);
         context
             .read<HistoricalHabitProvider>()
             .completeHistoricalHabit(index, habit, time, context);
@@ -453,7 +453,7 @@ void checkCompleteHabit(
     if (isToday) {
       context
           .read<HabitProvider>()
-          .completeHabitProvider(index, isAdLoaded, interstitialAd);
+          .completeHabitProvider(index, isAdLoaded, interstitialAd, context);
     }
     context
         .read<HistoricalHabitProvider>()

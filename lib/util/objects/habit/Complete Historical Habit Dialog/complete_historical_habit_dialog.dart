@@ -51,7 +51,8 @@ completeHistoricalHabitDialog(
                             if (isToday) {
                               context
                                   .read<HabitProvider>()
-                                  .completeHabitProvider(index, false, false);
+                                  .completeHabitProvider(
+                                      index, false, false, context);
                             }
                             context
                                 .read<HistoricalHabitProvider>()
@@ -116,9 +117,8 @@ completeHistoricalHabitDialog(
                     child: Text(AppLocale.done.getString(context)),
                     onPressed: () {
                       if (isToday) {
-                        context
-                            .read<HabitProvider>()
-                            .completeHabitProvider(index, false, false);
+                        context.read<HabitProvider>().completeHabitProvider(
+                            index, false, false, context);
                       }
                       context
                           .read<HistoricalHabitProvider>()

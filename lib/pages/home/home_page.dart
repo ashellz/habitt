@@ -178,7 +178,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       header(
                           username, context.watch<DataProvider>().greetingText),
                       const SizedBox(height: 20),
-                      SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                      SizedBox(
+                          height: 30, child: tagsWidgets(tagSelected, context)),
                     ],
                   ),
                 ),
@@ -187,7 +188,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     key: sizeKey,
                     controller: pageController,
                     children: [
-                      for (String tag in visibleListTags())
+                      for (String tag in visibleListTags(context))
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, bottom: 40),
@@ -243,14 +244,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 }
 
-List<String> visibleListTags() {
+List<String> visibleListTags(BuildContext context) {
+  final habitsList = context.read<DataProvider>().habitsList;
+  int habitsListLength = habitsList.length;
   List<String> visibleList = ["All"];
 
-  for (int i = 0; i < habitBox.length; i++) {
-    final category = habitBox.getAt(i)?.category;
+  for (int i = 0; i < habitsListLength; i++) {
+    final category = habitsList[i].category;
 
     if (!visibleList.contains(category)) {
-      visibleList.add(category!);
+      visibleList.add(category);
     }
   }
 
@@ -259,11 +262,11 @@ List<String> visibleListTags() {
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
 
-  for (int i = 0; i < habitBox.length; i++) {
-    final tag = habitBox.getAt(i)?.tag;
+  for (int i = 0; i < habitsListLength; i++) {
+    final tag = habitsList[i].tag;
     if (!visibleList.contains(tag)) {
       if (tag != "No tag") {
-        visibleList.add(tag!);
+        visibleList.add(tag);
       }
     }
   }

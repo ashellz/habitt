@@ -241,7 +241,7 @@ class HabitProvider extends ChangeNotifier {
   }
 
   Future<void> completeHabitProvider(
-      int index, bool isAdLoaded, interstitialAd) async {
+      int index, bool isAdLoaded, interstitialAd, BuildContext context) async {
     final existingHabit = habitBox.getAt(index);
 
     bool isTask = habitBox.getAt(index)!.task;
@@ -290,7 +290,7 @@ class HabitProvider extends ChangeNotifier {
 
     // apply haptic feedback or sound
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
-    if (allHabitsCompleted()) {
+    if (allHabitsCompleted(context)) {
       if (isAdLoaded) {
         interstitialAd.show();
       }

@@ -53,7 +53,7 @@ completeHabitDialog(
                           ),
                           onPressed: () {
                             context.read<HabitProvider>().completeHabitProvider(
-                                index, isAdLoaded, interstitialAd);
+                                index, isAdLoaded, interstitialAd, context);
                             Navigator.pop(context);
                           },
                         ),
@@ -101,7 +101,7 @@ completeHabitDialog(
                     child: Text(AppLocale.done.getString(context)),
                     onPressed: () {
                       context.read<HabitProvider>().completeHabitProvider(
-                          index, isAdLoaded, interstitialAd);
+                          index, isAdLoaded, interstitialAd, context);
                       Navigator.pop(context);
                     },
                   ),
