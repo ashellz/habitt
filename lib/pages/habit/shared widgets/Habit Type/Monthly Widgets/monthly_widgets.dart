@@ -19,14 +19,14 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
 
   String getMonthlyText() {
     String text = "";
-    if (context.watch<DataProvider>().monthValueSelected < 2) {
-      text = values[context.watch<DataProvider>().monthValueSelected];
-    } else if (context.watch<DataProvider>().monthValueSelected < 9) {
+    if (context.watch<DataProvider>().monthValueSelected < 3) {
+      text = values[context.watch<DataProvider>().monthValueSelected - 1];
+    } else if (context.watch<DataProvider>().monthValueSelected < 11) {
       text =
-          "${values[context.watch<DataProvider>().monthValueSelected]} ${AppLocale.days.getString(context)}";
+          "${values[context.watch<DataProvider>().monthValueSelected - 1]} ${AppLocale.days.getString(context)}";
     } else {
       text =
-          "${context.watch<DataProvider>().monthValueSelected + 1} ${AppLocale.days.getString(context)}";
+          "${context.watch<DataProvider>().monthValueSelected} ${AppLocale.days.getString(context)}";
     }
 
     return text;
@@ -67,11 +67,14 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
                   context.read<DataProvider>().unselectAllDaysAMonth();
                   if (Provider.of<DataProvider>(context, listen: false)
                           .monthValueSelected >
-                      28) {
-                    context.read<DataProvider>().setMonthValueSelected(0);
+                      29) {
+                    context.read<DataProvider>().setMonthValueSelected(1);
                   } else {
                     context.read<DataProvider>().increaseMonthValueSelected();
                   }
+
+                  print(Provider.of<DataProvider>(context, listen: false)
+                      .monthValueSelected);
                 },
                 child: Text(
                   getMonthlyText(),
@@ -97,7 +100,7 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
               children: [
                 const SizedBox(height: 15),
                 Text(
-                  "${AppLocale.thisHabitWillAppear.getString(context)} ${getMonthlyText().toLowerCase()} ${AppLocale.aMonth.getString(context)} ${AppLocale.untilCompleted.getString(context)}${context.watch<DataProvider>().monthValueSelected == 0 ? "" : " ${context.watch<DataProvider>().monthValueSelected + 1} ${AppLocale.times.getString(context)}."}",
+                  "${AppLocale.thisHabitWillAppear.getString(context)} ${getMonthlyText().toLowerCase()} ${AppLocale.aMonth.getString(context)} ${AppLocale.untilCompleted.getString(context)}${context.watch<DataProvider>().monthValueSelected == 1 ? "." : " ${context.watch<DataProvider>().monthValueSelected} ${AppLocale.times.getString(context)}."}",
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 15),
@@ -133,7 +136,7 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          for (int i = 0; i < 7; i++)
+                          for (int i = 1; i < 8; i++)
                             SelectableDayInTheMonth(
                               index: i,
                             ),
@@ -141,7 +144,7 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          for (int i = 7; i < 14; i++)
+                          for (int i = 8; i < 15; i++)
                             SelectableDayInTheMonth(
                               index: i,
                             ),
@@ -149,7 +152,7 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          for (int i = 14; i < 21; i++)
+                          for (int i = 15; i < 22; i++)
                             SelectableDayInTheMonth(
                               index: i,
                             ),
@@ -157,17 +160,17 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          for (int i = 21; i < 28; i++)
+                          for (int i = 22; i < 29; i++)
                             SelectableDayInTheMonth(
                               index: i,
                             ),
                         ]),
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      for (int i = 28; i < 31; i++)
+                      for (int i = 29; i < 32; i++)
                         SelectableDayInTheMonth(
                           index: i,
                         ),
-                      for (int i = 31; i < 35; i++)
+                      for (int i = 32; i < 36; i++)
                         const Expanded(child: AspectRatio(aspectRatio: 1))
                     ]),
                   ],
@@ -175,7 +178,7 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
               ),
               const SizedBox(height: 10),
               Text(
-                  "${AppLocale.leaveUnselectedMonth.getString(context)} ${context.watch<DataProvider>().monthValueSelected == 0 ? "" : " ${context.watch<DataProvider>().monthValueSelected + 1} ${AppLocale.times.getString(context)}."}",
+                  "${AppLocale.leaveUnselectedMonth.getString(context)} ${context.watch<DataProvider>().monthValueSelected == 1 ? "" : " ${context.watch<DataProvider>().monthValueSelected} ${AppLocale.times.getString(context)}."}",
                   style: const TextStyle(color: Colors.grey)),
               const SizedBox(height: 10),
               Text(AppLocale.noteMonth.getString(context),

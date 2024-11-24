@@ -294,9 +294,9 @@ void openAddHabitPage(
   createcontroller.text = AppLocale.habitName.getString(context);
   Provider.of<HabitProvider>(context, listen: false).categoriesExpanded = false;
   Provider.of<HabitProvider>(context, listen: false).habitNotifications = [];
-  context.read<DataProvider>().setCustomValueSelected(0);
-  context.read<DataProvider>().setMonthValueSelected(0);
-  context.read<DataProvider>().setWeekValueSelected(0);
+  context.read<DataProvider>().setCustomValueSelected(2);
+  context.read<DataProvider>().setMonthValueSelected(1);
+  context.read<DataProvider>().setWeekValueSelected(1);
   context.read<DataProvider>().unselectAllDaysAWeek();
   context.read<DataProvider>().unselectAllDaysAMonth();
   Provider.of<DataProvider>(context, listen: false)

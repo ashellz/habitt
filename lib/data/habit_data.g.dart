@@ -40,13 +40,16 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       customValue: fields[20] == null ? 0 : fields[20] as int,
       selectedDaysAWeek: fields[21] == null ? [] : fields[21] as List,
       selectedDaysAMonth: fields[22] == null ? [] : fields[22] as List,
+      daysUntilAppearance: fields[23] == null ? 0 : fields[23] as int,
+      timesCompletedThisWeek: fields[24] == null ? 0 : fields[24] as int,
+      timesCompletedThisMonth: fields[25] == null ? 0 : fields[25] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(23)
+      ..writeByte(26)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -92,7 +95,13 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(21)
       ..write(obj.selectedDaysAWeek)
       ..writeByte(22)
-      ..write(obj.selectedDaysAMonth);
+      ..write(obj.selectedDaysAMonth)
+      ..writeByte(23)
+      ..write(obj.daysUntilAppearance)
+      ..writeByte(24)
+      ..write(obj.timesCompletedThisWeek)
+      ..writeByte(25)
+      ..write(obj.timesCompletedThisMonth);
   }
 
   @override

@@ -46,7 +46,7 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
                 selectedDays++;
               }
 
-              if (selectedDays < 6 ||
+              if (selectedDays < 7 ||
                   selectedDaysAWeek.contains(widget.index)) {
                 if (selectedDaysAWeek.contains(widget.index)) {
                   selectedDaysAWeek.remove(widget.index);
@@ -58,12 +58,11 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
               }
 
               if (selectedDays == 0) {
-                context.read<DataProvider>().setWeekValueSelected(selectedDays);
+                context.read<DataProvider>().setWeekValueSelected(1);
               } else {
-                context
-                    .read<DataProvider>()
-                    .setWeekValueSelected(selectedDays - 1);
+                context.read<DataProvider>().setWeekValueSelected(selectedDays);
               }
+              print(selectedDaysAWeek);
             }),
             child: Stack(
               children: [
@@ -90,7 +89,7 @@ class _SelectableDayInTheWeekState extends State<SelectableDayInTheWeek> {
                 ),
                 Center(
                     child: AutoSizeText(
-                  dayNames[widget.index],
+                  dayNames[widget.index - 1],
                   textAlign: TextAlign.center,
                 )),
               ],

@@ -186,6 +186,7 @@ mixin AppLocale {
   static const String leaveUnselectedWeek = 'leaveUnselectedWeek';
   static const String leaveUnselectedMonth = 'leaveUnselectedMonth';
   static const String noteMonth = 'Note month';
+  static const String startingFromToday = 'starting from today';
 
   // Notifications Page
   static const String habitNotifications = 'Habit Notifications';
@@ -365,6 +366,7 @@ mixin AppLocale {
         "Leave unselected if you want the habit to appear every day of the month until completed",
     noteMonth:
         "Note: If a month doesn't have the selected day (31st, 30th, etc.) this habit, of course, won't appear that day.",
+    startingFromToday: "starting from today",
   };
 
   static const Map<String, dynamic> ba = {
@@ -533,6 +535,7 @@ mixin AppLocale {
     leaveUnselectedWeek:
         "Ostavi neoznačeno ako želiš da se navika pojavi svaki dan u sedmici dok se ne ispuni",
     noteMonth:
-        "Napomena: Ako mjesec nema odabrani dan (31, 30 i dr.) ova navika, naravno, neće biti prikazana taj dan."
+        "Napomena: Ako mjesec nema odabrani dan (31, 30 i dr.) ova navika, naravno, neće biti prikazana taj dan.",
+    startingFromToday: "počevši od danas",
   };
 }

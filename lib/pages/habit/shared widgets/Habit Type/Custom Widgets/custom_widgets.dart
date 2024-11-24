@@ -19,12 +19,12 @@ class _CustomWidgetsState extends State<CustomWidgets> {
 
   String getCustomText() {
     String text = "";
-    if (context.watch<DataProvider>().customValueSelected < 9) {
+    if (context.watch<DataProvider>().customValueSelected < 11) {
       text =
-          "${values[context.watch<DataProvider>().customValueSelected]} ${AppLocale.day.getString(context)}";
+          "${values[context.watch<DataProvider>().customValueSelected - 2]} ${AppLocale.day.getString(context)}";
     } else {
       text =
-          "${context.watch<DataProvider>().customValueSelected + 2} ${AppLocale.days.getString(context)}";
+          "${context.watch<DataProvider>().customValueSelected} ${AppLocale.days.getString(context)}";
     }
 
     return text;
@@ -56,7 +56,7 @@ class _CustomWidgetsState extends State<CustomWidgets> {
         Row(
           children: [
             Text(
-              "${AppLocale.every.getString(context)}${context.watch<LanguageProvider>().languageCode == "ba" && context.watch<DataProvider>().customValueSelected > 8 ? "h" : ""}",
+              "${AppLocale.every.getString(context)}${context.watch<LanguageProvider>().languageCode == "ba" && context.watch<DataProvider>().customValueSelected > 10 ? "h" : ""}",
               style: const TextStyle(
                 fontSize: 18,
               ),
@@ -68,11 +68,14 @@ class _CustomWidgetsState extends State<CustomWidgets> {
                 onPressed: () {
                   if (Provider.of<DataProvider>(context, listen: false)
                           .customValueSelected >
-                      27) {
-                    context.read<DataProvider>().setCustomValueSelected(0);
+                      29) {
+                    context.read<DataProvider>().setCustomValueSelected(2);
                   } else {
                     context.read<DataProvider>().increaseCustomValueSelected();
                   }
+
+                  print(Provider.of<DataProvider>(context, listen: false)
+                      .customValueSelected);
                 },
                 child: Text(
                   "${getCustomText()}.",
@@ -84,7 +87,7 @@ class _CustomWidgetsState extends State<CustomWidgets> {
         ),
         const SizedBox(height: 15),
         Text(
-          "This habit will appear every ${getCustomText().toLowerCase()} starting from today.",
+          "${AppLocale.thisHabitWillAppear.getString(context)} ${AppLocale.every.getString(context).toLowerCase()} ${getCustomText().toLowerCase()} ${AppLocale.startingFromToday.getString(context)}.",
           style: const TextStyle(color: Colors.grey),
         ),
       ],

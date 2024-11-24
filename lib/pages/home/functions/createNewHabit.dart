@@ -36,44 +36,46 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   }
 
   myHabit = HabitData(
-      name: createcontroller.text,
-      completed: false,
-      icon: getIconString(
-          Provider.of<HabitProvider>(context, listen: false).updatedIcon.icon),
-      category:
-          Provider.of<HabitProvider>(context, listen: false).dropDownValue,
-      streak: 0,
-      amount:
-          Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
-              ? Provider.of<HabitProvider>(context, listen: false).amount
-              : 1,
-      amountName: amountNameController.text,
-      amountCompleted: 0,
-      duration:
-          Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
-              ? currentDurationValue
-              : 0,
-      durationCompleted: 0,
-      skipped: false,
-      tag: habitTag,
-      notifications: habitNotifications,
-      notes: Provider.of<HabitProvider>(context, listen: false)
-          .notescontroller
-          .text,
-      longestStreak: 0,
-      id: streakBox.get('highestId')! + 1,
-      task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
-      type: habitType,
-      weekValue:
-          Provider.of<DataProvider>(context, listen: false).weekValueSelected,
-      monthValue:
-          Provider.of<DataProvider>(context, listen: false).monthValueSelected,
-      customValue:
-          Provider.of<DataProvider>(context, listen: false).customValueSelected,
-      selectedDaysAWeek:
-          Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
-      selectedDaysAMonth:
-          Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth);
+    name: createcontroller.text,
+    completed: false,
+    icon: getIconString(
+        Provider.of<HabitProvider>(context, listen: false).updatedIcon.icon),
+    category: Provider.of<HabitProvider>(context, listen: false).dropDownValue,
+    streak: 0,
+    amount:
+        Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
+            ? Provider.of<HabitProvider>(context, listen: false).amount
+            : 1,
+    amountName: amountNameController.text,
+    amountCompleted: 0,
+    duration:
+        Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
+            ? currentDurationValue
+            : 0,
+    durationCompleted: 0,
+    skipped: false,
+    tag: habitTag,
+    notifications: habitNotifications,
+    notes:
+        Provider.of<HabitProvider>(context, listen: false).notescontroller.text,
+    longestStreak: 0,
+    id: streakBox.get('highestId')! + 1,
+    task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
+    type: habitType,
+    weekValue:
+        Provider.of<DataProvider>(context, listen: false).weekValueSelected,
+    monthValue:
+        Provider.of<DataProvider>(context, listen: false).monthValueSelected,
+    customValue:
+        Provider.of<DataProvider>(context, listen: false).customValueSelected,
+    selectedDaysAWeek:
+        Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
+    selectedDaysAMonth:
+        Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
+    daysUntilAppearance: 0,
+    timesCompletedThisWeek: 0,
+    timesCompletedThisMonth: 0,
+  );
   await habitBox.add(myHabit);
   streakBox.put('highestId', streakBox.get('highestId')! + 1);
   hasHabits();

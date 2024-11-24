@@ -20,7 +20,7 @@ class DataProvider extends ChangeNotifier {
 
   int weekValueSelected = 0;
   int monthValueSelected = 0;
-  int customValueSelected = 0;
+  int customValueSelected = 2;
 
   List selectedDaysAWeek = [];
 

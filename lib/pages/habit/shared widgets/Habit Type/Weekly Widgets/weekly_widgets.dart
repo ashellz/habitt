@@ -72,14 +72,17 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
                   context.read<DataProvider>().unselectAllDaysAWeek();
                   if (Provider.of<DataProvider>(context, listen: false)
                           .weekValueSelected >
-                      4) {
-                    context.read<DataProvider>().setWeekValueSelected(0);
+                      5) {
+                    context.read<DataProvider>().setWeekValueSelected(1);
                   } else {
                     context.read<DataProvider>().increaseWeekValueSelected();
                   }
+
+                  print(Provider.of<DataProvider>(context, listen: false)
+                      .weekValueSelected);
                 },
                 child: Text(
-                  values[context.watch<DataProvider>().weekValueSelected],
+                  values[context.watch<DataProvider>().weekValueSelected - 1],
                   style: const TextStyle(
                     fontSize: 18,
                   ),
@@ -100,7 +103,7 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
             children: [
               const SizedBox(height: 15),
               Text(
-                "${AppLocale.thisHabitWillAppear.getString(context)} ${values[context.watch<DataProvider>().weekValueSelected].toLowerCase()} ${AppLocale.aWeek.getString(context)} ${AppLocale.untilCompleted.getString(context)}${context.watch<DataProvider>().weekValueSelected == 0 ? "." : " ${context.watch<DataProvider>().weekValueSelected + 1} ${AppLocale.times.getString(context)}."}",
+                "${AppLocale.thisHabitWillAppear.getString(context)} ${values[context.watch<DataProvider>().weekValueSelected - 1].toLowerCase()} ${AppLocale.aWeek.getString(context)} ${AppLocale.untilCompleted.getString(context)}${context.watch<DataProvider>().weekValueSelected == 1 ? "." : " ${context.watch<DataProvider>().weekValueSelected} ${AppLocale.times.getString(context)}."}",
                 style: const TextStyle(color: Colors.grey),
               ),
               const SizedBox(height: 15),
@@ -134,7 +137,7 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      for (int i = 0; i < 7; i++)
+                      for (int i = 1; i < 8; i++)
                         SelectableDayInTheWeek(
                           index: i,
                         ),
@@ -142,7 +145,7 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
               ),
               const SizedBox(height: 10),
               Text(
-                  "${AppLocale.leaveUnselectedWeek.getString(context)}${context.watch<DataProvider>().weekValueSelected == 0 ? "." : " ${context.watch<DataProvider>().weekValueSelected + 1} ${AppLocale.times.getString(context)}."}",
+                  "${AppLocale.leaveUnselectedWeek.getString(context)}${context.watch<DataProvider>().weekValueSelected == 1 ? "." : " ${context.watch<DataProvider>().weekValueSelected} ${AppLocale.times.getString(context)}."}",
                   style: const TextStyle(color: Colors.grey))
             ],
           )

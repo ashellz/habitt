@@ -281,13 +281,16 @@ class HabitProvider extends ChangeNotifier {
       customValue: existingHabit.customValue,
       selectedDaysAWeek: existingHabit.selectedDaysAWeek,
       selectedDaysAMonth: existingHabit.selectedDaysAMonth,
+      daysUntilAppearance: existingHabit.daysUntilAppearance,
+      timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
+      timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
     );
 
     await habitBox.putAt(index, updatedHabit);
 
     // apply haptic feedback or sound
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
-    if (allHabitsCompleted() && !isTask) {
+    if (allHabitsCompleted()) {
       if (isAdLoaded) {
         interstitialAd.show();
       }
@@ -424,7 +427,10 @@ class HabitProvider extends ChangeNotifier {
           monthValue: existingHabit.monthValue,
           customValue: existingHabit.customValue,
           selectedDaysAWeek: existingHabit.selectedDaysAWeek,
-          selectedDaysAMonth: existingHabit.selectedDaysAMonth);
+          selectedDaysAMonth: existingHabit.selectedDaysAMonth,
+          daysUntilAppearance: existingHabit.daysUntilAppearance,
+          timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
+          timesCompletedThisMonth: existingHabit.timesCompletedThisMonth);
 
       await habitBox.putAt(index, updatedHabit);
       saveHabitsForToday();
@@ -506,7 +512,12 @@ class HabitProvider extends ChangeNotifier {
             monthValue: habitBox.getAt(index)!.monthValue,
             customValue: habitBox.getAt(index)!.customValue,
             selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
-            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth));
+            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth,
+            daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
+            timesCompletedThisWeek:
+                habitBox.getAt(index)!.timesCompletedThisWeek,
+            timesCompletedThisMonth:
+                habitBox.getAt(index)!.timesCompletedThisMonth));
     saveHabitsForToday();
     notifyListeners();
   }
@@ -540,7 +551,12 @@ class HabitProvider extends ChangeNotifier {
             monthValue: habitBox.getAt(index)!.monthValue,
             customValue: habitBox.getAt(index)!.customValue,
             selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
-            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth));
+            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth,
+            daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
+            timesCompletedThisWeek:
+                habitBox.getAt(index)!.timesCompletedThisWeek,
+            timesCompletedThisMonth:
+                habitBox.getAt(index)!.timesCompletedThisMonth));
     saveHabitsForToday();
     notifyListeners();
   }

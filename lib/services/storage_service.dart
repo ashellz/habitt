@@ -166,7 +166,10 @@ void addInitialData(context) {
         monthValue: 0,
         customValue: 0,
         selectedDaysAWeek: [],
-        selectedDaysAMonth: []),
+        selectedDaysAMonth: [],
+        daysUntilAppearance: 0,
+        timesCompletedThisWeek: 0,
+        timesCompletedThisMonth: 0),
     HabitData(
         name: 'Add a new habit',
         notes: '',
@@ -190,7 +193,10 @@ void addInitialData(context) {
         monthValue: 0,
         customValue: 0,
         selectedDaysAWeek: [],
-        selectedDaysAMonth: [])
+        selectedDaysAMonth: [],
+        daysUntilAppearance: 0,
+        timesCompletedThisWeek: 0,
+        timesCompletedThisMonth: 0)
   ];
 
   if (tagBox.isEmpty) {

@@ -34,7 +34,7 @@ class _SelectableDayInTheMonthState extends State<SelectableDayInTheMonth> {
                 selectedDays++;
               }
 
-              if (selectedDays < 30 ||
+              if (selectedDays < 31 ||
                   selectedDaysAMonth.contains(widget.index)) {
                 if (selectedDaysAMonth.contains(widget.index)) {
                   selectedDaysAMonth.remove(widget.index);
@@ -46,13 +46,11 @@ class _SelectableDayInTheMonthState extends State<SelectableDayInTheMonth> {
               }
 
               if (selectedDays == 0) {
-                context
-                    .read<DataProvider>()
-                    .setMonthValueSelected(selectedDays);
+                context.read<DataProvider>().setMonthValueSelected(1);
               } else {
                 context
                     .read<DataProvider>()
-                    .setMonthValueSelected(selectedDays - 1);
+                    .setMonthValueSelected(selectedDays);
               }
             }),
             child: Stack(
@@ -81,7 +79,7 @@ class _SelectableDayInTheMonthState extends State<SelectableDayInTheMonth> {
                 ),
                 Center(
                     child: AutoSizeText(
-                  "${widget.index + 1}",
+                  "${widget.index}",
                   textAlign: TextAlign.center,
                 )),
               ],
