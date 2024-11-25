@@ -7,6 +7,7 @@ import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:habitt/util/objects/habit/Complete%20Habit%20Dialog/complete_habit_dialog.dart';
@@ -92,6 +93,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
           editcontroller.clear();
           changed = false;
           if (context.mounted) {
+            context.read<DataProvider>().updateHabits();
             context.read<HabitProvider>().changeNotification([]);
             Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
                 0;

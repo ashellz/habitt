@@ -41,6 +41,7 @@ class SaveButton extends StatelessWidget {
               final isFirstTimeEdit = boolBox.get("firstTimeEditAppearence")!;
 
               if (appearanceEdited && isFirstTimeEdit) {
+                boolBox.put("firstTimeEditAppearence", false);
                 showCustomDialog(
                     context,
                     "Edit Habit",

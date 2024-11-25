@@ -8,6 +8,7 @@ import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
+import 'package:habitt/pages/home/all_habits_page.dart';
 import 'package:habitt/pages/home/functions/fillTagsList.dart';
 import 'package:habitt/pages/home/widgets/adaptable_page_view.dart';
 import 'package:habitt/pages/home/widgets/additional_tasks.dart';
@@ -155,6 +156,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               automaticallyImplyLeading: false,
               backgroundColor: context.watch<ColorProvider>().blackColor,
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.list),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return const AllHabitsPage();
+                    }));
+                  },
+                ),
+                const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.menu),
                   onPressed: () {
