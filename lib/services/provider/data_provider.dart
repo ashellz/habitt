@@ -6,6 +6,7 @@ import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
 
 class DataProvider extends ChangeNotifier {
+  String allHabitsTagSelected = "Categories";
   List<String> categoriesList = [];
   List<String> tagsList =
       []; // This list is going to be empty except when initialized in onboarding page
@@ -34,6 +35,11 @@ class DataProvider extends ChangeNotifier {
   int theAmountValue = 0;
   int theDurationValueHours = 0;
   int theDurationValueMinutes = 0;
+
+  void setAllHabitsTagSelected(String value) {
+    allHabitsTagSelected = value;
+    notifyListeners();
+  }
 
   void setAmountValue(int value) {
     theAmountValue = value;
@@ -140,11 +146,11 @@ class DataProvider extends ChangeNotifier {
   // Initialize tagsList with context to access localization
   void initializeTagsList(BuildContext context) {
     tagsList = [
-      AppLocale.noTag.getString(context),
-      AppLocale.healthyLifestyle.getString(context),
-      AppLocale.betterSleep.getString(context),
-      AppLocale.morningRoutine.getString(context),
-      AppLocale.workout.getString(context),
+      "No tag",
+      "Healthy Lifestyle",
+      "Better Sleep",
+      "Morning Routine",
+      "Workout"
     ];
 
     notifyListeners();

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,10 +14,12 @@ class PageViewHeightAdaptable extends StatefulWidget {
     super.key,
     required this.controller,
     required this.children,
+    required this.isHomePage,
   }) : assert(children.length > 0, 'children must not be empty');
 
   final PageController controller;
   final List<Widget> children;
+  final bool isHomePage;
 
   @override
   State<PageViewHeightAdaptable> createState() =>
@@ -45,9 +48,16 @@ class _PageViewHeightAdaptableState extends State<PageViewHeightAdaptable> {
       child: LayoutBuilder(
         builder: (context, constraints) => PageView(
           physics: const BouncingScrollPhysics(),
-          onPageChanged: (value) => context
-              .read<HabitProvider>()
-              .setTagSelected(visibleListTags(context)[value]),
+          onPageChanged: (value) {
+            if (widget.isHomePage) {
+              context
+                  .read<HabitProvider>()
+                  .setTagSelected(visibleListTags(context)[value]);
+            } else {
+              context.read<DataProvider>().setAllHabitsTagSelected(
+                  ["Categories", "Tags", "Tasks"][value]);
+            }
+          },
           controller: widget.controller,
           children: [
             for (final (i, child) in widget.children.indexed)

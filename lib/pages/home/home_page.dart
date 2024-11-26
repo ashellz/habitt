@@ -8,7 +8,7 @@ import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
 import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
-import 'package:habitt/pages/home/all_habits_page.dart';
+import 'package:habitt/pages/home/widgets/All%20Habits%20Page/all_habits_page.dart';
 import 'package:habitt/pages/home/functions/fillTagsList.dart';
 import 'package:habitt/pages/home/widgets/adaptable_page_view.dart';
 import 'package:habitt/pages/home/widgets/additional_tasks.dart';
@@ -161,8 +161,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   onPressed: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return const AllHabitsPage();
-                    }));
+                      return AllHabitsPage(
+                        editcontroller: editcontroller,
+                      );
+                    })).whenComplete(() {
+                      if (context.mounted) {
+                        context.read<DataProvider>().updateHabits();
+                      }
+                    });
                   },
                 ),
                 const Spacer(),
@@ -196,6 +202,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
                 Column(children: [
                   PageViewHeightAdaptable(
+                    isHomePage: true,
                     key: sizeKey,
                     controller: pageController,
                     children: [
