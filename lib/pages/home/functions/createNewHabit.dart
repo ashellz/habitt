@@ -83,6 +83,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   // Updates the main category height if new habit category is same as the main category
   if (context.mounted) {
     context.read<DataProvider>().updateHabits();
+    Provider.of<DataProvider>(context, listen: false).updateAllHabits();
     if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
         context.watch<HabitProvider>().mainCategory) {
       Provider.of<HabitProvider>(context, listen: false)

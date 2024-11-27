@@ -32,6 +32,7 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
   habitBox.deleteAt(index);
 
   Provider.of<DataProvider>(context, listen: false).updateHabits();
+  Provider.of<DataProvider>(context, listen: false).updateAllHabits();
 
   deleted = true;
   editcontroller.text = "";

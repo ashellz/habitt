@@ -118,6 +118,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
     context.read<DataProvider>().updateHabits();
+    context.read<DataProvider>().updateAllHabits();
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   }
 

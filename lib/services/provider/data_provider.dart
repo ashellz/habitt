@@ -16,6 +16,7 @@ class DataProvider extends ChangeNotifier {
   String greetingText = "";
 
   List<HabitData> tasksList = [];
+  List<HabitData> allHabitsList = [];
   List<HabitData> habitsList = [];
   TextEditingController habitTypeController = TextEditingController();
 
@@ -128,6 +129,11 @@ class DataProvider extends ChangeNotifier {
     }
 
     habitTypeController.text = value;
+    notifyListeners();
+  }
+
+  void updateAllHabits() {
+    allHabitsList = habitBox.values.toList();
     notifyListeners();
   }
 

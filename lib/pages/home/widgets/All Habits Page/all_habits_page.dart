@@ -28,7 +28,6 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
   final allHabitsPageController = PageController(initialPage: 0);
   GlobalKey sizeKey = GlobalKey();
   double? height;
-  List habits = habitBox.values.toList();
   List<List<int>> habitsCategory = [];
 
   @override
@@ -37,6 +36,7 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DataProvider>().setAllHabitsTagSelected("Categories");
+      context.read<DataProvider>().updateAllHabits();
     });
   }
 
@@ -54,6 +54,7 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
 
   @override
   Widget build(BuildContext context) {
+    List habits = context.watch<DataProvider>().allHabitsList;
     List tagsList = context.watch<DataProvider>().tagsList;
     List<double> habitBoxSizes = [];
     List<double> tagsSizes = [];
@@ -64,18 +65,18 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
     for (int i = 0; i < habits.length; i++) {
       if (!habits[i].task) {
         if (habits[i].category == "Any time") {
-          habitBoxSizes[0] += 55.5;
+          habitBoxSizes[0] += 65.5;
         } else if (habits[i].category == "Morning") {
-          habitBoxSizes[1] += 55.5;
+          habitBoxSizes[1] += 65.5;
         } else if (habits[i].category == "Afternoon") {
-          habitBoxSizes[2] += 55.5;
+          habitBoxSizes[2] += 65.5;
         } else if (habits[i].category == "Evening") {
-          habitBoxSizes[3] += 55.5;
+          habitBoxSizes[3] += 65.5;
         }
       }
 
       if (habits[i].task == true) {
-        taskSize += 55.5;
+        taskSize += 65.5;
       }
     }
 
@@ -84,7 +85,7 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
         tagsSizes.add(0);
         for (int j = 0; j < habits.length; j++) {
           if (habits[j].tag == tagsList[i] && !habits[j].task) {
-            tagsSizes[i] += 55.5;
+            tagsSizes[i] += 65.5;
           }
         }
       } else {
@@ -104,78 +105,82 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
+                padding: const EdgeInsets.only(
+                    bottom: 30, left: 20, right: 20, top: 10),
                 child: SizedBox(
                     height: 30,
                     child: allHabitsTag(context, allHabitsPageController)),
               ),
-              PageViewHeightAdaptable(
-                isHomePage: false,
-                key: sizeKey,
-                controller: allHabitsPageController,
-                children: [
-                  for (String type in ['Categories', 'Tags', 'Tasks'])
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          if (type == "Categories")
-                            Column(children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 50),
+                child: PageViewHeightAdaptable(
+                  isHomePage: false,
+                  key: sizeKey,
+                  controller: allHabitsPageController,
+                  children: [
+                    for (String type in ['Categories', 'Tags', 'Tasks'])
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            if (type == "Categories")
+                              Column(children: [
+                                ReorderableCategory(
+                                  category: "Any time",
+                                  boxSize: habitBoxSizes[0],
+                                  type: type,
+                                  editController: widget.editcontroller,
+                                ),
+                                ReorderableCategory(
+                                  category: "Morning",
+                                  boxSize: habitBoxSizes[1],
+                                  type: type,
+                                  editController: widget.editcontroller,
+                                ),
+                                ReorderableCategory(
+                                  category: "Afternoon",
+                                  boxSize: habitBoxSizes[2],
+                                  type: type,
+                                  editController: widget.editcontroller,
+                                ),
+                                ReorderableCategory(
+                                  category: "Evening",
+                                  boxSize: habitBoxSizes[3],
+                                  type: type,
+                                  editController: widget.editcontroller,
+                                ),
+                              ]),
+                            if (type == "Tags")
+                              Column(children: [
+                                for (int i = 0; i < tagsList.length; i++)
+                                  if (tagsList[i] != "No tag")
+                                    ReorderableCategory(
+                                      category: tagsList[i],
+                                      boxSize: tagsSizes[i],
+                                      type: type,
+                                      editController: widget.editcontroller,
+                                    ),
+                              ]),
+                            if (type == "Tasks")
                               ReorderableCategory(
-                                category: "Any time",
-                                boxSize: habitBoxSizes[0],
+                                category: "Tasks",
+                                boxSize: taskSize,
                                 type: type,
                                 editController: widget.editcontroller,
                               ),
-                              ReorderableCategory(
-                                category: "Morning",
-                                boxSize: habitBoxSizes[1],
-                                type: type,
-                                editController: widget.editcontroller,
-                              ),
-                              ReorderableCategory(
-                                category: "Afternoon",
-                                boxSize: habitBoxSizes[2],
-                                type: type,
-                                editController: widget.editcontroller,
-                              ),
-                              ReorderableCategory(
-                                category: "Evening",
-                                boxSize: habitBoxSizes[3],
-                                type: type,
-                                editController: widget.editcontroller,
-                              ),
-                            ]),
-                          if (type == "Tags")
-                            Column(children: [
-                              for (int i = 0; i < tagsList.length; i++)
-                                if (tagsList[i] != "No tag")
-                                  ReorderableCategory(
-                                    category: tagsList[i],
-                                    boxSize: tagsSizes[i],
-                                    type: type,
-                                    editController: widget.editcontroller,
-                                  ),
-                            ]),
-                          if (type == "Tasks")
-                            ReorderableCategory(
-                              category: "Tasks",
-                              boxSize: taskSize,
-                              type: type,
-                              editController: widget.editcontroller,
-                            ),
-                          SizedBox(
-                            height: height == null
-                                ? 0
-                                : height! > MediaQuery.of(context).size.height
-                                    ? 0
-                                    : MediaQuery.of(context).size.height -
-                                        height!,
-                          )
-                        ],
+                            SizedBox(
+                              height: height == null
+                                  ? 0
+                                  : height! > MediaQuery.of(context).size.height
+                                      ? 0
+                                      : MediaQuery.of(context).size.height -
+                                          height!,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ]),
           )
@@ -205,12 +210,16 @@ class ReorderableCategory extends StatefulWidget {
 class _ReorderableCategoryState extends State<ReorderableCategory> {
   Color evenItemColor = Colors.grey.shade900;
   Color oddItemColor = Colors.grey.shade800;
-  List habits = List.from(habitBox.values.toList());
 
   @override
   Widget build(BuildContext context) {
+    if (widget.boxSize == 0) {
+      return Container();
+    }
+
+    List habits = context.watch<DataProvider>().allHabitsList;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(translateBoth(widget.category, context),
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -218,6 +227,7 @@ class _ReorderableCategoryState extends State<ReorderableCategory> {
         SizedBox(
             height: widget.boxSize,
             child: ReorderableList(
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, i) {
                 if (widget.type == "Categories") {
                   if (habits[i].category == widget.category) {
@@ -302,82 +312,81 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: ListTile(
-        leading: Icon(
-          convertIcon(habits[i].icon),
-        ),
-        title: Text(
-          habits[i].name,
-          overflow: TextOverflow.ellipsis,
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                context.read<HabitProvider>().resetSomethingEdited();
-                context.read<HabitProvider>().resetAppearenceEdited();
-                Provider.of<HabitProvider>(context, listen: false)
-                    .habitGoalValue = 0;
-                updated = false;
-                editcontroller.text = "";
-                changed = false;
-                deleted = false;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: context.watch<ColorProvider>().darkGreyColor,
+          ),
+          child: ListTile(
+            onTap: () {
+              context.read<HabitProvider>().resetSomethingEdited();
+              context.read<HabitProvider>().resetAppearenceEdited();
+              Provider.of<HabitProvider>(context, listen: false)
+                  .habitGoalValue = 0;
+              updated = false;
+              editcontroller.text = "";
+              changed = false;
+              deleted = false;
 
-                int id = habits[i].id;
-                HabitData habit = habits[i];
+              int id = habits[i].id;
+              HabitData habit = habits[i];
 
-                Navigator.of(context)
-                    .push(MaterialPageRoute(
-                        builder: (context) => EditHabitPage(
-                              id: id,
-                              editcontroller: editcontroller,
-                            )))
-                    .whenComplete(() {
-                  bool changeTag = true;
-                  for (int i = 0; i < tagBox.length; i++) {
-                    if (tagBox.getAt(i)!.tag == habit.tag) {
-                      changeTag = false;
-                      break;
-                    }
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) => EditHabitPage(
+                            id: id,
+                            editcontroller: editcontroller,
+                          )))
+                  .whenComplete(() {
+                bool changeTag = true;
+                for (int i = 0; i < tagBox.length; i++) {
+                  if (tagBox.getAt(i)!.tag == habit.tag) {
+                    changeTag = false;
+                    break;
                   }
-                  if (changeTag) {
-                    habit.tag = habitTag;
-                    changeTag = true;
-                  }
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.read<HabitProvider>().setTagSelected(
-                        "All"); //TODO: only change if selected tag is deleted
-                  });
-                  pageController.animateToPage(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-
-                  deleted = false;
-                  updated = false;
-                  editcontroller.clear();
-                  changed = false;
-                  if (context.mounted) {
-                    context.read<DataProvider>().updateHabits();
-                    context.read<HabitProvider>().changeNotification([]);
-                    Provider.of<HabitProvider>(context, listen: false)
-                        .habitGoalValue = 0;
-                  }
+                }
+                if (changeTag) {
+                  habit.tag = habitTag;
+                  changeTag = true;
+                }
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.read<HabitProvider>().setTagSelected(
+                      "All"); //TODO: only change if selected tag is deleted
                 });
-              },
+                pageController.animateToPage(
+                  0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+
+                deleted = false;
+                updated = false;
+                editcontroller.clear();
+                changed = false;
+                if (context.mounted) {
+                  context.read<DataProvider>().updateHabits();
+                  context.read<HabitProvider>().changeNotification([]);
+                  Provider.of<HabitProvider>(context, listen: false)
+                      .habitGoalValue = 0;
+                }
+              });
+            },
+            leading: Icon(
+              convertIcon(habits[i].icon),
             ),
-            ReorderableDragStartListener(
+            title: Text(
+              habits[i].name,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: ReorderableDragStartListener(
               index: i,
               child: const Icon(Icons.drag_handle),
             ),
-          ],
+          ),
         ),
       ),
     );

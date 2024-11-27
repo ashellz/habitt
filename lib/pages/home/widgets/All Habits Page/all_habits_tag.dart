@@ -11,6 +11,7 @@ Widget allHabitsTag(BuildContext context, pageController) {
 
   return ListView(
     scrollDirection: Axis.horizontal,
+    physics: const PageScrollPhysics(),
     children: <Widget>[
       for (final category in allHabitsCategoriesList)
         StatefulBuilder(

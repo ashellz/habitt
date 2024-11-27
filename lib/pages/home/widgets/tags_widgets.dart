@@ -27,6 +27,7 @@ Widget tagsWidgets(String? tagSelected, BuildContext context) {
 
   return ListView(
     scrollDirection: Axis.horizontal,
+    physics: const PageScrollPhysics(),
     children: <Widget>[
       for (final category in visibleList)
         StatefulBuilder(
