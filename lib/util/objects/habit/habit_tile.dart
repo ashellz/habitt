@@ -93,7 +93,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
           editcontroller.clear();
           changed = false;
           if (context.mounted) {
-            context.read<DataProvider>().updateHabits();
+            context.read<DataProvider>().updateHabits(context);
             context.read<HabitProvider>().changeNotification([]);
             Provider.of<HabitProvider>(context, listen: false).habitGoalValue =
                 0;
@@ -112,7 +112,9 @@ class _NewHabitTileState extends State<NewHabitTile> {
             ),
             SlidableAction(
               onPressed: (context) {
-                context.read<HabitProvider>().skipHabitProvider(habitIndex);
+                context
+                    .read<HabitProvider>()
+                    .skipHabitProvider(habitIndex, context);
               },
               backgroundColor: context.watch<ColorProvider>().greyColor,
               foregroundColor: Colors.white,
@@ -175,7 +177,8 @@ class HabitTile extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-          IntrinsicWidth(stepWidth: 10, child: StreakDisplay(habit: habit)),
+          IntrinsicWidth(
+              stepWidth: 10, child: StreakDisplay(habit: habit, id: widget.id)),
         ],
       ),
       trailing: CheckBox(
@@ -200,20 +203,27 @@ class HabitTile extends StatelessWidget {
   }
 }
 
-class StreakDisplay extends StatelessWidget {
+class StreakDisplay extends StatefulWidget {
   const StreakDisplay({
     super.key,
     required this.habit,
+    required this.id,
   });
 
   final HabitData habit;
+  final int id;
 
+  @override
+  State<StreakDisplay> createState() => _StreakDisplayState();
+}
+
+class _StreakDisplayState extends State<StreakDisplay> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       Icon(
         MaterialCommunityIcons.fire,
-        color: habit.completed ? Colors.white : Colors.grey,
+        color: widget.habit.completed ? Colors.white : Colors.grey,
         size: 21,
       ),
       Transform.translate(
@@ -221,19 +231,19 @@ class StreakDisplay extends StatelessWidget {
         child: AnimatedDigitWidget(
           loop: false,
           duration: const Duration(milliseconds: 800),
-          value: habit.skipped
-              ? habit.streak
-              : habit.completed
-                  ? habit.streak + 1
-                  : habit.streak,
+          value: widget.habit.skipped
+              ? widget.habit.streak
+              : widget.habit.completed
+                  ? widget.habit.streak + 1
+                  : widget.habit.streak,
           textStyle: const TextStyle(fontFamily: "Poppins", fontSize: 14),
           valueColors: [
             ValueColor(
-              condition: () => habit.completed,
+              condition: () => widget.habit.completed,
               color: Colors.white,
             ),
             ValueColor(
-              condition: () => !habit.completed,
+              condition: () => !widget.habit.completed,
               color: Colors.grey,
             ),
           ],

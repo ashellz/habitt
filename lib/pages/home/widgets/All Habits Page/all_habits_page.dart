@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
@@ -6,11 +8,14 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/home/widgets/All%20Habits%20Page/all_habits_tag.dart';
 import 'package:habitt/pages/home/widgets/adaptable_page_view.dart';
 import 'package:habitt/pages/shared%20widgets/expandable_app_bar.dart';
+import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/translate_category.dart';
 import 'package:provider/provider.dart';
+
+PageController allHabitsPageController = PageController(initialPage: 0);
 
 class AllHabitsPage extends StatefulWidget {
   const AllHabitsPage({
@@ -25,7 +30,6 @@ class AllHabitsPage extends StatefulWidget {
 }
 
 class _AllHabitsPageState extends State<AllHabitsPage> {
-  final allHabitsPageController = PageController(initialPage: 0);
   GlobalKey sizeKey = GlobalKey();
   double? height;
   List<List<int>> habitsCategory = [];
@@ -33,10 +37,11 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
   @override
   void initState() {
     super.initState();
+    allHabitsPageController = PageController(initialPage: 0);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DataProvider>().setAllHabitsTagSelected("Categories");
-      context.read<DataProvider>().updateAllHabits();
+      context.read<AllHabitsProvider>().setAllHabitsTagSelected("Categories");
+      context.read<AllHabitsProvider>().initAllHabitsPage(context);
     });
   }
 
@@ -53,45 +58,25 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
   }
 
   @override
+  void dispose() {
+    allHabitsPageController.dispose(); // Dispose of the PageController
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List habits = context.watch<DataProvider>().allHabitsList;
     List tagsList = context.watch<DataProvider>().tagsList;
-    List<double> habitBoxSizes = [];
-    List<double> tagsSizes = [];
-    double taskSize = 0;
+    List<String> allHabitsCategoriesList =
+        context.watch<AllHabitsProvider>().allHabitCategoriesList;
+    List<double> habitBoxSizes =
+        context.watch<AllHabitsProvider>().habitBoxSizes;
+    List<double> tagsSizes = context.watch<AllHabitsProvider>().tagsSizes;
+    double taskSize = context.watch<AllHabitsProvider>().taskSize;
 
-    habitBoxSizes = [0, 0, 0, 0];
-
-    for (int i = 0; i < habits.length; i++) {
-      if (!habits[i].task) {
-        if (habits[i].category == "Any time") {
-          habitBoxSizes[0] += 65.5;
-        } else if (habits[i].category == "Morning") {
-          habitBoxSizes[1] += 65.5;
-        } else if (habits[i].category == "Afternoon") {
-          habitBoxSizes[2] += 65.5;
-        } else if (habits[i].category == "Evening") {
-          habitBoxSizes[3] += 65.5;
-        }
-      }
-
-      if (habits[i].task == true) {
-        taskSize += 65.5;
-      }
-    }
-
-    for (int i = 0; i < tagsList.length; i++) {
-      if (tagsList[i] != "No tag") {
-        tagsSizes.add(0);
-        for (int j = 0; j < habits.length; j++) {
-          if (habits[j].tag == tagsList[i] && !habits[j].task) {
-            tagsSizes[i] += 65.5;
-          }
-        }
-      } else {
-        tagsSizes.add(0);
-      }
-    }
+    allHabitsCategoriesList.sort((a, b) {
+      const order = ["Categories", "Tags", "Tasks"];
+      return order.indexOf(a).compareTo(order.indexOf(b));
+    });
 
     return Scaffold(
       backgroundColor: context.watch<ColorProvider>().blackColor,
@@ -100,7 +85,7 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
         slivers: [
           ExpandableAppBar(
               actionsWidget: Container(),
-              title: "All Habits"), // update to mathc bosnian
+              title: AppLocale.allHabits.getString(context)),
           SliverToBoxAdapter(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -109,7 +94,8 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
                     bottom: 30, left: 20, right: 20, top: 10),
                 child: SizedBox(
                     height: 30,
-                    child: allHabitsTag(context, allHabitsPageController)),
+                    child: allHabitsTag(context, allHabitsPageController,
+                        allHabitsCategoriesList)),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 50),
@@ -118,7 +104,18 @@ class _AllHabitsPageState extends State<AllHabitsPage> {
                   key: sizeKey,
                   controller: allHabitsPageController,
                   children: [
-                    for (String type in ['Categories', 'Tags', 'Tasks'])
+                    if (allHabitsCategoriesList.isEmpty)
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 2,
+                        width: double.infinity,
+                        child: Center(
+                          child: Text(
+                            AppLocale.nothingHere.getString(context),
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    for (String type in allHabitsCategoriesList)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -218,6 +215,7 @@ class _ReorderableCategoryState extends State<ReorderableCategory> {
     }
 
     List habits = context.watch<DataProvider>().allHabitsList;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -368,7 +366,7 @@ class Tile extends StatelessWidget {
                 editcontroller.clear();
                 changed = false;
                 if (context.mounted) {
-                  context.read<DataProvider>().updateHabits();
+                  context.read<DataProvider>().updateHabits(context);
                   context.read<HabitProvider>().changeNotification([]);
                   Provider.of<HabitProvider>(context, listen: false)
                       .habitGoalValue = 0;

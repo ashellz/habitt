@@ -42,7 +42,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
                           TextStyle(color: Colors.grey.shade600, fontSize: 16)),
                 ),
               changelogContainer("v1.0.6",
-                  "- Added ability to reorder habits\n- You can now choose how often does a habit appear (daily, weekly, etc.)\n- A category/tag now does't count as completed if tasks in that are not completed too\n- Tasks now appear in each category/tag when selected\n- A few design changes\n- Fixed minor and major bugs"),
+                  "- Added ability to reorder habits\n- Added a page with all of your habits\n- Added ability to choose how often does a habit appear (daily, weekly, etc.)\n- It is now possible to complete a habit by filling the needed amount/duration and pressing 'Enter', instead of 'Done'\n- A category/tag now does't count as completed if tasks in that are not completed too\n- Tasks now appear in each category/tag when selected\n- A few design changes\n- Fixed minor and major bugs"),
               changelogContainer("v1.0.5",
                   "- Added Bosnian language\n- Made a few design changes\n- You can now only sign in with google, other options are unavaiable\n- Changed how account and data deletion works\n- Fixed more bugs"),
               changelogContainer("v1.0.4",

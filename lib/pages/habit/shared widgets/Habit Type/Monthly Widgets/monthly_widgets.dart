@@ -91,10 +91,7 @@ class _MonthlyWidgetsState extends State<MonthlyWidgets> {
           ],
         ),
         Visibility(
-            visible: !context
-                .watch<DataProvider>()
-                .selectedDaysAMonth
-                .contains(true),
+            visible: context.watch<DataProvider>().selectedDaysAMonth.isEmpty,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

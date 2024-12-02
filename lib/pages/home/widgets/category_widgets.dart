@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:habitt/data/app_locale.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/util/functions/translate_category.dart';
@@ -17,7 +16,7 @@ Widget anyTime(BuildContext context, editcontroller, mainCategory, bool tag,
   String anyTime = "Any time";
 
   if (mainCategory != anyTime || tag) {
-    if (anytimeHasHabits) {
+    if (context.watch<DataProvider>().anytimeHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -61,7 +60,7 @@ Widget morning(BuildContext context, mainCategory, editcontroller, bool tag,
   String morning = "Morning";
 
   if (mainCategory != morning || tag) {
-    if (morningHasHabits) {
+    if (context.watch<DataProvider>().morningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -105,7 +104,7 @@ Widget afternoon(BuildContext context, mainCategory, editcontroller, bool tag,
   String afternoon = "Afternoon";
 
   if (mainCategory != afternoon || tag) {
-    if (afternoonHasHabits) {
+    if (context.watch<DataProvider>().afternoonHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -148,7 +147,7 @@ Widget evening(BuildContext context, mainCategory, editcontroller, bool tag,
   String evening = "Evening";
 
   if (mainCategory != evening || tag) {
-    if (eveningHasHabits) {
+    if (context.watch<DataProvider>().eveningHasHabits) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

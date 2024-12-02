@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
+import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -65,17 +66,42 @@ completeHabitDialog(
                             style: const TextStyle(fontFamily: "Poppins"),
                           ),
                           onPressed: () {
+                            HabitData habit = habitBox.getAt(index)!;
                             mystate(() {
                               if (amountCheck) {
-                                context
-                                    .read<HabitProvider>()
-                                    .applyAmountCompleted(index, context);
+                                if (Provider.of<DataProvider>(context,
+                                            listen: false)
+                                        .theAmountValue ==
+                                    habit.amount) {
+                                  context
+                                      .read<HabitProvider>()
+                                      .completeHabitProvider(index, isAdLoaded,
+                                          interstitialAd, context);
+                                } else {
+                                  context
+                                      .read<HabitProvider>()
+                                      .applyAmountCompleted(index, context);
+                                }
                               } else {
-                                context
-                                    .read<HabitProvider>()
-                                    .applyDurationCompleted(index, context);
+                                if (Provider.of<DataProvider>(context,
+                                                    listen: false)
+                                                .theDurationValueHours *
+                                            60 +
+                                        Provider.of<DataProvider>(context,
+                                                listen: false)
+                                            .theDurationValueMinutes ==
+                                    habit.duration) {
+                                  context
+                                      .read<HabitProvider>()
+                                      .completeHabitProvider(index, isAdLoaded,
+                                          interstitialAd, context);
+                                } else {
+                                  context
+                                      .read<HabitProvider>()
+                                      .applyDurationCompleted(index, context);
+                                }
                               }
-                              saveHabitsForToday();
+                              saveHabitsForToday(context);
                             });
                             Navigator.pop(context);
                           },
@@ -108,18 +134,36 @@ completeHabitDialog(
                   CupertinoDialogAction(
                     child: Text(AppLocale.enter.getString(context)),
                     onPressed: () {
-                      mystate(() {
-                        if (amountCheck) {
+                      HabitData habit = habitBox.getAt(index)!;
+
+                      if (amountCheck) {
+                        if (Provider.of<DataProvider>(context, listen: false)
+                                .theAmountValue ==
+                            habit.amount) {
+                          context.read<HabitProvider>().completeHabitProvider(
+                              index, isAdLoaded, interstitialAd, context);
+                        } else {
                           context
                               .read<HabitProvider>()
                               .applyAmountCompleted(index, context);
+                        }
+                      } else {
+                        if (Provider.of<DataProvider>(context, listen: false)
+                                        .theDurationValueHours *
+                                    60 +
+                                Provider.of<DataProvider>(context,
+                                        listen: false)
+                                    .theDurationValueMinutes ==
+                            habit.duration) {
+                          context.read<HabitProvider>().completeHabitProvider(
+                              index, isAdLoaded, interstitialAd, context);
                         } else {
                           context
                               .read<HabitProvider>()
                               .applyDurationCompleted(index, context);
                         }
-                        saveHabitsForToday();
-                      });
+                      }
+                      saveHabitsForToday(context);
                       Navigator.pop(context);
                     },
                   ),

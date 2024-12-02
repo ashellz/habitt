@@ -1,21 +1,25 @@
 import 'dart:math';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
+import 'package:provider/provider.dart';
 
-void checkForNotifications() async {
-  checkForCustomNotifications();
+void checkForNotifications(BuildContext context) async {
+  checkForCustomNotifications(context);
 
-  scheduleMorningNotification();
-  scheduleAfternoonNotification();
-  scheduleEveningNotification();
-  scheduleDailyNotification();
+  scheduleMorningNotification(context);
+  scheduleAfternoonNotification(context);
+  scheduleEveningNotification(context);
+  scheduleDailyNotification(context);
 }
 
-void scheduleMorningNotification() async {
+void scheduleMorningNotification(BuildContext context) async {
   int morningHabits = 0;
   int morningHabitsCompleted = 0;
+  List<HabitData> habitsList =
+      Provider.of<DataProvider>(context, listen: false).habitsList;
 
   List morningNotificationTexts = [
     "Good morning! 🌞 Time to get started on your morning habits! 💪✨",
@@ -40,8 +44,8 @@ void scheduleMorningNotification() async {
 
   if (boolBox.get("morningNotification") == true) {
     for (int i = 0; i < habitBox.length; i++) {
-      if (habitBox.getAt(i)?.category == "Morning") {
-        if (habitBox.getAt(i)!.completed == true) {
+      if (habitsList[i].category == "Morning") {
+        if (habitsList[i].completed == true) {
           morningHabitsCompleted++;
         }
         morningHabits++;
@@ -79,9 +83,11 @@ void scheduleMorningNotification() async {
   }
 }
 
-void scheduleAfternoonNotification() async {
+void scheduleAfternoonNotification(BuildContext context) async {
   int afternoonHabits = 0;
   int afternoonHabitsCompleted = 0;
+  List<HabitData> habitsList =
+      Provider.of<DataProvider>(context, listen: false).habitsList;
 
   List afternoonNotificationTexts = [
     "Keep the momentum going with your afternoon habits! ☀️",
@@ -106,8 +112,8 @@ void scheduleAfternoonNotification() async {
 
   if (boolBox.get("afternoonNotification") == true) {
     for (int i = 0; i < habitBox.length; i++) {
-      if (habitBox.getAt(i)?.category == "Afternoon") {
-        if (habitBox.getAt(i)?.completed == true) {
+      if (habitsList[i].category == "Afternoon") {
+        if (habitsList[i].completed == true) {
           afternoonHabitsCompleted++;
         }
         afternoonHabits++;
@@ -145,9 +151,11 @@ void scheduleAfternoonNotification() async {
   }
 }
 
-void scheduleEveningNotification() async {
+void scheduleEveningNotification(BuildContext context) async {
   int eveningHabits = 0;
   int eveningHabitsCompleted = 0;
+  List<HabitData> habitsList =
+      Provider.of<DataProvider>(context, listen: false).habitsList;
 
   List eveningNotificationTexts = [
     "Finish strong by completing your evening habits! 🌙",
@@ -172,8 +180,8 @@ void scheduleEveningNotification() async {
 
   if (boolBox.get("eveningNotification") == true) {
     for (int i = 0; i < habitBox.length; i++) {
-      if (habitBox.getAt(i)?.category == "Evening") {
-        if (habitBox.getAt(i)?.completed == true) {
+      if (habitsList[i].category == "Evening") {
+        if (habitsList[i].completed == true) {
           eveningHabitsCompleted++;
         }
         eveningHabits++;
@@ -211,11 +219,13 @@ void scheduleEveningNotification() async {
   }
 }
 
-void scheduleDailyNotification() async {
+void scheduleDailyNotification(BuildContext context) async {
   int dailyHabits = 0;
   int dailyHabitsCompleted = 0;
   List dailyNotificationTime = listBox.get("dailyNotificationTime")!;
   int hour = dailyNotificationTime[0];
+  List<HabitData> habitsList =
+      Provider.of<DataProvider>(context, listen: false).habitsList;
 
   String hourSufix = "o'clock";
 
@@ -257,7 +267,7 @@ void scheduleDailyNotification() async {
 
   if (boolBox.get("dailyNotification") == true) {
     for (int i = 0; i < habitBox.length; i++) {
-      if (habitBox.getAt(i)?.completed == true) {
+      if (habitsList[i].completed == true) {
         dailyHabitsCompleted++;
       }
       dailyHabits++;
@@ -294,7 +304,7 @@ void scheduleDailyNotification() async {
   }
 }
 
-void checkForCustomNotifications() async {
+void checkForCustomNotifications(BuildContext context) async {
   List<String> customNotificationTextsNeutral = [
     "Hey there! Don't forget to complete your habit!",
     "Reminder: It's time to work on your habit!",
@@ -333,11 +343,14 @@ void checkForCustomNotifications() async {
     "Stay motivated! Get your habit done today!"
   ];
 
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)!.notifications.isNotEmpty) {
-      for (int j = 0; j < habitBox.getAt(i)!.notifications.length; j++) {
-        if (!habitBox.getAt(i)!.completed) {
-          List notificationsList = habitBox.getAt(i)!.notifications[j];
+  List<HabitData> habitsList =
+      Provider.of<DataProvider>(context, listen: false).habitsList;
+
+  for (int i = 0; i < habitsList.length; i++) {
+    if (habitsList[i].notifications.isNotEmpty) {
+      for (int j = 0; j < habitsList[i].notifications.length; j++) {
+        if (!habitsList[i].completed) {
+          List notificationsList = habitsList[i].notifications[j];
           List<String> customNotificationTexts = [];
           int notificationId = i * 100 + j;
 
@@ -357,7 +370,7 @@ void checkForCustomNotifications() async {
               content: NotificationContent(
                 id: notificationId,
                 channelKey: 'basic_channel',
-                title: habitBox.getAt(i)!.name,
+                title: habitsList[i].name,
                 body: customNotificationTexts[
                     Random().nextInt(customNotificationTexts.length)],
               ));

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
@@ -78,16 +77,16 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   );
   await habitBox.add(myHabit);
   streakBox.put('highestId', streakBox.get('highestId')! + 1);
-  hasHabits();
-  saveHabitsForToday();
+
   // Updates the main category height if new habit category is same as the main category
   if (context.mounted) {
-    context.read<DataProvider>().updateHabits();
+    saveHabitsForToday(context);
+    context.read<DataProvider>().updateHabits(context);
     Provider.of<DataProvider>(context, listen: false).updateAllHabits();
     if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
         context.watch<HabitProvider>().mainCategory) {
       Provider.of<HabitProvider>(context, listen: false)
-          .updateMainCategoryHeight();
+          .updateMainCategoryHeight(context);
     }
   }
 

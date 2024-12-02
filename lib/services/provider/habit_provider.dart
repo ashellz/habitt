@@ -5,20 +5,17 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:fluttertoast/fluttertoast.dart";
 import "package:habitt/data/habit_data.dart";
-import "package:habitt/main.dart";
 import "package:habitt/pages/home/functions/createNewHabit.dart";
 import "package:habitt/pages/home/home_page.dart";
 import "package:habitt/services/provider/data_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/services/storage_service.dart";
-import "package:habitt/util/functions/habit/checkIfEmpty.dart";
 import "package:habitt/util/functions/habit/deleteHabit.dart";
 import "package:habitt/util/functions/habit/editHabit.dart";
 import "package:habitt/util/functions/habit/habitsCompleted.dart";
 import "package:habitt/util/functions/habit/saveHabitsForToday.dart";
 import "package:hive/hive.dart";
 import "package:provider/provider.dart";
-import "package:restart_app/restart_app.dart";
 
 class HabitProvider extends ChangeNotifier {
   final habitBox = Hive.box<HabitData>('habits');
@@ -44,8 +41,6 @@ class HabitProvider extends ChangeNotifier {
   TextEditingController habitGoalController = TextEditingController();
 
   TextEditingController notescontroller = TextEditingController();
-
-  int get habitListLength => Hive.box<HabitData>('habits').length;
   bool get displayEmptyCategories =>
       Hive.box<bool>('bool').get('displayEmptyCategories')!;
   double _mainCategoryHeight = 200;
@@ -77,6 +72,7 @@ class HabitProvider extends ChangeNotifier {
 
   void updateSomethingEdited() {
     somethingEdited = true;
+    getPageHeight(false);
     notifyListeners();
   }
 
@@ -101,8 +97,14 @@ class HabitProvider extends ChangeNotifier {
     editHabitPageHeight = 600;
     if (firstPage) {
       editHabitPageHeight += 20;
+      if (somethingEdited) {
+        editHabitPageHeight += 50;
+      }
     } else {
       editHabitPageHeight += 50;
+      if (somethingEdited) {
+        editHabitPageHeight += 50;
+      }
       if (habitGoalValue != 0) {
         editHabitPageHeight += 150;
       }
@@ -149,21 +151,23 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void chooseMainCategory() {
+  void chooseMainCategory(BuildContext context) {
     int hour = DateTime.now().hour;
     if (hour >= 4 && hour < 12) {
-      if (!morningHasHabits) {
+      if (!Provider.of<DataProvider>(context, listen: false).morningHasHabits) {
         mainCategory = "Any time";
       } else {
         mainCategory = "Morning";
       }
     } else if (hour >= 12 && hour < 19) {
-      if (!afternoonHasHabits) {
+      if (!Provider.of<DataProvider>(context, listen: false)
+          .afternoonHasHabits) {
         mainCategory = "Any time";
       } else {
         mainCategory = "Afternoon";
       }
-    } else if (!eveningHasHabits) {
+    } else if (!Provider.of<DataProvider>(context, listen: false)
+        .eveningHasHabits) {
       mainCategory = "Any time";
     } else {
       mainCategory = "Evening";
@@ -171,19 +175,22 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateMainCategoryHeight() {
+  void updateMainCategoryHeight(BuildContext context) {
+    List<HabitData> habitsList =
+        Provider.of<DataProvider>(context, listen: false).habitsList;
+
     _mainCategoryHeight = 200;
-    for (int i = 0; i < habitListLength; i++) {
-      if (!habitBox.getAt(i)!.task) {
-        if (habitBox.getAt(i)?.category == 'Morning') {
+    for (var habit in habitsList) {
+      if (!habit.task) {
+        if (habit.category == 'Morning') {
           if (mainCategory == 'Morning') {
             _mainCategoryHeight += 70;
           }
-        } else if (habitBox.getAt(i)?.category == 'Afternoon') {
+        } else if (habit.category == 'Afternoon') {
           if (mainCategory == 'Afternoon') {
             _mainCategoryHeight += 70;
           }
-        } else if (habitBox.getAt(i)?.category == 'Evening') {
+        } else if (habit.category == 'Evening') {
           if (mainCategory == 'Evening') {
             _mainCategoryHeight += 70;
           }
@@ -234,9 +241,12 @@ class HabitProvider extends ChangeNotifier {
   Future<void> createNewHabitProvider(
       createcontroller, BuildContext context) async {
     await createNewHabit(createcontroller, context);
-    saveHabitsForToday();
-    chooseMainCategory();
-    updateMainCategoryHeight();
+    if (context.mounted) {
+      saveHabitsForToday(context);
+      updateMainCategoryHeight(context);
+      chooseMainCategory(context);
+    }
+
     notifyListeners();
   }
 
@@ -288,19 +298,25 @@ class HabitProvider extends ChangeNotifier {
 
     await habitBox.putAt(index, updatedHabit);
 
+    if (context.mounted) {
+      context.read<DataProvider>().updateHabits(context);
+    }
+
     // apply haptic feedback or sound
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
-    if (allHabitsCompleted(context)) {
-      if (isAdLoaded) {
-        interstitialAd.show();
-      }
-      playSound();
-      if (hapticFeedback) {
-        HapticFeedback.heavyImpact();
-      }
-    } else if (!existingHabit.completed) {
-      if (hapticFeedback) {
-        HapticFeedback.mediumImpact();
+    if (context.mounted) {
+      if (allHabitsCompleted(context)) {
+        if (isAdLoaded) {
+          interstitialAd.show();
+        }
+        playSound();
+        if (hapticFeedback) {
+          HapticFeedback.heavyImpact();
+        }
+      } else if (!existingHabit.completed) {
+        if (hapticFeedback) {
+          HapticFeedback.mediumImpact();
+        }
       }
     }
 
@@ -336,8 +352,6 @@ class HabitProvider extends ChangeNotifier {
       }
 
       if (isTask) {
-        print("totaltasksicateory$totalTasksInCategory");
-        print("completedtasksicateory$completedTasksInCategory");
         if (totalTasksInCategory == completedTasksInCategory) {
           if (isAdLoaded) {
             interstitialAd.show();
@@ -350,13 +364,14 @@ class HabitProvider extends ChangeNotifier {
       }
     }
 
-    saveHabitsForToday();
+    if (context.mounted) {
+      context.read<DataProvider>().updateHabits(context);
+      saveHabitsForToday(context);
+    }
     notifyListeners();
   }
 
-  void skipHabitProvider(
-    int index,
-  ) async {
+  void skipHabitProvider(int index, BuildContext context) async {
     // Check if the user is skipping more than 3 habits a day
 
     int habitsSkipped = 0;
@@ -433,7 +448,11 @@ class HabitProvider extends ChangeNotifier {
           timesCompletedThisMonth: existingHabit.timesCompletedThisMonth);
 
       await habitBox.putAt(index, updatedHabit);
-      saveHabitsForToday();
+
+      if (context.mounted) {
+        context.read<DataProvider>().updateHabits(context);
+        saveHabitsForToday(context);
+      }
       notifyListeners();
     }
   }
@@ -459,9 +478,11 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
     editHabit(index, context, editcontroller);
-    saveHabitsForToday();
-    chooseMainCategory();
-    updateMainCategoryHeight();
+    if (context.mounted) {
+      saveHabitsForToday(context);
+    }
+    chooseMainCategory(context);
+    updateMainCategoryHeight(context);
     Navigator.of(context).pop();
 
     notifyListeners();
@@ -469,13 +490,15 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> deleteHabitProvider(index, context, editcontroller) async {
     await deleteHabit(index, context, editcontroller);
-    saveHabitsForToday();
-    if (checkIfAllEmpty()) {
-      Restart.restartApp();
+    if (context.mounted) {
+      saveHabitsForToday(context);
     }
+    //if (checkIfAllEmpty(context)) {
+    // Restart.restartApp();
+    //}
 
-    chooseMainCategory();
-    updateMainCategoryHeight();
+    chooseMainCategory(context);
+    updateMainCategoryHeight(context);
     notifyListeners();
   }
 
@@ -518,7 +541,9 @@ class HabitProvider extends ChangeNotifier {
                 habitBox.getAt(index)!.timesCompletedThisWeek,
             timesCompletedThisMonth:
                 habitBox.getAt(index)!.timesCompletedThisMonth));
-    saveHabitsForToday();
+    if (context.mounted) {
+      saveHabitsForToday(context);
+    }
     notifyListeners();
   }
 
@@ -557,7 +582,9 @@ class HabitProvider extends ChangeNotifier {
                 habitBox.getAt(index)!.timesCompletedThisWeek,
             timesCompletedThisMonth:
                 habitBox.getAt(index)!.timesCompletedThisMonth));
-    saveHabitsForToday();
+    if (context.mounted) {
+      saveHabitsForToday(context);
+    }
     notifyListeners();
   }
 
@@ -571,8 +598,10 @@ class HabitProvider extends ChangeNotifier {
 
     if (daysDifference > 0 || daysDifference < 0) {
       resetCompletionStatus(); //sets all current habits completed to false
-      saveHabitsForToday(); //puts all current habits to historical habits
-
+      if (context.mounted) {
+        saveHabitsForToday(
+            context); //puts all current habits to historical habits
+      }
       if (context.mounted) {
         context.read<HistoricalHabitProvider>().calculateStreak(context);
         if (userId != null) {
@@ -583,8 +612,27 @@ class HabitProvider extends ChangeNotifier {
   }
 
   void resetCompletionStatus() {
-    for (int i = 0; i < habitBox.length; i++) {
-      var habit = habitBox.getAt(i)!;
+    DateTime today = DateTime.now();
+
+    for (var habit in habitBox.values) {
+      if (habit.completed) {
+        habit.timesCompletedThisMonth++;
+        habit.timesCompletedThisWeek++;
+      }
+
+      if (today.day == 1) {
+        habit.timesCompletedThisMonth = 0;
+      }
+      if (today.weekday == 1) {
+        habit.timesCompletedThisWeek = 0;
+      }
+
+      if (habit.daysUntilAppearance == 0) {
+        habit.daysUntilAppearance = habit.customValue - 1;
+      } else {
+        habit.daysUntilAppearance--;
+      }
+
       habit.amountCompleted = 0;
       habit.durationCompleted = 0;
       habit.completed = false;

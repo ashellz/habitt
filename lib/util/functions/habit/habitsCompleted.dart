@@ -62,7 +62,8 @@ bool tagCompleted(String tag, BuildContext context) {
 }
 
 bool allHabitsCompleted(BuildContext context) {
-  List<HabitData> habitsList = context.watch<DataProvider>().habitsList;
+  List<HabitData> habitsList =
+      Provider.of<DataProvider>(context, listen: false).habitsList;
   for (var habit in habitsList) {
     if (!habit.completed) {
       return false;

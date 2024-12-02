@@ -229,7 +229,7 @@ Widget chooseNotificationTime(time, StateSetter mystate, BuildContext context) {
                             context
                                 .read<HabitProvider>()
                                 .updateSomethingEdited();
-                            checkForNotifications();
+                            checkForNotifications(context);
                             Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(

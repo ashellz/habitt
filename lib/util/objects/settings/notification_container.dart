@@ -56,7 +56,7 @@ Widget notificationContainer(String category, BuildContext context) {
                         onChanged: (value) {
                           setState(() {
                             boolBox.put('${box}Notification', value);
-                            checkForNotifications();
+                            checkForNotifications(context);
                           });
                         },
                       ),

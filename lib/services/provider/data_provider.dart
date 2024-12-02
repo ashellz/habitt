@@ -4,9 +4,15 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:provider/provider.dart';
 
 class DataProvider extends ChangeNotifier {
-  String allHabitsTagSelected = "Categories";
+  bool morningHasHabits = false;
+  bool afternoonHasHabits = false;
+  bool eveningHasHabits = false;
+  bool anytimeHasHabits = false;
+
   List<String> categoriesList = [];
   List<String> tagsList =
       []; // This list is going to be empty except when initialized in onboarding page
@@ -36,11 +42,6 @@ class DataProvider extends ChangeNotifier {
   int theAmountValue = 0;
   int theDurationValueHours = 0;
   int theDurationValueMinutes = 0;
-
-  void setAllHabitsTagSelected(String value) {
-    allHabitsTagSelected = value;
-    notifyListeners();
-  }
 
   void setAmountValue(int value) {
     theAmountValue = value;
@@ -137,9 +138,68 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHabits() {
-    habitsList = habitBox.values.toList();
+  void updateHabits(BuildContext context) {
+    DateTime today = DateTime.now();
+    habitsList = [];
+
+    anytimeHasHabits = false;
+    morningHasHabits = false;
+    afternoonHasHabits = false;
+    eveningHasHabits = false;
+
+    void showCategory(String category) {
+      if (category == "Any time") {
+        anytimeHasHabits = true;
+      } else if (category == "Morning") {
+        morningHasHabits = true;
+      } else if (category == "Afternoon") {
+        afternoonHasHabits = true;
+      } else if (category == "Evening") {
+        eveningHasHabits = true;
+      }
+    }
+
+    for (var habit in habitBox.values) {
+      if (habit.type == "Daily") {
+        showCategory(habit.category);
+        habitsList.add(habit);
+      } else if (habit.type == "Weekly") {
+        if (habit.selectedDaysAWeek.isEmpty) {
+          if (habit.timesCompletedThisWeek < habit.weekValue) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        } else {
+          if (habit.selectedDaysAWeek.contains(today.weekday)) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        }
+      } else if (habit.type == "Monthly") {
+        if (habit.selectedDaysAMonth.isEmpty) {
+          if (habit.timesCompletedThisMonth < habit.monthValue) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        } else {
+          if (habit.selectedDaysAMonth.contains(today.day)) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        }
+      } else if (habit.type == "Custom") {
+        if (habit.daysUntilAppearance == 0) {
+          showCategory(habit.category);
+          habitsList.add(habit);
+        }
+      }
+    }
     tasksList = habitsList.where((habit) => habit.task).toList();
+
+    context
+        .read<HistoricalHabitProvider>()
+        .updateHistoricalHabits(DateTime.now());
+
     notifyListeners();
   }
 

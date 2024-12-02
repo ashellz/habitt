@@ -14,18 +14,6 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
   final bool amountCheck;
   final int index;
 
-  double getHourMax() {
-    double hourMax = 0;
-
-    if (habitBox.getAt(index)!.duration % 60 > 0) {
-      hourMax = (habitBox.getAt(index)!.duration ~/ 60).toDouble();
-    } else {
-      hourMax = (habitBox.getAt(index)!.duration ~/ 60) - 1;
-    }
-
-    return hourMax;
-  }
-
   @override
   Widget build(BuildContext context) {
     int theAmountValue =
@@ -52,6 +40,10 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(15.0)),
                     ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade800),
                       borderRadius:
@@ -60,7 +52,7 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                     filled: false,
                   ),
                   min: 0,
-                  max: habitBox.getAt(index)!.amount - 1,
+                  max: habitBox.getAt(index)!.amount.toDouble(),
                   value: theAmountValue.toDouble(),
                   onChanged: (value) {
                     if (boolBox.get('hapticFeedback')!) {
@@ -87,6 +79,10 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15.0)),
                       ),
+                      disabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey.shade800),
                         borderRadius:
@@ -101,7 +97,7 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                           AppLocale.hours.getString(context).toUpperCase(),
                     ),
                     min: 0,
-                    max: getHourMax(),
+                    max: (habitBox.getAt(index)!.duration ~/ 60).toDouble(),
                     value: theDurationValueHours.toDouble(),
                     onChanged: (value) {
                       if (boolBox.get('hapticFeedback')!) {
@@ -118,13 +114,14 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                         final updatedDurationValueHours =
                             context.read<DataProvider>().theDurationValueHours;
 
-                        if (updatedDurationValueHours == getHourMax()) {
+                        if (updatedDurationValueHours ==
+                            (habitBox.getAt(index)!.duration ~/ 60)) {
                           if (theDurationValueMinutes >
-                              (habitBox.getAt(index)!.duration % 60 - 1)) {
+                              (habitBox.getAt(index)!.duration % 60)) {
                             context
                                 .read<DataProvider>()
                                 .setDurationValueMinutes(
-                                    (habitBox.getAt(index)!.duration % 60) - 1);
+                                    (habitBox.getAt(index)!.duration % 60));
                           }
                         }
                       });
@@ -139,6 +136,10 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                       borderSide: BorderSide(color: Colors.grey.shade800),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade800),
@@ -157,7 +158,7 @@ class CupertinoCompleteHabitWidget extends StatelessWidget {
                   max: theDurationValueHours.toDouble() <
                           habitBox.getAt(index)!.duration ~/ 60
                       ? 59
-                      : habitBox.getAt(index)!.duration % 60 - 1,
+                      : habitBox.getAt(index)!.duration % 60,
                   value: theDurationValueMinutes.toDouble(),
                   onChanged: (value) {
                     if (boolBox.get('hapticFeedback')!) {

@@ -17,19 +17,6 @@ class AndroidCompleteHabitWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double getHourMax() {
-      double hourMax = 0;
-
-      if (habitBox.getAt(index)!.duration % 60 > 0) {
-        hourMax = (habitBox.getAt(index)!.duration ~/ 60).toDouble();
-      } else {
-        hourMax = (habitBox.getAt(index)!.duration ~/ 60) - 1;
-      }
-
-      print("hourMax: $hourMax");
-      return hourMax;
-    }
-
     int theAmountValue = context.watch<DataProvider>().theAmountValue;
     int theDurationValueHours =
         context.watch<DataProvider>().theDurationValueHours;
@@ -64,7 +51,7 @@ class AndroidCompleteHabitWidget extends StatelessWidget {
                       fillColor: context.watch<ColorProvider>().greyColor,
                     ),
                     min: 0,
-                    max: habitBox.getAt(index)!.amount - 1,
+                    max: habitBox.getAt(index)!.amount.toDouble(),
                     value: theAmountValue.toDouble(),
                     onChanged: (value) {
                       if (boolBox.get('hapticFeedback')!) {
@@ -108,7 +95,7 @@ class AndroidCompleteHabitWidget extends StatelessWidget {
                         labelText: AppLocale.hours.getString(context),
                       ),
                       min: 0,
-                      max: getHourMax(),
+                      max: (habitBox.getAt(index)!.duration ~/ 60).toDouble(),
                       value: theDurationValueHours.toDouble(),
                       onChanged: (value) {
                         if (boolBox.get('hapticFeedback')!) {
@@ -126,14 +113,14 @@ class AndroidCompleteHabitWidget extends StatelessWidget {
                               .read<DataProvider>()
                               .theDurationValueHours;
 
-                          if (updatedDurationValueHours == getHourMax()) {
+                          if (updatedDurationValueHours ==
+                              (habitBox.getAt(index)!.duration ~/ 60)) {
                             if (theDurationValueMinutes >
-                                (habitBox.getAt(index)!.duration % 60 - 1)) {
+                                (habitBox.getAt(index)!.duration % 60)) {
                               context
                                   .read<DataProvider>()
                                   .setDurationValueMinutes(
-                                      (habitBox.getAt(index)!.duration % 60) -
-                                          1);
+                                      (habitBox.getAt(index)!.duration % 60));
                             }
                           }
                         });
@@ -168,7 +155,7 @@ class AndroidCompleteHabitWidget extends StatelessWidget {
                     max: theDurationValueHours.toDouble() <
                             habitBox.getAt(index)!.duration ~/ 60
                         ? 59
-                        : habitBox.getAt(index)!.duration % 60 - 1,
+                        : habitBox.getAt(index)!.duration % 60,
                     value: theDurationValueMinutes.toDouble(),
                     onChanged: (value) {
                       if (boolBox.get('hapticFeedback')!) {

@@ -36,7 +36,7 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<DataProvider>().setShowMoreOptionsWeekly(true);
-        context.read<DataProvider>().setWeekValueSelected(selectedDays - 1);
+        context.read<DataProvider>().setWeekValueSelected(selectedDays);
       });
     }
   }
@@ -96,8 +96,7 @@ class _WeeklyWidgetsState extends State<WeeklyWidgets> {
           ],
         ),
         Visibility(
-          visible:
-              !context.watch<DataProvider>().selectedDaysAWeek.contains(true),
+          visible: context.watch<DataProvider>().selectedDaysAWeek.isEmpty,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

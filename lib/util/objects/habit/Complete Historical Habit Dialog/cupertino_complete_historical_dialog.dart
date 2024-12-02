@@ -23,18 +23,6 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
     int theDurationValueMinutes =
         context.watch<DataProvider>().theDurationValueMinutes;
 
-    double getHourMax() {
-      double hourMax = 0;
-
-      if (habit.duration % 60 > 0) {
-        hourMax = (habit.duration ~/ 60).toDouble();
-      } else {
-        hourMax = (habit.duration ~/ 60) - 1;
-      }
-
-      return hourMax;
-    }
-
     return Material(
       color: Colors.transparent,
       child: Column(
@@ -52,6 +40,10 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(15.0)),
                     ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade800),
                       borderRadius:
@@ -60,7 +52,7 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
                     filled: false,
                   ),
                   min: 0,
-                  max: habit.amount - 1,
+                  max: habit.amount.toDouble(),
                   value: theAmountValue.toDouble(),
                   onChanged: (value) {
                     if (boolBox.get("hapticFeedback")!) {
@@ -86,6 +78,10 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15.0)),
                       ),
+                      disabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey.shade800),
                         borderRadius:
@@ -100,7 +96,7 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
                           AppLocale.hours.getString(context).toUpperCase(),
                     ),
                     min: 0,
-                    max: getHourMax(),
+                    max: (habit.duration ~/ 60).toDouble(),
                     value: theDurationValueHours.toDouble(),
                     onChanged: (value) {
                       if (boolBox.get("hapticFeedback")!) {
@@ -117,12 +113,10 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
 
                         if (updatedDurationValueHours ==
                             (habit.duration ~/ 60)) {
-                          if (theDurationValueMinutes >
-                              (habit.duration % 60 - 1)) {
+                          if (theDurationValueMinutes > (habit.duration % 60)) {
                             context
                                 .read<DataProvider>()
-                                .setDurationValueMinutes(
-                                    (habit.duration % 60) - 1);
+                                .setDurationValueMinutes((habit.duration % 60));
                           }
                         }
                       });
@@ -137,6 +131,10 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
                       borderSide: BorderSide(color: Colors.grey.shade800),
                       borderRadius:
                           const BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade800),
@@ -154,7 +152,7 @@ class CupertinoCompleteHistoricalHabitWidget extends StatelessWidget {
                   min: 0,
                   max: theDurationValueHours.toDouble() < habit.duration ~/ 60
                       ? 59
-                      : habit.duration % 60 - 1,
+                      : habit.duration % 60,
                   value: theDurationValueMinutes.toDouble(),
                   onChanged: (value) {
                     if (boolBox.get("hapticFeedback")!) {

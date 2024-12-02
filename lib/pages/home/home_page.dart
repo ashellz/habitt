@@ -6,7 +6,6 @@ import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
 import 'package:habitt/pages/home/widgets/All%20Habits%20Page/all_habits_page.dart';
 import 'package:habitt/pages/home/functions/fillTagsList.dart';
@@ -23,12 +22,10 @@ import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
-import 'package:habitt/util/functions/fillKeys.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-Icon startIcon = const Icon(Icons.book);
-
+const startIcon = Icon(Icons.book);
 final habitBox = Hive.box<HabitData>('habits');
 final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
@@ -96,14 +93,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    checkForDayJoined();
     if (interstitialAd == null) {
       initInterstitialAd();
     }
 
     WidgetsBinding.instance.addObserver(this);
-
-    hasHabits();
   }
 
   @override
@@ -116,8 +110,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<HabitProvider>().updateLastOpenedDate(context);
-      context.read<HabitProvider>().chooseMainCategory();
-      context.read<HabitProvider>().updateMainCategoryHeight();
+      context.read<HabitProvider>().chooseMainCategory(context);
+      context.read<HabitProvider>().updateMainCategoryHeight(context);
       if (interstitialAd == null) {
         initInterstitialAd();
       }
@@ -166,7 +160,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       );
                     })).whenComplete(() {
                       if (context.mounted) {
-                        context.read<DataProvider>().updateHabits();
+                        context.read<DataProvider>().updateHabits(context);
                       }
                     });
                   },
@@ -227,7 +221,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       context,
                                       mainCategory,
                                       editcontroller,
-                                      anytimeHasHabits,
                                       isAdLoaded,
                                       interstitialAd),
                                   AdditionalTasks(
@@ -339,9 +332,6 @@ void openAddHabitPage(
       Provider.of<HabitProvider>(context, listen: false)
           .notescontroller
           .clear();
-
-      Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-          startIcon;
 
       Provider.of<HabitProvider>(context, listen: false).dropDownValue =
           'Any time';

@@ -1,5 +1,4 @@
 import 'package:habitt/data/habit_data.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:hive/hive.dart';
 
@@ -13,17 +12,4 @@ bool isEmpty(String category) {
   }
 
   return true;
-}
-
-bool checkIfAllEmpty() {
-  hasHabits();
-
-  if (morningHasHabits == false &&
-      afternoonHasHabits == false &&
-      eveningHasHabits == false &&
-      anytimeHasHabits == false) {
-    return true;
-  } else {
-    return false;
-  }
 }

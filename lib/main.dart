@@ -12,6 +12,7 @@ import 'package:habitt/data/tags.dart';
 import 'package:habitt/firebase_options.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/onboarding/onboarding_page.dart';
+import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
@@ -25,10 +26,6 @@ import 'package:habitt/util/functions/openHiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-bool morningHasHabits = false;
-bool afternoonHasHabits = false;
-bool eveningHasHabits = false;
-bool anytimeHasHabits = false;
 bool doOnce = true;
 final FlutterLocalization localization = FlutterLocalization.instance;
 
@@ -88,28 +85,11 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => ColorProvider()),
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ChangeNotifierProvider(create: (context) => DataProvider()),
+        ChangeNotifierProvider(create: (context) => AllHabitsProvider()),
       ],
       child: const MyApp(),
     ),
   );
-}
-
-hasHabits() {
-  final habitBox = Hive.box<HabitData>('habits');
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)!.category == 'Morning' && !habitBox.getAt(i)!.task) {
-      morningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Afternoon' &&
-        !habitBox.getAt(i)!.task) {
-      afternoonHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Evening' &&
-        !habitBox.getAt(i)!.task) {
-      eveningHasHabits = true;
-    } else if (habitBox.getAt(i)?.category == 'Any time' &&
-        !habitBox.getAt(i)!.task) {
-      anytimeHasHabits = true;
-    }
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -167,7 +147,7 @@ class AuthCheck extends StatelessWidget {
     return FutureBuilder<void>(
       future: openHiveAndPerformTasks(context),
       builder: (context, futureSnapshot) {
-        // After the Future is complete, check for onboarding or homepage
+        checkForDayJoined(); // After the Future is complete, check for onboarding or homepage
         if (boolBox.containsKey("firstTimeOpened")) {
           if (boolBox.get("firstTimeOpened")!) {
             boolBox.put("firstTimeOpened", false);
@@ -189,19 +169,35 @@ Future<void> openHiveAndPerformTasks(BuildContext context) async {
   // Post-frame callback to update providers and perform actions
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!boolBox.containsKey("update1")) {
+      print("wipe");
+      boolBox.put("update1", true);
+
+      for (var habit in habitBox.values) {
+        habit.type = "Daily";
+        habit.weekValue = 1;
+        habit.monthValue = 1;
+        habit.customValue = 1;
+        habit.selectedDaysAWeek = [];
+        habit.selectedDaysAMonth = [];
+
+        habit.save();
+      }
+    }
+
     if (doOnce) {
       context.read<LanguageProvider>().loadLanguage();
       doOnce = false;
     }
-    context.read<DataProvider>().updateHabits();
+    context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().initializeLists(context);
-    context.read<HabitProvider>().chooseMainCategory();
-    context.read<HabitProvider>().updateMainCategoryHeight();
+    context.read<HabitProvider>().chooseMainCategory(context);
+    context.read<HabitProvider>().updateMainCategoryHeight(context);
     context.read<HistoricalHabitProvider>().calculateStreak(context);
     context.read<HabitProvider>().updateLastOpenedDate(context);
-    context.read<DataProvider>().updateHabits();
+    context.read<DataProvider>().updateHabits(context);
   });
 
-  saveHabitsForToday();
-  checkForNotifications();
+  saveHabitsForToday(context);
+  checkForNotifications(context);
 }

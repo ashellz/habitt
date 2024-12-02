@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/data/habit_data.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:hive/hive.dart';
@@ -21,23 +21,19 @@ void editHabit(int index, BuildContext context, editcontroller) {
           .durationMinutes +
       (Provider.of<HabitProvider>(context, listen: false).durationHours * 60);
 
-  int categoryHabits = 0;
-  String category = editedFrom;
+  bool isTaskBefore = habitBox.getAt(index)!.task;
+  bool isTaskAfter =
+      Provider.of<HabitProvider>(context, listen: false).additionalTask;
 
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == category) {
-      categoryHabits += 1;
-    }
-  }
-  if (categoryHabits < 2) {
-    if (category == "Morning") {
-      morningHasHabits = false;
-    } else if (category == "Afternoon") {
-      afternoonHasHabits = false;
-    } else if (category == "Evening") {
-      eveningHasHabits = false;
-    } else if (category == "Any time") {
-      anytimeHasHabits = false;
+  if (isTaskBefore) {
+    if (!isTaskAfter) {
+      context.read<AllHabitsProvider>().initAllHabitsPage(context);
+      context.read<AllHabitsProvider>().setAllHabitsTagSelected("Categories");
+      pageController.animateToPage(
+        0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -56,8 +52,8 @@ void editHabit(int index, BuildContext context, editcontroller) {
 
     if (editedFrom == mainCategory || editedTo == mainCategory) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HabitProvider>().chooseMainCategory();
-        context.read<HabitProvider>().updateMainCategoryHeight();
+        context.read<HabitProvider>().chooseMainCategory(context);
+        context.read<HabitProvider>().updateMainCategoryHeight(context);
       });
     }
   }
@@ -117,35 +113,10 @@ void editHabit(int index, BuildContext context, editcontroller) {
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
-    context.read<DataProvider>().updateHabits();
+    context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().updateAllHabits();
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   }
 
-  openCategory(context);
-
   // showPopup(context, "Habit edited!");
-}
-
-void openCategory(BuildContext context) {
-  var dropDownValue =
-      Provider.of<HabitProvider>(context, listen: false).dropDownValue;
-
-  if (dropDownValue == "Morning") {
-    if (morningHasHabits == false) {
-      morningHasHabits = true;
-    }
-  } else if (dropDownValue == "Afternoon") {
-    if (afternoonHasHabits == false) {
-      afternoonHasHabits = true;
-    }
-  } else if (dropDownValue == "Evening") {
-    if (eveningHasHabits == false) {
-      eveningHasHabits = true;
-    }
-  } else if (dropDownValue == "Any time") {
-    if (anytimeHasHabits == false) {
-      anytimeHasHabits = true;
-    }
-  }
 }

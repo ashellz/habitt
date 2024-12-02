@@ -119,6 +119,12 @@ mixin AppLocale {
 
   static const String noHabitsInCategory = 'No habits in this category';
 
+  static const String allHabits = "All Habits";
+  static const String categories = "Categories";
+  static const String tags = "Tags";
+  static const String tasks = "Tasks";
+  static const String nothingHere = "Nothing here";
+
   // New Habit and Edit Page
   static const String habitInfo = 'Habit Info';
   static const String newHabit = 'New Habit';
@@ -349,7 +355,7 @@ mixin AppLocale {
     eighth: 'eighth',
     ninth: 'ninth',
     tenth: 'tenth',
-    every: 'every',
+    every: 'Every',
     selectDays: 'Select days for this habit',
     untilCompleted: "until completed",
     thisHabitWillAppear: "This habit will appear",
@@ -367,6 +373,11 @@ mixin AppLocale {
     noteMonth:
         "Note: If a month doesn't have the selected day (31st, 30th, etc.) this habit, of course, won't appear that day.",
     startingFromToday: "starting from today",
+    allHabits: "All Habits",
+    categories: "Categories",
+    tags: "Tags",
+    tasks: "Tasks",
+    nothingHere: "Nothing to see here."
   };
 
   static const Map<String, dynamic> ba = {
@@ -537,5 +548,10 @@ mixin AppLocale {
     noteMonth:
         "Napomena: Ako mjesec nema odabrani dan (31, 30 i dr.) ova navika, naravno, neće biti prikazana taj dan.",
     startingFromToday: "počevši od danas",
+    allHabits: "Sve navike",
+    categories: "Kategorije",
+    tags: "Oznake",
+    tasks: "Zadaci",
+    nothingHere: "Ovdje nema ničega."
   };
 }

@@ -77,7 +77,7 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
                   .read<HistoricalHabitProvider>()
                   .skipHistoricalHabit(index, habit, widget.time, context);
               if (isToday) {
-                context.read<HabitProvider>().skipHabitProvider(index);
+                context.read<HabitProvider>().skipHabitProvider(index, context);
               }
             },
             backgroundColor: context.watch<ColorProvider>().greyColor,

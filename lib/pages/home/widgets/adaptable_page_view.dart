@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habitt/pages/home/home_page.dart';
-import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -54,8 +54,9 @@ class _PageViewHeightAdaptableState extends State<PageViewHeightAdaptable> {
                   .read<HabitProvider>()
                   .setTagSelected(visibleListTags(context)[value]);
             } else {
-              context.read<DataProvider>().setAllHabitsTagSelected(
-                  ["Categories", "Tags", "Tasks"][value]);
+              context.read<AllHabitsProvider>().setAllHabitsTagSelected(
+                  Provider.of<AllHabitsProvider>(context, listen: false)
+                      .allHabitCategoriesList[value]);
             }
           },
           controller: widget.controller,

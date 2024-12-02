@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/home/widgets/anytime_main_category.dart';
 import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
@@ -11,10 +13,16 @@ import 'package:provider/provider.dart';
 Widget mainCategoryList(mainCategoryHeight, mainCategory, editcontroller,
     BuildContext context, bool isAdLoaded, InterstitialAd? interstitialAd) {
   if (context.watch<DataProvider>().habitsList.isEmpty) {
-    return Text(
-      "Nothing to see here.",
-      textAlign: TextAlign.center,
-    ); // TODO: edit this later
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2,
+      width: double.infinity,
+      child: Center(
+        child: Text(
+          AppLocale.nothingHere.getString(context),
+          style: const TextStyle(color: Colors.grey),
+        ),
+      ),
+    );
   }
 
   final habitsList = context.watch<DataProvider>().habitsList;
