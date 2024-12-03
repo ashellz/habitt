@@ -41,6 +41,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
                       style:
                           TextStyle(color: Colors.grey.shade600, fontSize: 16)),
                 ),
+              changelogContainer("v1.0.7", ""),
               changelogContainer("v1.0.6",
                   "- Added ability to reorder habits\n- Added a page with all of your habits\n- Added ability to choose how often does a habit appear (daily, weekly, etc.)\n- It is now possible to complete a habit by filling the needed amount/duration and pressing 'Enter', instead of 'Done'\n- A category/tag now does't count as completed if tasks in that are not completed too\n- Tasks now appear in each category/tag when selected\n- A few design changes\n- Fixed minor and major bugs"),
               changelogContainer("v1.0.5",
