@@ -25,6 +25,8 @@ class HabitNameTextField extends StatefulWidget {
 }
 
 class _HabitNameTextFieldState extends State<HabitNameTextField> {
+  bool isDone = false;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,6 +36,14 @@ class _HabitNameTextFieldState extends State<HabitNameTextField> {
         keyboardAppearance: Theme.of(context).brightness == Brightness.dark
             ? Brightness.dark
             : Brightness.light,
+        onTap: () {
+          if (!widget.isEdit && !isDone) {
+            isDone = true;
+            setState(() {
+              widget.controller.clear();
+            });
+          }
+        },
         onChanged: (value) {
           if (widget.isEdit) {
             context.read<HabitProvider>().updateSomethingEdited();

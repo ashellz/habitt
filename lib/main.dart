@@ -170,7 +170,6 @@ Future<void> openHiveAndPerformTasks(BuildContext context) async {
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!boolBox.containsKey("update1")) {
-      print("wipe");
       boolBox.put("update1", true);
 
       for (var habit in habitBox.values) {

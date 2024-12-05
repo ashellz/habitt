@@ -41,7 +41,8 @@ class _ChangelogPageState extends State<ChangelogPage> {
                       style:
                           TextStyle(color: Colors.grey.shade600, fontSize: 16)),
                 ),
-              changelogContainer("v1.0.7", ""),
+              changelogContainer("v1.0.7",
+                  "- Notifications now match the selected language\n- Improved some design flaws"),
               changelogContainer("v1.0.6",
                   "- Added ability to reorder habits\n- Added a page with all of your habits\n- Added ability to choose how often does a habit appear (daily, weekly, etc.)\n- It is now possible to complete a habit by filling the needed amount/duration and pressing 'Enter', instead of 'Done'\n- A category/tag now does't count as completed if tasks in that are not completed too\n- Tasks now appear in each category/tag when selected\n- A few design changes\n- Fixed minor and major bugs"),
               changelogContainer("v1.0.5",
@@ -72,6 +73,10 @@ class _ChangelogPageState extends State<ChangelogPage> {
                   ),
                 ),
               ),
+              if (!showOlder)
+                const SizedBox(
+                  height: 50,
+                ),
               Visibility(
                   visible: showOlder,
                   child: Column(
@@ -141,6 +146,7 @@ class _ChangelogPageState extends State<ChangelogPage> {
                             "05.07.2024", "- Added changelog page"),
                         changelogContainer("03.07.2024",
                             "- Fixed amount and duration completed don't reset on a new day\n- Fixed on all habits completed streak when it is just 1 day streak it was displaying 1 days"),
+                        const SizedBox(height: 50)
                       ])),
             ],
           ),
