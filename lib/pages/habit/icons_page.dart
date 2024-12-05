@@ -28,7 +28,7 @@ class IconsPage extends StatelessWidget {
           ),
           const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.only(left: 30, right: 30, bottom: 50),
               child: Center(
                 child: Wrap(
                   spacing: 30,

@@ -6,13 +6,13 @@ import 'package:habitt/util/functions/habit/habitsCompleted.dart';
 import 'package:habitt/util/functions/translate_category.dart';
 import 'package:provider/provider.dart';
 
-Widget tagsWidgets(String? tagSelected) {
-  List<String> visibleList = visibleListTags();
+Widget tagsWidgets(String? tagSelected, BuildContext context) {
+  List<String> visibleList = visibleListTags(context);
 
   Color getTextColor(category) {
     late Color color;
 
-    if (categoryCompleted(category)) {
+    if (categoryCompleted(category, context)) {
       color = Colors.grey.shade700;
     } else {
       color = Colors.white;
@@ -27,6 +27,7 @@ Widget tagsWidgets(String? tagSelected) {
 
   return ListView(
     scrollDirection: Axis.horizontal,
+    physics: const ClampingScrollPhysics(),
     children: <Widget>[
       for (final category in visibleList)
         StatefulBuilder(
@@ -50,7 +51,7 @@ Widget tagsWidgets(String? tagSelected) {
                     ),
                     height: 30,
                     child: Center(
-                      child: Text(translateCategory(category, context),
+                      child: Text(translateBoth(category, context),
                           style: TextStyle(
                               color: getTextColor(category),
                               decorationThickness: 3.0)),

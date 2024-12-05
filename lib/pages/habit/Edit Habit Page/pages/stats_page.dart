@@ -84,7 +84,8 @@ Widget statsPage(
                 .completeHabitProvider(
                     context.read<HabitProvider>().getIndexFromId(id),
                     isAdLoaded,
-                    interstitialAd)
+                    interstitialAd,
+                    context)
                 .then((value) {
               buildCompletionRateGraph(
                   id,

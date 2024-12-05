@@ -6,8 +6,8 @@ import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/data/tags.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/habit/add_habit_page.dart';
+import 'package:habitt/pages/home/widgets/All%20Habits%20Page/all_habits_page.dart';
 import 'package:habitt/pages/home/functions/fillTagsList.dart';
 import 'package:habitt/pages/home/widgets/adaptable_page_view.dart';
 import 'package:habitt/pages/home/widgets/additional_tasks.dart';
@@ -22,12 +22,10 @@ import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
-import 'package:habitt/util/functions/fillKeys.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-Icon startIcon = const Icon(Icons.book);
-
+const startIcon = Icon(Icons.book);
 final habitBox = Hive.box<HabitData>('habits');
 final metadataBox = Hive.box<DateTime>('metadata');
 final streakBox = Hive.box<int>('streak');
@@ -83,14 +81,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (interstitialAd == null) {
-      initInterstitialAd();
-    }
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (interstitialAd == null) {
-        initInterstitialAd();
-      }
       final boxHeight = sizeKey.currentContext?.size?.height;
 
       setState(() {
@@ -102,14 +93,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    checkForDayJoined();
     if (interstitialAd == null) {
       initInterstitialAd();
     }
 
     WidgetsBinding.instance.addObserver(this);
-
-    hasHabits();
   }
 
   @override
@@ -122,8 +110,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<HabitProvider>().updateLastOpenedDate(context);
-      context.read<HabitProvider>().chooseMainCategory();
-      context.read<HabitProvider>().updateMainCategoryHeight();
+      context.read<HabitProvider>().chooseMainCategory(context);
+      context.read<HabitProvider>().updateMainCategoryHeight(context);
       if (interstitialAd == null) {
         initInterstitialAd();
       }
@@ -136,7 +124,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     String? tagSelected = context.watch<HabitProvider>().tagSelected;
 
     String mainCategory = context.watch<HabitProvider>().mainCategory;
-    int habitListLength = context.watch<HabitProvider>().habitListLength;
     double mainCategoryHeight =
         context.watch<HabitProvider>().mainCategoryHeight;
     String username = stringBox.get('username') ?? 'Guest';
@@ -164,6 +151,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               backgroundColor: context.watch<ColorProvider>().blackColor,
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.list),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return AllHabitsPage(
+                        editcontroller: editcontroller,
+                      );
+                    })).whenComplete(() {
+                      if (context.mounted) {
+                        context.read<DataProvider>().updateHabits(context);
+                      }
+                    });
+                  },
+                ),
+                const Spacer(),
+                IconButton(
                   icon: const Icon(Icons.menu),
                   onPressed: () {
                     Navigator.of(context)
@@ -186,16 +189,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       header(
                           username, context.watch<DataProvider>().greetingText),
                       const SizedBox(height: 20),
-                      SizedBox(height: 30, child: tagsWidgets(tagSelected)),
+                      SizedBox(
+                          height: 30, child: tagsWidgets(tagSelected, context)),
                     ],
                   ),
                 ),
                 Column(children: [
                   PageViewHeightAdaptable(
+                    isHomePage: true,
                     key: sizeKey,
                     controller: pageController,
                     children: [
-                      for (String tag in visibleListTags())
+                      for (String tag in visibleListTags(context))
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20, right: 20, bottom: 40),
@@ -205,7 +210,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               if (tag == 'All')
                                 Column(children: [
                                   mainCategoryList(
-                                      habitListLength,
                                       mainCategoryHeight,
                                       mainCategory,
                                       editcontroller,
@@ -217,7 +221,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                       context,
                                       mainCategory,
                                       editcontroller,
-                                      anytimeHasHabits,
                                       isAdLoaded,
                                       interstitialAd),
                                   AdditionalTasks(
@@ -252,14 +255,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 }
 
-List<String> visibleListTags() {
+List<String> visibleListTags(BuildContext context) {
+  final habitsList = context.read<DataProvider>().habitsList;
+  int habitsListLength = habitsList.length;
   List<String> visibleList = ["All"];
 
-  for (int i = 0; i < habitBox.length; i++) {
-    final category = habitBox.getAt(i)?.category;
+  for (int i = 0; i < habitsListLength; i++) {
+    final category = habitsList[i].category;
 
     if (!visibleList.contains(category)) {
-      visibleList.add(category!);
+      visibleList.add(category);
     }
   }
 
@@ -268,11 +273,11 @@ List<String> visibleListTags() {
     return order.indexOf(a).compareTo(order.indexOf(b));
   });
 
-  for (int i = 0; i < habitBox.length; i++) {
-    final tag = habitBox.getAt(i)?.tag;
+  for (int i = 0; i < habitsListLength; i++) {
+    final tag = habitsList[i].tag;
     if (!visibleList.contains(tag)) {
       if (tag != "No tag") {
-        visibleList.add(tag!);
+        visibleList.add(tag);
       }
     }
   }
@@ -300,8 +305,14 @@ void openAddHabitPage(
   Provider.of<HabitProvider>(context, listen: false).duration = 0;
   createcontroller.text = AppLocale.habitName.getString(context);
   Provider.of<HabitProvider>(context, listen: false).categoriesExpanded = false;
-
   Provider.of<HabitProvider>(context, listen: false).habitNotifications = [];
+  context.read<DataProvider>().setCustomValueSelected(2);
+  context.read<DataProvider>().setMonthValueSelected(1);
+  context.read<DataProvider>().setWeekValueSelected(1);
+  context.read<DataProvider>().unselectAllDaysAWeek();
+  context.read<DataProvider>().unselectAllDaysAMonth();
+  Provider.of<DataProvider>(context, listen: false)
+      .updateHabitType(AppLocale.daily.getString(context), context);
 
   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
     return AddHabitPage(
@@ -321,9 +332,6 @@ void openAddHabitPage(
       Provider.of<HabitProvider>(context, listen: false)
           .notescontroller
           .clear();
-
-      Provider.of<HabitProvider>(context, listen: false).updatedIcon =
-          startIcon;
 
       Provider.of<HabitProvider>(context, listen: false).dropDownValue =
           'Any time';

@@ -44,7 +44,11 @@ class PopUpButton extends StatelessWidget {
                       );
                     },
                   ),
-                ).whenComplete(() => checkForNotifications()),
+                ).whenComplete(() {
+                  if (context.mounted) {
+                    checkForNotifications(context);
+                  }
+                }),
             value: 0,
             child: Row(
               children: [

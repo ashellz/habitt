@@ -4,24 +4,35 @@ part 'habit_data.g.dart';
 
 @HiveType(typeId: 1)
 class HabitData extends HiveObject {
-  HabitData(
-      {required this.name,
-      required this.completed,
-      required this.icon,
-      required this.category,
-      required this.streak,
-      required this.amount,
-      required this.amountName,
-      required this.amountCompleted,
-      required this.duration,
-      required this.durationCompleted,
-      required this.skipped,
-      required this.tag,
-      required this.notifications,
-      required this.notes,
-      required this.longestStreak,
-      required this.id,
-      required this.task});
+  HabitData({
+    required this.name,
+    required this.completed,
+    required this.icon,
+    required this.category,
+    required this.streak,
+    required this.amount,
+    required this.amountName,
+    required this.amountCompleted,
+    required this.duration,
+    required this.durationCompleted,
+    required this.skipped,
+    required this.tag,
+    required this.notifications,
+    required this.notes,
+    required this.longestStreak,
+    required this.id,
+    required this.task,
+    required this.type,
+    required this.weekValue,
+    required this.monthValue,
+    required this.customValue,
+    required this.selectedDaysAWeek,
+    required this.selectedDaysAMonth,
+    required this.daysUntilAppearance,
+    required this.timesCompletedThisWeek,
+    required this.timesCompletedThisMonth,
+  });
+
   @HiveField(0)
   String name;
 
@@ -72,4 +83,31 @@ class HabitData extends HiveObject {
 
   @HiveField(16)
   bool task;
+
+  @HiveField(17)
+  String type;
+
+  @HiveField(18)
+  int weekValue;
+
+  @HiveField(19)
+  int monthValue;
+
+  @HiveField(20)
+  int customValue;
+
+  @HiveField(21)
+  List selectedDaysAWeek;
+
+  @HiveField(22)
+  List selectedDaysAMonth;
+
+  @HiveField(23)
+  int daysUntilAppearance;
+
+  @HiveField(24)
+  int timesCompletedThisWeek;
+
+  @HiveField(25)
+  int timesCompletedThisMonth;
 }

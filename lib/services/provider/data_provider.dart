@@ -2,9 +2,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
+import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:provider/provider.dart';
 
 class DataProvider extends ChangeNotifier {
+  bool morningHasHabits = false;
+  bool afternoonHasHabits = false;
+  bool eveningHasHabits = false;
+  bool anytimeHasHabits = false;
+
   List<String> categoriesList = [];
   List<String> tagsList =
       []; // This list is going to be empty except when initialized in onboarding page
@@ -13,7 +21,187 @@ class DataProvider extends ChangeNotifier {
   List<String> greetingTexts = [];
   String greetingText = "";
 
-  bool hasTasks = false;
+  List<HabitData> tasksList = [];
+  List<HabitData> allHabitsList = [];
+  List<HabitData> habitsList = [];
+  TextEditingController habitTypeController = TextEditingController();
+
+  int weekValueSelected = 0;
+  int monthValueSelected = 0;
+  int customValueSelected = 2;
+
+  List selectedDaysAWeek = [];
+
+  List selectedDaysAMonth = [];
+
+  bool showMoreOptionsWeekly = false;
+  bool showMoreOptionsMonthly = false;
+
+  // complete habit dialog
+
+  int theAmountValue = 0;
+  int theDurationValueHours = 0;
+  int theDurationValueMinutes = 0;
+
+  void setAmountValue(int value) {
+    theAmountValue = value;
+    notifyListeners();
+  }
+
+  void setDurationValueHours(int value) {
+    theDurationValueHours = value;
+    notifyListeners();
+  }
+
+  void setDurationValueMinutes(int value) {
+    theDurationValueMinutes = value;
+    notifyListeners();
+  }
+
+  void setShowMoreOptionsWeekly(bool value) {
+    showMoreOptionsWeekly = value;
+    notifyListeners();
+  }
+
+  void setShowMoreOptionsMonthly(bool value) {
+    showMoreOptionsMonthly = value;
+    notifyListeners();
+  }
+
+  void unselectAllDaysAWeek() {
+    selectedDaysAWeek = [];
+    notifyListeners();
+  }
+
+  void unselectAllDaysAMonth() {
+    selectedDaysAMonth = [];
+    notifyListeners();
+  }
+
+  void selectDaysAWeek(List days) {
+    selectedDaysAWeek = days;
+    notifyListeners();
+  }
+
+  void selectDaysAMonth(List days) {
+    selectedDaysAMonth = days;
+    notifyListeners();
+  }
+
+  void setCustomValueSelected(int value) {
+    customValueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseCustomValueSelected() {
+    customValueSelected++;
+    notifyListeners();
+  }
+
+  void setMonthValueSelected(int value) {
+    monthValueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseMonthValueSelected() {
+    monthValueSelected++;
+    notifyListeners();
+  }
+
+  void setWeekValueSelected(int value) {
+    weekValueSelected = value;
+    notifyListeners();
+  }
+
+  void increaseWeekValueSelected() {
+    weekValueSelected++;
+    notifyListeners();
+  }
+
+  void updateHabitType(String value, BuildContext context) {
+    if (value == "Daily") {
+      value = AppLocale.daily.getString(context);
+    } else if (value == "Weekly") {
+      value = AppLocale.weekly.getString(context);
+    } else if (value == "Monthly") {
+      value = AppLocale.monthly.getString(context);
+    } else if (value == "Custom") {
+      value = AppLocale.custom.getString(context);
+    }
+
+    habitTypeController.text = value;
+    notifyListeners();
+  }
+
+  void updateAllHabits() {
+    allHabitsList = habitBox.values.toList();
+    notifyListeners();
+  }
+
+  void updateHabits(BuildContext context) {
+    DateTime today = DateTime.now();
+    habitsList = [];
+
+    anytimeHasHabits = false;
+    morningHasHabits = false;
+    afternoonHasHabits = false;
+    eveningHasHabits = false;
+
+    void showCategory(String category) {
+      if (category == "Any time") {
+        anytimeHasHabits = true;
+      } else if (category == "Morning") {
+        morningHasHabits = true;
+      } else if (category == "Afternoon") {
+        afternoonHasHabits = true;
+      } else if (category == "Evening") {
+        eveningHasHabits = true;
+      }
+    }
+
+    for (var habit in habitBox.values) {
+      if (habit.type == "Daily") {
+        showCategory(habit.category);
+        habitsList.add(habit);
+      } else if (habit.type == "Weekly") {
+        if (habit.selectedDaysAWeek.isEmpty) {
+          if (habit.timesCompletedThisWeek < habit.weekValue) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        } else {
+          if (habit.selectedDaysAWeek.contains(today.weekday)) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        }
+      } else if (habit.type == "Monthly") {
+        if (habit.selectedDaysAMonth.isEmpty) {
+          if (habit.timesCompletedThisMonth < habit.monthValue) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        } else {
+          if (habit.selectedDaysAMonth.contains(today.day)) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
+        }
+      } else if (habit.type == "Custom") {
+        if (habit.daysUntilAppearance == 0) {
+          showCategory(habit.category);
+          habitsList.add(habit);
+        }
+      }
+    }
+    tasksList = habitsList.where((habit) => habit.task).toList();
+
+    context
+        .read<HistoricalHabitProvider>()
+        .updateHistoricalHabits(DateTime.now());
+
+    notifyListeners();
+  }
 
   void updateAccountDeletionPending(bool value) {
     accountDeletionPending = value;
@@ -24,11 +212,11 @@ class DataProvider extends ChangeNotifier {
   // Initialize tagsList with context to access localization
   void initializeTagsList(BuildContext context) {
     tagsList = [
-      AppLocale.noTag.getString(context),
-      AppLocale.healthyLifestyle.getString(context),
-      AppLocale.betterSleep.getString(context),
-      AppLocale.morningRoutine.getString(context),
-      AppLocale.workout.getString(context),
+      "No tag",
+      "Healthy Lifestyle",
+      "Better Sleep",
+      "Morning Routine",
+      "Workout"
     ];
 
     notifyListeners();

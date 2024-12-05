@@ -43,9 +43,12 @@ class _NotesTextFieldState extends State<NotesTextField> {
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           alignLabelWithHint: true,
-          suffixIcon: const Icon(
-            Icons.notes_rounded,
-            color: Colors.white,
+          suffixIcon: const Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(
+              Icons.notes_rounded,
+              color: Colors.white,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),

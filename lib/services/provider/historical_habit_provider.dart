@@ -3,14 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
-  List get allHistoricalHabits => historicalBox.values.toList();
-
   DateTime calendarDay = DateTime.now();
 
   List<HistoricalHabitData> historicalHabits = [];
@@ -37,6 +37,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
     return historicalBox.getAt(0)!.data[index]; // default
   }
 
+  int boxIndex = 0;
+
   void updateHistoricalHabits(DateTime date) {
     if (kDebugMode) {
       print("updating historical habits");
@@ -50,6 +52,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
       if (const ListEquality()
           .equals(intDate, [date.year, date.month, date.day])) {
         historicalHabits = historicalBox.getAt(i)!.data;
+        boxIndex = i;
         notifyListeners();
         break;
       } else {
@@ -194,9 +197,58 @@ class HistoricalHabitProvider extends ChangeNotifier {
         HapticFeedback.heavyImpact();
       }
     } else*/
+
+    HabitData? todayHabit;
+    bool isThisWeek = false;
+    bool isThisMonth = false;
+
+    for (int i = 0; i < habitBox.length; i++) {
+      if (habitBox.getAt(i)!.id == habit.id) {
+        todayHabit = habitBox.getAt(i)!;
+        break;
+      }
+    }
+
+    if (todayHabit != null) {
+      if (time.year == DateTime.now().year) {
+        if (time.month == DateTime.now().month) {
+          if (time.day != DateTime.now().day) {
+            isThisMonth = true;
+          }
+          if (time.weekday < DateTime.now().weekday) {
+            isThisWeek = true;
+          }
+        }
+      }
+    }
+
     if (!habit.completed) {
+      if (todayHabit != null) {
+        if (isThisWeek) {
+          todayHabit.timesCompletedThisWeek++;
+          context.read<DataProvider>().updateHabits(context);
+        }
+        if (isThisMonth) {
+          todayHabit.timesCompletedThisMonth++;
+          context.read<DataProvider>().updateHabits(context);
+        }
+        todayHabit.save();
+      }
+
       if (hapticFeedback) {
         HapticFeedback.mediumImpact();
+      }
+    } else {
+      if (todayHabit != null) {
+        if (isThisWeek) {
+          todayHabit.timesCompletedThisWeek--;
+          context.read<DataProvider>().updateHabits(context);
+        }
+        if (isThisMonth) {
+          todayHabit.timesCompletedThisMonth--;
+          context.read<DataProvider>().updateHabits(context);
+        }
+        todayHabit.save();
       }
     }
 
@@ -207,8 +259,11 @@ class HistoricalHabitProvider extends ChangeNotifier {
   }
 
   applyHistoricalAmountCompleted(
-      habit, theAmountValue, DateTime time, int index) {
+      habit, BuildContext context, DateTime time, int index) {
     List<int> currentDate = [time.year, time.month, time.day];
+
+    int theAmountValue =
+        Provider.of<DataProvider>(context, listen: false).theAmountValue;
 
     HistoricalHabitData habitData = HistoricalHabitData(
         name: habit.name,
@@ -229,9 +284,15 @@ class HistoricalHabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  applyHistoricalDurationCompleted(habit, int theDurationValueHours,
-      int theDurationValueMinutes, DateTime time, int index) {
+  applyHistoricalDurationCompleted(
+      habit, BuildContext context, DateTime time, int index) {
     List<int> currentDate = [time.year, time.month, time.day];
+
+    int theDurationValueHours =
+        Provider.of<DataProvider>(context, listen: false).theDurationValueHours;
+    int theDurationValueMinutes =
+        Provider.of<DataProvider>(context, listen: false)
+            .theDurationValueMinutes;
 
     HistoricalHabitData habitData = HistoricalHabitData(
         name: habit.name,
@@ -271,23 +332,23 @@ class HistoricalHabitProvider extends ChangeNotifier {
       int streak = 0;
 
       for (int j = 0; j < historicalList.length - 1; j++) {
-        if (historicalList[j].data.length <= i) {
-          completed = false;
-        } else {
-          completed = historicalList[j].data[i].completed;
-          skipped = historicalList[j].data[i].skipped;
-        }
+        for (var historicalHabit in historicalList[j].data) {
+          if (historicalHabit.id == habit.id) {
+            completed = historicalHabit.completed;
+            skipped = historicalHabit.skipped;
 
-        if (completed) {
-          if (!skipped) {
-            streak++;
+            if (completed) {
+              if (!skipped) {
+                streak++;
+              }
+            } else {
+              streak = 0;
+            }
+
+            if (streak > longestStreak) {
+              longestStreak = streak;
+            }
           }
-        } else {
-          streak = 0;
-        }
-
-        if (streak > longestStreak) {
-          longestStreak = streak;
         }
       }
 

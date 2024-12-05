@@ -5,6 +5,7 @@ import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildCompletionRateGraph.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +26,6 @@ void buildEditedValues(
   }
 
   if (!updated) {
-    int amount = habitProvider.amount;
-    int duration = habitProvider.duration;
-    int durationHours = habitProvider.durationHours;
-    int durationMinutes = habitProvider.durationMinutes;
-
     habitProvider.categoriesExpanded = false;
     if (habit.amount > 1) {
       habitProvider.habitGoalValue = 1;
@@ -42,8 +38,8 @@ void buildEditedValues(
       habitProvider.habitGoalValue = 2;
       habitProvider.duration = habit.duration;
       habitProvider.amount = 1;
-      habitProvider.durationHours = duration ~/ 60;
-      habitProvider.durationMinutes = duration % 60;
+      habitProvider.durationHours = habit.duration ~/ 60;
+      habitProvider.durationMinutes = habit.duration % 60;
     } else {
       habitProvider.habitGoalValue = 0;
       habitProvider.amount = 1;
@@ -70,6 +66,16 @@ void buildEditedValues(
           .read<HabitProvider>()
           .changeNotification(List.from(habit.notifications));
       context.read<HabitProvider>().updateDropDownValue(habit.category);
+      context.read<DataProvider>().updateHabitType(habit.type, context);
+      context.read<DataProvider>().setCustomValueSelected(habit.customValue);
+      context.read<DataProvider>().setMonthValueSelected(habit.monthValue);
+      context.read<DataProvider>().setWeekValueSelected(habit.weekValue);
+      context
+          .read<DataProvider>()
+          .selectDaysAWeek(habit.selectedDaysAWeek.toList());
+      context
+          .read<DataProvider>()
+          .selectDaysAMonth(habit.selectedDaysAMonth.toList());
     });
 
     habitProvider.notescontroller.text = habit.notes;

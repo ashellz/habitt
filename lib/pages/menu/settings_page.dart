@@ -8,6 +8,7 @@ import 'package:habitt/services/provider/color_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
+import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/objects/settings/notification_container.dart';
 import 'package:habitt/util/objects/settings/text_and_switch_container.dart';
 import 'package:provider/provider.dart';
@@ -65,6 +66,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       languageProvider.changeLanguage(newLanguage);
                     });
+
+                    checkForNotifications(context);
 
                     onInit = true;
                   },

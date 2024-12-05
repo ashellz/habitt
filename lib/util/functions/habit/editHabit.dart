@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habitt/data/habit_data.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/allhabits_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:habitt/util/functions/habit/checkForTasks.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -21,23 +21,19 @@ void editHabit(int index, BuildContext context, editcontroller) {
           .durationMinutes +
       (Provider.of<HabitProvider>(context, listen: false).durationHours * 60);
 
-  int categoryHabits = 0;
-  String category = editedFrom;
+  bool isTaskBefore = habitBox.getAt(index)!.task;
+  bool isTaskAfter =
+      Provider.of<HabitProvider>(context, listen: false).additionalTask;
 
-  for (int i = 0; i < habitBox.length; i++) {
-    if (habitBox.getAt(i)?.category == category) {
-      categoryHabits += 1;
-    }
-  }
-  if (categoryHabits < 2) {
-    if (category == "Morning") {
-      morningHasHabits = false;
-    } else if (category == "Afternoon") {
-      afternoonHasHabits = false;
-    } else if (category == "Evening") {
-      eveningHasHabits = false;
-    } else if (category == "Any time") {
-      anytimeHasHabits = false;
+  if (isTaskBefore) {
+    if (!isTaskAfter) {
+      context.read<AllHabitsProvider>().initAllHabitsPage(context);
+      context.read<AllHabitsProvider>().setAllHabitsTagSelected("Categories");
+      pageController.animateToPage(
+        0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -56,8 +52,8 @@ void editHabit(int index, BuildContext context, editcontroller) {
 
     if (editedFrom == mainCategory || editedTo == mainCategory) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HabitProvider>().chooseMainCategory();
-        context.read<HabitProvider>().updateMainCategoryHeight();
+        context.read<HabitProvider>().chooseMainCategory(context);
+        context.read<HabitProvider>().updateMainCategoryHeight(context);
       });
     }
   }
@@ -68,72 +64,59 @@ void editHabit(int index, BuildContext context, editcontroller) {
   habitBox.putAt(
       index,
       HabitData(
-        name: editcontroller.text,
-        completed: resetCompleted ? false : habitBox.getAt(index)!.completed,
-        icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
-            .updatedIcon
-            .icon),
-        category:
-            Provider.of<HabitProvider>(context, listen: false).dropDownValue,
-        streak: habitBox.getAt(index)?.streak ?? 0,
-        amount:
-            Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
-                    1
-                ? Provider.of<HabitProvider>(context, listen: false).amount
-                : habitBox.getAt(index)!.amount,
-        amountName: Provider.of<HabitProvider>(context, listen: false)
-            .habitGoalController
-            .text,
-        amountCompleted:
-            resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
-        duration:
-            Provider.of<HabitProvider>(context, listen: false).habitGoalValue ==
-                    2
-                ? duration
-                : habitBox.getAt(index)?.duration ?? 0,
-        durationCompleted:
-            resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
-        skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
-        tag: habitTag,
-        notifications: editHabitNotifications,
-        notes: Provider.of<HabitProvider>(context, listen: false)
-            .notescontroller
-            .text,
-        longestStreak: habitBox.getAt(index)!.longestStreak,
-        id: habitBox.getAt(index)!.id,
-        task: Provider.of<HabitProvider>(context, listen: false).additionalTask,
-      ));
+          name: editcontroller.text,
+          completed: resetCompleted ? false : habitBox.getAt(index)!.completed,
+          icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
+              .updatedIcon
+              .icon),
+          category:
+              Provider.of<HabitProvider>(context, listen: false).dropDownValue,
+          streak: habitBox.getAt(index)?.streak ?? 0,
+          amount:
+              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
+                  ? Provider.of<HabitProvider>(context, listen: false).amount
+                  : habitBox.getAt(index)!.amount,
+          amountName: Provider.of<HabitProvider>(context, listen: false)
+              .habitGoalController
+              .text,
+          amountCompleted:
+              resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
+          duration:
+              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
+                  ? duration
+                  : habitBox.getAt(index)?.duration ?? 0,
+          durationCompleted:
+              resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
+          skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
+          tag: habitTag,
+          notifications: editHabitNotifications,
+          notes: Provider.of<HabitProvider>(context, listen: false)
+              .notescontroller
+              .text,
+          longestStreak: habitBox.getAt(index)!.longestStreak,
+          id: habitBox.getAt(index)!.id,
+          task:
+              Provider.of<HabitProvider>(context, listen: false).additionalTask,
+          type: Provider.of<DataProvider>(context, listen: false)
+              .habitTypeController
+              .text,
+          weekValue: Provider.of<DataProvider>(context, listen: false)
+              .weekValueSelected,
+          monthValue: Provider.of<DataProvider>(context, listen: false)
+              .monthValueSelected,
+          customValue: Provider.of<DataProvider>(context, listen: false).customValueSelected,
+          selectedDaysAWeek: Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
+          selectedDaysAMonth: Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
+          daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
+          timesCompletedThisWeek: habitBox.getAt(index)!.timesCompletedThisWeek,
+          timesCompletedThisMonth: habitBox.getAt(index)!.timesCompletedThisMonth));
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {
-    checkForTasks(context);
+    context.read<DataProvider>().updateHabits(context);
+    context.read<DataProvider>().updateAllHabits();
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
   }
 
-  openCategory(context);
-
   // showPopup(context, "Habit edited!");
-}
-
-void openCategory(BuildContext context) {
-  var dropDownValue =
-      Provider.of<HabitProvider>(context, listen: false).dropDownValue;
-
-  if (dropDownValue == "Morning") {
-    if (morningHasHabits == false) {
-      morningHasHabits = true;
-    }
-  } else if (dropDownValue == "Afternoon") {
-    if (afternoonHasHabits == false) {
-      afternoonHasHabits = true;
-    }
-  } else if (dropDownValue == "Evening") {
-    if (eveningHasHabits == false) {
-      eveningHasHabits = true;
-    }
-  } else if (dropDownValue == "Any time") {
-    if (anytimeHasHabits == false) {
-      anytimeHasHabits = true;
-    }
-  }
 }

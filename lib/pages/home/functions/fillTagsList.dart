@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/main.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:provider/provider.dart';
@@ -31,22 +30,22 @@ void fillTagsList(BuildContext context) {
     }
   }
 
-  if (anytimeHasHabits) {
+  if (Provider.of<DataProvider>(context, listen: false).anytimeHasHabits) {
     addAnytime();
   } else {
     categoriesList.remove("Any time");
   }
-  if (morningHasHabits) {
+  if (Provider.of<DataProvider>(context, listen: false).morningHasHabits) {
     addMorning();
   } else {
     categoriesList.remove("Morning");
   }
-  if (afternoonHasHabits) {
+  if (Provider.of<DataProvider>(context, listen: false).afternoonHasHabits) {
     addAfternoon();
   } else {
     categoriesList.remove("Afternoon");
   }
-  if (eveningHasHabits) {
+  if (Provider.of<DataProvider>(context, listen: false).eveningHasHabits) {
     addEvening();
   } else {
     categoriesList.remove("Evening");

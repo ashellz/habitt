@@ -8,6 +8,7 @@ import "package:habitt/pages/habit/shared%20widgets/dropdown_menu.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_display.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_goal.dart";
 import "package:habitt/pages/habit/shared%20widgets/habit_name_textfield.dart";
+import "package:habitt/pages/habit/shared%20widgets/Habit%20Type/habit_type.dart";
 import "package:habitt/pages/habit/shared%20widgets/notes_text_field.dart";
 
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
@@ -37,10 +38,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
   ScrollController scrollController = ScrollController();
   double scrollPosition = 0.0;
   final chooseCategoriesList = ["Any time", "Morning", "Afternoon", "Evening"];
+  final TextEditingController habitTypeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    habitTypeController.text = "Daily";
     scrollController.addListener(() {
       setState(() {
         scrollPosition = scrollController.position.pixels;
@@ -50,7 +53,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
     var createcontroller = widget.createcontroller;
 
     return Scaffold(
@@ -93,7 +95,9 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
                           // DROPDOWN MENU
                           const DropDownMenu(),
-                          const SizedBox(height: 15),
+
+                          // HABIT TYPE
+                          const HabitType(isEdit: false),
 
                           // HABIT GOAL
                           const HabitGoal(
@@ -112,30 +116,27 @@ class _AddHabitPageState extends State<AddHabitPage> {
                 ),
               ],
             ),
-            Transform.translate(
-              offset: Offset(0, keyboardOpen ? 100 : 0),
-              child: SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.theLightColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20)),
-                    ),
+            SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.theLightColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                   ),
-                  child: const Text('Add Habit',
-                      style: TextStyle(color: Colors.white)),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      Provider.of<HabitProvider>(context, listen: false)
-                          .createNewHabitProvider(createcontroller, context);
-                      Navigator.pop(context);
-                    }
-                  },
                 ),
+                child: const Text('Add Habit',
+                    style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    Provider.of<HabitProvider>(context, listen: false)
+                        .createNewHabitProvider(createcontroller, context);
+                    Navigator.pop(context);
+                  }
+                },
               ),
             ),
           ],

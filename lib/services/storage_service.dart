@@ -160,7 +160,16 @@ void addInitialData(context) {
         notifications: List.empty(),
         longestStreak: 0,
         id: 0,
-        task: false),
+        task: false,
+        type: "Daily",
+        weekValue: 0,
+        monthValue: 0,
+        customValue: 0,
+        selectedDaysAWeek: [],
+        selectedDaysAMonth: [],
+        daysUntilAppearance: 0,
+        timesCompletedThisWeek: 0,
+        timesCompletedThisMonth: 0),
     HabitData(
         name: 'Add a new habit',
         notes: '',
@@ -178,7 +187,16 @@ void addInitialData(context) {
         notifications: List.empty(),
         longestStreak: 0,
         id: 1,
-        task: false)
+        task: false,
+        type: "Daily",
+        weekValue: 0,
+        monthValue: 0,
+        customValue: 0,
+        selectedDaysAWeek: [],
+        selectedDaysAMonth: [],
+        daysUntilAppearance: 0,
+        timesCompletedThisWeek: 0,
+        timesCompletedThisMonth: 0)
   ];
 
   if (tagBox.isEmpty) {

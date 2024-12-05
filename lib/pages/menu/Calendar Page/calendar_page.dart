@@ -75,7 +75,6 @@ class _CalendarPageState extends State<CalendarPage> {
             onAdFailedToLoad: (error) {
               interstitialAd = null;
               isAdLoaded = false;
-              initInterstitialAd();
             }));
   }
 
