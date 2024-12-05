@@ -31,6 +31,7 @@ class HabitData extends HiveObject {
     required this.daysUntilAppearance,
     required this.timesCompletedThisWeek,
     required this.timesCompletedThisMonth,
+    required this.paused,
   });
 
   @HiveField(0)
@@ -110,4 +111,7 @@ class HabitData extends HiveObject {
 
   @HiveField(25)
   int timesCompletedThisMonth;
+
+  @HiveField(26)
+  bool paused;
 }

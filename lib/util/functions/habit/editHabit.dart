@@ -109,7 +109,8 @@ void editHabit(int index, BuildContext context, editcontroller) {
           selectedDaysAMonth: Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
           daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
           timesCompletedThisWeek: habitBox.getAt(index)!.timesCompletedThisWeek,
-          timesCompletedThisMonth: habitBox.getAt(index)!.timesCompletedThisMonth));
+          timesCompletedThisMonth: habitBox.getAt(index)!.timesCompletedThisMonth,
+          paused: habitBox.getAt(index)!.paused));
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   if (context.mounted) {

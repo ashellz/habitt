@@ -380,9 +380,20 @@ class Tile extends StatelessWidget {
               habits[i].name,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: ReorderableDragStartListener(
-              index: i,
-              child: const Icon(Icons.drag_handle),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (habits[i].paused)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Icon(Icons.pause_circle_outline),
+                  ),
+                ReorderableDragStartListener(
+                  index: i,
+                  child: const Icon(Icons.drag_handle),
+                ),
+              ],
             ),
           ),
         ),

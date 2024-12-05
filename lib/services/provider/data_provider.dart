@@ -160,37 +160,39 @@ class DataProvider extends ChangeNotifier {
     }
 
     for (var habit in habitBox.values) {
-      if (habit.type == "Daily") {
-        showCategory(habit.category);
-        habitsList.add(habit);
-      } else if (habit.type == "Weekly") {
-        if (habit.selectedDaysAWeek.isEmpty) {
-          if (habit.timesCompletedThisWeek < habit.weekValue) {
-            showCategory(habit.category);
-            habitsList.add(habit);
-          }
-        } else {
-          if (habit.selectedDaysAWeek.contains(today.weekday)) {
-            showCategory(habit.category);
-            habitsList.add(habit);
-          }
-        }
-      } else if (habit.type == "Monthly") {
-        if (habit.selectedDaysAMonth.isEmpty) {
-          if (habit.timesCompletedThisMonth < habit.monthValue) {
-            showCategory(habit.category);
-            habitsList.add(habit);
-          }
-        } else {
-          if (habit.selectedDaysAMonth.contains(today.day)) {
-            showCategory(habit.category);
-            habitsList.add(habit);
-          }
-        }
-      } else if (habit.type == "Custom") {
-        if (habit.daysUntilAppearance == 0) {
+      if (!habit.paused) {
+        if (habit.type == "Daily") {
           showCategory(habit.category);
           habitsList.add(habit);
+        } else if (habit.type == "Weekly") {
+          if (habit.selectedDaysAWeek.isEmpty) {
+            if (habit.timesCompletedThisWeek < habit.weekValue) {
+              showCategory(habit.category);
+              habitsList.add(habit);
+            }
+          } else {
+            if (habit.selectedDaysAWeek.contains(today.weekday)) {
+              showCategory(habit.category);
+              habitsList.add(habit);
+            }
+          }
+        } else if (habit.type == "Monthly") {
+          if (habit.selectedDaysAMonth.isEmpty) {
+            if (habit.timesCompletedThisMonth < habit.monthValue) {
+              showCategory(habit.category);
+              habitsList.add(habit);
+            }
+          } else {
+            if (habit.selectedDaysAMonth.contains(today.day)) {
+              showCategory(habit.category);
+              habitsList.add(habit);
+            }
+          }
+        } else if (habit.type == "Custom") {
+          if (habit.daysUntilAppearance == 0) {
+            showCategory(habit.category);
+            habitsList.add(habit);
+          }
         }
       }
     }

@@ -74,6 +74,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     daysUntilAppearance: 0,
     timesCompletedThisWeek: 0,
     timesCompletedThisMonth: 0,
+    paused: false,
   );
   await habitBox.add(myHabit);
   streakBox.put('highestId', streakBox.get('highestId')! + 1);

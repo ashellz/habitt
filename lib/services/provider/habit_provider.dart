@@ -250,6 +250,17 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void pauseHabit(HabitData habit, BuildContext context) {
+    habit.paused = !habit.paused;
+    habit.save();
+    if (context.mounted) {
+      context.read<DataProvider>().updateHabits(context);
+      context.read<DataProvider>().updateAllHabits();
+      saveHabitsForToday(context);
+    }
+    notifyListeners();
+  }
+
   Future<void> completeHabitProvider(
       int index, bool isAdLoaded, interstitialAd, BuildContext context) async {
     final existingHabit = habitBox.getAt(index);
@@ -294,6 +305,7 @@ class HabitProvider extends ChangeNotifier {
       daysUntilAppearance: existingHabit.daysUntilAppearance,
       timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
       timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
+      paused: existingHabit.paused,
     );
 
     await habitBox.putAt(index, updatedHabit);
@@ -445,7 +457,8 @@ class HabitProvider extends ChangeNotifier {
           selectedDaysAMonth: existingHabit.selectedDaysAMonth,
           daysUntilAppearance: existingHabit.daysUntilAppearance,
           timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
-          timesCompletedThisMonth: existingHabit.timesCompletedThisMonth);
+          timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
+          paused: existingHabit.paused);
 
       await habitBox.putAt(index, updatedHabit);
 
@@ -540,7 +553,8 @@ class HabitProvider extends ChangeNotifier {
             timesCompletedThisWeek:
                 habitBox.getAt(index)!.timesCompletedThisWeek,
             timesCompletedThisMonth:
-                habitBox.getAt(index)!.timesCompletedThisMonth));
+                habitBox.getAt(index)!.timesCompletedThisMonth,
+            paused: habitBox.getAt(index)!.paused));
     if (context.mounted) {
       saveHabitsForToday(context);
     }
@@ -581,7 +595,8 @@ class HabitProvider extends ChangeNotifier {
             timesCompletedThisWeek:
                 habitBox.getAt(index)!.timesCompletedThisWeek,
             timesCompletedThisMonth:
-                habitBox.getAt(index)!.timesCompletedThisMonth));
+                habitBox.getAt(index)!.timesCompletedThisMonth,
+            paused: habitBox.getAt(index)!.paused));
     if (context.mounted) {
       saveHabitsForToday(context);
     }

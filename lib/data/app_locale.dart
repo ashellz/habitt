@@ -149,6 +149,12 @@ mixin AppLocale {
   static const String currentStreak = 'Current streak';
   static const String bestStreak = 'Best streak';
   static const String completionRate = 'Completion rate';
+  static const String pauseHabit = 'Pause habit';
+  static const String unpauseHabit = 'Unpause habit';
+  static const String areYouSurePauseHabit =
+      'Are you sure you want to pause this habit?';
+  static const String areYouSureUnpauseHabit =
+      'Are you sure you want to unpause this habit?';
 
   //Habit Type
   static const String habitType = 'Habit Type';
@@ -377,7 +383,13 @@ mixin AppLocale {
     categories: "Categories",
     tags: "Tags",
     tasks: "Tasks",
-    nothingHere: "Nothing to see here."
+    nothingHere: "Nothing to see here.",
+    pauseHabit: "Pause Habit",
+    unpauseHabit: "Unpause Habit",
+    areYouSurePauseHabit:
+        "This habit and its stats will be paused and will not appear on home page. Use this only when you are unable to do a habit for multiple days in a row. Are you sure?",
+    areYouSureUnpauseHabit:
+        "This habit and its stats will now resume and will now appear on home page. Are you sure?"
   };
 
   static const Map<String, dynamic> ba = {
@@ -552,6 +564,12 @@ mixin AppLocale {
     categories: "Kategorije",
     tags: "Oznake",
     tasks: "Zadaci",
-    nothingHere: "Ovdje nema ničega."
+    nothingHere: "Ovdje nema ničega.",
+    pauseHabit: "Pauziraj naviku",
+    unpauseHabit: "Odpauziraj naviku",
+    areYouSurePauseHabit:
+        "Ova navika i njene statistike će biti pauzirane te se neće prikazati na početnoj stranici. Koristite ovo samo ukoliko ne možete da izvršavate ovu naviku nekoliko dana zaredom. Da li ste sigurni?",
+    areYouSureUnpauseHabit:
+        "Ova navika i njene statistike će se nastaviti te će se sada prikazati na početnoj stranici. Da li ste sigurni?"
   };
 }
