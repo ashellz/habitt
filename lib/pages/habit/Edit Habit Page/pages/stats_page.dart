@@ -10,6 +10,7 @@ import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/box.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/pages/widgets/get_completion_rate_days.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
+import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ Widget statsPage(
     List<int> everyFifthDay,
     List<int> everyFifthMonth) {
   var habit = context.read<HabitProvider>().getHabitAt(id);
+  List<HabitData> habitsList = context.watch<DataProvider>().habitsList;
 
   int timesCompleted = 0;
   int timesMissed = 0;
@@ -66,6 +68,7 @@ Widget statsPage(
       Center(
         child: TextButton(
           style: ButtonStyle(
+            enableFeedback: boolBox.get("hapticFeedback")!,
             minimumSize: WidgetStateProperty.all<Size>(
                 Size(MediaQuery.of(context).size.width, 50)),
             backgroundColor: WidgetStateProperty.all<Color>(habit.skipped
@@ -80,26 +83,32 @@ Widget statsPage(
             ),
           ),
           onPressed: () {
-            Provider.of<HabitProvider>(context, listen: false)
-                .completeHabitProvider(
-                    context.read<HabitProvider>().getIndexFromId(id),
-                    isAdLoaded,
-                    interstitialAd,
-                    context)
-                .then((value) {
-              buildCompletionRateGraph(
-                  id,
-                  completionRates,
-                  highestCompletionRate,
-                  lowestCompletionRate,
-                  everyFifthDay,
-                  everyFifthMonth);
-            });
+            if (habitsList.contains(habit)) {
+              Provider.of<HabitProvider>(context, listen: false)
+                  .completeHabitProvider(
+                      context.read<HabitProvider>().getIndexFromId(id),
+                      isAdLoaded,
+                      interstitialAd,
+                      context)
+                  .then((value) {
+                buildCompletionRateGraph(
+                    id,
+                    completionRates,
+                    highestCompletionRate,
+                    lowestCompletionRate,
+                    everyFifthDay,
+                    everyFifthMonth);
+              });
+            }
           },
           child: Text(
             habitCompleted(),
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: habitsList.contains(habit)
+                    ? Colors.white
+                    : Colors.grey.shade700),
           ),
         ),
       ),

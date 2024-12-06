@@ -153,24 +153,133 @@ class HabitProvider extends ChangeNotifier {
 
   void chooseMainCategory(BuildContext context) {
     int hour = DateTime.now().hour;
+    List<HabitData> habitsList =
+        Provider.of<DataProvider>(context, listen: false).habitsList;
+    bool morningCompleted = false;
+    bool afternoonCompleted = false;
+    bool eveningCompleted = false;
+    bool anytimeCompleted = false;
+    int morningHabits = 0;
+    int morningHabitsCompleted = 0;
+    int afternoonHabits = 0;
+    int afternoonHabitsCompleted = 0;
+    int eveningHabits = 0;
+    int eveningHabitsCompleted = 0;
+    int anytimeHabits = 0;
+    int anytimeHabitsCompleted = 0;
+    bool morningHasHabits =
+        Provider.of<DataProvider>(context, listen: false).morningHasHabits;
+    bool afternoonHasHabits =
+        Provider.of<DataProvider>(context, listen: false).afternoonHasHabits;
+    bool eveningHasHabits =
+        Provider.of<DataProvider>(context, listen: false).eveningHasHabits;
+    bool anytimeHasHabits =
+        Provider.of<DataProvider>(context, listen: false).anytimeHasHabits;
+
+    for (var habit in habitsList) {
+      if (!habit.task) {
+        if (habit.category == "Morning") {
+          morningHabits++;
+          if (habit.completed) {
+            morningHabitsCompleted++;
+          }
+        } else if (habit.category == "Afternoon") {
+          afternoonHabits++;
+          if (habit.completed) {
+            afternoonHabitsCompleted++;
+          }
+        } else if (habit.category == "Evening") {
+          eveningHabits++;
+          if (habit.completed) {
+            eveningHabitsCompleted++;
+          }
+        } else {
+          anytimeHabits++;
+          if (habit.completed) {
+            anytimeHabitsCompleted++;
+          }
+        }
+      }
+    }
+
+    if (morningHabitsCompleted == morningHabits) {
+      morningCompleted = true;
+    }
+    if (afternoonHabitsCompleted == afternoonHabits) {
+      afternoonCompleted = true;
+    }
+    if (eveningHabitsCompleted == eveningHabits) {
+      eveningCompleted = true;
+    }
+    if (anytimeHabitsCompleted == anytimeHabits) {
+      anytimeCompleted = true;
+    }
+
+    bool morningReady = false;
+    bool afternoonReady = false;
+    bool eveningReady = false;
+    bool anytimeReady = false;
+
+    if (morningHasHabits) {
+      if (!morningCompleted) {
+        morningReady = true;
+      }
+    }
+
+    if (afternoonHasHabits) {
+      if (!afternoonCompleted) {
+        afternoonReady = true;
+      }
+    }
+
+    if (eveningHasHabits) {
+      if (!eveningCompleted) {
+        eveningReady = true;
+      }
+    }
+
+    if (anytimeHasHabits) {
+      if (!anytimeCompleted) {
+        anytimeReady = true;
+      }
+    }
+
     if (hour >= 4 && hour < 12) {
-      if (!Provider.of<DataProvider>(context, listen: false).morningHasHabits) {
-        mainCategory = "Any time";
-      } else {
+      if (morningReady) {
         mainCategory = "Morning";
+      } else if (anytimeReady) {
+        mainCategory = "Any time";
+      } else if (afternoonReady) {
+        mainCategory = "Afternoon";
+      } else if (eveningReady) {
+        mainCategory = "Evening";
+      } else {
+        mainCategory = "Any time";
       }
     } else if (hour >= 12 && hour < 19) {
-      if (!Provider.of<DataProvider>(context, listen: false)
-          .afternoonHasHabits) {
-        mainCategory = "Any time";
-      } else {
+      if (afternoonReady) {
         mainCategory = "Afternoon";
+      } else if (morningReady) {
+        mainCategory = "Morning";
+      } else if (anytimeReady) {
+        mainCategory = "Any time";
+      } else if (eveningReady) {
+        mainCategory = "Evening";
+      } else {
+        mainCategory = "Any time";
       }
-    } else if (!Provider.of<DataProvider>(context, listen: false)
-        .eveningHasHabits) {
-      mainCategory = "Any time";
+    } else if (hour >= 19 || hour < 4) {
+      if (eveningReady) {
+        mainCategory = "Evening";
+      } else if (morningReady) {
+        mainCategory = "Morning";
+      } else if (afternoonReady) {
+        mainCategory = "Afternoon";
+      } else {
+        mainCategory = "Any time";
+      }
     } else {
-      mainCategory = "Evening";
+      mainCategory = "Any time";
     }
     notifyListeners();
   }

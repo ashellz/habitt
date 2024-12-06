@@ -330,13 +330,12 @@ class Tile extends StatelessWidget {
               changed = false;
               deleted = false;
 
-              int id = habits[i].id;
               HabitData habit = habits[i];
 
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) => EditHabitPage(
-                            id: id,
+                            habit: habit,
                             editcontroller: editcontroller,
                           )))
                   .whenComplete(() {

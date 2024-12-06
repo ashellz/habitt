@@ -63,7 +63,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
         Navigator.of(context)
             .push(MaterialPageRoute(
                 builder: (context) => EditHabitPage(
-                      id: id,
+                      habit: habit,
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {

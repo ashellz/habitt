@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_localization/flutter_localization.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
 import "package:habitt/data/app_locale.dart";
+import "package:habitt/data/habit_data.dart";
 import "package:habitt/pages/habit/Edit%20Habit%20Page/functions/buildEditedValues.dart";
 import "package:habitt/pages/habit/Edit%20Habit%20Page/pages/edit_page.dart";
 import "package:habitt/pages/habit/Edit%20Habit%20Page/pages/stats_page.dart";
@@ -21,11 +22,11 @@ final formKey = GlobalKey<FormState>();
 class EditHabitPage extends StatefulWidget {
   const EditHabitPage({
     super.key,
-    required this.id,
+    required this.habit,
     required this.editcontroller,
   });
 
-  final int id;
+  final HabitData habit;
   final TextEditingController editcontroller;
 
   @override
@@ -77,12 +78,20 @@ class _EditHabitPageState extends State<EditHabitPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int index = context.read<HabitProvider>().getIndexFromId(widget.id);
+    final int index =
+        context.read<HabitProvider>().getIndexFromId(widget.habit.id);
     final editcontroller = widget.editcontroller;
     final desccontroller = context.watch<HabitProvider>().notescontroller;
 
-    buildEditedValues(context, widget.id, editcontroller, lowestCompletionRate,
-        completionRates, highestCompletionRate, everyFifthDay, everyFifthMonth);
+    buildEditedValues(
+        context,
+        widget.habit.id,
+        editcontroller,
+        lowestCompletionRate,
+        completionRates,
+        highestCompletionRate,
+        everyFifthDay,
+        everyFifthMonth);
 
     PageController pageController = PageController();
     return Scaffold(
@@ -130,60 +139,79 @@ class _EditHabitPageState extends State<EditHabitPage> {
                 title: AppLocale.habitInfo.getString(context),
               ),
               SliverToBoxAdapter(
-                  child: Column(children: [
-                HabitDisplay(
-                  controller: editcontroller,
-                  topPadding: 20,
-                ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: SizedBox(
-                      height: Provider.of<HabitProvider>(context, listen: false)
-                          .editHabitPageHeight,
-                      child: PageView.builder(
-                        onPageChanged: (value) {
-                          if (value == 0) {
-                            setState(() {
-                              currentIndex = 0;
-                              firstPage = true;
-                              context
-                                  .read<HabitProvider>()
-                                  .getPageHeight(firstPage);
-                            });
-                          } else {
-                            setState(() {
-                              currentIndex = 1;
-                              firstPage = false;
-                              context
-                                  .read<HabitProvider>()
-                                  .getPageHeight(firstPage);
-                            });
-                          }
-                        },
-                        physics: const NeverScrollableScrollPhysics(),
-                        controller: pageController,
-                        itemCount: 2,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: index == 0
-                                ? statsPage(
-                                    context,
-                                    widget.id,
-                                    isAdLoaded,
-                                    interstitialAd,
-                                    lowestCompletionRate,
-                                    completionRates,
-                                    highestCompletionRate,
-                                    everyFifthDay,
-                                    everyFifthMonth)
-                                : editPage(setState, context, editcontroller,
-                                    desccontroller, habitTypeController, index),
-                          );
-                        },
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    HabitDisplay(
+                      controller: editcontroller,
+                      topPadding: 20,
+                    ),
+                    if (widget.habit.paused)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: Text(
+                            "${AppLocale.thisHabitIsPaused.getString(context)}.",
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                color: Color.fromRGBO(158, 158, 158, 1),
+                                fontSize: 16)),
                       ),
-                    ))
-              ])),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: SizedBox(
+                          height:
+                              Provider.of<HabitProvider>(context, listen: false)
+                                  .editHabitPageHeight,
+                          child: PageView.builder(
+                            onPageChanged: (value) {
+                              if (value == 0) {
+                                setState(() {
+                                  currentIndex = 0;
+                                  firstPage = true;
+                                  context
+                                      .read<HabitProvider>()
+                                      .getPageHeight(firstPage);
+                                });
+                              } else {
+                                setState(() {
+                                  currentIndex = 1;
+                                  firstPage = false;
+                                  context
+                                      .read<HabitProvider>()
+                                      .getPageHeight(firstPage);
+                                });
+                              }
+                            },
+                            physics: const NeverScrollableScrollPhysics(),
+                            controller: pageController,
+                            itemCount: 2,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: index == 0
+                                    ? statsPage(
+                                        context,
+                                        widget.habit.id,
+                                        isAdLoaded,
+                                        interstitialAd,
+                                        lowestCompletionRate,
+                                        completionRates,
+                                        highestCompletionRate,
+                                        everyFifthDay,
+                                        everyFifthMonth)
+                                    : editPage(
+                                        setState,
+                                        context,
+                                        editcontroller,
+                                        desccontroller,
+                                        habitTypeController,
+                                        index),
+                              );
+                            },
+                          ),
+                        ))
+                  ])),
             ]),
 
             // SAVE BUTTON
