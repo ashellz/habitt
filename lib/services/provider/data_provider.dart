@@ -196,6 +196,12 @@ class DataProvider extends ChangeNotifier {
         }
       }
     }
+
+    // potential optional feature
+    // habitsList.sort((a, b) {
+    // return a.completed ? 1 : -1; // Completed items go to the bottom.
+    // });
+
     tasksList = habitsList.where((habit) => habit.task).toList();
 
     context

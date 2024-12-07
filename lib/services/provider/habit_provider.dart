@@ -1,6 +1,5 @@
 import "dart:async";
 import "package:awesome_notifications/awesome_notifications.dart";
-import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:fluttertoast/fluttertoast.dart";
@@ -509,74 +508,73 @@ class HabitProvider extends ChangeNotifier {
     }
 
     // Check if the user is skipping two days in a row
-    DateTime now = DateTime.now();
-    List currentDate = [now.year, now.month, now.day];
-    final existingHabit = habitBox.getAt(index);
+    final existingHabit = habitBox.getAt(index)!;
 
     var historicalList = historicalBox.values.toList();
 
     historicalList.sort((a, b) {
       DateTime dateA = a.date;
       DateTime dateB = b.date;
-      return dateA.compareTo(dateB);
-    });
+      return dateB.compareTo(dateA);
+    }); // sorted that 0 is today
 
-    for (int i = 0; i < historicalList.length; i++) {
-      List habitDate = [
-        historicalList[i].date.year,
-        historicalList[i].date.month,
-        historicalList[i].date.day
-      ];
-
-      if (const ListEquality().equals(habitDate, currentDate)) {
-        if (historicalList[i - 1].data[index].skipped) {
-          Fluttertoast.showToast(
-              msg: "You can't skip a habit two days in a row.");
-          return;
+    for (int i = 1; i < historicalList.length; i++) {
+      // loop starts from yesterday
+      for (int j = 0; j < historicalList[i].data.length; j++) {
+        //checks every habit from the day
+        if (historicalList[i].data[j].id == existingHabit.id) {
+          //if a habit exists in that
+          if (historicalList[i].data[j].skipped) {
+            // if the habit was skipped
+            Fluttertoast.showToast(
+                msg: "You can't skip a habit two days in a row.");
+            return;
+          } else {
+            //break the loop;
+            break;
+          }
         }
       }
     }
 
     // Skip the habit
 
-    if (existingHabit != null) {
-      final updatedHabit = HabitData(
-          name: existingHabit.name,
-          completed: !existingHabit.completed,
-          icon: existingHabit.icon,
-          category: existingHabit.category,
-          streak: existingHabit.streak,
-          amount: existingHabit.amount,
-          amountName: existingHabit.amountName,
-          amountCompleted: existingHabit.amountCompleted,
-          duration: existingHabit.duration,
-          durationCompleted: existingHabit.durationCompleted,
-          skipped: !existingHabit.skipped,
-          tag: existingHabit.tag,
-          notifications: existingHabit.notifications,
-          notes: existingHabit.notes,
-          longestStreak: existingHabit.longestStreak,
-          id: existingHabit.id,
-          task: existingHabit.task,
-          type: existingHabit.type,
-          weekValue: existingHabit.weekValue,
-          monthValue: existingHabit.monthValue,
-          customValue: existingHabit.customValue,
-          selectedDaysAWeek: existingHabit.selectedDaysAWeek,
-          selectedDaysAMonth: existingHabit.selectedDaysAMonth,
-          daysUntilAppearance: existingHabit.daysUntilAppearance,
-          timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
-          timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
-          paused: existingHabit.paused);
+    final updatedHabit = HabitData(
+        name: existingHabit.name,
+        completed: !existingHabit.completed,
+        icon: existingHabit.icon,
+        category: existingHabit.category,
+        streak: existingHabit.streak,
+        amount: existingHabit.amount,
+        amountName: existingHabit.amountName,
+        amountCompleted: existingHabit.amountCompleted,
+        duration: existingHabit.duration,
+        durationCompleted: existingHabit.durationCompleted,
+        skipped: !existingHabit.skipped,
+        tag: existingHabit.tag,
+        notifications: existingHabit.notifications,
+        notes: existingHabit.notes,
+        longestStreak: existingHabit.longestStreak,
+        id: existingHabit.id,
+        task: existingHabit.task,
+        type: existingHabit.type,
+        weekValue: existingHabit.weekValue,
+        monthValue: existingHabit.monthValue,
+        customValue: existingHabit.customValue,
+        selectedDaysAWeek: existingHabit.selectedDaysAWeek,
+        selectedDaysAMonth: existingHabit.selectedDaysAMonth,
+        daysUntilAppearance: existingHabit.daysUntilAppearance,
+        timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
+        timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
+        paused: existingHabit.paused);
 
-      await habitBox.putAt(index, updatedHabit);
+    await habitBox.putAt(index, updatedHabit);
 
-      if (context.mounted) {
-        context.read<DataProvider>().updateHabits(context);
-        saveHabitsForToday(context);
-      }
-      notifyListeners();
+    if (context.mounted) {
+      context.read<DataProvider>().updateHabits(context);
+      saveHabitsForToday(context);
     }
+    notifyListeners();
   }
 
   HabitData getHabitAt(int id) {
