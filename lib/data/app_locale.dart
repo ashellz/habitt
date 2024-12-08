@@ -118,6 +118,8 @@ mixin AppLocale {
   static const String anyTime = 'Any time Category';
 
   static const String noHabitsInCategory = 'No habits in this category';
+  static const String cantSkipHabitRow = 'Cant skip habit row';
+  static const String cantSkipHabit3 = 'Cant skip habit 3';
 
   static const String allHabits = "All Habits";
   static const String categories = "Categories";
@@ -156,6 +158,10 @@ mixin AppLocale {
   static const String areYouSureUnpauseHabit =
       'Are you sure you want to unpause this habit?';
   static const String thisHabitIsPaused = 'This habit is paused';
+  static const String habitAdded = "Habit added!";
+  static const String habitEdited = "Habit edited!";
+  static const String habitDeleted = "Habit deleted!";
+  static const String saveChanges = "Save changes";
 
   //Habit Type
   static const String habitType = 'Habit Type';
@@ -392,7 +398,15 @@ mixin AppLocale {
     areYouSureUnpauseHabit:
         "This habit and its stats will now resume and will now appear on home page. Are you sure?",
     thisHabitIsPaused: "This habit is paused",
+    cantSkipHabitRow: "You can't skip a habit two days in a row.",
+    cantSkipHabit3: "You can't skip more than three habits a day.",
+    habitAdded: "Habit added!",
+    habitEdited: "Habit edited!",
+    habitDeleted: "Habit deleted!",
+    saveChanges: "Save Changes",
   };
+
+  // -------------------------------------------------------------------------------------
 
   static const Map<String, dynamic> ba = {
     yes: 'Da',
@@ -574,5 +588,11 @@ mixin AppLocale {
     areYouSureUnpauseHabit:
         "Ova navika i njene statistike će se nastaviti te će se sada prikazati na početnoj stranici. Da li ste sigurni?",
     thisHabitIsPaused: "Ova navika je pauzirana",
+    cantSkipHabitRow: "Ne možete preskočiti naviku dva dana zaredom.",
+    cantSkipHabit3: "Ne možete preskočiti više od tri navike na dan.",
+    habitAdded: "Navika dodana!",
+    habitEdited: "Izmjene sačuvane!",
+    habitDeleted: "Navika obrisana!",
+    saveChanges: "Sačuvaj izmjene",
   };
 }

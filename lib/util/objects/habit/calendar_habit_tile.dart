@@ -73,11 +73,12 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
           ),
           SlidableAction(
             onPressed: (context) {
-              context
-                  .read<HistoricalHabitProvider>()
-                  .skipHistoricalHabit(index, habit, widget.time, context);
               if (isToday) {
                 context.read<HabitProvider>().skipHabitProvider(index, context);
+              } else {
+                context
+                    .read<HistoricalHabitProvider>()
+                    .skipHistoricalHabit(index, habit, widget.time, context);
               }
             },
             backgroundColor: context.watch<ColorProvider>().greyColor,

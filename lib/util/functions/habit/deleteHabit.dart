@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/pages/habit/Edit%20Habit%20Page/edit_habit_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/allhabits_provider.dart';
@@ -19,6 +21,9 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
       .setAllHabitsTagSelected("Categories");
   Provider.of<AllHabitsProvider>(context, listen: false)
       .initAllHabitsPage(context);
+  Provider.of<DataProvider>(context, listen: false)
+      .setNotificationText(AppLocale.habitDeleted.getString(context));
+  Provider.of<DataProvider>(context, listen: false).activateNotification();
 
   deleted = true;
   editcontroller.text = "";

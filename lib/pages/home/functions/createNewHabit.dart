@@ -84,6 +84,9 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     saveHabitsForToday(context);
     context.read<DataProvider>().updateHabits(context);
     Provider.of<DataProvider>(context, listen: false).updateAllHabits();
+    Provider.of<DataProvider>(context, listen: false)
+        .setNotificationText(AppLocale.habitAdded.getString(context));
+    Provider.of<DataProvider>(context, listen: false).activateNotification();
     if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
         context.watch<HabitProvider>().mainCategory) {
       Provider.of<HabitProvider>(context, listen: false)

@@ -13,6 +13,9 @@ class DataProvider extends ChangeNotifier {
   bool eveningHasHabits = false;
   bool anytimeHasHabits = false;
 
+  bool isNotificationVisible = false;
+  String notificationText = "";
+
   List<String> categoriesList = [];
   List<String> tagsList =
       []; // This list is going to be empty except when initialized in onboarding page
@@ -42,6 +45,21 @@ class DataProvider extends ChangeNotifier {
   int theAmountValue = 0;
   int theDurationValueHours = 0;
   int theDurationValueMinutes = 0;
+
+  void setNotificationText(String text) {
+    notificationText = text;
+    notifyListeners();
+  }
+
+  void activateNotification() {
+    isNotificationVisible = true;
+    notifyListeners();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      isNotificationVisible = false;
+      notifyListeners();
+    });
+  }
 
   void setAmountValue(int value) {
     theAmountValue = value;

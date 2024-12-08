@@ -143,110 +143,150 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       ),
       backgroundColor: context.watch<ColorProvider>().blackColor,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: context.watch<ColorProvider>().blackColor,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.list),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return AllHabitsPage(
-                        editcontroller: editcontroller,
-                      );
-                    })).whenComplete(() {
-                      if (context.mounted) {
-                        context.read<DataProvider>().updateHabits(context);
-                      }
-                    });
-                  },
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return const MenuPage();
-                    }));
-                  },
-                ),
-              ]),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 30),
-                      header(
-                          username, context.watch<DataProvider>().greetingText),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                          height: 30, child: tagsWidgets(tagSelected, context)),
-                    ],
-                  ),
-                ),
-                Column(children: [
-                  PageViewHeightAdaptable(
-                    isHomePage: true,
-                    key: sizeKey,
-                    controller: pageController,
-                    children: [
-                      for (String tag in visibleListTags(context))
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 40),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 40),
-                              if (tag == 'All')
-                                Column(children: [
-                                  mainCategoryList(
-                                      mainCategoryHeight,
-                                      mainCategory,
-                                      editcontroller,
-                                      context,
-                                      isAdLoaded,
-                                      interstitialAd),
-                                  const SizedBox(height: 20),
-                                  otherCategoriesList(
-                                      context,
-                                      mainCategory,
-                                      editcontroller,
-                                      isAdLoaded,
-                                      interstitialAd),
-                                  AdditionalTasks(
-                                      editcontroller: editcontroller,
-                                      isAdLoaded: isAdLoaded,
-                                      interstitialAd: interstitialAd),
-                                ]),
-                              if (tag != 'All')
-                                tagSelectedWidget(tag, editcontroller,
-                                    isAdLoaded, interstitialAd, context),
-                              SizedBox(
-                                height: height == null
-                                    ? 0
-                                    : height! >
-                                            MediaQuery.of(context).size.height
+      body: Stack(
+        children: [
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: context.watch<ColorProvider>().blackColor,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.list),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return AllHabitsPage(
+                            editcontroller: editcontroller,
+                          );
+                        })).whenComplete(() {
+                          if (context.mounted) {
+                            context.read<DataProvider>().updateHabits(context);
+                          }
+                        });
+                      },
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return const MenuPage();
+                        }));
+                      },
+                    ),
+                  ]),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 30),
+                          header(username,
+                              context.watch<DataProvider>().greetingText),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                              height: 30,
+                              child: tagsWidgets(tagSelected, context)),
+                        ],
+                      ),
+                    ),
+                    Column(children: [
+                      PageViewHeightAdaptable(
+                        isHomePage: true,
+                        key: sizeKey,
+                        controller: pageController,
+                        children: [
+                          for (String tag in visibleListTags(context))
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 40),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 40),
+                                  if (tag == 'All')
+                                    Column(children: [
+                                      mainCategoryList(
+                                          mainCategoryHeight,
+                                          mainCategory,
+                                          editcontroller,
+                                          context,
+                                          isAdLoaded,
+                                          interstitialAd),
+                                      const SizedBox(height: 20),
+                                      otherCategoriesList(
+                                          context,
+                                          mainCategory,
+                                          editcontroller,
+                                          isAdLoaded,
+                                          interstitialAd),
+                                      AdditionalTasks(
+                                          editcontroller: editcontroller,
+                                          isAdLoaded: isAdLoaded,
+                                          interstitialAd: interstitialAd),
+                                    ]),
+                                  if (tag != 'All')
+                                    tagSelectedWidget(tag, editcontroller,
+                                        isAdLoaded, interstitialAd, context),
+                                  SizedBox(
+                                    height: height == null
                                         ? 0
-                                        : MediaQuery.of(context).size.height -
-                                            height!,
-                              )
-                            ],
-                          ),
-                        ),
-                    ],
+                                        : height! >
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .height
+                                            ? 0
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .height -
+                                                height!,
+                                  )
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ])
+                  ],
+                ),
+              ),
+            ],
+          ),
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            top: context.watch<DataProvider>().isNotificationVisible
+                ? 50
+                : -100, // Adjust height to fit your widget
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.25,
+                  vertical: 20),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                decoration: BoxDecoration(
+                    color: context.watch<ColorProvider>().greyColor,
+                    borderRadius: BorderRadius.circular(15)),
+                alignment: Alignment.center,
+                child: Text(
+                  context.watch<DataProvider>().notificationText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                ])
-              ],
+                ),
+              ),
             ),
           ),
         ],

@@ -43,8 +43,9 @@ class _CalendarPageState extends State<CalendarPage> {
           Text(
               "${AppLocale.thisWillErasePreviousDataOn.getString(context)} ${today.year}-${today.month}-${today.day}. ${AppLocale.areYouSure.getString(context)}",
               textAlign: TextAlign.center),
-          () =>
-              context.read<HistoricalHabitProvider>().importCurrentHabits(day),
+          () => context
+              .read<HistoricalHabitProvider>()
+              .importCurrentHabits(day, context),
           "Yes",
           "No");
     }
@@ -171,7 +172,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                 textAlign: TextAlign.center),
                             () => context
                                 .read<HistoricalHabitProvider>()
-                                .importCurrentHabits(today),
+                                .importCurrentHabits(today, context),
                             AppLocale.yes.getString(context),
                             AppLocale.no.getString(context));
                       },

@@ -2,7 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
@@ -101,16 +103,18 @@ class HistoricalHabitProvider extends ChangeNotifier {
     historicalList.sort((a, b) {
       DateTime dateA = a.date;
       DateTime dateB = b.date;
-      return dateA
-          .compareTo(dateB); // This will sort from oldest to most recent
-    });
+      return dateB.compareTo(dateA);
+    }); // today is 0
 
     for (int i = 0; i < historicalList.length; i++) {
-      List habitDate = [
+      List<int> habitDate = [
         historicalList[i].date.year,
         historicalList[i].date.month,
         historicalList[i].date.day
       ];
+
+      // loop until day is found, get day index, start loop from index to today, and another from index to the past
+      // stop the second loop when day with the same habit is found, check if its skipped
 
       if (const ListEquality().equals(habitDate, chosenHabitDate)) {
         for (int j = 0; j < historicalList[i].data.length; j++) {
@@ -121,24 +125,41 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
         if (habitsSkipped >= 3) {
           Fluttertoast.showToast(
-              msg: "You can't skip more than 3 habits a day.");
+              msg: AppLocale.cantSkipHabit3.getString(context));
           return;
         }
 
-        if (i - 1 >= 0) {
-          if (historicalList[i - 1].data[index].skipped) {
-            Fluttertoast.showToast(
-                msg: "You can't skip a habit two days in a row.");
-            return;
+        for (int j = i - 1; j >= 0; j--) {
+          // goes from chosen day to today
+
+          for (int k = 0; k < historicalList[j].data.length; k++) {
+            if (historicalList[j].data[k].id == habit.id) {
+              if (historicalList[j].data[k].skipped) {
+                Fluttertoast.showToast(
+                    msg: AppLocale.cantSkipHabitRow.getString(context));
+                return;
+              }
+              break;
+            }
           }
         }
-        if (i + 1 < historicalList.length) {
-          if (historicalList[i + 1].data[index].skipped) {
-            Fluttertoast.showToast(
-                msg: "You can't skip a habit two days in a row.");
-            return;
+
+        for (int j = i + 1; j < historicalList.length; j++) {
+          // goes from chosen to past
+
+          for (int k = 0; k < historicalList[j].data.length; k++) {
+            if (historicalList[j].data[k].id == habit.id) {
+              if (historicalList[j].data[k].skipped) {
+                Fluttertoast.showToast(
+                    msg: AppLocale.cantSkipHabitRow.getString(context));
+                return;
+              }
+              break;
+            }
           }
         }
+
+        break;
       }
     }
 
@@ -413,9 +434,12 @@ class HistoricalHabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void importCurrentHabits(DateTime today) {
+  void importCurrentHabits(DateTime today, BuildContext context) {
     print("importing current habits");
     List<int> date = [today.year, today.month, today.day];
+
+    List habitsList =
+        Provider.of<DataProvider>(context, listen: false).habitsList;
 
     for (int i = 0; i < historicalBox.length; i++) {
       List<int> habitDate = [
@@ -426,8 +450,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
       if (const ListEquality().equals(habitDate, date)) {
         historicalBox.getAt(i)!.data.clear();
-        for (int j = 0; j < habitBox.length; j++) {
-          var currentHabit = habitBox.getAt(j)!;
+        for (var currentHabit in habitsList) {
           historicalBox.getAt(i)!.data.add(HistoricalHabitData(
                 name: currentHabit.name,
                 completed: false,

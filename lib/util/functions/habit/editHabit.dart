@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/functions/getIcon.dart';
 import 'package:habitt/pages/home/home_page.dart';
@@ -117,6 +119,10 @@ void editHabit(int index, BuildContext context, editcontroller) {
     context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().updateAllHabits();
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
+    context
+        .read<DataProvider>()
+        .setNotificationText(AppLocale.habitEdited.getString(context));
+    context.read<DataProvider>().activateNotification();
   }
 
   // showPopup(context, "Habit edited!");

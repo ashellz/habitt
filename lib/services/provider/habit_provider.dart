@@ -2,7 +2,9 @@ import "dart:async";
 import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_localization/flutter_localization.dart";
 import "package:fluttertoast/fluttertoast.dart";
+import "package:habitt/data/app_locale.dart";
 import "package:habitt/data/habit_data.dart";
 import "package:habitt/pages/home/functions/createNewHabit.dart";
 import "package:habitt/pages/home/home_page.dart";
@@ -364,6 +366,11 @@ class HabitProvider extends ChangeNotifier {
     if (context.mounted) {
       context.read<DataProvider>().updateHabits(context);
       context.read<DataProvider>().updateAllHabits();
+      if (habit.category == mainCategory) {
+        chooseMainCategory(context);
+        updateMainCategoryHeight(context);
+      }
+
       saveHabitsForToday(context);
     }
     notifyListeners();
@@ -503,7 +510,7 @@ class HabitProvider extends ChangeNotifier {
     }
 
     if (habitsSkipped >= 3) {
-      Fluttertoast.showToast(msg: "You can't skip more than 3 habits a day.");
+      Fluttertoast.showToast(msg: AppLocale.cantSkipHabit3.getString(context));
       return;
     }
 
@@ -527,7 +534,7 @@ class HabitProvider extends ChangeNotifier {
           if (historicalList[i].data[j].skipped) {
             // if the habit was skipped
             Fluttertoast.showToast(
-                msg: "You can't skip a habit two days in a row.");
+                msg: AppLocale.cantSkipHabitRow.getString(context));
             return;
           } else {
             //break the loop;
