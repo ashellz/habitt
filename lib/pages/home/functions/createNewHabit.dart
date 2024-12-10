@@ -8,6 +8,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
+import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:provider/provider.dart';
 
 late HabitData myHabit;
@@ -81,17 +82,19 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
 
   // Updates the main category height if new habit category is same as the main category
   if (context.mounted) {
+    for (var habit
+        in Provider.of<DataProvider>(context, listen: false).habitsList) {
+      if (habit.id == 1) {
+        habit.completed = true;
+        habit.save();
+      }
+    }
+
     saveHabitsForToday(context);
     context.read<DataProvider>().updateHabits(context);
     Provider.of<DataProvider>(context, listen: false).updateAllHabits();
-    Provider.of<DataProvider>(context, listen: false)
-        .setNotificationText(AppLocale.habitAdded.getString(context));
-    Provider.of<DataProvider>(context, listen: false).activateNotification();
-    if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
-        context.watch<HabitProvider>().mainCategory) {
-      Provider.of<HabitProvider>(context, listen: false)
-          .updateMainCategoryHeight(context);
-    }
+    NotificationManager()
+        .showNotification(context, AppLocale.habitAdded.getString(context));
   }
 
   createcontroller.clear();

@@ -4,6 +4,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
+import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,6 @@ class DataProvider extends ChangeNotifier {
   bool anytimeHasHabits = false;
 
   bool isNotificationVisible = false;
-  String notificationText = "";
 
   List<String> categoriesList = [];
   List<String> tagsList =
@@ -45,21 +45,6 @@ class DataProvider extends ChangeNotifier {
   int theAmountValue = 0;
   int theDurationValueHours = 0;
   int theDurationValueMinutes = 0;
-
-  void setNotificationText(String text) {
-    notificationText = text;
-    notifyListeners();
-  }
-
-  void activateNotification() {
-    isNotificationVisible = true;
-    notifyListeners();
-
-    Future.delayed(const Duration(seconds: 3), () {
-      isNotificationVisible = false;
-      notifyListeners();
-    });
-  }
 
   void setAmountValue(int value) {
     theAmountValue = value;
@@ -225,6 +210,7 @@ class DataProvider extends ChangeNotifier {
     context
         .read<HistoricalHabitProvider>()
         .updateHistoricalHabits(DateTime.now());
+    context.read<HabitProvider>().updateMainCategoryHeight(context);
 
     notifyListeners();
   }

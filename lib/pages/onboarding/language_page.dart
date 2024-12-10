@@ -25,9 +25,7 @@ class LanguagePage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () =>
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.read<LanguageProvider>().changeLanguage("en");
-                  }),
+                      context.read<LanguageProvider>().changeLanguage("en"),
                   child: Container(
                     width: 100,
                     height: 80,
@@ -49,9 +47,7 @@ class LanguagePage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () =>
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.read<LanguageProvider>().changeLanguage("ba");
-                  }),
+                      context.read<LanguageProvider>().changeLanguage("ba"),
                   child: Container(
                     width: 100,
                     height: 80,

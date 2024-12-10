@@ -106,6 +106,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 .read<DataProvider>()
                                 .initializeTagsList(context);
                             addInitialData(context);
+                            context.read<DataProvider>().updateHabits(context);
+                            boolBox.put("firstTimeOpened", false);
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
                               builder: (context) => const HomePage(),

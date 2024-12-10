@@ -7,6 +7,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,20 @@ void editHabit(int index, BuildContext context, editcontroller) {
   bool isTaskBefore = habitBox.getAt(index)!.task;
   bool isTaskAfter =
       Provider.of<HabitProvider>(context, listen: false).additionalTask;
+
+  String habitType = Provider.of<DataProvider>(context, listen: false)
+      .habitTypeController
+      .text;
+
+  if (habitType == AppLocale.daily.getString(context)) {
+    habitType = "Daily";
+  } else if (habitType == AppLocale.weekly.getString(context)) {
+    habitType = "Weekly";
+  } else if (habitType == AppLocale.monthly.getString(context)) {
+    habitType = "Monthly";
+  } else if (habitType == AppLocale.custom.getString(context)) {
+    habitType = "Custom";
+  }
 
   if (isTaskBefore) {
     if (!isTaskAfter) {
@@ -48,18 +63,6 @@ void editHabit(int index, BuildContext context, editcontroller) {
     resetCompleted = true;
   }
 
-  if (editedFrom != editedTo) {
-    String mainCategory =
-        Provider.of<HabitProvider>(context, listen: false).mainCategory;
-
-    if (editedFrom == mainCategory || editedTo == mainCategory) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HabitProvider>().chooseMainCategory(context);
-        context.read<HabitProvider>().updateMainCategoryHeight(context);
-      });
-    }
-  }
-
   var editHabitNotifications =
       Provider.of<HabitProvider>(context, listen: false).habitNotifications;
 
@@ -74,19 +77,17 @@ void editHabit(int index, BuildContext context, editcontroller) {
           category:
               Provider.of<HabitProvider>(context, listen: false).dropDownValue,
           streak: habitBox.getAt(index)?.streak ?? 0,
-          amount:
-              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
-                  ? Provider.of<HabitProvider>(context, listen: false).amount
-                  : habitBox.getAt(index)!.amount,
+          amount: Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 1
+              ? Provider.of<HabitProvider>(context, listen: false).amount
+              : habitBox.getAt(index)!.amount,
           amountName: Provider.of<HabitProvider>(context, listen: false)
               .habitGoalController
               .text,
           amountCompleted:
               resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
-          duration:
-              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
-                  ? duration
-                  : habitBox.getAt(index)?.duration ?? 0,
+          duration: Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
+              ? duration
+              : habitBox.getAt(index)?.duration ?? 0,
           durationCompleted:
               resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
           skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
@@ -99,15 +100,15 @@ void editHabit(int index, BuildContext context, editcontroller) {
           id: habitBox.getAt(index)!.id,
           task:
               Provider.of<HabitProvider>(context, listen: false).additionalTask,
-          type: Provider.of<DataProvider>(context, listen: false)
-              .habitTypeController
-              .text,
+          type: habitType,
           weekValue: Provider.of<DataProvider>(context, listen: false)
               .weekValueSelected,
           monthValue: Provider.of<DataProvider>(context, listen: false)
               .monthValueSelected,
-          customValue: Provider.of<DataProvider>(context, listen: false).customValueSelected,
-          selectedDaysAWeek: Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
+          customValue: Provider.of<DataProvider>(context, listen: false)
+              .customValueSelected,
+          selectedDaysAWeek:
+              Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
           selectedDaysAMonth: Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
           daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
           timesCompletedThisWeek: habitBox.getAt(index)!.timesCompletedThisWeek,
@@ -119,11 +120,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
     context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().updateAllHabits();
     Provider.of<HabitProvider>(context, listen: false).notescontroller.clear();
-    context
-        .read<DataProvider>()
-        .setNotificationText(AppLocale.habitEdited.getString(context));
-    context.read<DataProvider>().activateNotification();
+    NotificationManager()
+        .showNotification(context, AppLocale.habitEdited.getString(context));
   }
-
-  // showPopup(context, "Habit edited!");
 }

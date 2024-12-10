@@ -72,7 +72,7 @@ void scheduleMorningNotification(BuildContext context) async {
   }
 
   if (boolBox.get("morningNotification") == true) {
-    for (int i = 0; i < habitBox.length; i++) {
+    for (int i = 0; i < habitsList.length; i++) {
       if (habitsList[i].category == "Morning") {
         if (habitsList[i].completed == true) {
           morningHabitsCompleted++;
@@ -169,7 +169,7 @@ void scheduleAfternoonNotification(BuildContext context) async {
   }
 
   if (boolBox.get("afternoonNotification") == true) {
-    for (int i = 0; i < habitBox.length; i++) {
+    for (int i = 0; i < habitsList.length; i++) {
       if (habitsList[i].category == "Afternoon") {
         if (habitsList[i].completed == true) {
           afternoonHabitsCompleted++;
@@ -265,7 +265,7 @@ void scheduleEveningNotification(BuildContext context) async {
   }
 
   if (boolBox.get("eveningNotification") == true) {
-    for (int i = 0; i < habitBox.length; i++) {
+    for (int i = 0; i < habitsList.length; i++) {
       if (habitsList[i].category == "Evening") {
         if (habitsList[i].completed == true) {
           eveningHabitsCompleted++;
@@ -393,7 +393,7 @@ void scheduleDailyNotification(BuildContext context) async {
   }
 
   if (boolBox.get("dailyNotification") == true) {
-    for (int i = 0; i < habitBox.length; i++) {
+    for (int i = 0; i < habitsList.length; i++) {
       if (habitsList[i].completed == true) {
         dailyHabitsCompleted++;
       }

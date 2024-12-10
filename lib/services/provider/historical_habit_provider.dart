@@ -340,36 +340,109 @@ class HistoricalHabitProvider extends ChangeNotifier {
     historicalList.sort((a, b) {
       DateTime dateA = a.date;
       DateTime dateB = b.date;
-      return dateA
-          .compareTo(dateB); // This will sort from oldest to most recent
+      return dateB.compareTo(dateA); // today is 0
     });
 
     for (int i = 0; i < habitBox.length; i++) {
       int longestStreak = 0;
       var habit = habitBox.getAt(i)!;
 
+      bool shouldBreak = false;
       bool completed = false;
       bool skipped = false;
       int streak = 0;
+      DateTime? firstHabitDate;
+      int completedHabits = 0;
 
-      for (int j = 0; j < historicalList.length - 1; j++) {
+      for (int j = 1; j < historicalList.length; j++) {
         for (var historicalHabit in historicalList[j].data) {
           if (historicalHabit.id == habit.id) {
+            firstHabitDate ??= historicalList[j].date;
             completed = historicalHabit.completed;
             skipped = historicalHabit.skipped;
 
-            if (completed) {
-              if (!skipped) {
-                streak++;
+            if (habit.type == 'Daily') {
+              if (completed) {
+                if (!skipped) {
+                  streak++;
+                }
+              } else {
+                shouldBreak = true;
+                break;
               }
-            } else {
-              streak = 0;
+            }
+
+            if (habit.type == 'Weekly') {
+              if (habit.selectedDaysAWeek.isNotEmpty) {
+                if (completed) {
+                  if (!skipped) {
+                    streak++;
+                  }
+                } else {
+                  shouldBreak = true;
+                  break;
+                }
+              } else {
+                int weekDay = historicalList[j].date.weekday;
+                Duration differnce =
+                    historicalList[j].date.difference(firstHabitDate);
+
+                if (weekDay == 7) {
+                  if (firstHabitDate.weekday != 7 || differnce.inDays >= 7) {
+                    if (completedHabits < habit.weekValue) {
+                      shouldBreak = true;
+                      break;
+                    }
+                  }
+                  completedHabits = 0;
+                }
+
+                if (completed) {
+                  completedHabits++;
+                  if (!skipped) {
+                    streak++;
+                  }
+                }
+              }
+            }
+
+            if (habit.type == 'Monthly') {
+              if (habit.selectedDaysAMonth.isNotEmpty) {
+                if (completed) {
+                  if (!skipped) {
+                    streak++;
+                  }
+                } else {
+                  shouldBreak = true;
+                  break;
+                }
+              } else {
+                if (historicalList[j].date.month != DateTime.now().month &&
+                    historicalList[j].date.day == 1) {
+                  if (completedHabits < habit.monthValue) {
+                    shouldBreak = true;
+                    break;
+                  }
+                  completedHabits = 0;
+                }
+
+                if (completed) {
+                  completedHabits++;
+                  if (!skipped) {
+                    streak++;
+                  }
+                }
+              }
             }
 
             if (streak > longestStreak) {
               longestStreak = streak;
             }
           }
+        }
+
+        if (shouldBreak) {
+          break;
         }
       }
 

@@ -6,6 +6,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:provider/provider.dart';
 
 late String category;
@@ -21,9 +22,8 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
       .setAllHabitsTagSelected("Categories");
   Provider.of<AllHabitsProvider>(context, listen: false)
       .initAllHabitsPage(context);
-  Provider.of<DataProvider>(context, listen: false)
-      .setNotificationText(AppLocale.habitDeleted.getString(context));
-  Provider.of<DataProvider>(context, listen: false).activateNotification();
+  NotificationManager()
+      .showNotification(context, AppLocale.habitDeleted.getString(context));
 
   deleted = true;
   editcontroller.text = "";

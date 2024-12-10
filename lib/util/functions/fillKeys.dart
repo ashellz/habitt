@@ -24,7 +24,7 @@ fillKeys() {
   }
 
   if (!streakBox.containsKey('highestId')) {
-    streakBox.put('highestId', habitBox.length - 1);
+    streakBox.put('highestId', 1);
   }
 
   if (!boolBox.containsKey("blackColor")) {
