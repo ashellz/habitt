@@ -100,6 +100,8 @@ class _SlidingNotificationState extends State<_SlidingNotification>
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              fontFamily: "Poppins",
+              decoration: TextDecoration.none,
             ),
           ),
         ),

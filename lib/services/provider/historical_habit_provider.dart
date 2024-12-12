@@ -455,11 +455,10 @@ class HistoricalHabitProvider extends ChangeNotifier {
     //ALL HABITS COMPLETED STREAK
     int allHabitsCompletedStreak = 0;
 
-    for (int i = 0; i < historicalList.length - 1; i++) {
+    for (int i = 1; i < historicalList.length; i++) {
       int numberOfHabits = 0;
       int numberOfCompletedHabits = 0;
       bool isSkipped = false;
-      // -1 is because the last one is the current day
 
       for (var habit in historicalList[i].data) {
         if (!habit.task) {
@@ -479,7 +478,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
             allHabitsCompletedStreak++;
           }
         } else {
-          allHabitsCompletedStreak = 0;
+          break;
         }
       }
     }

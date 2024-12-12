@@ -95,7 +95,7 @@ class _CalendarPageState extends State<CalendarPage> {
               child: Column(children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: AppColors.theDarkGrey,
+                      color: context.watch<ColorProvider>().darkGreyColor,
                       borderRadius: BorderRadius.circular(20)),
                   child: TableCalendar(
                     locale:

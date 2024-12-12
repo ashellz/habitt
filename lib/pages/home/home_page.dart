@@ -134,7 +134,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          openAddHabitPage(context, createcontroller);
+          // openAddHabitPage(context, createcontroller);
+          customAmilaDialog(context);
         },
         backgroundColor: AppColors.theLightColor,
         child: const Icon(
@@ -351,4 +352,28 @@ List<DropdownMenuItem<String>> get dropdownItems {
     const DropdownMenuItem(value: "Any time", child: Text("Any Time")),
   ];
   return menuItems;
+}
+
+void customAmilaDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: const Text("Amila", textAlign: TextAlign.center),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    child: Text("Oženi"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: Text("Zaprosi"),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              )
+            ],
+            backgroundColor: context.watch<ColorProvider>().greyColor,
+          ));
 }

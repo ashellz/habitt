@@ -197,7 +197,6 @@ void openHiveAndPerformTasks(BuildContext context) {
     context.read<HabitProvider>().updateMainCategoryHeight(context);
     context.read<HistoricalHabitProvider>().calculateStreak(context);
     context.read<HabitProvider>().updateLastOpenedDate(context);
-    context.read<DataProvider>().updateHabits(context);
   });
 
   saveHabitsForToday(context);

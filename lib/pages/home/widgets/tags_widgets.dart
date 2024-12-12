@@ -8,6 +8,10 @@ import 'package:provider/provider.dart';
 
 Widget tagsWidgets(String? tagSelected, BuildContext context) {
   List<String> visibleList = visibleListTags(context);
+  Map<String, GlobalKey> tagKeys = {
+    for (var tag in visibleList) tag: GlobalKey()
+  };
+  ScrollController scrollController = ScrollController();
 
   Color getTextColor(category) {
     late Color color;
@@ -25,7 +29,27 @@ Widget tagsWidgets(String? tagSelected, BuildContext context) {
     return color;
   }
 
+  void scrollToTag(String category) {
+    if (tagKeys[category]?.currentContext != null) {
+      RenderBox renderBox =
+          tagKeys[category]!.currentContext!.findRenderObject() as RenderBox;
+      double tagPosition = renderBox.localToGlobal(Offset.zero).dx;
+      double screenWidth = MediaQuery.of(context).size.width;
+      double targetOffset = scrollController.offset +
+          tagPosition -
+          (screenWidth / 2) +
+          (renderBox.size.width / 2);
+
+      scrollController.animateTo(
+        targetOffset,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   return ListView(
+    controller: scrollController,
     scrollDirection: Axis.horizontal,
     physics: const ClampingScrollPhysics(),
     children: <Widget>[
@@ -34,14 +58,21 @@ Widget tagsWidgets(String? tagSelected, BuildContext context) {
           builder: (BuildContext context, StateSetter setState) => Padding(
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
-                onTap: () => setState(() {
-                      pageController.animateToPage(
-                        visibleList.indexOf(category),
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                      );
-                    }),
+                onTap: () {
+                  if (tagSelected == category) {
+                    return;
+                  }
+                  setState(() {
+                    pageController.animateToPage(
+                      visibleList.indexOf(category),
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  });
+                  scrollToTag(category);
+                },
                 child: Container(
+                    key: tagKeys[category],
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
