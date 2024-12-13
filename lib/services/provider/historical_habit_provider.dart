@@ -129,6 +129,8 @@ class HistoricalHabitProvider extends ChangeNotifier {
           return;
         }
 
+        bool shouldBreak = false;
+
         for (int j = i - 1; j >= 0; j--) {
           // goes from chosen day to today
 
@@ -139,8 +141,14 @@ class HistoricalHabitProvider extends ChangeNotifier {
                     msg: AppLocale.cantSkipHabitRow.getString(context));
                 return;
               }
+              shouldBreak = true;
               break;
             }
+          }
+
+          if (shouldBreak) {
+            shouldBreak = false;
+            break;
           }
         }
 
@@ -154,8 +162,13 @@ class HistoricalHabitProvider extends ChangeNotifier {
                     msg: AppLocale.cantSkipHabitRow.getString(context));
                 return;
               }
+              shouldBreak = true;
               break;
             }
+          }
+
+          if (shouldBreak) {
+            break;
           }
         }
 

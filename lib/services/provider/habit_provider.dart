@@ -525,6 +525,8 @@ class HabitProvider extends ChangeNotifier {
       return dateB.compareTo(dateA);
     }); // sorted that 0 is today
 
+    bool shouldBreak = false;
+
     for (int i = 1; i < historicalList.length; i++) {
       // loop starts from yesterday
       for (int j = 0; j < historicalList[i].data.length; j++) {
@@ -538,9 +540,14 @@ class HabitProvider extends ChangeNotifier {
             return;
           } else {
             //break the loop;
+            shouldBreak = true;
             break;
           }
         }
+      }
+
+      if (shouldBreak) {
+        break;
       }
     }
 

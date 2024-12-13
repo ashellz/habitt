@@ -30,7 +30,6 @@ bool doOnce = true;
 final FlutterLocalization localization = FlutterLocalization.instance;
 
 Future<void> main() async {
-  print('main function ran');
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
 
