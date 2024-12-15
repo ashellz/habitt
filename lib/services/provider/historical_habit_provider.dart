@@ -177,19 +177,24 @@ class HistoricalHabitProvider extends ChangeNotifier {
     }
 
     HistoricalHabitData habitData = HistoricalHabitData(
-      name: habit.name,
-      completed: !habit.completed,
-      icon: habit.icon,
-      category: habit.category,
-      amount: habit.amount,
-      amountName: habit.amountName,
-      amountCompleted: habit.amountCompleted,
-      duration: habit.duration,
-      durationCompleted: habit.durationCompleted,
-      skipped: !habit.skipped,
-      id: habit.id,
-      task: habit.task,
-    );
+        name: habit.name,
+        completed: !habit.completed,
+        icon: habit.icon,
+        category: habit.category,
+        amount: habit.amount,
+        amountName: habit.amountName,
+        amountCompleted: habit.amountCompleted,
+        duration: habit.duration,
+        durationCompleted: habit.durationCompleted,
+        skipped: !habit.skipped,
+        id: habit.id,
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     applyCurentHabitData(chosenHabitDate, index, habitData, time);
 
@@ -202,27 +207,32 @@ class HistoricalHabitProvider extends ChangeNotifier {
     List<int> currentDate = [time.year, time.month, time.day];
 
     HistoricalHabitData habitData = HistoricalHabitData(
-      name: habit.name,
-      completed: !habit.completed,
-      icon: habit.icon,
-      category: habit.category,
-      amount: habit.amount,
-      amountName: habit.amountName,
-      amountCompleted: !habit.completed
-          ? habit.amount
-          : !habit.skipped
-              ? 0
-              : habit.amountCompleted,
-      duration: habit.duration,
-      durationCompleted: !habit.completed
-          ? habit.duration
-          : !habit.skipped
-              ? 0
-              : habit.durationCompleted,
-      skipped: false,
-      id: habit.id,
-      task: habit.task,
-    );
+        name: habit.name,
+        completed: !habit.completed,
+        icon: habit.icon,
+        category: habit.category,
+        amount: habit.amount,
+        amountName: habit.amountName,
+        amountCompleted: !habit.completed
+            ? habit.amount
+            : !habit.skipped
+                ? 0
+                : habit.amountCompleted,
+        duration: habit.duration,
+        durationCompleted: !habit.completed
+            ? habit.duration
+            : !habit.skipped
+                ? 0
+                : habit.durationCompleted,
+        skipped: false,
+        id: habit.id,
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
     /*if (allHabitsCompleted()) {
@@ -311,7 +321,13 @@ class HistoricalHabitProvider extends ChangeNotifier {
         durationCompleted: habit.durationCompleted,
         skipped: habit.skipped,
         id: habit.id,
-        task: habit.task);
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -340,7 +356,13 @@ class HistoricalHabitProvider extends ChangeNotifier {
         durationCompleted: theDurationValueHours * 60 + theDurationValueMinutes,
         skipped: habit.skipped,
         id: habit.id,
-        task: habit.task);
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -475,6 +497,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
       for (var habit in historicalList[i].data) {
         if (!habit.task) {
+          // logic for weekly/monthly habits
+          if (habit.type == 'Weekly' || habit.type == 'Monthly') {}
+
           numberOfHabits++;
           if (habit.completed) {
             if (habit.skipped) {
@@ -537,19 +562,24 @@ class HistoricalHabitProvider extends ChangeNotifier {
         historicalBox.getAt(i)!.data.clear();
         for (var currentHabit in habitsList) {
           historicalBox.getAt(i)!.data.add(HistoricalHabitData(
-                name: currentHabit.name,
-                completed: false,
-                icon: currentHabit.icon,
-                category: currentHabit.category,
-                amount: currentHabit.amount,
-                amountCompleted: 0,
-                amountName: currentHabit.amountName,
-                duration: currentHabit.duration,
-                durationCompleted: 0,
-                skipped: false,
-                id: currentHabit.id,
-                task: currentHabit.task,
-              ));
+              name: currentHabit.name,
+              completed: false,
+              icon: currentHabit.icon,
+              category: currentHabit.category,
+              amount: currentHabit.amount,
+              amountCompleted: 0,
+              amountName: currentHabit.amountName,
+              duration: currentHabit.duration,
+              durationCompleted: 0,
+              skipped: false,
+              id: currentHabit.id,
+              task: currentHabit.task,
+              type: currentHabit.type,
+              weekValue: currentHabit.weekValue,
+              monthValue: currentHabit.monthValue,
+              customValue: currentHabit.customValue,
+              selectedDaysAWeek: currentHabit.selectedDaysAWeek,
+              selectedDaysAMonth: currentHabit.selectedDaysAMonth));
         }
 
         updateHistoricalHabits(today);

@@ -7,6 +7,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -116,6 +117,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
           paused: habitBox.getAt(index)!.paused));
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
+  saveHabitsForToday(context);
   if (context.mounted) {
     context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().updateAllHabits();

@@ -19,9 +19,7 @@ import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
-import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
-import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:habitt/util/functions/openHiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -166,9 +164,7 @@ class _AuthCheckState extends State<AuthCheck> {
 }
 
 // Create a function that wraps all necessary tasks
-void openHiveAndPerformTasks(BuildContext context) {
-  print('openHiveAndPerformTasks function ran');
-
+Future<void> openHiveAndPerformTasks(BuildContext context) async {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!boolBox.containsKey("update1")) {
       boolBox.put("update1", true);
@@ -192,12 +188,7 @@ void openHiveAndPerformTasks(BuildContext context) {
 
     context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().initializeLists(context);
-    context.read<HabitProvider>().chooseMainCategory(context);
-    context.read<HabitProvider>().updateMainCategoryHeight(context);
     context.read<HistoricalHabitProvider>().calculateStreak(context);
     context.read<HabitProvider>().updateLastOpenedDate(context);
   });
-
-  saveHabitsForToday(context);
-  checkForNotifications(context);
 }

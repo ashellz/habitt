@@ -5,7 +5,8 @@ import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
-import 'package:habitt/services/provider/historical_habit_provider.dart';
+import 'package:habitt/util/functions/checkForNotifications.dart';
+import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:provider/provider.dart';
 
 class DataProvider extends ChangeNotifier {
@@ -141,7 +142,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHabits(BuildContext context) {
+  Future<void> updateHabits(BuildContext context) async {
     DateTime today = DateTime.now();
     habitsList = [];
 
@@ -207,10 +208,10 @@ class DataProvider extends ChangeNotifier {
 
     tasksList = habitsList.where((habit) => habit.task).toList();
 
-    context
-        .read<HistoricalHabitProvider>()
-        .updateHistoricalHabits(DateTime.now());
+    context.read<HabitProvider>().chooseMainCategory(context);
     context.read<HabitProvider>().updateMainCategoryHeight(context);
+    saveHabitsForToday(context);
+    checkForNotifications(context);
 
     notifyListeners();
   }

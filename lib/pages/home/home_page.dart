@@ -107,11 +107,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      context.read<HabitProvider>().updateLastOpenedDate(context);
-      context.read<HabitProvider>().chooseMainCategory(context);
-      context.read<HabitProvider>().updateMainCategoryHeight(context);
+      if (mounted) {
+        await context.read<DataProvider>().updateHabits(context);
+      }
+      if (mounted) {
+        await context.read<HabitProvider>().updateLastOpenedDate(context);
+      }
       if (interstitialAd == null) {
         initInterstitialAd();
       }
@@ -134,8 +137,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // openAddHabitPage(context, createcontroller);
-          customAmilaDialog(context);
+          openAddHabitPage(context, createcontroller);
         },
         backgroundColor: AppColors.theLightColor,
         child: const Icon(
@@ -191,7 +193,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           username, context.watch<DataProvider>().greetingText),
                       const SizedBox(height: 20),
                       SizedBox(
-                          height: 30, child: tagsWidgets(tagSelected, context)),
+                          height: 30,
+                          child: TagsWidgets(tagSelected: tagSelected)),
                     ],
                   ),
                 ),
@@ -352,28 +355,4 @@ List<DropdownMenuItem<String>> get dropdownItems {
     const DropdownMenuItem(value: "Any time", child: Text("Any Time")),
   ];
   return menuItems;
-}
-
-void customAmilaDialog(BuildContext context) {
-  showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text("Amila", textAlign: TextAlign.center),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    child: Text("Oženi"),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  TextButton(
-                    child: Text("Zaprosi"),
-                    onPressed: () => Navigator.pop(context),
-                  )
-                ],
-              )
-            ],
-            backgroundColor: context.watch<ColorProvider>().greyColor,
-          ));
 }

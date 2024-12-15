@@ -351,11 +351,6 @@ class HabitProvider extends ChangeNotifier {
   Future<void> createNewHabitProvider(
       createcontroller, BuildContext context) async {
     await createNewHabit(createcontroller, context);
-    if (context.mounted) {
-      saveHabitsForToday(context);
-      updateMainCategoryHeight(context);
-      chooseMainCategory(context);
-    }
 
     notifyListeners();
   }
@@ -612,11 +607,6 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> editHabitProvider(int index, context, editcontroller) async {
     editHabit(index, context, editcontroller);
-    if (context.mounted) {
-      saveHabitsForToday(context);
-    }
-    chooseMainCategory(context);
-    updateMainCategoryHeight(context);
     Navigator.of(context).pop();
 
     notifyListeners();
@@ -624,15 +614,6 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> deleteHabitProvider(index, context, editcontroller) async {
     await deleteHabit(index, context, editcontroller);
-    if (context.mounted) {
-      saveHabitsForToday(context);
-    }
-    //if (checkIfAllEmpty(context)) {
-    // Restart.restartApp();
-    //}
-
-    chooseMainCategory(context);
-    updateMainCategoryHeight(context);
     notifyListeners();
   }
 
@@ -724,7 +705,7 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateLastOpenedDate(BuildContext context) async {
+  Future<void> updateLastOpenedDate(BuildContext context) async {
     DateTime now = DateTime.now();
     int day = now.day;
     int lastOpenedDate = streakBox.get('lastOpenedDay') ?? 0;

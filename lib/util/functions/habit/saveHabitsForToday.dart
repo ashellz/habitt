@@ -29,6 +29,12 @@ void saveHabitsForToday(BuildContext context) async {
       skipped: habit.skipped,
       id: habit.id,
       task: habit.task,
+      type: habit.type,
+      weekValue: habit.weekValue,
+      monthValue: habit.monthValue,
+      customValue: habit.customValue,
+      selectedDaysAWeek: habit.selectedDaysAWeek,
+      selectedDaysAMonth: habit.selectedDaysAMonth,
     );
 
     // Add the habit data to the list for today

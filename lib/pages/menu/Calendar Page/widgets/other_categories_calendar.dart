@@ -32,19 +32,24 @@ otherCategoriesListCalendar(
       var habit = habitBox.getAt(i)!;
 
       HistoricalHabitData newHistoricalHabit = HistoricalHabitData(
-        name: habit.name,
-        category: habit.category,
-        completed: false,
-        icon: habit.icon,
-        amount: habit.amount,
-        amountCompleted: 0,
-        amountName: habit.amountName,
-        duration: habit.duration,
-        durationCompleted: 0,
-        skipped: false,
-        id: habit.id,
-        task: habit.task,
-      );
+          name: habit.name,
+          category: habit.category,
+          completed: false,
+          icon: habit.icon,
+          amount: habit.amount,
+          amountCompleted: 0,
+          amountName: habit.amountName,
+          duration: habit.duration,
+          durationCompleted: 0,
+          skipped: false,
+          id: habit.id,
+          task: habit.task,
+          type: habit.type,
+          weekValue: habit.weekValue,
+          monthValue: habit.monthValue,
+          customValue: habit.customValue,
+          selectedDaysAWeek: habit.selectedDaysAWeek,
+          selectedDaysAMonth: habit.selectedDaysAMonth);
 
       todayHabitsList.add(newHistoricalHabit);
     }

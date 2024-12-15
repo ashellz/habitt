@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habitt/services/provider/color_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:habitt/util/colors.dart';
 
 class NotificationManager {
   static final NotificationManager _instance = NotificationManager._internal();
@@ -90,7 +89,7 @@ class _SlidingNotificationState extends State<_SlidingNotification>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           decoration: BoxDecoration(
-              color: context.watch<ColorProvider>().greyColor,
+              color: AppColors.theLightColor,
               borderRadius: BorderRadius.circular(15)),
           alignment: Alignment.center,
           child: Text(
