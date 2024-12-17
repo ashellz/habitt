@@ -386,88 +386,20 @@ class HistoricalHabitProvider extends ChangeNotifier {
       bool completed = false;
       bool skipped = false;
       int streak = 0;
-      DateTime? firstHabitDate;
-      int completedHabits = 0;
 
       for (int j = 1; j < historicalList.length; j++) {
         for (var historicalHabit in historicalList[j].data) {
           if (historicalHabit.id == habit.id) {
-            firstHabitDate ??= historicalList[j].date;
             completed = historicalHabit.completed;
             skipped = historicalHabit.skipped;
 
-            if (habit.type == 'Daily') {
-              if (completed) {
-                if (!skipped) {
-                  streak++;
-                }
-              } else {
-                shouldBreak = true;
-                break;
+            if (completed) {
+              if (!skipped) {
+                streak++;
               }
-            }
-
-            if (habit.type == 'Weekly') {
-              if (habit.selectedDaysAWeek.isNotEmpty) {
-                if (completed) {
-                  if (!skipped) {
-                    streak++;
-                  }
-                } else {
-                  shouldBreak = true;
-                  break;
-                }
-              } else {
-                int weekDay = historicalList[j].date.weekday;
-                Duration differnce =
-                    historicalList[j].date.difference(firstHabitDate);
-
-                if (weekDay == 7) {
-                  if (firstHabitDate.weekday != 7 || differnce.inDays >= 7) {
-                    if (completedHabits < habit.weekValue) {
-                      shouldBreak = true;
-                      break;
-                    }
-                  }
-                  completedHabits = 0;
-                }
-
-                if (completed) {
-                  completedHabits++;
-                  if (!skipped) {
-                    streak++;
-                  }
-                }
-              }
-            }
-
-            if (habit.type == 'Monthly') {
-              if (habit.selectedDaysAMonth.isNotEmpty) {
-                if (completed) {
-                  if (!skipped) {
-                    streak++;
-                  }
-                } else {
-                  shouldBreak = true;
-                  break;
-                }
-              } else {
-                if (historicalList[j].date.month != DateTime.now().month &&
-                    historicalList[j].date.day == 1) {
-                  if (completedHabits < habit.monthValue) {
-                    shouldBreak = true;
-                    break;
-                  }
-                  completedHabits = 0;
-                }
-
-                if (completed) {
-                  completedHabits++;
-                  if (!skipped) {
-                    streak++;
-                  }
-                }
-              }
+            } else {
+              shouldBreak = true;
+              break;
             }
 
             if (streak > longestStreak) {
@@ -495,18 +427,19 @@ class HistoricalHabitProvider extends ChangeNotifier {
       int numberOfCompletedHabits = 0;
       bool isSkipped = false;
 
+      void theFunction(habit) {
+        numberOfHabits++;
+        if (habit.completed) {
+          if (habit.skipped) {
+            isSkipped = true;
+          }
+          numberOfCompletedHabits++;
+        }
+      }
+
       for (var habit in historicalList[i].data) {
         if (!habit.task) {
-          // logic for weekly/monthly habits
-          if (habit.type == 'Weekly' || habit.type == 'Monthly') {}
-
-          numberOfHabits++;
-          if (habit.completed) {
-            if (habit.skipped) {
-              isSkipped = true;
-            }
-            numberOfCompletedHabits++;
-          }
+          theFunction(habit);
         }
       }
 
