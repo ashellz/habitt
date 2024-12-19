@@ -19,6 +19,9 @@ class HistoricalHabitAdapter extends TypeAdapter<HistoricalHabit> {
     return HistoricalHabit(
       date: fields[0] as DateTime,
       data: (fields[1] as List).cast<HistoricalHabitData>(),
+      addedHabits: fields[2] == null
+          ? []
+          : (fields[2] as List).cast<HistoricalHabitData>(),
     );
   }
 
@@ -29,7 +32,9 @@ class HistoricalHabitAdapter extends TypeAdapter<HistoricalHabit> {
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
-      ..write(obj.data);
+      ..write(obj.data)
+      ..writeByte(2)
+      ..write(obj.addedHabits);
   }
 
   @override

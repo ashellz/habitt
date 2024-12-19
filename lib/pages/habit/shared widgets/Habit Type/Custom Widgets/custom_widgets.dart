@@ -32,6 +32,12 @@ class _CustomWidgetsState extends State<CustomWidgets> {
 
   @override
   Widget build(BuildContext context) {
+    if (context.watch<DataProvider>().customValueSelected < 2) {
+      context
+          .read<DataProvider>()
+          .setCustomValueSelected(2); // solves the problem on my account
+    }
+
     values = [
       AppLocale.other.getString(context),
       AppLocale.third.getString(context),

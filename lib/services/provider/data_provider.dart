@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
+import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
@@ -14,6 +15,8 @@ class DataProvider extends ChangeNotifier {
   bool afternoonHasHabits = false;
   bool eveningHasHabits = false;
   bool anytimeHasHabits = false;
+
+  List<HistoricalHabitData> addHabitsList = [];
 
   bool isNotificationVisible = false;
 
@@ -46,6 +49,15 @@ class DataProvider extends ChangeNotifier {
   int theAmountValue = 0;
   int theDurationValueHours = 0;
   int theDurationValueMinutes = 0;
+
+  void selectHabit(HistoricalHabitData habit, bool? value) {
+    if (value ?? false) {
+      addHabitsList.add(habit);
+    } else {
+      addHabitsList.remove(habit);
+    }
+    notifyListeners();
+  }
 
   void setAmountValue(int value) {
     theAmountValue = value;

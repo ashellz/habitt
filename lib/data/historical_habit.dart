@@ -4,13 +4,17 @@ part 'historical_habit.g.dart';
 
 @HiveType(typeId: 3)
 class HistoricalHabit extends HiveObject {
-  HistoricalHabit({required this.date, required this.data});
+  HistoricalHabit(
+      {required this.date, required this.data, required this.addedHabits});
 
   @HiveField(0)
   DateTime date;
 
   @HiveField(1)
   List<HistoricalHabitData> data;
+
+  @HiveField(2)
+  List<HistoricalHabitData> addedHabits;
 }
 
 @HiveType(typeId: 4)

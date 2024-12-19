@@ -84,7 +84,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
         historicalBox.putAt(
             i,
             HistoricalHabit(
-                date: historicalBox.getAt(i)!.date, data: currentHabitData));
+                date: historicalBox.getAt(i)!.date,
+                data: currentHabitData,
+                addedHabits: historicalBox.getAt(i)!.addedHabits));
         updateHistoricalHabits(time);
         break;
       }

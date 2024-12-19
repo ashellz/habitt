@@ -64,7 +64,8 @@ void saveHabitsForToday(BuildContext context) async {
   }
 
   if (!todayExists) {
-    await historicalBox.add(HistoricalHabit(date: today, data: habitsForToday));
+    await historicalBox.add(
+        HistoricalHabit(date: today, data: habitsForToday, addedHabits: []));
 
     var historicalList = historicalBox.keys.map((key) {
       final value = historicalBox.get(key);

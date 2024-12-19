@@ -206,12 +206,13 @@ mixin AppLocale {
   static const String leaveUnselectedMonth = 'leaveUnselectedMonth';
   static const String noteMonth = 'Note month';
   static const String startingFromToday = 'starting from today';
+  static const String addHabits = 'Add Habits';
 
   // Notifications Page
   static const String habitNotifications = 'Habit Notifications';
 
   // Calendar Page
-  static const String importCurrentHabits = 'Import current habits';
+  static const String addMoreHabits = 'Add more habits';
   static const String thisWillErasePreviousDataOn =
       "This will erase previous data on ";
   static const String areYouSure = 'Are you sure?';
@@ -328,7 +329,7 @@ mixin AppLocale {
     additionalTask: 'Additional task',
     chooseAnIcon: 'Choose an icon',
     habitNotifications: 'Habit Notifications',
-    importCurrentHabits: 'Import current habits',
+    addMoreHabits: 'Add more habits',
     thisWillErasePreviousDataOn: 'This will erase previous data on ',
     areYouSure: 'Are you sure?',
     stats: 'Stats',
@@ -349,6 +350,7 @@ mixin AppLocale {
     once: 'Once',
     twice: 'Twice',
     three: 'Three',
+    addHabits: "Add habits",
     four: 'Four',
     five: 'Five',
     six: 'Six',
@@ -431,6 +433,7 @@ mixin AppLocale {
     betterSleep: 'Bolji san',
     morningRoutine: 'Jutarnja rutina',
     workout: 'Trening',
+    addHabits: "Dodaj navike",
     skip: 'Preskoči',
     next: 'Dalje',
     done: 'Završi',
@@ -518,7 +521,7 @@ mixin AppLocale {
     additionalTask: 'Dodatni zadatak',
     chooseAnIcon: 'Odaberi ikonu',
     habitNotifications: 'Notifikacije navike',
-    importCurrentHabits: "Zamijeni sa trenutnim navikama",
+    addMoreHabits: "Dodaj još navika",
     thisWillErasePreviousDataOn: "Vaše navike će biti obrisane na dan ",
     areYouSure: "Nastavi?",
     stats: "Statistika",
