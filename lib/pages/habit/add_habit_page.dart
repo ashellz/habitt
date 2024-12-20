@@ -128,8 +128,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                         topRight: Radius.circular(20)),
                   ),
                 ),
-                child: const Text('Add Habit',
-                    style: TextStyle(color: Colors.white)),
+                child: Text(AppLocale.addHabit.getString(context),
+                    style: const TextStyle(color: Colors.white)),
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     Provider.of<HabitProvider>(context, listen: false)

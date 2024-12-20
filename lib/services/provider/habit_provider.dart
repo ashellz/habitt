@@ -255,7 +255,7 @@ class HabitProvider extends ChangeNotifier {
       } else if (eveningReady) {
         mainCategory = "Evening";
       } else {
-        mainCategory = "Any time";
+        mainCategory = "Morning";
       }
     } else if (hour >= 12 && hour < 19) {
       if (afternoonReady) {
@@ -267,7 +267,7 @@ class HabitProvider extends ChangeNotifier {
       } else if (eveningReady) {
         mainCategory = "Evening";
       } else {
-        mainCategory = "Any time";
+        mainCategory = "Afternoon";
       }
     } else if (hour >= 19 || hour < 4) {
       if (eveningReady) {
@@ -277,7 +277,7 @@ class HabitProvider extends ChangeNotifier {
       } else if (afternoonReady) {
         mainCategory = "Afternoon";
       } else {
-        mainCategory = "Any time";
+        mainCategory = "Evening";
       }
     } else {
       mainCategory = "Any time";

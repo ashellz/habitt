@@ -19,6 +19,7 @@ mixin AppLocale {
   static const String dataWontBeSavedSignOut =
       "Your data won't be saved automatically. Are you sure you want to sign out?";
   static const String dataUploaded = 'Data uploaded';
+  static const String addHabit = 'Add Habit';
 
   // Tags
   static const String noTag = 'No tag';
@@ -406,6 +407,7 @@ mixin AppLocale {
     habitEdited: "Habit edited!",
     habitDeleted: "Habit deleted!",
     saveChanges: "Save Changes",
+    addHabit: "Add Habit",
   };
 
   // -------------------------------------------------------------------------------------
@@ -597,5 +599,6 @@ mixin AppLocale {
     habitEdited: "Izmjene sačuvane!",
     habitDeleted: "Navika obrisana!",
     saveChanges: "Sačuvaj izmjene",
+    addHabit: "Dodaj naviku",
   };
 }

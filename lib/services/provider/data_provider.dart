@@ -56,6 +56,7 @@ class DataProvider extends ChangeNotifier {
     } else {
       addHabitsList.remove(habit);
     }
+
     notifyListeners();
   }
 

@@ -22,7 +22,9 @@ class AddHabitsCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<HabitProvider>().resetSomethingEdited();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HabitProvider>().resetSomethingEdited();
+    });
 
     List<HistoricalHabitData> historicalHabits = [];
     int boxIndex = 0;
@@ -39,18 +41,8 @@ class AddHabitsCalendar extends StatelessWidget {
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Provider.of<DataProvider>(context, listen: false).addHabitsList =
-              historicalBox.getAt(i)!.addedHabits;
+              List.from(historicalBox.getAt(i)!.addedHabits);
         });
-
-        print("added habits:");
-        for (var habit in historicalBox.getAt(i)!.addedHabits) {
-          print(habit.name);
-        }
-
-        print("all habits:");
-        for (int i = 0; i < historicalBox.getAt(i)!.data.length; i++) {
-          print(historicalBox.getAt(i)!.data[i].name);
-        }
 
         historicalHabits = historicalBox
             .getAt(i)!
@@ -61,10 +53,6 @@ class AddHabitsCalendar extends StatelessWidget {
                 .any((h) => h.id == habit.id))
             .toList();
 
-        print("historical  habits:");
-        for (var historicalHabit in historicalHabits) {
-          print(historicalHabit.name);
-        }
         break;
       }
     }
@@ -73,35 +61,44 @@ class AddHabitsCalendar extends StatelessWidget {
 
     for (var otherHabit in habitBox.values) {
       if (!historicalHabits.any((h) => h.id == otherHabit.id)) {
-        for (var habit in historicalBox.getAt(boxIndex)!.addedHabits) {
-          if (habit.id != otherHabit.id) {
-            HistoricalHabitData convertedOtherHabit = HistoricalHabitData(
-              id: otherHabit.id,
-              name: otherHabit.name,
-              category: otherHabit.category,
-              amount: otherHabit.amount,
-              icon: otherHabit.icon,
-              completed: otherHabit.completed,
-              amountCompleted: otherHabit.amountCompleted,
-              amountName: otherHabit.amountName,
-              duration: otherHabit.duration,
-              durationCompleted: otherHabit.durationCompleted,
-              skipped: otherHabit.skipped,
-              task: otherHabit.task,
-              type: otherHabit.type,
-              weekValue: otherHabit.weekValue,
-              monthValue: otherHabit.monthValue,
-              customValue: otherHabit.customValue,
-              selectedDaysAWeek: otherHabit.selectedDaysAWeek,
-              selectedDaysAMonth: otherHabit.selectedDaysAMonth,
-            );
-
-            if (!otherHabits.contains(convertedOtherHabit)) {
-              otherHabits.add(convertedOtherHabit);
+        HistoricalHabitData convertedOtherHabit = HistoricalHabitData(
+          id: otherHabit.id,
+          name: otherHabit.name,
+          category: otherHabit.category,
+          amount: otherHabit.amount,
+          icon: otherHabit.icon,
+          completed: otherHabit.completed,
+          amountCompleted: otherHabit.amountCompleted,
+          amountName: otherHabit.amountName,
+          duration: otherHabit.duration,
+          durationCompleted: otherHabit.durationCompleted,
+          skipped: otherHabit.skipped,
+          task: otherHabit.task,
+          type: otherHabit.type,
+          weekValue: otherHabit.weekValue,
+          monthValue: otherHabit.monthValue,
+          customValue: otherHabit.customValue,
+          selectedDaysAWeek: otherHabit.selectedDaysAWeek,
+          selectedDaysAMonth: otherHabit.selectedDaysAMonth,
+        );
+        if (historicalBox.getAt(boxIndex)!.addedHabits.isEmpty) {
+          if (!otherHabits.contains(convertedOtherHabit)) {
+            otherHabits.add(convertedOtherHabit);
+          }
+        } else {
+          for (var habit in historicalBox.getAt(boxIndex)!.addedHabits) {
+            if (habit.id != otherHabit.id) {
+              if (!otherHabits.contains(convertedOtherHabit)) {
+                otherHabits.add(convertedOtherHabit);
+              }
             }
           }
         }
       }
+    }
+
+    for (var addedHabit in historicalBox.getAt(boxIndex)!.addedHabits) {
+      print("added habit: ${addedHabit.name} id: ${addedHabit.id}");
     }
 
     return Scaffold(
@@ -118,13 +115,22 @@ class AddHabitsCalendar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(children: [
                     for (var habit in historicalHabits)
-                      Habit(habit: habit, historicalHabits: historicalHabits),
+                      Habit(
+                          habit: habit,
+                          historicalHabits: historicalHabits,
+                          boxIndex: boxIndex),
                     for (var habit
                         in Provider.of<DataProvider>(context, listen: false)
                             .addHabitsList)
-                      Habit(habit: habit, historicalHabits: historicalHabits),
+                      Habit(
+                          habit: habit,
+                          historicalHabits: historicalHabits,
+                          boxIndex: boxIndex),
                     for (var habit in otherHabits)
-                      Habit(habit: habit, historicalHabits: historicalHabits),
+                      Habit(
+                          habit: habit,
+                          historicalHabits: historicalHabits,
+                          boxIndex: boxIndex),
                     const SizedBox(height: 50)
                   ]),
                 ),
@@ -143,11 +149,13 @@ class Habit extends StatelessWidget {
     super.key,
     required this.habit,
     required this.historicalHabits,
+    required this.boxIndex,
   });
 
   // ignore: prefer_typing_uninitialized_variables
   final HistoricalHabitData habit;
   final List<HistoricalHabitData> historicalHabits;
+  final int boxIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +188,11 @@ class Habit extends StatelessWidget {
                       : AppColors.theLightColor,
                   onChanged: (value) {
                     context.read<DataProvider>().selectHabit(habit, value);
-
+                    for (var addedHabit
+                        in historicalBox.getAt(boxIndex)!.addedHabits) {
+                      print(
+                          "added habit on click: ${addedHabit.name} id: ${addedHabit.id}");
+                    }
                     context.read<HabitProvider>().updateSomethingEdited();
                   })),
         ),
@@ -216,61 +228,41 @@ class SaveButton extends StatelessWidget {
             child: Text(AppLocale.saveChanges.getString(context),
                 style: const TextStyle(color: Colors.white)),
             onPressed: () {
-              // Collect IDs to be removed
-              List<int> ids = historicalBox
-                  .getAt(boxIndex)!
-                  .addedHabits
-                  .map((habit) => habit.id)
-                  .toList();
+              var entry = historicalBox.getAt(boxIndex)!;
 
-              print("added habits after click:");
-              for (var habit in historicalBox.getAt(boxIndex)!.addedHabits) {
-                print(habit.name);
+              List<HistoricalHabitData> addedHabits =
+                  List.from(entry.addedHabits);
+
+              List<HistoricalHabitData> data = List.from(entry.data);
+              List<HistoricalHabitData> habitsToRemove = [];
+
+              for (var habit in data) {
+                for (var addedHabit in addedHabits) {
+                  print("added habit: ${addedHabit.name} id: ${addedHabit.id}");
+
+                  if (habit.id == addedHabit.id) {
+                    habitsToRemove.add(habit);
+                    print(
+                        "added habit to be removed: ${habit.name} id: ${habit.id}");
+                  }
+                }
               }
 
-              // Retrieve the entry at boxIndex
-              final historicalEntry = historicalBox.getAt(boxIndex);
-
-              // Check if entry exists to avoid null errors
-              if (historicalEntry != null) {
-                // Create new lists for updated data and added habits
-                final updatedData =
-                    List<HistoricalHabitData>.from(historicalEntry.data);
-                final updatedAddedHabits =
-                    List<HistoricalHabitData>.from(historicalEntry.addedHabits);
-
-                // Remove habits from data based on IDs
-                updatedData.removeWhere((habit) => ids.contains(habit.id));
-
-                // Clear and update addedHabits
-                updatedAddedHabits.clear();
-                for (var toBeAddedHabit
-                    in Provider.of<DataProvider>(context, listen: false)
-                        .addHabitsList) {
-                  updatedAddedHabits.add(toBeAddedHabit);
-                  updatedData.add(toBeAddedHabit);
-                }
-
-                // Create a new HistoricalHabit object with updated values
-                final updatedEntry = HistoricalHabit(
-                  date: historicalEntry.date,
-                  data: updatedData,
-                  addedHabits: updatedAddedHabits,
-                );
-
-                // Save the updated entry back to the box
-                historicalBox.putAt(boxIndex, updatedEntry);
-
-                // Debugging: Print the updated data
-                print("Updated Habits:");
-                for (var habit in updatedEntry.data) {
-                  print(habit.name);
-                }
-              } else {
-                print("Historical entry at index $boxIndex is null.");
+              for (var habit in habitsToRemove) {
+                data.remove(habit);
+                print("removed habit ${habit.name}");
               }
 
-              // Navigate back
+              addedHabits = Provider.of<DataProvider>(context, listen: false)
+                  .addHabitsList;
+
+              data.addAll(addedHabits);
+
+              historicalBox.putAt(
+                  boxIndex,
+                  HistoricalHabit(
+                      date: entry.date, data: data, addedHabits: addedHabits));
+
               Navigator.pop(context);
             }),
       ),

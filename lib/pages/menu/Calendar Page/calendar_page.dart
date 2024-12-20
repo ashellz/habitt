@@ -41,7 +41,7 @@ class _CalendarPageState extends State<CalendarPage> {
       Navigator.of(context)
           .push(MaterialPageRoute(
         builder: (context) => AddHabitsCalendar(
-          selectedDay: today,
+          selectedDay: day,
         ),
       ))
           .whenComplete(() {
