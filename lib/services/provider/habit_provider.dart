@@ -707,14 +707,19 @@ class HabitProvider extends ChangeNotifier {
 
   Future<void> updateLastOpenedDate(BuildContext context) async {
     DateTime now = DateTime.now();
-    int day = now.day;
-    int lastOpenedDate = streakBox.get('lastOpenedDay') ?? 0;
-    int daysDifference = day - lastOpenedDate;
 
-    await streakBox.put('lastOpenedDay', day);
+    DateTime lastOpenedDate = metadataBox.get("lastOpenedDate")!;
 
-    if (daysDifference > 0 || daysDifference < 0) {
-      resetCompletionStatus(); //sets all current habits completed to false
+    bool isNewMonth =
+        now.month != lastOpenedDate.month || now.year != lastOpenedDate.year;
+    DateTime normalizedLastOpened =
+        DateTime(lastOpenedDate.year, lastOpenedDate.month, lastOpenedDate.day);
+    DateTime normalizedNow = DateTime(now.year, now.month, now.day);
+    int daysDifference = normalizedNow.difference(normalizedLastOpened).inDays;
+
+    if (daysDifference != 0) {
+      resetCompletionStatus(daysDifference,
+          isNewMonth); //sets all current habits completed to false
       if (context.mounted) {
         saveHabitsForToday(
             context); //puts all current habits to historical habits
@@ -726,9 +731,10 @@ class HabitProvider extends ChangeNotifier {
         }
       }
     }
+    await metadataBox.put("lastOpenedDate", now);
   }
 
-  void resetCompletionStatus() {
+  void resetCompletionStatus(int daysDifference, bool isNewMonth) {
     DateTime today = DateTime.now();
 
     for (var habit in habitBox.values) {
@@ -737,14 +743,20 @@ class HabitProvider extends ChangeNotifier {
         habit.timesCompletedThisWeek++;
       }
 
-      if (today.day == 1) {
+      if (isNewMonth) {
         habit.timesCompletedThisMonth = 0;
       }
-      if (today.weekday == 1) {
+
+      if (daysDifference > 1) {
+        if (today.weekday - daysDifference <= 1) {
+          habit.timesCompletedThisWeek = 0;
+        }
+      } else if (today.weekday == 1) {
         habit.timesCompletedThisWeek = 0;
       }
 
       if (habit.daysUntilAppearance == 0) {
+        // TODO: promijenit bazu podataka i ovo uklonit skroz
         habit.daysUntilAppearance = habit.customValue - 1;
       } else {
         habit.daysUntilAppearance--;
