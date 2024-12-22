@@ -412,7 +412,7 @@ class HabitProvider extends ChangeNotifier {
       customValue: existingHabit.customValue,
       selectedDaysAWeek: existingHabit.selectedDaysAWeek,
       selectedDaysAMonth: existingHabit.selectedDaysAMonth,
-      daysUntilAppearance: existingHabit.daysUntilAppearance,
+      customAppearance: existingHabit.customAppearance,
       timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
       timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
       paused: existingHabit.paused,
@@ -572,7 +572,7 @@ class HabitProvider extends ChangeNotifier {
         customValue: existingHabit.customValue,
         selectedDaysAWeek: existingHabit.selectedDaysAWeek,
         selectedDaysAMonth: existingHabit.selectedDaysAMonth,
-        daysUntilAppearance: existingHabit.daysUntilAppearance,
+        customAppearance: existingHabit.customAppearance,
         timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
         timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
         paused: existingHabit.paused);
@@ -624,39 +624,39 @@ class HabitProvider extends ChangeNotifier {
         Provider.of<DataProvider>(context, listen: false)
             .theDurationValueMinutes;
 
+    var habit = habitBox.getAt(index)!;
+
     habitBox.putAt(
         index,
         HabitData(
-            name: habitBox.getAt(index)!.name,
-            completed: habitBox.getAt(index)!.completed,
-            icon: habitBox.getAt(index)!.icon,
-            category: habitBox.getAt(index)!.category,
-            streak: habitBox.getAt(index)!.streak,
-            amount: habitBox.getAt(index)!.amount,
-            amountName: habitBox.getAt(index)!.amountName,
-            amountCompleted: habitBox.getAt(index)!.amountCompleted,
-            duration: habitBox.getAt(index)!.duration,
+            name: habit.name,
+            completed: habit.completed,
+            icon: habit.icon,
+            category: habit.category,
+            streak: habit.streak,
+            amount: habit.amount,
+            amountName: habit.amountName,
+            amountCompleted: habit.amountCompleted,
+            duration: habit.duration,
             durationCompleted:
                 theDurationValueHours * 60 + theDurationValueMinutes,
-            skipped: habitBox.getAt(index)!.skipped,
-            tag: habitBox.getAt(index)!.tag,
-            notifications: habitBox.getAt(index)!.notifications,
-            notes: habitBox.getAt(index)!.notes,
-            longestStreak: habitBox.getAt(index)!.longestStreak,
-            id: habitBox.getAt(index)!.id,
-            task: habitBox.getAt(index)!.task,
-            type: habitBox.getAt(index)!.type,
-            weekValue: habitBox.getAt(index)!.weekValue,
-            monthValue: habitBox.getAt(index)!.monthValue,
-            customValue: habitBox.getAt(index)!.customValue,
-            selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
-            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth,
-            daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
-            timesCompletedThisWeek:
-                habitBox.getAt(index)!.timesCompletedThisWeek,
-            timesCompletedThisMonth:
-                habitBox.getAt(index)!.timesCompletedThisMonth,
-            paused: habitBox.getAt(index)!.paused));
+            skipped: habit.skipped,
+            tag: habit.tag,
+            notifications: habit.notifications,
+            notes: habit.notes,
+            longestStreak: habit.longestStreak,
+            id: habit.id,
+            task: habit.task,
+            type: habit.type,
+            weekValue: habit.weekValue,
+            monthValue: habit.monthValue,
+            customValue: habit.customValue,
+            selectedDaysAWeek: habit.selectedDaysAWeek,
+            selectedDaysAMonth: habit.selectedDaysAMonth,
+            customAppearance: habit.customAppearance,
+            timesCompletedThisWeek: habit.timesCompletedThisWeek,
+            timesCompletedThisMonth: habit.timesCompletedThisMonth,
+            paused: habit.paused));
     if (context.mounted) {
       saveHabitsForToday(context);
     }
@@ -693,7 +693,7 @@ class HabitProvider extends ChangeNotifier {
             customValue: habitBox.getAt(index)!.customValue,
             selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
             selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth,
-            daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
+            customAppearance: habitBox.getAt(index)!.customAppearance,
             timesCompletedThisWeek:
                 habitBox.getAt(index)!.timesCompletedThisWeek,
             timesCompletedThisMonth:
@@ -753,13 +753,6 @@ class HabitProvider extends ChangeNotifier {
         }
       } else if (today.weekday == 1) {
         habit.timesCompletedThisWeek = 0;
-      }
-
-      if (habit.daysUntilAppearance == 0) {
-        // TODO: promijenit bazu podataka i ovo uklonit skroz
-        habit.daysUntilAppearance = habit.customValue - 1;
-      } else {
-        habit.daysUntilAppearance--;
       }
 
       habit.amountCompleted = 0;

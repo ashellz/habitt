@@ -174,7 +174,7 @@ void addInitialData(BuildContext context) {
         customValue: 0,
         selectedDaysAWeek: [],
         selectedDaysAMonth: [],
-        daysUntilAppearance: 0,
+        customAppearance: [],
         timesCompletedThisWeek: 0,
         timesCompletedThisMonth: 0,
         paused: false),
@@ -202,7 +202,7 @@ void addInitialData(BuildContext context) {
         customValue: 0,
         selectedDaysAWeek: [],
         selectedDaysAMonth: [],
-        daysUntilAppearance: 0,
+        customAppearance: [],
         timesCompletedThisWeek: 0,
         timesCompletedThisMonth: 0,
         paused: false)

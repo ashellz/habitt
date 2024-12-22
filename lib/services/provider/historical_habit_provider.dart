@@ -10,6 +10,7 @@ import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/getSortedHistoricalList.dart';
 import 'package:provider/provider.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
@@ -100,13 +101,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
     // Check if the user skipped a habit two days in a row or skipped 3 habits a day already
     List<int> chosenHabitDate = [time.year, time.month, time.day];
 
-    var historicalList = historicalBox.values.toList();
-
-    historicalList.sort((a, b) {
-      DateTime dateA = a.date;
-      DateTime dateB = b.date;
-      return dateB.compareTo(dateA);
-    }); // today is 0
+    var historicalList = getSortedHistoricalList();
 
     for (int i = 0; i < historicalList.length; i++) {
       List<int> habitDate = [

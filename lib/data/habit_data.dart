@@ -1,3 +1,4 @@
+import 'package:habitt/util/functions/habit/getCustomAppearance.dart';
 import 'package:hive/hive.dart';
 
 part 'habit_data.g.dart';
@@ -28,7 +29,7 @@ class HabitData extends HiveObject {
     required this.customValue,
     required this.selectedDaysAWeek,
     required this.selectedDaysAMonth,
-    required this.daysUntilAppearance,
+    required this.customAppearance,
     required this.timesCompletedThisWeek,
     required this.timesCompletedThisMonth,
     required this.paused,
@@ -104,7 +105,7 @@ class HabitData extends HiveObject {
   List selectedDaysAMonth;
 
   @HiveField(23)
-  int daysUntilAppearance;
+  List customAppearance;
 
   @HiveField(24)
   int timesCompletedThisWeek;

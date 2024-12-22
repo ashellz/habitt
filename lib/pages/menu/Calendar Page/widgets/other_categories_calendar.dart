@@ -31,7 +31,6 @@ otherCategoriesListCalendar(
     List<HistoricalHabitData> todayHabitsList = [];
 
     List<HabitData> getSelectedDayHabits(BuildContext context, chosenDay) {
-      DateTime today = DateTime.now();
       List<HabitData> habitsList = [];
 
       for (var habit in habitBox.values) {
@@ -44,7 +43,7 @@ otherCategoriesListCalendar(
                 habitsList.add(habit);
               }
             } else {
-              if (habit.selectedDaysAWeek.contains(today.weekday)) {
+              if (habit.selectedDaysAWeek.contains(chosenDay.weekday)) {
                 habitsList.add(habit);
               }
             }
@@ -54,13 +53,28 @@ otherCategoriesListCalendar(
                 habitsList.add(habit);
               }
             } else {
-              if (habit.selectedDaysAMonth.contains(today.day)) {
+              if (habit.selectedDaysAMonth.contains(chosenDay.day)) {
                 habitsList.add(habit);
               }
             }
           } else if (habit.type == "Custom") {
-            if (habit.daysUntilAppearance == 0) {
-              // habitsList.add(habit); // TODO: Add custom habits to calendar
+            List<List<int>> days = [];
+            for (int i = 0; i < habit.customAppearance.length; i++) {
+              List<int> day = [
+                habit.customAppearance[i].year,
+                habit.customAppearance[i].month,
+                habit.customAppearance[i].day
+              ];
+              days.add(day);
+            }
+
+            for (var day in days) {
+              if (day[0] == chosenDay.year &&
+                  day[1] == chosenDay.month &&
+                  day[2] == chosenDay.day) {
+                habitsList.add(habit);
+                break;
+              }
             }
           }
         }

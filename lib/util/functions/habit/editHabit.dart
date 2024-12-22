@@ -67,6 +67,24 @@ void editHabit(int index, BuildContext context, editcontroller) {
   var editHabitNotifications =
       Provider.of<HabitProvider>(context, listen: false).habitNotifications;
 
+  List<DateTime> customAppearance = [];
+
+  if (habitType == "Custom") {
+    int counter = 0;
+    DateTime day = DateTime.now();
+
+    for (int i = 0; i < 30; i++) {
+      if (counter %
+              Provider.of<DataProvider>(context, listen: false)
+                  .customValueSelected ==
+          0) {
+        customAppearance.add(day);
+      }
+      day = day.add(const Duration(days: 1));
+      counter++;
+    }
+  }
+
   habitBox.putAt(
       index,
       HabitData(
@@ -111,7 +129,7 @@ void editHabit(int index, BuildContext context, editcontroller) {
           selectedDaysAWeek:
               Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
           selectedDaysAMonth: Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
-          daysUntilAppearance: habitBox.getAt(index)!.daysUntilAppearance,
+          customAppearance: customAppearance,
           timesCompletedThisWeek: habitBox.getAt(index)!.timesCompletedThisWeek,
           timesCompletedThisMonth: habitBox.getAt(index)!.timesCompletedThisMonth,
           paused: habitBox.getAt(index)!.paused));

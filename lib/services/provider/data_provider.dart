@@ -206,9 +206,24 @@ class DataProvider extends ChangeNotifier {
             }
           }
         } else if (habit.type == "Custom") {
-          if (habit.daysUntilAppearance == 0) {
-            showCategory(habit.category);
-            habitsList.add(habit);
+          List<List<int>> days = [];
+          for (int i = 0; i < habit.customAppearance.length; i++) {
+            List<int> day = [
+              habit.customAppearance[i].year,
+              habit.customAppearance[i].month,
+              habit.customAppearance[i].day
+            ];
+            days.add(day);
+          }
+
+          for (var day in days) {
+            if (day[0] == today.year &&
+                day[1] == today.month &&
+                day[2] == today.day) {
+              showCategory(habit.category);
+              habitsList.add(habit);
+              break;
+            }
           }
         }
       }

@@ -35,6 +35,24 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     habitType = "Custom";
   }
 
+  List<DateTime> customAppearance = [];
+
+  if (habitType == "Custom") {
+    int counter = 0;
+    DateTime day = DateTime.now();
+
+    for (int i = 0; i < 30; i++) {
+      if (counter %
+              Provider.of<DataProvider>(context, listen: false)
+                  .customValueSelected ==
+          0) {
+        customAppearance.add(day);
+      }
+      day = day.add(const Duration(days: 1));
+      counter++;
+    }
+  }
+
   myHabit = HabitData(
     name: createcontroller.text,
     completed: false,
@@ -72,7 +90,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
         Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
     selectedDaysAMonth:
         Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
-    daysUntilAppearance: 0,
+    customAppearance: customAppearance,
     timesCompletedThisWeek: 0,
     timesCompletedThisMonth: 0,
     paused: false,

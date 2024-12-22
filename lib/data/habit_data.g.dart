@@ -40,7 +40,11 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       customValue: fields[20] == null ? 0 : fields[20] as int,
       selectedDaysAWeek: fields[21] == null ? [] : fields[21] as List,
       selectedDaysAMonth: fields[22] == null ? [] : fields[22] as List,
-      daysUntilAppearance: fields[23] == null ? 0 : fields[23] as int,
+      customAppearance: fields[23] == null
+          ? fields[17] == "Custom"
+              ? getCustomAppearance(fields[15])
+              : []
+          : fields[23] as List,
       timesCompletedThisWeek: fields[24] == null ? 0 : fields[24] as int,
       timesCompletedThisMonth: fields[25] == null ? 0 : fields[25] as int,
       paused: fields[26] == null ? false : fields[26] as bool,
@@ -98,7 +102,7 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(22)
       ..write(obj.selectedDaysAMonth)
       ..writeByte(23)
-      ..write(obj.daysUntilAppearance)
+      ..write(obj.customAppearance)
       ..writeByte(24)
       ..write(obj.timesCompletedThisWeek)
       ..writeByte(25)
