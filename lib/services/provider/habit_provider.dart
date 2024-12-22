@@ -89,6 +89,10 @@ class HabitProvider extends ChangeNotifier {
   }
 
   updateAllHabitsCompletedStreak(int value) {
+    if (value > allHabitsCompletedStreak) {
+      streakBox.put('BestAllHabitsCompletedStreak', value);
+    }
+
     allHabitsCompletedStreak = value;
     streakBox.put('allHabitsCompletedStreak', value);
     notifyListeners();
@@ -254,8 +258,10 @@ class HabitProvider extends ChangeNotifier {
         mainCategory = "Afternoon";
       } else if (eveningReady) {
         mainCategory = "Evening";
-      } else {
+      } else if (morningHasHabits) {
         mainCategory = "Morning";
+      } else {
+        mainCategory = "Any time";
       }
     } else if (hour >= 12 && hour < 19) {
       if (afternoonReady) {
@@ -266,8 +272,10 @@ class HabitProvider extends ChangeNotifier {
         mainCategory = "Any time";
       } else if (eveningReady) {
         mainCategory = "Evening";
-      } else {
+      } else if (afternoonHasHabits) {
         mainCategory = "Afternoon";
+      } else {
+        mainCategory = "Any time";
       }
     } else if (hour >= 19 || hour < 4) {
       if (eveningReady) {
@@ -276,8 +284,10 @@ class HabitProvider extends ChangeNotifier {
         mainCategory = "Morning";
       } else if (afternoonReady) {
         mainCategory = "Afternoon";
-      } else {
+      } else if (eveningHasHabits) {
         mainCategory = "Evening";
+      } else {
+        mainCategory = "Any time";
       }
     } else {
       mainCategory = "Any time";

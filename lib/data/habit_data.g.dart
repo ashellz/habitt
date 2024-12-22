@@ -44,7 +44,9 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
           ? fields[17] == "Custom"
               ? getCustomAppearance(fields[15])
               : []
-          : fields[23] as List,
+          : fields[23] is List
+              ? fields[23] as List
+              : [],
       timesCompletedThisWeek: fields[24] == null ? 0 : fields[24] as int,
       timesCompletedThisMonth: fields[25] == null ? 0 : fields[25] as int,
       paused: fields[26] == null ? false : fields[26] as bool,

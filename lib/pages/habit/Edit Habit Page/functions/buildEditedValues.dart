@@ -22,7 +22,8 @@ void buildEditedValues(
   var habit = context.read<HabitProvider>().getHabitAt(id);
 
   if (!changed) {
-    habitProvider.updatedIcon = Icon(getIcon(habitProvider.getIndexFromId(id)));
+    habitProvider.updatedIcon = Icon(getIconFromString(
+        habitBox.getAt(habitProvider.getIndexFromId(id))!.icon));
   }
 
   if (!updated) {

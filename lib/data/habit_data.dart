@@ -105,7 +105,7 @@ class HabitData extends HiveObject {
   List selectedDaysAMonth;
 
   @HiveField(23)
-  List customAppearance;
+  var customAppearance;
 
   @HiveField(24)
   int timesCompletedThisWeek;

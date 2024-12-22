@@ -170,7 +170,7 @@ class Habit extends StatelessWidget {
           ),
           child: ListTile(
               leading: Icon(
-                convertIcon(habit.icon),
+                getIconFromString(habit.icon),
               ),
               title: Text(
                 habit.name,

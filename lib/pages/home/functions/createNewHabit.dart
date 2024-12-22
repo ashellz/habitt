@@ -56,7 +56,7 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   myHabit = HabitData(
     name: createcontroller.text,
     completed: false,
-    icon: getIconString(
+    icon: getStringFromIconDataIcon(
         Provider.of<HabitProvider>(context, listen: false).updatedIcon.icon),
     category: Provider.of<HabitProvider>(context, listen: false).dropDownValue,
     streak: 0,

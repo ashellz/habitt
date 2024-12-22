@@ -373,7 +373,7 @@ class Tile extends StatelessWidget {
               });
             },
             leading: Icon(
-              convertIcon(habits[i].icon),
+              getIconFromString(habits[i].icon),
             ),
             title: Text(
               habits[i].name,

@@ -129,7 +129,7 @@ class HabitTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        convertIcon(habit.icon),
+        getIconFromString(habit.icon),
         color: habit.completed ? Colors.grey.shade700 : Colors.white,
       ),
       title: Text(

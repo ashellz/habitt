@@ -90,9 +90,10 @@ void editHabit(int index, BuildContext context, editcontroller) {
       HabitData(
           name: editcontroller.text,
           completed: resetCompleted ? false : habitBox.getAt(index)!.completed,
-          icon: getIconString(Provider.of<HabitProvider>(context, listen: false)
-              .updatedIcon
-              .icon),
+          icon: getStringFromIconDataIcon(
+              Provider.of<HabitProvider>(context, listen: false)
+                  .updatedIcon
+                  .icon),
           category:
               Provider.of<HabitProvider>(context, listen: false).dropDownValue,
           streak: habitBox.getAt(index)?.streak ?? 0,
@@ -104,9 +105,10 @@ void editHabit(int index, BuildContext context, editcontroller) {
               .text,
           amountCompleted:
               resetCompleted ? 0 : habitBox.getAt(index)!.amountCompleted,
-          duration: Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
-              ? duration
-              : habitBox.getAt(index)?.duration ?? 0,
+          duration:
+              Provider.of<HabitProvider>(context, listen: false).habitGoalValue == 2
+                  ? duration
+                  : habitBox.getAt(index)?.duration ?? 0,
           durationCompleted:
               resetCompleted ? 0 : habitBox.getAt(index)!.durationCompleted,
           skipped: resetCompleted ? false : habitBox.getAt(index)!.skipped,
@@ -122,12 +124,10 @@ void editHabit(int index, BuildContext context, editcontroller) {
           type: habitType,
           weekValue: Provider.of<DataProvider>(context, listen: false)
               .weekValueSelected,
-          monthValue: Provider.of<DataProvider>(context, listen: false)
-              .monthValueSelected,
-          customValue: Provider.of<DataProvider>(context, listen: false)
-              .customValueSelected,
-          selectedDaysAWeek:
-              Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
+          monthValue:
+              Provider.of<DataProvider>(context, listen: false).monthValueSelected,
+          customValue: Provider.of<DataProvider>(context, listen: false).customValueSelected,
+          selectedDaysAWeek: Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
           selectedDaysAMonth: Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
           customAppearance: customAppearance,
           timesCompletedThisWeek: habitBox.getAt(index)!.timesCompletedThisWeek,
