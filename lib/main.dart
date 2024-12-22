@@ -23,6 +23,7 @@ import 'package:habitt/util/functions/fillKeys.dart';
 import 'package:habitt/util/functions/openHiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
 
 bool doOnce = true;
 final FlutterLocalization localization = FlutterLocalization.instance;
@@ -155,7 +156,7 @@ class _AuthCheckState extends State<AuthCheck> {
       if (boolBox.get("firstTimeOpened")!) {
         return const OnboardingPage();
       } else {
-        return const HomePage();
+        return UpgradeAlert(child: const HomePage());
       }
     } else {
       return const OnboardingPage();
