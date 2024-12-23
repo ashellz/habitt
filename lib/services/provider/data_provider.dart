@@ -7,6 +7,8 @@ import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/checkForNotifications.dart';
+import 'package:habitt/util/functions/getSortedHistoricalList.dart';
+import 'package:habitt/util/functions/habit/getCustomAppearance.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:provider/provider.dart';
 
@@ -206,6 +208,13 @@ class DataProvider extends ChangeNotifier {
             }
           }
         } else if (habit.type == "Custom") {
+          if (DateTime.now().difference(habit.lastCustomUpdate).inDays >= 29) {
+            List<DateTime> customAppearance = getCustomAppearance(habit.id);
+            habit.customAppearance = customAppearance;
+            habit.lastCustomUpdate = DateTime.now();
+            habit.save();
+          }
+
           List<List<int>> days = [];
           for (int i = 0; i < habit.customAppearance.length; i++) {
             List<int> day = [
@@ -222,6 +231,33 @@ class DataProvider extends ChangeNotifier {
                 day[2] == today.day) {
               showCategory(habit.category);
               habitsList.add(habit);
+              break;
+            }
+          }
+        }
+      } else if (habit.type == "Custom") {
+        if (habit.lastCustomUpdate.difference(today).inDays < 30) {
+          List historicalList = getSortedHistoricalList();
+
+          for (int i = 0; i < historicalList.length; i++) {
+            var otherHabit =
+                historicalList[i].where((element) => element.id == habit.id);
+
+            if (otherHabit.isNotEmpty) {
+              DateTime day = historicalList[i].date;
+              DateTime daySimplified = DateTime(
+                day.year,
+                day.month,
+                day.day,
+              );
+
+              if (daySimplified
+                      .difference(DateTime(today.year, today.month, today.day))
+                      .inDays >=
+                  otherHabit.first.customValue) {
+                habit.lastCustomUpdate =
+                    today.subtract(const Duration(days: 30));
+              }
               break;
             }
           }

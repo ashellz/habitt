@@ -7,6 +7,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/habit/getCustomAppearance.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:hive/hive.dart';
@@ -17,7 +18,8 @@ var habitListLenght = Hive.box<HabitData>('habits').length;
 late String editedFrom;
 late String editedTo;
 
-void editHabit(int index, BuildContext context, editcontroller) {
+void editHabit(
+    int index, BuildContext context, editcontroller, bool? allHabitsPage) {
   editedFrom = habitBox.getAt(index)!.category;
   editedTo = Provider.of<HabitProvider>(context, listen: false).dropDownValue;
 
@@ -68,20 +70,25 @@ void editHabit(int index, BuildContext context, editcontroller) {
       Provider.of<HabitProvider>(context, listen: false).habitNotifications;
 
   List<DateTime> customAppearance = [];
+  String previousHabitType = habitBox.getAt(index)!.type;
 
   if (habitType == "Custom") {
-    int counter = 0;
-    DateTime day = DateTime.now();
+    if (habitType != previousHabitType) {
+      int counter = 0;
+      DateTime day = DateTime.now();
 
-    for (int i = 0; i < 30; i++) {
-      if (counter %
-              Provider.of<DataProvider>(context, listen: false)
-                  .customValueSelected ==
-          0) {
-        customAppearance.add(day);
+      for (int i = 0; i < 30; i++) {
+        if (counter %
+                Provider.of<DataProvider>(context, listen: false)
+                    .customValueSelected ==
+            0) {
+          customAppearance.add(day);
+        }
+        day = day.add(const Duration(days: 1));
+        counter++;
       }
-      day = day.add(const Duration(days: 1));
-      counter++;
+    } else {
+      customAppearance = getCustomAppearance(habitBox.getAt(index)!.id);
     }
   }
 
@@ -132,7 +139,14 @@ void editHabit(int index, BuildContext context, editcontroller) {
           customAppearance: customAppearance,
           timesCompletedThisWeek: habitBox.getAt(index)!.timesCompletedThisWeek,
           timesCompletedThisMonth: habitBox.getAt(index)!.timesCompletedThisMonth,
-          paused: habitBox.getAt(index)!.paused));
+          paused: habitBox.getAt(index)!.paused,
+          lastCustomUpdate: DateTime.now()));
+
+  if (allHabitsPage == true) {
+    if (editedFrom != editedTo) {
+      context.read<AllHabitsProvider>().initAllHabitsPage(context);
+    }
+  }
 
   Provider.of<HabitProvider>(context, listen: false).dropDownValue = 'Any time';
   saveHabitsForToday(context);

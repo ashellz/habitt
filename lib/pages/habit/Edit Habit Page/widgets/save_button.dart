@@ -9,14 +9,15 @@ import 'package:habitt/util/functions/showCustomDialog.dart';
 import 'package:provider/provider.dart';
 
 class SaveButton extends StatelessWidget {
-  const SaveButton({
-    super.key,
-    required this.index,
-    required this.editcontroller,
-  });
+  const SaveButton(
+      {super.key,
+      required this.index,
+      required this.editcontroller,
+      this.allHabitsPage});
 
   final int index;
   final TextEditingController editcontroller;
+  final bool? allHabitsPage;
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +54,14 @@ class SaveButton extends StatelessWidget {
                             : "The changes won't affect this habit in the past. You can change this in settings.",
                         textAlign: TextAlign.center),
                     () => Provider.of<HabitProvider>(context, listen: false)
-                        .editHabitProvider(index, context, editcontroller),
+                        .editHabitProvider(
+                            index, context, editcontroller, allHabitsPage),
                     "Edit",
                     "Cancel");
               } else {
                 Provider.of<HabitProvider>(context, listen: false)
-                    .editHabitProvider(index, context, editcontroller);
+                    .editHabitProvider(
+                        index, context, editcontroller, allHabitsPage);
               }
             }
           },

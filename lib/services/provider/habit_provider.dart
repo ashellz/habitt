@@ -426,6 +426,7 @@ class HabitProvider extends ChangeNotifier {
       timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
       timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
       paused: existingHabit.paused,
+      lastCustomUpdate: existingHabit.lastCustomUpdate,
     );
 
     await habitBox.putAt(index, updatedHabit);
@@ -585,7 +586,8 @@ class HabitProvider extends ChangeNotifier {
         customAppearance: existingHabit.customAppearance,
         timesCompletedThisWeek: existingHabit.timesCompletedThisWeek,
         timesCompletedThisMonth: existingHabit.timesCompletedThisMonth,
-        paused: existingHabit.paused);
+        paused: existingHabit.paused,
+        lastCustomUpdate: existingHabit.lastCustomUpdate);
 
     await habitBox.putAt(index, updatedHabit);
 
@@ -615,8 +617,9 @@ class HabitProvider extends ChangeNotifier {
     return 0;
   }
 
-  Future<void> editHabitProvider(int index, context, editcontroller) async {
-    editHabit(index, context, editcontroller);
+  Future<void> editHabitProvider(
+      int index, context, editcontroller, bool? allHabitsPage) async {
+    editHabit(index, context, editcontroller, allHabitsPage);
     Navigator.of(context).pop();
 
     notifyListeners();
@@ -666,7 +669,8 @@ class HabitProvider extends ChangeNotifier {
             customAppearance: habit.customAppearance,
             timesCompletedThisWeek: habit.timesCompletedThisWeek,
             timesCompletedThisMonth: habit.timesCompletedThisMonth,
-            paused: habit.paused));
+            paused: habit.paused,
+            lastCustomUpdate: habit.lastCustomUpdate));
     if (context.mounted) {
       saveHabitsForToday(context);
     }
@@ -677,38 +681,39 @@ class HabitProvider extends ChangeNotifier {
     int theAmountValue =
         Provider.of<DataProvider>(context, listen: false).theAmountValue;
 
+    var habit = habitBox.getAt(index)!;
+
     habitBox.putAt(
         index,
         HabitData(
-            name: habitBox.getAt(index)!.name,
-            completed: habitBox.getAt(index)!.completed,
-            icon: habitBox.getAt(index)!.icon,
-            category: habitBox.getAt(index)!.category,
-            streak: habitBox.getAt(index)!.streak,
-            amount: habitBox.getAt(index)!.amount,
-            amountName: habitBox.getAt(index)!.amountName,
+            name: habit.name,
+            completed: habit.completed,
+            icon: habit.icon,
+            category: habit.category,
+            streak: habit.streak,
+            amount: habit.amount,
+            amountName: habit.amountName,
             amountCompleted: theAmountValue,
-            duration: habitBox.getAt(index)!.duration,
-            durationCompleted: habitBox.getAt(index)!.durationCompleted,
-            skipped: habitBox.getAt(index)!.skipped,
-            tag: habitBox.getAt(index)!.tag,
-            notifications: habitBox.getAt(index)!.notifications,
-            notes: habitBox.getAt(index)!.notes,
-            longestStreak: habitBox.getAt(index)!.longestStreak,
-            id: habitBox.getAt(index)!.id,
-            task: habitBox.getAt(index)!.task,
-            type: habitBox.getAt(index)!.type,
-            weekValue: habitBox.getAt(index)!.weekValue,
-            monthValue: habitBox.getAt(index)!.monthValue,
-            customValue: habitBox.getAt(index)!.customValue,
-            selectedDaysAWeek: habitBox.getAt(index)!.selectedDaysAWeek,
-            selectedDaysAMonth: habitBox.getAt(index)!.selectedDaysAMonth,
-            customAppearance: habitBox.getAt(index)!.customAppearance,
-            timesCompletedThisWeek:
-                habitBox.getAt(index)!.timesCompletedThisWeek,
-            timesCompletedThisMonth:
-                habitBox.getAt(index)!.timesCompletedThisMonth,
-            paused: habitBox.getAt(index)!.paused));
+            duration: habit.duration,
+            durationCompleted: habit.durationCompleted,
+            skipped: habit.skipped,
+            tag: habit.tag,
+            notifications: habit.notifications,
+            notes: habit.notes,
+            longestStreak: habit.longestStreak,
+            id: habit.id,
+            task: habit.task,
+            type: habit.type,
+            weekValue: habit.weekValue,
+            monthValue: habit.monthValue,
+            customValue: habit.customValue,
+            selectedDaysAWeek: habit.selectedDaysAWeek,
+            selectedDaysAMonth: habit.selectedDaysAMonth,
+            customAppearance: habit.customAppearance,
+            timesCompletedThisWeek: habit.timesCompletedThisWeek,
+            timesCompletedThisMonth: habit.timesCompletedThisMonth,
+            paused: habit.paused,
+            lastCustomUpdate: habit.lastCustomUpdate));
     if (context.mounted) {
       saveHabitsForToday(context);
     }

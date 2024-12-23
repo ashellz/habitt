@@ -337,6 +337,7 @@ class Tile extends StatelessWidget {
                       builder: (context) => EditHabitPage(
                             habit: habit,
                             editcontroller: editcontroller,
+                            allHabitsPage: true,
                           )))
                   .whenComplete(() {
                 bool changeTag = true;

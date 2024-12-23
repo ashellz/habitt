@@ -177,7 +177,8 @@ void addInitialData(BuildContext context) {
         customAppearance: [],
         timesCompletedThisWeek: 0,
         timesCompletedThisMonth: 0,
-        paused: false),
+        paused: false,
+        lastCustomUpdate: DateTime.now()),
     HabitData(
         name: languageCode == 'en' ? 'Add a new habit' : 'Dodati novu naviku',
         notes: '',
@@ -205,7 +206,8 @@ void addInitialData(BuildContext context) {
         customAppearance: [],
         timesCompletedThisWeek: 0,
         timesCompletedThisMonth: 0,
-        paused: false)
+        paused: false,
+        lastCustomUpdate: DateTime.now())
   ];
 
   if (tagBox.isEmpty) {

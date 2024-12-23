@@ -94,11 +94,11 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     timesCompletedThisWeek: 0,
     timesCompletedThisMonth: 0,
     paused: false,
+    lastCustomUpdate: DateTime.now(),
   );
   await habitBox.add(myHabit);
   streakBox.put('highestId', streakBox.get('highestId')! + 1);
 
-  // Updates the main category height if new habit category is same as the main category
   if (context.mounted) {
     for (var habit
         in Provider.of<DataProvider>(context, listen: false).habitsList) {
@@ -116,8 +116,5 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
   }
 
   createcontroller.clear();
-
   habitNotifications = [];
-
-  //showPopup(context, "Habit added!");
 }

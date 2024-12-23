@@ -2,7 +2,7 @@ import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/util/functions/getSortedHistoricalList.dart';
 import 'package:habitt/util/functions/habit/getHabitFromId.dart';
 
-List getCustomAppearance(int id) {
+List<DateTime> getCustomAppearance(int id) {
   List<DateTime> customAppearance = [];
   HabitData habit = getHabitFromId(id);
   DateTime? habitFoundAtDate;

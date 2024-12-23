@@ -24,10 +24,12 @@ class EditHabitPage extends StatefulWidget {
     super.key,
     required this.habit,
     required this.editcontroller,
+    this.allHabitsPage,
   });
 
   final HabitData habit;
   final TextEditingController editcontroller;
+  final bool? allHabitsPage;
 
   @override
   State<EditHabitPage> createState() => _EditHabitPageState();
@@ -215,7 +217,11 @@ class _EditHabitPageState extends State<EditHabitPage> {
             ]),
 
             // SAVE BUTTON
-            SaveButton(index: index, editcontroller: editcontroller),
+            SaveButton(
+              index: index,
+              editcontroller: editcontroller,
+              allHabitsPage: widget.allHabitsPage,
+            ),
           ])),
     );
   }

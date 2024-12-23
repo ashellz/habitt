@@ -33,6 +33,7 @@ class HabitData extends HiveObject {
     required this.timesCompletedThisWeek,
     required this.timesCompletedThisMonth,
     required this.paused,
+    required this.lastCustomUpdate,
   });
 
   @HiveField(0)
@@ -115,4 +116,7 @@ class HabitData extends HiveObject {
 
   @HiveField(26)
   bool paused;
+
+  @HiveField(27)
+  DateTime lastCustomUpdate;
 }

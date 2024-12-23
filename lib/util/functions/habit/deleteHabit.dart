@@ -6,6 +6,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/allhabits_provider.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,8 @@ Future<void> deleteHabit(int index, context, editcontroller) async {
       .initAllHabitsPage(context);
   NotificationManager()
       .showNotification(context, AppLocale.habitDeleted.getString(context));
+
+  checkForNotifications(context);
 
   deleted = true;
   editcontroller.text = "";

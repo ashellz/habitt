@@ -50,13 +50,15 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       timesCompletedThisWeek: fields[24] == null ? 0 : fields[24] as int,
       timesCompletedThisMonth: fields[25] == null ? 0 : fields[25] as int,
       paused: fields[26] == null ? false : fields[26] as bool,
+      lastCustomUpdate:
+          fields[27] == null ? DateTime.now() : fields[27] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(27)
+      ..writeByte(28)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -110,7 +112,9 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(25)
       ..write(obj.timesCompletedThisMonth)
       ..writeByte(26)
-      ..write(obj.paused);
+      ..write(obj.paused)
+      ..writeByte(27)
+      ..write(obj.lastCustomUpdate);
   }
 
   @override

@@ -370,22 +370,36 @@ class IconsPage extends StatelessWidget {
             actionsWidget: const SizedBox(),
             title: AppLocale.chooseAnIcon.getString(context),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, bottom: 50),
-              child: Center(
-                child: Wrap(
-                  spacing: 30,
-                  children: [
-                    for (var icon in icons) IconWidget(icon: icon),
-                  ],
-                ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final icon = icons[index];
+                  return IconWidget(icon: icon);
+                },
+                childCount: icons.length,
+              ),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _getCrossAxisCount(context),
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
+  }
+
+  int _getCrossAxisCount(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    print("screen width: $screenWidth");
+    if (screenWidth < 200) return 2;
+    if (screenWidth < 400) return 3;
+    if (screenWidth < 600) return 4;
+    if (screenWidth < 800) return 5;
+    return 6;
   }
 }
 
@@ -399,11 +413,9 @@ class IconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 25),
+    return AspectRatio(
+      aspectRatio: 1,
       child: SizedBox(
-        width: 65,
-        height: 65,
         child: ElevatedButton(
           onPressed: () {
             Provider.of<HabitProvider>(context, listen: false).updatedIcon =
