@@ -431,10 +431,6 @@ class HabitProvider extends ChangeNotifier {
 
     await habitBox.putAt(index, updatedHabit);
 
-    if (context.mounted) {
-      context.read<DataProvider>().updateHabits(context);
-    }
-
     // apply haptic feedback or sound
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
     if (context.mounted) {
@@ -630,7 +626,7 @@ class HabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  applyDurationCompleted(index, BuildContext context) {
+  applyDurationCompleted(index, BuildContext context) async {
     int theDurationValueHours =
         Provider.of<DataProvider>(context, listen: false).theDurationValueHours;
     int theDurationValueMinutes =
@@ -639,7 +635,7 @@ class HabitProvider extends ChangeNotifier {
 
     var habit = habitBox.getAt(index)!;
 
-    habitBox.putAt(
+    await habitBox.putAt(
         index,
         HabitData(
             name: habit.name,
@@ -671,19 +667,21 @@ class HabitProvider extends ChangeNotifier {
             timesCompletedThisMonth: habit.timesCompletedThisMonth,
             paused: habit.paused,
             lastCustomUpdate: habit.lastCustomUpdate));
+
     if (context.mounted) {
+      context.read<DataProvider>().updateHabits(context);
       saveHabitsForToday(context);
     }
     notifyListeners();
   }
 
-  applyAmountCompleted(index, BuildContext context) {
+  applyAmountCompleted(index, BuildContext context) async {
     int theAmountValue =
         Provider.of<DataProvider>(context, listen: false).theAmountValue;
 
     var habit = habitBox.getAt(index)!;
 
-    habitBox.putAt(
+    await habitBox.putAt(
         index,
         HabitData(
             name: habit.name,
@@ -715,6 +713,7 @@ class HabitProvider extends ChangeNotifier {
             paused: habit.paused,
             lastCustomUpdate: habit.lastCustomUpdate));
     if (context.mounted) {
+      context.read<DataProvider>().updateHabits(context);
       saveHabitsForToday(context);
     }
     notifyListeners();

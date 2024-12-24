@@ -24,6 +24,7 @@ class _TagsWidgetsState extends State<TagsWidgets> {
   Map<String, GlobalKey> tagKeys = {};
   ScrollController scrollController = ScrollController();
   int counter = 0;
+  bool widgetChangeEnabled = true;
 
   void scrollToTag(String category) {
     if (tagKeys[category]?.currentContext != null) {
@@ -47,6 +48,10 @@ class _TagsWidgetsState extends State<TagsWidgets> {
   @override
   void didUpdateWidget(covariant TagsWidgets oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (!widgetChangeEnabled) {
+      return;
+    }
 
     if (counter <= 3) {
       counter++;
@@ -106,7 +111,12 @@ class _TagsWidgetsState extends State<TagsWidgets> {
                         curve: Curves.easeInOut,
                       );
                     });
+                    widgetChangeEnabled = false;
                     scrollToTag(category);
+
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      widgetChangeEnabled = true;
+                    });
                   },
                   child: Container(
                       key: tagKeys[category],
