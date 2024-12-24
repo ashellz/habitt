@@ -19,6 +19,7 @@ mixin AppLocale {
   static const String dataWontBeSavedSignOut =
       "Your data won't be saved automatically. Are you sure you want to sign out?";
   static const String dataUploaded = 'Data uploaded';
+  static const String addHabit = 'Add Habit';
 
   // Tags
   static const String noTag = 'No tag';
@@ -118,6 +119,8 @@ mixin AppLocale {
   static const String anyTime = 'Any time Category';
 
   static const String noHabitsInCategory = 'No habits in this category';
+  static const String cantSkipHabitRow = 'Cant skip habit row';
+  static const String cantSkipHabit3 = 'Cant skip habit 3';
 
   static const String allHabits = "All Habits";
   static const String categories = "Categories";
@@ -149,6 +152,17 @@ mixin AppLocale {
   static const String currentStreak = 'Current streak';
   static const String bestStreak = 'Best streak';
   static const String completionRate = 'Completion rate';
+  static const String pauseHabit = 'Pause habit';
+  static const String unpauseHabit = 'Unpause habit';
+  static const String areYouSurePauseHabit =
+      'Are you sure you want to pause this habit?';
+  static const String areYouSureUnpauseHabit =
+      'Are you sure you want to unpause this habit?';
+  static const String thisHabitIsPaused = 'This habit is paused';
+  static const String habitAdded = "Habit added!";
+  static const String habitEdited = "Habit edited!";
+  static const String habitDeleted = "Habit deleted!";
+  static const String saveChanges = "Save changes";
 
   //Habit Type
   static const String habitType = 'Habit Type';
@@ -193,12 +207,13 @@ mixin AppLocale {
   static const String leaveUnselectedMonth = 'leaveUnselectedMonth';
   static const String noteMonth = 'Note month';
   static const String startingFromToday = 'starting from today';
+  static const String addHabits = 'Add Habits';
 
   // Notifications Page
   static const String habitNotifications = 'Habit Notifications';
 
   // Calendar Page
-  static const String importCurrentHabits = 'Import current habits';
+  static const String addMoreHabits = 'Add more habits';
   static const String thisWillErasePreviousDataOn =
       "This will erase previous data on ";
   static const String areYouSure = 'Are you sure?';
@@ -315,7 +330,7 @@ mixin AppLocale {
     additionalTask: 'Additional task',
     chooseAnIcon: 'Choose an icon',
     habitNotifications: 'Habit Notifications',
-    importCurrentHabits: 'Import current habits',
+    addMoreHabits: 'Add more habits',
     thisWillErasePreviousDataOn: 'This will erase previous data on ',
     areYouSure: 'Are you sure?',
     stats: 'Stats',
@@ -336,6 +351,7 @@ mixin AppLocale {
     once: 'Once',
     twice: 'Twice',
     three: 'Three',
+    addHabits: "Add habits",
     four: 'Four',
     five: 'Five',
     six: 'Six',
@@ -377,8 +393,24 @@ mixin AppLocale {
     categories: "Categories",
     tags: "Tags",
     tasks: "Tasks",
-    nothingHere: "Nothing to see here."
+    nothingHere: "Nothing to see here.",
+    pauseHabit: "Pause Habit",
+    unpauseHabit: "Unpause Habit",
+    areYouSurePauseHabit:
+        "This habit and its stats will be paused and will not appear on home page. Use this only when you are unable to do a habit for multiple days in a row. Are you sure?",
+    areYouSureUnpauseHabit:
+        "This habit and its stats will now resume and will now appear on home page. Are you sure?",
+    thisHabitIsPaused: "This habit is paused",
+    cantSkipHabitRow: "You can't skip a habit two days in a row.",
+    cantSkipHabit3: "You can't skip more than three habits a day.",
+    habitAdded: "Habit added!",
+    habitEdited: "Habit edited!",
+    habitDeleted: "Habit deleted!",
+    saveChanges: "Save Changes",
+    addHabit: "Add Habit",
   };
+
+  // -------------------------------------------------------------------------------------
 
   static const Map<String, dynamic> ba = {
     yes: 'Da',
@@ -403,6 +435,7 @@ mixin AppLocale {
     betterSleep: 'Bolji san',
     morningRoutine: 'Jutarnja rutina',
     workout: 'Trening',
+    addHabits: "Dodaj navike",
     skip: 'Preskoči',
     next: 'Dalje',
     done: 'Završi',
@@ -490,7 +523,7 @@ mixin AppLocale {
     additionalTask: 'Dodatni zadatak',
     chooseAnIcon: 'Odaberi ikonu',
     habitNotifications: 'Notifikacije navike',
-    importCurrentHabits: "Zamijeni sa trenutnim navikama",
+    addMoreHabits: "Dodaj još navika",
     thisWillErasePreviousDataOn: "Vaše navike će biti obrisane na dan ",
     areYouSure: "Nastavi?",
     stats: "Statistika",
@@ -552,6 +585,20 @@ mixin AppLocale {
     categories: "Kategorije",
     tags: "Oznake",
     tasks: "Zadaci",
-    nothingHere: "Ovdje nema ničega."
+    nothingHere: "Ovdje nema ničega.",
+    pauseHabit: "Pauziraj naviku",
+    unpauseHabit: "Odpauziraj naviku",
+    areYouSurePauseHabit:
+        "Ova navika i njene statistike će biti pauzirane te se neće prikazati na početnoj stranici. Koristite ovo samo ukoliko ne možete da izvršavate ovu naviku nekoliko dana zaredom. Da li ste sigurni?",
+    areYouSureUnpauseHabit:
+        "Ova navika i njene statistike će se nastaviti te će se sada prikazati na početnoj stranici. Da li ste sigurni?",
+    thisHabitIsPaused: "Ova navika je pauzirana",
+    cantSkipHabitRow: "Ne možete preskočiti naviku dva dana zaredom.",
+    cantSkipHabit3: "Ne možete preskočiti više od tri navike na dan.",
+    habitAdded: "Navika dodana!",
+    habitEdited: "Izmjene sačuvane!",
+    habitDeleted: "Navika obrisana!",
+    saveChanges: "Sačuvaj izmjene",
+    addHabit: "Dodaj naviku",
   };
 }

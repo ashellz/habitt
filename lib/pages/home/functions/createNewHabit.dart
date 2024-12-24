@@ -8,6 +8,7 @@ import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
+import 'package:habitt/util/objects/popup_notification.dart';
 import 'package:provider/provider.dart';
 
 late HabitData myHabit;
@@ -34,10 +35,28 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
     habitType = "Custom";
   }
 
+  List<DateTime> customAppearance = [];
+
+  if (habitType == "Custom") {
+    int counter = 0;
+    DateTime day = DateTime.now();
+
+    for (int i = 0; i < 30; i++) {
+      if (counter %
+              Provider.of<DataProvider>(context, listen: false)
+                  .customValueSelected ==
+          0) {
+        customAppearance.add(day);
+      }
+      day = day.add(const Duration(days: 1));
+      counter++;
+    }
+  }
+
   myHabit = HabitData(
     name: createcontroller.text,
     completed: false,
-    icon: getIconString(
+    icon: getStringFromIconDataIcon(
         Provider.of<HabitProvider>(context, listen: false).updatedIcon.icon),
     category: Provider.of<HabitProvider>(context, listen: false).dropDownValue,
     streak: 0,
@@ -71,28 +90,31 @@ Future<void> createNewHabit(createcontroller, BuildContext context) async {
         Provider.of<DataProvider>(context, listen: false).selectedDaysAWeek,
     selectedDaysAMonth:
         Provider.of<DataProvider>(context, listen: false).selectedDaysAMonth,
-    daysUntilAppearance: 0,
+    customAppearance: customAppearance,
     timesCompletedThisWeek: 0,
     timesCompletedThisMonth: 0,
+    paused: false,
+    lastCustomUpdate: DateTime.now(),
   );
   await habitBox.add(myHabit);
   streakBox.put('highestId', streakBox.get('highestId')! + 1);
 
-  // Updates the main category height if new habit category is same as the main category
   if (context.mounted) {
+    for (var habit
+        in Provider.of<DataProvider>(context, listen: false).habitsList) {
+      if (habit.id == 1) {
+        habit.completed = true;
+        habit.save();
+      }
+    }
+
     saveHabitsForToday(context);
     context.read<DataProvider>().updateHabits(context);
     Provider.of<DataProvider>(context, listen: false).updateAllHabits();
-    if (Provider.of<HabitProvider>(context, listen: false).dropDownValue ==
-        context.watch<HabitProvider>().mainCategory) {
-      Provider.of<HabitProvider>(context, listen: false)
-          .updateMainCategoryHeight(context);
-    }
+    NotificationManager()
+        .showNotification(context, AppLocale.habitAdded.getString(context));
   }
 
   createcontroller.clear();
-
   habitNotifications = [];
-
-  //showPopup(context, "Habit added!");
 }

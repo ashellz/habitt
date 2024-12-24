@@ -19,6 +19,9 @@ class HistoricalHabitAdapter extends TypeAdapter<HistoricalHabit> {
     return HistoricalHabit(
       date: fields[0] as DateTime,
       data: (fields[1] as List).cast<HistoricalHabitData>(),
+      addedHabits: fields[2] == null
+          ? []
+          : (fields[2] as List).cast<HistoricalHabitData>(),
     );
   }
 
@@ -29,7 +32,9 @@ class HistoricalHabitAdapter extends TypeAdapter<HistoricalHabit> {
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
-      ..write(obj.data);
+      ..write(obj.data)
+      ..writeByte(2)
+      ..write(obj.addedHabits);
   }
 
   @override
@@ -54,24 +59,31 @@ class HistoricalHabitDataAdapter extends TypeAdapter<HistoricalHabitData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HistoricalHabitData(
-        name: fields[0] as String,
-        completed: fields[1] as bool,
-        icon: fields[2] as String,
-        category: fields[3] as String,
-        amount: fields[4] as int,
-        amountCompleted: fields[5] as int,
-        amountName: fields[6] as String,
-        duration: fields[7] as int,
-        durationCompleted: fields[8] as int,
-        skipped: fields[9] as bool,
-        id: fields[10] == null ? 12345 : fields[10] as int,
-        task: fields[11] == null ? false : fields[11] as bool);
+      name: fields[0] as String,
+      completed: fields[1] as bool,
+      icon: fields[2] as String,
+      category: fields[3] as String,
+      amount: fields[4] as int,
+      amountCompleted: fields[5] as int,
+      amountName: fields[6] as String,
+      duration: fields[7] as int,
+      durationCompleted: fields[8] as int,
+      skipped: fields[9] as bool,
+      id: fields[10] == null ? 12345 : fields[10] as int,
+      task: fields[11] == null ? false : fields[11] as bool,
+      type: fields[12] == null ? "Daily " : fields[12] as String,
+      weekValue: fields[13] == null ? 1 : fields[13] as int,
+      monthValue: fields[14] == null ? 1 : fields[14] as int,
+      customValue: fields[15] == null ? 1 : fields[15] as int,
+      selectedDaysAWeek: fields[16] == null ? [] : fields[16] as List,
+      selectedDaysAMonth: fields[17] == null ? [] : fields[17] as List,
+    );
   }
 
   @override
   void write(BinaryWriter writer, HistoricalHabitData obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -95,7 +107,19 @@ class HistoricalHabitDataAdapter extends TypeAdapter<HistoricalHabitData> {
       ..writeByte(10)
       ..write(obj.id)
       ..writeByte(11)
-      ..write(obj.task);
+      ..write(obj.task)
+      ..writeByte(12)
+      ..write(obj.type)
+      ..writeByte(13)
+      ..write(obj.weekValue)
+      ..writeByte(14)
+      ..write(obj.monthValue)
+      ..writeByte(15)
+      ..write(obj.customValue)
+      ..writeByte(16)
+      ..write(obj.selectedDaysAWeek)
+      ..writeByte(17)
+      ..write(obj.selectedDaysAMonth);
   }
 
   @override

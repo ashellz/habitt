@@ -19,12 +19,11 @@ import 'package:habitt/services/provider/habit_provider.dart';
 import 'package:habitt/services/provider/historical_habit_provider.dart';
 import 'package:habitt/services/provider/language_provider.dart';
 import 'package:habitt/util/colors.dart';
-import 'package:habitt/util/functions/checkForNotifications.dart';
 import 'package:habitt/util/functions/fillKeys.dart';
-import 'package:habitt/util/functions/habit/saveHabitsForToday.dart';
 import 'package:habitt/util/functions/openHiveBoxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
 
 bool doOnce = true;
 final FlutterLocalization localization = FlutterLocalization.instance;
@@ -129,45 +128,44 @@ class MyApp extends StatelessWidget {
           supportedLocales: localization.supportedLocales,
           localizationsDelegates: localization.localizationsDelegates,
           home: const AuthCheck(),
-          routes: {
-            "/home": (_) => const HomePage(),
-          },
         );
       },
     );
   }
 }
 
-class AuthCheck extends StatelessWidget {
+class AuthCheck extends StatefulWidget {
   const AuthCheck({super.key});
 
   @override
+  State<AuthCheck> createState() => _AuthCheckState();
+}
+
+class _AuthCheckState extends State<AuthCheck> {
+  @override
+  void initState() {
+    super.initState();
+
+    openHiveAndPerformTasks(context);
+    checkForDayJoined();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Create a FutureBuilder to wait for openHiveBoxes to complete
-    return FutureBuilder<void>(
-      future: openHiveAndPerformTasks(context),
-      builder: (context, futureSnapshot) {
-        checkForDayJoined(); // After the Future is complete, check for onboarding or homepage
-        if (boolBox.containsKey("firstTimeOpened")) {
-          if (boolBox.get("firstTimeOpened")!) {
-            boolBox.put("firstTimeOpened", false);
-            return const OnboardingPage();
-          } else {
-            return const HomePage();
-          }
-        } else {
-          boolBox.put("firstTimeOpened", false);
-          return const OnboardingPage();
-        }
-      },
-    );
+    if (boolBox.containsKey("firstTimeOpened")) {
+      if (boolBox.get("firstTimeOpened")!) {
+        return const OnboardingPage();
+      } else {
+        return UpgradeAlert(child: const HomePage());
+      }
+    } else {
+      return const OnboardingPage();
+    }
   }
 }
 
 // Create a function that wraps all necessary tasks
 Future<void> openHiveAndPerformTasks(BuildContext context) async {
-  // Post-frame callback to update providers and perform actions
-
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!boolBox.containsKey("update1")) {
       boolBox.put("update1", true);
@@ -188,15 +186,10 @@ Future<void> openHiveAndPerformTasks(BuildContext context) async {
       context.read<LanguageProvider>().loadLanguage();
       doOnce = false;
     }
+
     context.read<DataProvider>().updateHabits(context);
     context.read<DataProvider>().initializeLists(context);
-    context.read<HabitProvider>().chooseMainCategory(context);
-    context.read<HabitProvider>().updateMainCategoryHeight(context);
     context.read<HistoricalHabitProvider>().calculateStreak(context);
     context.read<HabitProvider>().updateLastOpenedDate(context);
-    context.read<DataProvider>().updateHabits(context);
   });
-
-  saveHabitsForToday(context);
-  checkForNotifications(context);
 }

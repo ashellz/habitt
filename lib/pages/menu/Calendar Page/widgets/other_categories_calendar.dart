@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/Calendar%20Page/widgets/category_widgets.dart';
@@ -28,35 +29,94 @@ otherCategoriesListCalendar(
 
   void saveTodayHabits() {
     List<HistoricalHabitData> todayHabitsList = [];
-    for (int i = 0; i < habitBox.length; i++) {
-      var habit = habitBox.getAt(i)!;
 
+    List<HabitData> getSelectedDayHabits(BuildContext context, chosenDay) {
+      List<HabitData> habitsList = [];
+
+      for (var habit in habitBox.values) {
+        if (!habit.paused) {
+          if (habit.type == "Daily") {
+            habitsList.add(habit);
+          } else if (habit.type == "Weekly") {
+            if (habit.selectedDaysAWeek.isEmpty) {
+              if (habit.timesCompletedThisWeek < habit.weekValue) {
+                habitsList.add(habit);
+              }
+            } else {
+              if (habit.selectedDaysAWeek.contains(chosenDay.weekday)) {
+                habitsList.add(habit);
+              }
+            }
+          } else if (habit.type == "Monthly") {
+            if (habit.selectedDaysAMonth.isEmpty) {
+              if (habit.timesCompletedThisMonth < habit.monthValue) {
+                habitsList.add(habit);
+              }
+            } else {
+              if (habit.selectedDaysAMonth.contains(chosenDay.day)) {
+                habitsList.add(habit);
+              }
+            }
+          } else if (habit.type == "Custom") {
+            List<List<int>> days = [];
+            for (int i = 0; i < habit.customAppearance.length; i++) {
+              List<int> day = [
+                habit.customAppearance[i].year,
+                habit.customAppearance[i].month,
+                habit.customAppearance[i].day
+              ];
+              days.add(day);
+            }
+
+            for (var day in days) {
+              if (day[0] == chosenDay.year &&
+                  day[1] == chosenDay.month &&
+                  day[2] == chosenDay.day) {
+                habitsList.add(habit);
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      return habitsList;
+    }
+
+    List<HabitData> habitsList = getSelectedDayHabits(context, chosenDay);
+
+    for (var habit in habitsList) {
       HistoricalHabitData newHistoricalHabit = HistoricalHabitData(
-        name: habit.name,
-        category: habit.category,
-        completed: false,
-        icon: habit.icon,
-        amount: habit.amount,
-        amountCompleted: 0,
-        amountName: habit.amountName,
-        duration: habit.duration,
-        durationCompleted: 0,
-        skipped: false,
-        id: habit.id,
-        task: habit.task,
-      );
+          name: habit.name,
+          category: habit.category,
+          completed: false,
+          icon: habit.icon,
+          amount: habit.amount,
+          amountCompleted: 0,
+          amountName: habit.amountName,
+          duration: habit.duration,
+          durationCompleted: 0,
+          skipped: false,
+          id: habit.id,
+          task: habit.task,
+          type: habit.type,
+          weekValue: habit.weekValue,
+          monthValue: habit.monthValue,
+          customValue: habit.customValue,
+          selectedDaysAWeek: habit.selectedDaysAWeek,
+          selectedDaysAMonth: habit.selectedDaysAMonth);
 
       todayHabitsList.add(newHistoricalHabit);
     }
 
-    historicalBox.add(HistoricalHabit(date: chosenDay, data: todayHabitsList));
+    historicalBox.add(HistoricalHabit(
+        date: chosenDay, data: todayHabitsList, addedHabits: []));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HistoricalHabitProvider>().updateHistoricalHabits(chosenDay);
     });
 
-    int index = historicalBox.length - 1;
-    boxIndex = index;
+    boxIndex = historicalBox.length - 1;
   }
 
   if (Provider.of<HistoricalHabitProvider>(context, listen: false)

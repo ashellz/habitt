@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:habitt/data/app_locale.dart';
+import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/pages/habit/notifications_page.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/color_provider.dart';
@@ -20,6 +21,8 @@ class PopUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HabitData habit = habitBox.getAt(index)!;
+
     return PopupMenuButton(
       color: context.watch<ColorProvider>().greyColor,
       itemBuilder: (context) => [
@@ -63,6 +66,42 @@ class PopUpButton extends StatelessWidget {
         PopupMenuItem(
             onTap: () => showCustomDialog(
                         context,
+                        habit.paused
+                            ? AppLocale.unpauseHabit.getString(context)
+                            : AppLocale.pauseHabit.getString(context),
+                        Text(
+                            habit.paused
+                                ? AppLocale.areYouSureUnpauseHabit
+                                    .getString(context)
+                                : AppLocale.areYouSurePauseHabit
+                                    .getString(context),
+                            textAlign: TextAlign.center),
+                        () => context
+                            .read<HabitProvider>()
+                            .pauseHabit(habit, context),
+                        AppLocale.yes.getString(context),
+                        AppLocale.no.getString(context))
+                    .then((value) {
+                  if (context.mounted) {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  }
+                }),
+            value: 1,
+            child: Row(
+              children: [
+                const Icon(Icons.pause_circle_outline),
+                const SizedBox(width: 5),
+                Text(
+                  habit.paused
+                      ? AppLocale.unpauseHabit.getString(context)
+                      : AppLocale.pauseHabit.getString(context),
+                  style: const TextStyle(color: Colors.white),
+                )
+              ],
+            )),
+        PopupMenuItem(
+            onTap: () => showCustomDialog(
+                        context,
                         AppLocale.deleteHabit.getString(context),
                         Text(AppLocale.areYouSureDeleteHabit.getString(context),
                             textAlign: TextAlign.center),
@@ -77,7 +116,7 @@ class PopUpButton extends StatelessWidget {
                     }
                   }
                 }),
-            value: 1,
+            value: 2,
             child: Row(
               children: [
                 const Icon(Icons.delete),

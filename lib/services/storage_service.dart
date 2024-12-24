@@ -13,8 +13,10 @@ import 'package:habitt/data/tags.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/pages/menu/profile_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
+import 'package:habitt/services/provider/language_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 String? userId = FirebaseAuth.instance.currentUser?.uid;
 String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
@@ -141,17 +143,22 @@ Future<void> restoreHiveBoxesFromFirebase(String? userId) async {
   dataDownloaded = true;
 }
 
-void addInitialData(context) {
+void addInitialData(BuildContext context) {
+  String languageCode =
+      Provider.of<LanguageProvider>(context, listen: false).languageCode;
+
   List initialHabits = [
     HabitData(
-        name: 'Open the app',
-        notes: 'Open the app for the first time',
+        name: languageCode == 'en' ? 'Open the app' : 'Otvoriti aplikaciju',
+        notes: languageCode == 'en'
+            ? 'Open the app for the first time'
+            : 'Otvoriti aplikaciju po prvi put',
         category: 'Any time',
         streak: 0,
         completed: true,
         icon: "Icons.door_front_door_rounded",
         amount: 1,
-        amountName: "times",
+        amountName: languageCode == 'en' ? "times" : "puta",
         amountCompleted: 1,
         duration: 0,
         durationCompleted: 0,
@@ -167,11 +174,13 @@ void addInitialData(context) {
         customValue: 0,
         selectedDaysAWeek: [],
         selectedDaysAMonth: [],
-        daysUntilAppearance: 0,
+        customAppearance: [],
         timesCompletedThisWeek: 0,
-        timesCompletedThisMonth: 0),
+        timesCompletedThisMonth: 0,
+        paused: false,
+        lastCustomUpdate: DateTime.now()),
     HabitData(
-        name: 'Add a new habit',
+        name: languageCode == 'en' ? 'Add a new habit' : 'Dodati novu naviku',
         notes: '',
         category: 'Any time',
         streak: 0,
@@ -194,13 +203,16 @@ void addInitialData(context) {
         customValue: 0,
         selectedDaysAWeek: [],
         selectedDaysAMonth: [],
-        daysUntilAppearance: 0,
+        customAppearance: [],
         timesCompletedThisWeek: 0,
-        timesCompletedThisMonth: 0)
+        timesCompletedThisMonth: 0,
+        paused: false,
+        lastCustomUpdate: DateTime.now())
   ];
 
   if (tagBox.isEmpty) {
-    List<String> tagsList = context.watch<DataProvider>().tagsList;
+    List<String> tagsList =
+        Provider.of<DataProvider>(context, listen: false).tagsList;
 
     for (int i = 0; i < tagsList.length; i++) {
       tagBox.add(TagData(tag: tagsList[i]));

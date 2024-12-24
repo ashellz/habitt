@@ -40,16 +40,25 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       customValue: fields[20] == null ? 0 : fields[20] as int,
       selectedDaysAWeek: fields[21] == null ? [] : fields[21] as List,
       selectedDaysAMonth: fields[22] == null ? [] : fields[22] as List,
-      daysUntilAppearance: fields[23] == null ? 0 : fields[23] as int,
+      customAppearance: fields[23] == null
+          ? fields[17] == "Custom"
+              ? getCustomAppearance(fields[15])
+              : []
+          : fields[23] is List
+              ? fields[23] as List
+              : [],
       timesCompletedThisWeek: fields[24] == null ? 0 : fields[24] as int,
       timesCompletedThisMonth: fields[25] == null ? 0 : fields[25] as int,
+      paused: fields[26] == null ? false : fields[26] as bool,
+      lastCustomUpdate:
+          fields[27] == null ? DateTime.now() : fields[27] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, HabitData obj) {
     writer
-      ..writeByte(26)
+      ..writeByte(28)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -97,11 +106,15 @@ class HabitDataAdapter extends TypeAdapter<HabitData> {
       ..writeByte(22)
       ..write(obj.selectedDaysAMonth)
       ..writeByte(23)
-      ..write(obj.daysUntilAppearance)
+      ..write(obj.customAppearance)
       ..writeByte(24)
       ..write(obj.timesCompletedThisWeek)
       ..writeByte(25)
-      ..write(obj.timesCompletedThisMonth);
+      ..write(obj.timesCompletedThisMonth)
+      ..writeByte(26)
+      ..write(obj.paused)
+      ..writeByte(27)
+      ..write(obj.lastCustomUpdate);
   }
 
   @override

@@ -63,7 +63,7 @@ class _NewHabitTileState extends State<NewHabitTile> {
         Navigator.of(context)
             .push(MaterialPageRoute(
                 builder: (context) => EditHabitPage(
-                      id: id,
+                      habit: habit,
                       editcontroller: editcontroller,
                     )))
             .whenComplete(() {
@@ -160,7 +160,7 @@ class HabitTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        getIcon(index),
+        getIconFromString(habit.icon),
         color: habit.completed ? Colors.grey.shade700 : Colors.white,
       ),
       title: Row(

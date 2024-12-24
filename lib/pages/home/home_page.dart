@@ -107,11 +107,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      context.read<HabitProvider>().updateLastOpenedDate(context);
-      context.read<HabitProvider>().chooseMainCategory(context);
-      context.read<HabitProvider>().updateMainCategoryHeight(context);
+      if (mounted) {
+        await context.read<DataProvider>().updateHabits(context);
+      }
+      if (mounted) {
+        await context.read<HabitProvider>().updateLastOpenedDate(context);
+      }
       if (interstitialAd == null) {
         initInterstitialAd();
       }
@@ -190,7 +193,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           username, context.watch<DataProvider>().greetingText),
                       const SizedBox(height: 20),
                       SizedBox(
-                          height: 30, child: tagsWidgets(tagSelected, context)),
+                          height: 30,
+                          child: TagsWidgets(tagSelected: tagSelected)),
                     ],
                   ),
                 ),

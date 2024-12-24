@@ -330,14 +330,14 @@ class Tile extends StatelessWidget {
               changed = false;
               deleted = false;
 
-              int id = habits[i].id;
               HabitData habit = habits[i];
 
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) => EditHabitPage(
-                            id: id,
+                            habit: habit,
                             editcontroller: editcontroller,
+                            allHabitsPage: true,
                           )))
                   .whenComplete(() {
                 bool changeTag = true;
@@ -374,15 +374,26 @@ class Tile extends StatelessWidget {
               });
             },
             leading: Icon(
-              convertIcon(habits[i].icon),
+              getIconFromString(habits[i].icon),
             ),
             title: Text(
               habits[i].name,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: ReorderableDragStartListener(
-              index: i,
-              child: const Icon(Icons.drag_handle),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (habits[i].paused)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Icon(Icons.pause_circle_outline),
+                  ),
+                ReorderableDragStartListener(
+                  index: i,
+                  child: const Icon(Icons.drag_handle),
+                ),
+              ],
             ),
           ),
         ),

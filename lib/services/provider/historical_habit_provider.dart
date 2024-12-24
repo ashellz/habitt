@@ -2,12 +2,15 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habitt/data/app_locale.dart';
 import 'package:habitt/data/habit_data.dart';
 import 'package:habitt/data/historical_habit.dart';
 import 'package:habitt/pages/home/home_page.dart';
 import 'package:habitt/services/provider/data_provider.dart';
 import 'package:habitt/services/provider/habit_provider.dart';
+import 'package:habitt/util/functions/getSortedHistoricalList.dart';
 import 'package:provider/provider.dart';
 
 class HistoricalHabitProvider extends ChangeNotifier {
@@ -82,7 +85,9 @@ class HistoricalHabitProvider extends ChangeNotifier {
         historicalBox.putAt(
             i,
             HistoricalHabit(
-                date: historicalBox.getAt(i)!.date, data: currentHabitData));
+                date: historicalBox.getAt(i)!.date,
+                data: currentHabitData,
+                addedHabits: historicalBox.getAt(i)!.addedHabits));
         updateHistoricalHabits(time);
         break;
       }
@@ -96,21 +101,17 @@ class HistoricalHabitProvider extends ChangeNotifier {
     // Check if the user skipped a habit two days in a row or skipped 3 habits a day already
     List<int> chosenHabitDate = [time.year, time.month, time.day];
 
-    var historicalList = historicalBox.values.toList();
-
-    historicalList.sort((a, b) {
-      DateTime dateA = a.date;
-      DateTime dateB = b.date;
-      return dateA
-          .compareTo(dateB); // This will sort from oldest to most recent
-    });
+    var historicalList = getSortedHistoricalList();
 
     for (int i = 0; i < historicalList.length; i++) {
-      List habitDate = [
+      List<int> habitDate = [
         historicalList[i].date.year,
         historicalList[i].date.month,
         historicalList[i].date.day
       ];
+
+      // loop until day is found, get day index, start loop from index to today, and another from index to the past
+      // stop the second loop when day with the same habit is found, check if its skipped
 
       if (const ListEquality().equals(habitDate, chosenHabitDate)) {
         for (int j = 0; j < historicalList[i].data.length; j++) {
@@ -121,41 +122,76 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
         if (habitsSkipped >= 3) {
           Fluttertoast.showToast(
-              msg: "You can't skip more than 3 habits a day.");
+              msg: AppLocale.cantSkipHabit3.getString(context));
           return;
         }
 
-        if (i - 1 >= 0) {
-          if (historicalList[i - 1].data[index].skipped) {
-            Fluttertoast.showToast(
-                msg: "You can't skip a habit two days in a row.");
-            return;
+        bool shouldBreak = false;
+
+        for (int j = i - 1; j >= 0; j--) {
+          // goes from chosen day to today
+
+          for (int k = 0; k < historicalList[j].data.length; k++) {
+            if (historicalList[j].data[k].id == habit.id) {
+              if (historicalList[j].data[k].skipped) {
+                Fluttertoast.showToast(
+                    msg: AppLocale.cantSkipHabitRow.getString(context));
+                return;
+              }
+              shouldBreak = true;
+              break;
+            }
+          }
+
+          if (shouldBreak) {
+            shouldBreak = false;
+            break;
           }
         }
-        if (i + 1 < historicalList.length) {
-          if (historicalList[i + 1].data[index].skipped) {
-            Fluttertoast.showToast(
-                msg: "You can't skip a habit two days in a row.");
-            return;
+
+        for (int j = i + 1; j < historicalList.length; j++) {
+          // goes from chosen to past
+
+          for (int k = 0; k < historicalList[j].data.length; k++) {
+            if (historicalList[j].data[k].id == habit.id) {
+              if (historicalList[j].data[k].skipped) {
+                Fluttertoast.showToast(
+                    msg: AppLocale.cantSkipHabitRow.getString(context));
+                return;
+              }
+              shouldBreak = true;
+              break;
+            }
+          }
+
+          if (shouldBreak) {
+            break;
           }
         }
+
+        break;
       }
     }
 
     HistoricalHabitData habitData = HistoricalHabitData(
-      name: habit.name,
-      completed: !habit.completed,
-      icon: habit.icon,
-      category: habit.category,
-      amount: habit.amount,
-      amountName: habit.amountName,
-      amountCompleted: habit.amountCompleted,
-      duration: habit.duration,
-      durationCompleted: habit.durationCompleted,
-      skipped: !habit.skipped,
-      id: habit.id,
-      task: habit.task,
-    );
+        name: habit.name,
+        completed: !habit.completed,
+        icon: habit.icon,
+        category: habit.category,
+        amount: habit.amount,
+        amountName: habit.amountName,
+        amountCompleted: habit.amountCompleted,
+        duration: habit.duration,
+        durationCompleted: habit.durationCompleted,
+        skipped: !habit.skipped,
+        id: habit.id,
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     applyCurentHabitData(chosenHabitDate, index, habitData, time);
 
@@ -168,27 +204,32 @@ class HistoricalHabitProvider extends ChangeNotifier {
     List<int> currentDate = [time.year, time.month, time.day];
 
     HistoricalHabitData habitData = HistoricalHabitData(
-      name: habit.name,
-      completed: !habit.completed,
-      icon: habit.icon,
-      category: habit.category,
-      amount: habit.amount,
-      amountName: habit.amountName,
-      amountCompleted: !habit.completed
-          ? habit.amount
-          : !habit.skipped
-              ? 0
-              : habit.amountCompleted,
-      duration: habit.duration,
-      durationCompleted: !habit.completed
-          ? habit.duration
-          : !habit.skipped
-              ? 0
-              : habit.durationCompleted,
-      skipped: false,
-      id: habit.id,
-      task: habit.task,
-    );
+        name: habit.name,
+        completed: !habit.completed,
+        icon: habit.icon,
+        category: habit.category,
+        amount: habit.amount,
+        amountName: habit.amountName,
+        amountCompleted: !habit.completed
+            ? habit.amount
+            : !habit.skipped
+                ? 0
+                : habit.amountCompleted,
+        duration: habit.duration,
+        durationCompleted: !habit.completed
+            ? habit.duration
+            : !habit.skipped
+                ? 0
+                : habit.durationCompleted,
+        skipped: false,
+        id: habit.id,
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
     /*if (allHabitsCompleted()) {
@@ -277,7 +318,13 @@ class HistoricalHabitProvider extends ChangeNotifier {
         durationCompleted: habit.durationCompleted,
         skipped: habit.skipped,
         id: habit.id,
-        task: habit.task);
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -306,7 +353,13 @@ class HistoricalHabitProvider extends ChangeNotifier {
         durationCompleted: theDurationValueHours * 60 + theDurationValueMinutes,
         skipped: habit.skipped,
         id: habit.id,
-        task: habit.task);
+        task: habit.task,
+        type: habit.type,
+        weekValue: habit.weekValue,
+        monthValue: habit.monthValue,
+        customValue: habit.customValue,
+        selectedDaysAWeek: habit.selectedDaysAWeek,
+        selectedDaysAMonth: habit.selectedDaysAMonth);
 
     applyCurentHabitData(currentDate, index, habitData, time);
 
@@ -319,19 +372,19 @@ class HistoricalHabitProvider extends ChangeNotifier {
     historicalList.sort((a, b) {
       DateTime dateA = a.date;
       DateTime dateB = b.date;
-      return dateA
-          .compareTo(dateB); // This will sort from oldest to most recent
+      return dateB.compareTo(dateA); // today is 0
     });
 
     for (int i = 0; i < habitBox.length; i++) {
       int longestStreak = 0;
       var habit = habitBox.getAt(i)!;
 
+      bool shouldBreak = false;
       bool completed = false;
       bool skipped = false;
       int streak = 0;
 
-      for (int j = 0; j < historicalList.length - 1; j++) {
+      for (int j = 1; j < historicalList.length; j++) {
         for (var historicalHabit in historicalList[j].data) {
           if (historicalHabit.id == habit.id) {
             completed = historicalHabit.completed;
@@ -342,13 +395,18 @@ class HistoricalHabitProvider extends ChangeNotifier {
                 streak++;
               }
             } else {
-              streak = 0;
+              shouldBreak = true;
+              break;
             }
 
             if (streak > longestStreak) {
               longestStreak = streak;
             }
           }
+        }
+
+        if (shouldBreak) {
+          break;
         }
       }
 
@@ -361,21 +419,24 @@ class HistoricalHabitProvider extends ChangeNotifier {
     //ALL HABITS COMPLETED STREAK
     int allHabitsCompletedStreak = 0;
 
-    for (int i = 0; i < historicalList.length - 1; i++) {
+    for (int i = 1; i < historicalList.length; i++) {
       int numberOfHabits = 0;
       int numberOfCompletedHabits = 0;
       bool isSkipped = false;
-      // -1 is because the last one is the current day
+
+      void theFunction(habit) {
+        numberOfHabits++;
+        if (habit.completed) {
+          if (habit.skipped) {
+            isSkipped = true;
+          }
+          numberOfCompletedHabits++;
+        }
+      }
 
       for (var habit in historicalList[i].data) {
         if (!habit.task) {
-          numberOfHabits++;
-          if (habit.completed) {
-            if (habit.skipped) {
-              isSkipped = true;
-            }
-            numberOfCompletedHabits++;
-          }
+          theFunction(habit);
         }
       }
 
@@ -385,7 +446,7 @@ class HistoricalHabitProvider extends ChangeNotifier {
             allHabitsCompletedStreak++;
           }
         } else {
-          allHabitsCompletedStreak = 0;
+          break;
         }
       }
     }
@@ -413,9 +474,12 @@ class HistoricalHabitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void importCurrentHabits(DateTime today) {
+  void importCurrentHabits(DateTime today, BuildContext context) {
     print("importing current habits");
     List<int> date = [today.year, today.month, today.day];
+
+    List habitsList =
+        Provider.of<DataProvider>(context, listen: false).habitsList;
 
     for (int i = 0; i < historicalBox.length; i++) {
       List<int> habitDate = [
@@ -426,22 +490,26 @@ class HistoricalHabitProvider extends ChangeNotifier {
 
       if (const ListEquality().equals(habitDate, date)) {
         historicalBox.getAt(i)!.data.clear();
-        for (int j = 0; j < habitBox.length; j++) {
-          var currentHabit = habitBox.getAt(j)!;
+        for (var currentHabit in habitsList) {
           historicalBox.getAt(i)!.data.add(HistoricalHabitData(
-                name: currentHabit.name,
-                completed: false,
-                icon: currentHabit.icon,
-                category: currentHabit.category,
-                amount: currentHabit.amount,
-                amountCompleted: 0,
-                amountName: currentHabit.amountName,
-                duration: currentHabit.duration,
-                durationCompleted: 0,
-                skipped: false,
-                id: currentHabit.id,
-                task: currentHabit.task,
-              ));
+              name: currentHabit.name,
+              completed: false,
+              icon: currentHabit.icon,
+              category: currentHabit.category,
+              amount: currentHabit.amount,
+              amountCompleted: 0,
+              amountName: currentHabit.amountName,
+              duration: currentHabit.duration,
+              durationCompleted: 0,
+              skipped: false,
+              id: currentHabit.id,
+              task: currentHabit.task,
+              type: currentHabit.type,
+              weekValue: currentHabit.weekValue,
+              monthValue: currentHabit.monthValue,
+              customValue: currentHabit.customValue,
+              selectedDaysAWeek: currentHabit.selectedDaysAWeek,
+              selectedDaysAMonth: currentHabit.selectedDaysAMonth));
         }
 
         updateHistoricalHabits(today);

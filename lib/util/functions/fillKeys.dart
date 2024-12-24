@@ -24,7 +24,7 @@ fillKeys() {
   }
 
   if (!streakBox.containsKey('highestId')) {
-    streakBox.put('highestId', habitBox.length - 1);
+    streakBox.put('highestId', 1);
   }
 
   if (!boolBox.containsKey("blackColor")) {
@@ -73,12 +73,13 @@ fillKeys() {
     boolBox.put("displayEmptyCategories", false);
   }
 
-  if (!streakBox.containsKey('lastOpenedDay')) {
-    streakBox.put(
-      'lastOpenedDay',
-      DateTime.now().day,
+  if (!metadataBox.containsKey("lastOpenedDate")) {
+    metadataBox.put(
+      'lastOpenedDate',
+      DateTime.now(),
     );
   }
+
   if (!streakBox.containsKey('lastOpenedMonth')) {
     streakBox.put(
       'lastOpenedMonth',

@@ -73,11 +73,12 @@ class _CalendarHabitTileState extends State<CalendarHabitTile> {
           ),
           SlidableAction(
             onPressed: (context) {
-              context
-                  .read<HistoricalHabitProvider>()
-                  .skipHistoricalHabit(index, habit, widget.time, context);
               if (isToday) {
                 context.read<HabitProvider>().skipHabitProvider(index, context);
+              } else {
+                context
+                    .read<HistoricalHabitProvider>()
+                    .skipHistoricalHabit(index, habit, widget.time, context);
               }
             },
             backgroundColor: context.watch<ColorProvider>().greyColor,
@@ -128,7 +129,7 @@ class HabitTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        convertIcon(habit.icon),
+        getIconFromString(habit.icon),
         color: habit.completed ? Colors.grey.shade700 : Colors.white,
       ),
       title: Text(

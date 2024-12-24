@@ -4,16 +4,17 @@ import "package:flutter_localization/flutter_localization.dart";
 import "package:google_mobile_ads/google_mobile_ads.dart";
 import "package:habitt/data/app_locale.dart";
 import "package:habitt/pages/home/home_page.dart";
+import "package:habitt/pages/menu/Calendar%20Page/add_habits_calendar.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/additional_historical_tasks.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/calendar_day.dart";
 import "package:habitt/pages/menu/Calendar%20Page/widgets/other_categories_calendar.dart";
 import "package:habitt/pages/shared%20widgets/expandable_app_bar.dart";
 import "package:habitt/services/ad_mob_service.dart";
 import "package:habitt/services/provider/color_provider.dart";
+import "package:habitt/services/provider/habit_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/services/provider/language_provider.dart";
 import "package:habitt/util/colors.dart";
-import "package:habitt/util/functions/showCustomDialog.dart";
 import "package:provider/provider.dart";
 import "package:table_calendar/table_calendar.dart";
 
@@ -37,16 +38,18 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void onDayLongPressed(DateTime day, DateTime focusedDay) {
     if (checkForImportAvailability(day, context)) {
-      showCustomDialog(
-          context,
-          AppLocale.importCurrentHabits.getString(context),
-          Text(
-              "${AppLocale.thisWillErasePreviousDataOn.getString(context)} ${today.year}-${today.month}-${today.day}. ${AppLocale.areYouSure.getString(context)}",
-              textAlign: TextAlign.center),
-          () =>
-              context.read<HistoricalHabitProvider>().importCurrentHabits(day),
-          "Yes",
-          "No");
+      Navigator.of(context)
+          .push(MaterialPageRoute(
+        builder: (context) => AddHabitsCalendar(
+          selectedDay: day,
+        ),
+      ))
+          .whenComplete(() {
+        if (mounted) {
+          context.read<HabitProvider>().resetSomethingEdited();
+          context.read<HistoricalHabitProvider>().updateHistoricalHabits(today);
+        }
+      });
     }
   }
 
@@ -94,7 +97,7 @@ class _CalendarPageState extends State<CalendarPage> {
               child: Column(children: [
                 Container(
                   decoration: BoxDecoration(
-                      color: AppColors.theDarkGrey,
+                      color: context.watch<ColorProvider>().darkGreyColor,
                       borderRadius: BorderRadius.circular(20)),
                   child: TableCalendar(
                     locale:
@@ -163,20 +166,14 @@ class _CalendarPageState extends State<CalendarPage> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        showCustomDialog(
-                            context,
-                            AppLocale.importCurrentHabits.getString(context),
-                            Text(
-                                "${AppLocale.thisWillErasePreviousDataOn.getString(context)} ${today.year}-${today.month}-${today.day}. ${AppLocale.areYouSure.getString(context)}",
-                                textAlign: TextAlign.center),
-                            () => context
-                                .read<HistoricalHabitProvider>()
-                                .importCurrentHabits(today),
-                            AppLocale.yes.getString(context),
-                            AppLocale.no.getString(context));
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AddHabitsCalendar(
+                            selectedDay: today,
+                          ),
+                        ));
                       },
                       child: Text(
-                        AppLocale.importCurrentHabits.getString(context),
+                        AppLocale.addMoreHabits.getString(context),
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),

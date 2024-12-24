@@ -14,6 +14,7 @@ import 'package:habitt/services/storage_service.dart';
 import 'package:habitt/util/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:upgrader/upgrader.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -106,9 +107,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                 .read<DataProvider>()
                                 .initializeTagsList(context);
                             addInitialData(context);
+                            context.read<DataProvider>().updateHabits(context);
+                            boolBox.put("firstTimeOpened", false);
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
-                              builder: (context) => const HomePage(),
+                              builder: (context) =>
+                                  UpgradeAlert(child: const HomePage()),
                             ));
                           },
                           child: SizedBox(
