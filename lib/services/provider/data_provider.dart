@@ -157,6 +157,17 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateHabit(HabitData newHabit) async {
+    int habitId = newHabit.id;
+
+    for (var habit in habitsList) {
+      if (habit.id == habitId) {
+        habit.completed = newHabit.completed;
+        notifyListeners();
+      }
+    }
+  }
+
   Future<void> updateHabits(BuildContext context) async {
     DateTime today = DateTime.now();
     habitsList = [];

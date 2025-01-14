@@ -11,6 +11,7 @@ import "package:habitt/pages/home/home_page.dart";
 import "package:habitt/services/provider/data_provider.dart";
 import "package:habitt/services/provider/historical_habit_provider.dart";
 import "package:habitt/services/storage_service.dart";
+import "package:habitt/util/functions/checkForNotifications.dart";
 import "package:habitt/util/functions/habit/deleteHabit.dart";
 import "package:habitt/util/functions/habit/editHabit.dart";
 import "package:habitt/util/functions/habit/habitsCompleted.dart";
@@ -430,10 +431,15 @@ class HabitProvider extends ChangeNotifier {
     );
 
     await habitBox.putAt(index, updatedHabit);
+    if (context.mounted) {
+      context.read<DataProvider>().updateHabit(updatedHabit);
+    }
 
     // apply haptic feedback or sound
     bool hapticFeedback = boolBox.get('hapticFeedback')!;
     if (context.mounted) {
+      checkForNotifications(
+          context); //TODO: change to check only for this habit
       if (allHabitsCompleted(context)) {
         if (isAdLoaded) {
           interstitialAd.show();
@@ -493,10 +499,6 @@ class HabitProvider extends ChangeNotifier {
       }
     }
 
-    if (context.mounted) {
-      context.read<DataProvider>().updateHabits(context);
-      saveHabitsForToday(context);
-    }
     notifyListeners();
   }
 

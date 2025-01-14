@@ -158,20 +158,49 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextSpan nameSpan = TextSpan(
+        text: habit.name,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500));
+    final dtp = TextPainter(text: nameSpan, textDirection: TextDirection.ltr);
+    dtp.layout();
+    final double nameWidth = dtp.width;
+
     return ListTile(
-      leading: Icon(
-        getIconFromString(habit.icon),
-        color: habit.completed ? Colors.grey.shade700 : Colors.white,
+      leading: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        transitionBuilder: (child, animation) =>
+            FadeTransition(opacity: animation, child: child),
+        child: Icon(
+          key: ValueKey(habit.completed),
+          getIconFromString(habit.icon),
+          color: habit.completed ? Colors.grey.shade700 : Colors.white,
+        ),
       ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: Text(
-              habit.name,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: textStyleCompletedCheck(),
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+                  child: Text(
+                    key: ValueKey(habit.completed),
+                    habit.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color:
+                          habit.completed ? Colors.grey.shade700 : Colors.white,
+                    ),
+                  ),
+                ),
+                AnimatedHabitIndicator(
+                    completed: habit.completed, nameWidth: nameWidth)
+              ],
             ),
           ),
           const SizedBox(
@@ -190,16 +219,6 @@ class HabitTile extends StatelessWidget {
         interstitialAd: interstitialAd,
       ),
     );
-  }
-
-  TextStyle textStyleCompletedCheck() {
-    return TextStyle(
-        color: habit.completed ? Colors.grey.shade700 : Colors.white,
-        decoration: habitBox.getAt(index)!.completed
-            ? TextDecoration.lineThrough
-            : null,
-        decorationColor: Colors.grey.shade700,
-        decorationThickness: 3.0);
   }
 }
 
@@ -221,10 +240,16 @@ class _StreakDisplayState extends State<StreakDisplay> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Icon(
-        MaterialCommunityIcons.fire,
-        color: widget.habit.completed ? Colors.white : Colors.grey,
-        size: 21,
+      AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) =>
+            FadeTransition(opacity: animation, child: child),
+        child: Icon(
+          key: ValueKey(widget.habit.completed),
+          MaterialCommunityIcons.fire,
+          color: widget.habit.completed ? Colors.white : Colors.grey,
+          size: 21,
+        ),
       ),
       Transform.translate(
         offset: const Offset(0, 2),
@@ -275,233 +300,262 @@ class CheckBox extends StatefulWidget {
 }
 
 class _CheckBoxState extends State<CheckBox> {
+  double _scale = 1.0;
+
+  Widget centerIcon() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      transitionBuilder: (child, animation) =>
+          FadeTransition(opacity: animation, child: child),
+      child: Center(
+        key: ValueKey(widget.habit.completed),
+        child: Icon(widget.habit.completed ? Icons.check : Icons.close,
+            color: Colors.white),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        setState(() {
+          _scale = 0.9;
+        });
+        Future.delayed(const Duration(milliseconds: 200), () {
+          setState(() {
+            _scale = 1.0;
+          });
+        });
         checkCompleteHabit(widget.amountCheck, widget.durationCheck,
             widget.index, context, widget.isAdLoaded, widget.interstitialAd);
       },
-      child: Container(
-          clipBehavior: Clip.hardEdge,
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-            color: widget.habit.completed
-                ? AppColors.theOtherColor
-                : context.watch<ColorProvider>().greyColor,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: widget.habit.completed && !widget.habit.skipped
-              ? Stack(
-                  children: [
-                    Positioned.fill(
-                      child: RotatedBox(
-                        quarterTurns: -1,
-                        child: TweenAnimationBuilder<double>(
-                            duration: const Duration(milliseconds: 1000),
-                            curve: Curves.easeInOut,
-                            tween: Tween<double>(
-                              begin: 0,
-                              end: widget.habit.completed ? 1 : 0,
-                            ),
-                            builder: (context, value, _) {
-                              return LinearProgressIndicator(
-                                value: value,
-                                color: AppColors.theOtherColor,
-                                backgroundColor:
-                                    context.watch<ColorProvider>().greyColor,
-                              );
-                            }),
-                      ),
-                    ),
-                    Center(
-                      child: Icon(
-                          widget.habit.completed ? Icons.check : Icons.close,
-                          color: Colors.white),
-                    ),
-                  ],
-                )
-              : widget.amountCheck
-                  ? Stack(
-                      children: [
-                        Positioned.fill(
-                          child: RotatedBox(
-                            quarterTurns: -1,
-                            child: TweenAnimationBuilder<double>(
-                                duration: const Duration(milliseconds: 1000),
-                                curve: Curves.easeInOut,
-                                tween: Tween<double>(
-                                  begin: 0,
-                                  end: widget.habit.amountCompleted /
-                                      widget.habit.amount,
-                                ),
-                                builder: (context, value, _) {
-                                  return LinearProgressIndicator(
-                                    value: value,
-                                    color: widget.habit.skipped
-                                        ? Colors.grey.shade800
-                                        : AppColors.theOtherColor,
-                                    backgroundColor: context
-                                        .watch<ColorProvider>()
-                                        .greyColor,
-                                  );
-                                }),
-                          ),
+      onTapDown: (context) {
+        setState(() {
+          _scale = 0.9;
+        });
+      },
+      onTapCancel: () => setState(() {
+        _scale = 1.0;
+      }),
+      onTapUp: (context) => setState(() {
+        _scale = 1.0;
+      }),
+      child: AnimatedScale(
+        duration: const Duration(milliseconds: 100),
+        scale: _scale,
+        child: Container(
+            clipBehavior: Clip.hardEdge,
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: widget.habit.completed
+                  ? AppColors.theOtherColor
+                  : context.watch<ColorProvider>().greyColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: widget.habit.completed && !widget.habit.skipped
+                ? Stack(
+                    children: [
+                      Positioned.fill(
+                        child: RotatedBox(
+                          quarterTurns: -1,
+                          child: TweenAnimationBuilder<double>(
+                              duration: const Duration(milliseconds: 1000),
+                              curve: Curves.easeInOut,
+                              tween: Tween<double>(
+                                begin: 0,
+                                end: widget.habit.completed ? 1 : 0,
+                              ),
+                              builder: (context, value, _) {
+                                return LinearProgressIndicator(
+                                  value: value,
+                                  color: AppColors.theOtherColor,
+                                  backgroundColor:
+                                      context.watch<ColorProvider>().greyColor,
+                                );
+                              }),
                         ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Transform.translate(
-                                offset: const Offset(0, 3),
-                                child: Text(
-                                  widget.habit.amountCompleted.toString(),
-                                  style: TextStyle(
+                      ),
+                      centerIcon()
+                    ],
+                  )
+                : widget.amountCheck
+                    ? Stack(
+                        children: [
+                          Positioned.fill(
+                            child: RotatedBox(
+                              quarterTurns: -1,
+                              child: TweenAnimationBuilder<double>(
+                                  duration: const Duration(milliseconds: 1000),
+                                  curve: Curves.easeInOut,
+                                  tween: Tween<double>(
+                                    begin: 0,
+                                    end: widget.habit.amountCompleted /
+                                        widget.habit.amount,
+                                  ),
+                                  builder: (context, value, _) {
+                                    return LinearProgressIndicator(
+                                      value: value,
                                       color: widget.habit.skipped
-                                          ? Colors.grey
-                                          : Colors.white,
-                                      fontSize: 10),
+                                          ? Colors.grey.shade800
+                                          : AppColors.theOtherColor,
+                                      backgroundColor: context
+                                          .watch<ColorProvider>()
+                                          .greyColor,
+                                    );
+                                  }),
+                            ),
+                          ),
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Transform.translate(
+                                  offset: const Offset(0, 3),
+                                  child: Text(
+                                    widget.habit.amountCompleted.toString(),
+                                    style: TextStyle(
+                                        color: widget.habit.skipped
+                                            ? Colors.grey
+                                            : Colors.white,
+                                        fontSize: 10),
+                                  ),
+                                ),
+                                Divider(
+                                  color: widget.habit.skipped
+                                      ? Colors.grey
+                                      : Colors.white,
+                                  thickness: 1,
+                                  indent: 15,
+                                  endIndent: 15,
+                                ),
+                                Transform.translate(
+                                  offset: const Offset(0, -3),
+                                  child: Text(
+                                    widget.habit.amount.toString(),
+                                    style: TextStyle(
+                                        color: widget.habit.skipped
+                                            ? Colors.grey
+                                            : Colors.white,
+                                        fontSize: 10),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : widget.durationCheck
+                        ? Stack(
+                            children: [
+                              Positioned.fill(
+                                child: RotatedBox(
+                                  quarterTurns: -1,
+                                  child: TweenAnimationBuilder<double>(
+                                      duration:
+                                          const Duration(milliseconds: 1000),
+                                      curve: Curves.easeInOut,
+                                      tween: Tween<double>(
+                                        begin: 0,
+                                        end: widget.habit.durationCompleted /
+                                            widget.habit.duration,
+                                      ),
+                                      builder: (context, value, _) {
+                                        return LinearProgressIndicator(
+                                          value: value,
+                                          color: widget.habit.skipped
+                                              ? Colors.grey.shade800
+                                              : AppColors.theOtherColor,
+                                          backgroundColor: context
+                                              .watch<ColorProvider>()
+                                              .greyColor,
+                                        );
+                                      }),
                                 ),
                               ),
-                              Divider(
-                                color: widget.habit.skipped
-                                    ? Colors.grey
-                                    : Colors.white,
-                                thickness: 1,
-                                indent: 15,
-                                endIndent: 15,
-                              ),
-                              Transform.translate(
-                                offset: const Offset(0, -3),
-                                child: Text(
-                                  widget.habit.amount.toString(),
-                                  style: TextStyle(
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Transform.translate(
+                                      offset: const Offset(0, 3),
+                                      child: Text(
+                                        widget.habit.durationCompleted ~/ 60 ==
+                                                0
+                                            ? "${widget.habit.durationCompleted % 60}m"
+                                            : widget.habit.durationCompleted %
+                                                        60 ==
+                                                    0
+                                                ? "${widget.habit.durationCompleted ~/ 60}h"
+                                                : "${widget.habit.durationCompleted ~/ 60}h${widget.habit.durationCompleted % 60}m",
+                                        style: TextStyle(
+                                            color: widget.habit.skipped
+                                                ? Colors.grey
+                                                : Colors.white,
+                                            fontSize: 10),
+                                      ),
+                                    ),
+                                    Divider(
                                       color: widget.habit.skipped
                                           ? Colors.grey
                                           : Colors.white,
-                                      fontSize: 10),
+                                      thickness: 1,
+                                      indent: 15,
+                                      endIndent: 15,
+                                    ),
+                                    Transform.translate(
+                                      offset: const Offset(0, -3),
+                                      child: Text(
+                                        widget.habit.duration ~/ 60 == 0
+                                            ? "${widget.habit.duration % 60}m"
+                                            : widget.habit.duration % 60 == 0
+                                                ? "${widget.habit.duration ~/ 60}h"
+                                                : "${widget.habit.duration ~/ 60}h${widget.habit.duration % 60}m",
+                                        style: TextStyle(
+                                            color: widget.habit.skipped
+                                                ? Colors.grey
+                                                : Colors.white,
+                                            fontSize: 10),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                      ],
-                    )
-                  : widget.durationCheck
-                      ? Stack(
-                          children: [
-                            Positioned.fill(
-                              child: RotatedBox(
-                                quarterTurns: -1,
-                                child: TweenAnimationBuilder<double>(
-                                    duration:
-                                        const Duration(milliseconds: 1000),
-                                    curve: Curves.easeInOut,
-                                    tween: Tween<double>(
-                                      begin: 0,
-                                      end: widget.habit.durationCompleted /
-                                          widget.habit.duration,
-                                    ),
-                                    builder: (context, value, _) {
-                                      return LinearProgressIndicator(
-                                        value: value,
-                                        color: widget.habit.skipped
-                                            ? Colors.grey.shade800
-                                            : AppColors.theOtherColor,
-                                        backgroundColor: context
-                                            .watch<ColorProvider>()
-                                            .greyColor,
-                                      );
-                                    }),
-                              ),
-                            ),
-                            Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Transform.translate(
-                                    offset: const Offset(0, 3),
-                                    child: Text(
-                                      widget.habit.durationCompleted ~/ 60 == 0
-                                          ? "${widget.habit.durationCompleted % 60}m"
-                                          : widget.habit.durationCompleted %
-                                                      60 ==
-                                                  0
-                                              ? "${widget.habit.durationCompleted ~/ 60}h"
-                                              : "${widget.habit.durationCompleted ~/ 60}h${widget.habit.durationCompleted % 60}m",
-                                      style: TextStyle(
+                          )
+                        : Stack(
+                            children: [
+                              Positioned.fill(
+                                child: RotatedBox(
+                                  quarterTurns: -1,
+                                  child: TweenAnimationBuilder<double>(
+                                      duration:
+                                          const Duration(milliseconds: 1000),
+                                      curve: Curves.easeInOut,
+                                      tween: Tween<double>(
+                                        begin: 0,
+                                        end: widget.habit.completed ? 1 : 0,
+                                      ),
+                                      builder: (context, value, _) {
+                                        return LinearProgressIndicator(
+                                          value: value,
                                           color: widget.habit.skipped
-                                              ? Colors.grey
-                                              : Colors.white,
-                                          fontSize: 10),
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: widget.habit.skipped
-                                        ? Colors.grey
-                                        : Colors.white,
-                                    thickness: 1,
-                                    indent: 15,
-                                    endIndent: 15,
-                                  ),
-                                  Transform.translate(
-                                    offset: const Offset(0, -3),
-                                    child: Text(
-                                      widget.habit.duration ~/ 60 == 0
-                                          ? "${widget.habit.duration % 60}m"
-                                          : widget.habit.duration % 60 == 0
-                                              ? "${widget.habit.duration ~/ 60}h"
-                                              : "${widget.habit.duration ~/ 60}h${widget.habit.duration % 60}m",
-                                      style: TextStyle(
-                                          color: widget.habit.skipped
-                                              ? Colors.grey
-                                              : Colors.white,
-                                          fontSize: 10),
-                                    ),
-                                  ),
-                                ],
+                                              ? Colors.grey.shade800
+                                              : AppColors.theOtherColor,
+                                          backgroundColor: context
+                                              .watch<ColorProvider>()
+                                              .greyColor,
+                                        );
+                                      }),
+                                ),
                               ),
-                            ),
-                          ],
-                        )
-                      : Stack(
-                          children: [
-                            Positioned.fill(
-                              child: RotatedBox(
-                                quarterTurns: -1,
-                                child: TweenAnimationBuilder<double>(
-                                    duration:
-                                        const Duration(milliseconds: 1000),
-                                    curve: Curves.easeInOut,
-                                    tween: Tween<double>(
-                                      begin: 0,
-                                      end: widget.habit.completed ? 1 : 0,
-                                    ),
-                                    builder: (context, value, _) {
-                                      return LinearProgressIndicator(
-                                        value: value,
-                                        color: widget.habit.skipped
-                                            ? Colors.grey.shade800
-                                            : AppColors.theOtherColor,
-                                        backgroundColor: context
-                                            .watch<ColorProvider>()
-                                            .greyColor,
-                                      );
-                                    }),
-                              ),
-                            ),
-                            Center(
-                              child: Icon(
-                                  widget.habit.completed
-                                      ? Icons.check
-                                      : Icons.close,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )),
+                              centerIcon()
+                            ],
+                          )),
+      ),
     );
   }
 }
@@ -520,5 +574,91 @@ void checkCompleteHabit(amountCheck, durationCheck, int index,
     context
         .read<HabitProvider>()
         .completeHabitProvider(index, isAdLoaded, interstitialAd, context);
+  }
+}
+
+class AnimatedHabitIndicator extends StatefulWidget {
+  final bool completed;
+  final double nameWidth;
+
+  const AnimatedHabitIndicator({
+    required this.completed,
+    required this.nameWidth,
+  });
+
+  @override
+  _AnimatedHabitIndicatorState createState() => _AnimatedHabitIndicatorState();
+}
+
+class _AnimatedHabitIndicatorState extends State<AnimatedHabitIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _widthAnimation;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    _widthAnimation = Tween<double>(
+      begin: 0,
+      end: widget.completed ? widget.nameWidth + 10 : 0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _colorAnimation = ColorTween(
+      begin: Colors.white,
+      end: Colors.grey.shade700,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    if (widget.completed) {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatedHabitIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.completed != oldWidget.completed) {
+      if (widget.completed) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _widthAnimation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: const Offset(0, 1),
+          child: Container(
+            width: _widthAnimation.value,
+            height: 2.5,
+            color: _colorAnimation.value,
+          ),
+        );
+      },
+    );
   }
 }
