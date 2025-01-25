@@ -582,6 +582,7 @@ class AnimatedHabitIndicator extends StatefulWidget {
   final double nameWidth;
 
   const AnimatedHabitIndicator({
+    super.key,
     required this.completed,
     required this.nameWidth,
   });
@@ -605,6 +606,14 @@ class _AnimatedHabitIndicatorState extends State<AnimatedHabitIndicator>
       duration: const Duration(milliseconds: 500),
     );
 
+    _initializeAnimations();
+
+    if (widget.completed) {
+      _controller.forward();
+    }
+  }
+
+  void _initializeAnimations() {
     _widthAnimation = Tween<double>(
       begin: 0,
       end: widget.completed ? widget.nameWidth + 10 : 0,
@@ -620,10 +629,6 @@ class _AnimatedHabitIndicatorState extends State<AnimatedHabitIndicator>
       parent: _controller,
       curve: Curves.easeInOut,
     ));
-
-    if (widget.completed) {
-      _controller.forward();
-    }
   }
 
   @override
@@ -634,7 +639,7 @@ class _AnimatedHabitIndicatorState extends State<AnimatedHabitIndicator>
       if (widget.completed) {
         _controller.forward();
       } else {
-        _controller.reverse();
+        _controller.reverse(from: 1.0); // Reverse from the end state
       }
     }
   }
@@ -648,7 +653,7 @@ class _AnimatedHabitIndicatorState extends State<AnimatedHabitIndicator>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _widthAnimation,
+      animation: _controller,
       builder: (context, child) {
         return Transform.translate(
           offset: const Offset(0, 1),
