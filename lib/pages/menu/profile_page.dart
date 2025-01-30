@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -102,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
 
-    if (userId == null || FirebaseAuth.instance.currentUser!.isAnonymous) {
+    if (userId == null) {
       return Scaffold(
         appBar:
             AppBar(backgroundColor: context.watch<ColorProvider>().blackColor),
@@ -143,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   Text(
-                    stringBox.get("username")!,
+                    stringBox.get("username") ?? "Guest",
                     style: const TextStyle(
                       height: 1,
                       color: AppColors.theLightColor,

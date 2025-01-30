@@ -251,8 +251,9 @@ class DataProvider extends ChangeNotifier {
           List historicalList = getSortedHistoricalList();
 
           for (int i = 0; i < historicalList.length; i++) {
-            var otherHabit =
-                historicalList[i].where((element) => element.id == habit.id);
+            var otherHabit = historicalList[i]
+                .data
+                .where((element) => element.id == habit.id);
 
             if (otherHabit.isNotEmpty) {
               DateTime day = historicalList[i].date;
