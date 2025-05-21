@@ -1,16 +1,12 @@
 # habitt
 
-A new Flutter project.
+My first ever flutter project, actually ended up being a decent minimalist app I used myself for a couple months.
+Stopped working on it since last year so I might as well open source it.
 
-## Getting Started
+Feel free to download the code (it sucks, it's bad, it's unoptimized, may crash). Don't say I didn't warn you.
 
-This project is a starting point for a Flutter application.
+This is the project I started learning flutter on and it was basically a jumpad for me for other flutter projects.
 
-A few resources to get you started if this is your first Flutter project:
+The idea is great, but optimizing the code and making it work properly failed.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Habit 2.0 in process...
